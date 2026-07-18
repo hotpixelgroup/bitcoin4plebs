@@ -5,16 +5,25 @@ import { GlossaryPage } from '../pages/glossary-page';
 import { HomePage } from '../pages/home-page';
 import { QuestPage } from '../pages/quest-page';
 import { NavDrawer } from './nav-drawer';
-import { SiteLogo } from './site-logo';
+import { LogoMark } from './site-logo';
 
 function SiteHeader({ onMenu }: { onMenu: () => void }) {
   return (
     <header className="site-header">
       <div className="wrap">
-        <button className="nav-toggle" onClick={onMenu} aria-label="Open navigation">
-          ☰
-        </button>
-        <SiteLogo />
+        <div className="logo">
+          <button className="nav-toggle" onClick={onMenu} aria-label="Open navigation">
+            <LogoMark size={32} />
+          </button>
+          <Link to="/" className="logo-text-link">
+            <span className="logo-text">
+              <span className="logo-word">
+                bitcoin<span className="logo-4">4</span>plebs
+              </span>
+              <span className="logo-tag">don't trust. verify.</span>
+            </span>
+          </Link>
+        </div>
         <div className="pin">
           source pinned: bitcoin/bitcoin @ <b>{PINNED_COMMIT_SHORT}</b>
         </div>

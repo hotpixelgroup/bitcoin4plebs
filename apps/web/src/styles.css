@@ -76,6 +76,15 @@ a:hover {
 .logo:hover {
   text-decoration: none;
 }
+.logo-text-link {
+  color: var(--ink);
+}
+.logo-text-link:hover {
+  text-decoration: none;
+}
+.logo-text-link:hover .logo-tag {
+  color: var(--ink-2);
+}
 .logo-mark {
   display: block;
   flex-shrink: 0;
@@ -1058,18 +1067,34 @@ tr:last-child td {
 
 /* ——— left flyout nav ——— */
 
+/* The logo mark IS the navigation button. */
 .nav-toggle {
-  font: 400 20px/1 var(--sans);
-  color: var(--ink-2);
+  display: block;
   background: none;
-  border: 1px solid var(--hairline);
-  border-radius: 8px;
-  padding: 6px 10px;
+  border: none;
+  border-radius: 9px;
+  padding: 0;
+  line-height: 0;
   cursor: pointer;
+  transition: transform 0.12s ease;
 }
 .nav-toggle:hover {
-  color: var(--brand);
-  border-color: var(--brand);
+  transform: scale(1.06);
+}
+.nav-toggle:hover .logo-mark-hl {
+  fill: #ffa93d;
+}
+.nav-toggle:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 3px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-toggle {
+    transition: none;
+  }
+  .nav-toggle:hover {
+    transform: none;
+  }
 }
 
 .drawer-overlay {

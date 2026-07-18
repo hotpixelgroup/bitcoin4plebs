@@ -3,9 +3,10 @@ import { Link } from 'react-router-dom';
 /**
  * The mark: a miniature of the site's own signature element — a code card
  * with one orange highlighted line (the .cl-hl motif every quest reader
- * knows). Drawn inline so it scales crisply everywhere.
+ * knows). Drawn inline so it scales crisply everywhere. In the header it
+ * doubles as the navigation button.
  */
-function LogoMark({ size }: { size: number }) {
+export function LogoMark({ size }: { size: number }) {
   return (
     <svg
       className="logo-mark"
