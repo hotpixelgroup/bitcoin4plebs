@@ -68,10 +68,6 @@ export function NavDrawer({ open, onClose }: NavDrawerProps) {
             <span className="drawer-link-num">⌂</span>
             <span>Home — all quests</span>
           </Link>
-          <Link to="/glossary" className={linkClass('/glossary')}>
-            <span className="drawer-link-num">§</span>
-            <span>Glossary</span>
-          </Link>
           {groups.map((group) => (
             <div key={group.track}>
               <div className="drawer-track">{group.track}</div>
@@ -90,6 +86,11 @@ export function NavDrawer({ open, onClose }: NavDrawerProps) {
               ))}
             </div>
           ))}
+          <div className="drawer-track">Reference</div>
+          <Link to="/glossary" className={linkClass('/glossary')}>
+            <span className="drawer-link-num">§</span>
+            <span>Glossary</span>
+          </Link>
         </nav>
       </aside>
     </>
