@@ -68,6 +68,21 @@ describe('supplyAtHeight', () => {
   });
 });
 
+describe('removing the 64-halving guard (the tamper experiment)', () => {
+  it('wraps at era 65 back to the full reward, x86-style', () => {
+    const eras = computeEras({ guard64: false });
+    const wrapped = eras.find((e) => e.era === 65);
+    expect(wrapped?.subsidy).toBe(50n * COIN);
+  });
+
+  it('inflates the supply past MAX_MONEY, which the guard exists to prevent', () => {
+    const eras = computeEras({ guard64: false });
+    expect(eras[eras.length - 1].cumulative > MAX_MONEY).toBe(true);
+    // The guarded schedule is untouched by default.
+    expect(computeEras()).toHaveLength(33);
+  });
+});
+
 describe('supplyThroughBlock (the gettxoutsetinfo comparison)', () => {
   it('is 50 BTC once the genesis block is connected', () => {
     expect(supplyThroughBlock(0)).toBe(50n * COIN);

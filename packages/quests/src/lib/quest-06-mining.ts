@@ -26,6 +26,10 @@ export const quest06: Quest = {
   stops: [
     {
       id: 'the-header',
+      myth: {
+        belief: "Miners solve complex math problems, and the problems get harder over time.",
+        reality: "There is no problem being solved. Mining is guessing: hash the header, compare against a target, repeat. The guesses never get smarter; the target just gets lower. \u201cHarder\u201d only ever means \u201clower target.\u201d",
+      },
       viz: 'avalanche-grid',
       title: 'The whole "puzzle" is 80 bytes, and Satoshi explains it in a comment',
       takeaway:
@@ -67,6 +71,18 @@ export const quest06: Quest = {
     },
     {
       id: 'the-rule',
+      quiz: [
+        {
+          question: "A miner wins the block when\u2026",
+          options: [
+          "They solve the puzzle before anyone else",
+          "Their header's hash comes in at or under the target",
+          "The pool operator approves their work",
+          ],
+          answer: 1,
+          explain: "The whole rule of mining is one comparison: hash \u2264 target. Expensive to satisfy, nearly free for everyone else to verify.",
+        },
+      ],
       title: 'The entire rule of mining is one comparison',
       takeaway:
         'Here is what "satisfying proof-of-work" means: read the block\'s hash **as a 256-bit number**, and check it\'s **not bigger than the target**. Line 167. That\'s mining.',

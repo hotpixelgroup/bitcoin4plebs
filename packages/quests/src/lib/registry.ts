@@ -1,4 +1,5 @@
 import type { Quest } from './types.js';
+import { quest00 } from './quest-00-ledger.js';
 import { quest01 } from './quest-01-21m-cap.js';
 import { quest02 } from './quest-02-halving.js';
 import { quest03 } from './quest-03-your-coins.js';
@@ -17,6 +18,7 @@ import { quest10 } from './quest-10-addresses.js';
  * changes nothing else in the codebase.
  */
 export const quests: Quest[] = [
+  quest00,
   quest01,
   quest02,
   quest03,

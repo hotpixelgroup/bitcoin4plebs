@@ -28,6 +28,18 @@ export const quest07: Quest = {
   stops: [
     {
       id: 'front-door',
+      quiz: [
+        {
+          question: "Where do you actually submit a Bitcoin transaction?",
+          options: [
+          "To the official mempool server",
+          "To any node, which verifies it and gossips it onward",
+          "To the miners' queue directly",
+          ],
+          answer: 1,
+          explain: "There is no center to submit to. Your wallet hands the transaction to one ordinary node; every node that hears about it re-runs AcceptToMemoryPool before relaying it further.",
+        },
+      ],
       viz: 'gossip-network',
       title: 'The front door: AcceptToMemoryPool',
       takeaway:
@@ -94,6 +106,10 @@ export const quest07: Quest = {
     },
     {
       id: 'the-auction',
+      myth: {
+        belief: "Miners charge a processing fee for each transaction, like a payment company.",
+        reality: "Nobody sets or charges fees. You *bid* whatever you like, and miners simply take the best-paying megabyte of waiting transactions first. A quiet mempool confirms tiny bids next block; a busy one prices you out until you raise yours.",
+      },
       title: 'The waiting room is an auction, and your fee is your bid',
       takeaway:
         'Blocks hold about a million "virtual bytes"; the waiting room often holds far more. Miners resolve this the obvious way: **highest fee-per-byte first**. This is the loop that fills a block, best-paying chunk by best-paying chunk.',

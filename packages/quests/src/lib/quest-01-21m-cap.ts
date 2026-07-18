@@ -53,6 +53,18 @@ export const quest01: Quest = {
     },
     {
       id: 'schedule',
+      quiz: [
+        {
+          question: "Where does the 21 million cap actually come from?",
+          options: [
+          "A constant the code checks every block",
+          "Halving arithmetic whose total converges just under 21M",
+          "A yearly vote of developers",
+          ],
+          answer: 1,
+          explain: "Start at 50 BTC, halve every 210,000 blocks, discard remainders: sum every reward ever and you land at 20,999,999.9769 BTC. The 21,000,000 you will meet at Stop 5 is only a sanity rail.",
+        },
+      ],
       viz: 'bitshift-halving',
       title: 'The entire emission schedule is ten lines of code',
       takeaway:
@@ -113,6 +125,10 @@ export const quest01: Quest = {
     },
     {
       id: 'max-money',
+      myth: {
+        belief: "Somewhere in the code there's a setting that says 21 million, and someone with access could raise it.",
+        reality: "There IS a 21,000,000 in the code, and you're looking at it: a **sanity check** that creates nothing. The real cap emerges from halving arithmetic, and changing either number just forks you off the network, as Quest #4 shows.",
+      },
       title: 'Honesty check: there is no "21,000,000" switch',
       takeaway:
         'There **is** a 21,000,000 written in the code, but read the comment: it\'s a **sanity check**, not the thing that creates the cap. The cap is an *outcome* of the halving math you saw at Stop 2. We can prove that next.',

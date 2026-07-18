@@ -54,6 +54,18 @@ export const quest05: Quest = {
     },
     {
       id: 'cve-2010',
+      quiz: [
+        {
+          question: "What ended the 2010 \"184 billion BTC\" incident?",
+          options: [
+          "The coins were allowed to stay",
+          "A fix shipped within hours and the network abandoned the poisoned chain",
+          "The attacker gave the coins back",
+          ],
+          answer: 1,
+          explain: "Satoshi shipped the overflow fix the same day; nodes adopted it and continued from the last honest block. The 184 billion BTC ceased to exist because the ledger that contained them was simply not the chain anyone followed.",
+        },
+      ],
       title: 'August 2010: the day 184 billion BTC existed',
       takeaway:
         'Block 74,638 contained outputs summing to **184 billion BTC**. A value-overflow bug let the impossible total *wrap around* into a valid-looking number. The comment on line 23 still cites the CVE.',
@@ -87,6 +99,10 @@ export const quest05: Quest = {
     },
     {
       id: 'cve-2018',
+      myth: {
+        belief: "Bugs in Bitcoin get quietly exploited all the time; we would never know.",
+        reality: "The two inflation-class bugs in Bitcoin\u2019s history are both fully documented: 2010 (exploited for hours, chain abandoned) and 2018 (caught and patched before anyone used it). Public code means bugs get found loudly, and the fixes below are permanent, checkable scars.",
+      },
       title: 'September 2018: the bug that was never exploited',
       takeaway:
         'CVE-2018-17144: for nearly two years, a performance optimization had removed the check below. A transaction spending **the same coin twice in one block** could crash nodes, or it could quietly **inflate the supply**. Here is the restored check, scar named on line 36.',

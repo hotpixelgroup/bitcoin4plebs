@@ -7,6 +7,7 @@ import { DifficultyThermostat } from './difficulty-thermostat';
 import { FiftyoneRace } from './fiftyone-race';
 import { GossipNetwork } from './gossip-network';
 import { MerkleLightning } from './merkle-lightning';
+import { SharedLedger } from './shared-ledger';
 import { TamperCascade } from './tamper-cascade';
 import { UtxoFlow } from './utxo-flow';
 
@@ -26,6 +27,7 @@ const vizzes: Record<string, ComponentType> = {
   'tamper-cascade': TamperCascade,
   'merkle-lightning': MerkleLightning,
   'address-pipeline': AddressPipeline,
+  'shared-ledger': SharedLedger,
 };
 
 export function getViz(id: string): ComponentType | undefined {

@@ -1,11 +1,12 @@
 import { Link } from 'react-router-dom';
 import type { Quest } from '@bitcoin4plebs/quests';
 import { quests } from '@bitcoin4plebs/quests';
-import { useVerifiedQuests } from '../lib/progress';
+import { latestReadPosition, useVerifiedQuests } from '../lib/progress';
 
 /** One-line subtitles for each curriculum track (view concern, so kept here). */
 const TRACK_BLURBS: Record<string, string> = {
-  Foundations: 'Start here: where the money comes from, why yours is yours, and who enforces it all.',
+  'Start here': 'Five minutes of mental model. No code and no jargon: what a ledger is, and why copies plus rules changed everything.',
+  Foundations: 'The rulebook, one page at a time: where the money comes from, why yours is yours, and who enforces it all.',
   Advanced: 'Leave the classroom: real artifacts, real byte order, and finally a node of your own.',
 };
 
@@ -63,15 +64,30 @@ export function HomePage() {
             every excerpt <b>CI-verified</b>
           </span>
         </div>
-        {verifiedCount > 0 ? (
+        {verifiedCount > 0 && (
           <p className="hero-progress">
             ✓ You've verified {verifiedCount} of {quests.length} quests with your own eyes.
           </p>
-        ) : (
-          <Link className="hero-cta" to={`/quests/${quests[0].slug}`}>
-            Start Quest #1: verify the 21 million cap →
-          </Link>
         )}
+        {(() => {
+          const resume = latestReadPosition(verified);
+          const resumeQuest = resume ? quests.find((q) => q.slug === resume.slug) : undefined;
+          if (resume && resumeQuest) {
+            return (
+              <Link className="hero-cta" to={`/quests/${resume.slug}`}>
+                Continue Quest #{resumeQuest.number}: stop {resume.pos.stop} of {resume.pos.total} →
+              </Link>
+            );
+          }
+          if (verifiedCount === 0) {
+            return (
+              <Link className="hero-cta" to={`/quests/${quests[0].slug}`}>
+                Start at the beginning: what even is a ledger? →
+              </Link>
+            );
+          }
+          return null;
+        })()}
       </section>
 
       {groups.map((group) => {

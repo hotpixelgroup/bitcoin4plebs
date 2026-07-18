@@ -1,9 +1,9 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { getQuestBySlug, quests } from '@bitcoin4plebs/quests';
 import { Callout, RichText, StopSection } from '@bitcoin4plebs/ui';
 import { ReadProgress } from '../app/read-progress';
-import { useVerifiedQuests } from '../lib/progress';
+import { isFreshVisitor, recordReadPosition, useVerifiedQuests } from '../lib/progress';
 import { getRunner } from '../runners/registry';
 import { getViz } from '../vizzes/registry';
 
@@ -17,6 +17,7 @@ export function QuestPage() {
   const { slug } = useParams<{ slug: string }>();
   const quest = slug ? getQuestBySlug(slug) : undefined;
   const { verified, toggle } = useVerifiedQuests();
+  const [bannerDismissed, setBannerDismissed] = useState(false);
 
   useEffect(() => {
     document.title = quest ? `Quest #${quest.number}: ${quest.title} · bitcoin4plebs` : DEFAULT_TITLE;
@@ -26,8 +27,35 @@ export function QuestPage() {
   }, [quest]);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    // Jump to a deep-linked stop if the URL carries one; otherwise top.
+    const anchor = window.location.hash.slice(1);
+    if (anchor && document.getElementById(anchor)) {
+      document.getElementById(anchor)?.scrollIntoView();
+    } else {
+      window.scrollTo(0, 0);
+    }
   }, [slug]);
+
+  // Remember the furthest stop the reader scrolled past, for "Continue…".
+  useEffect(() => {
+    if (!quest) return;
+    const sections = Array.from(document.querySelectorAll<HTMLElement>('section.stop'));
+    if (!sections.length || typeof IntersectionObserver === 'undefined') return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          const index = sections.indexOf(entry.target as HTMLElement);
+          if (index >= 0) recordReadPosition(quest.slug, index + 1, quest.stops.length);
+        }
+      },
+      // Any visible part of a stop counts: tall sections never reach a
+      // fractional threshold inside a short viewport.
+      { threshold: 0 }
+    );
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
+  }, [quest]);
 
   if (!quest) {
     return (
@@ -46,10 +74,25 @@ export function QuestPage() {
   const prev = quests.find((q) => q.number === quest.number - 1);
   const next = quests.find((q) => q.number === quest.number + 1);
   const isVerified = Boolean(verified[quest.slug]);
+  const showPrereq =
+    !bannerDismissed && quest.number > 1 && isFreshVisitor(verified);
 
   return (
     <main className="wrap">
       <ReadProgress />
+      {showPrereq && (
+        <div className="prereq">
+          <span>
+            This quest builds on earlier ones. New here? The curriculum starts gently:
+          </span>
+          <span className="prereq-actions">
+            <Link to={`/quests/${quests[0].slug}`}>Start at Quest #{quests[0].number} →</Link>
+            <button onClick={() => setBannerDismissed(true)} aria-label="Dismiss">
+              ✕
+            </button>
+          </span>
+        </div>
+      )}
       <section className="hero">
         <div className="kicker">{quest.kicker}</div>
         <h1>{quest.title}</h1>

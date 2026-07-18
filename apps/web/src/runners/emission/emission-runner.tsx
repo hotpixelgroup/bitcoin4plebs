@@ -16,6 +16,94 @@ const TOTAL = totalSupply();
 const STEP_MS = 110;
 
 /**
+ * Break it yourself: edit the constants the quest just verified and watch
+ * what each edit does to the 21M promise. The interval change forks you
+ * onto a lonely chain; removing the 64-halving guard reproduces the exact
+ * disaster (x86 shift wraparound) that lines 1850-51 exist to prevent.
+ */
+function TamperPanel() {
+  const [interval, setIntervalValue] = useState('210000');
+  const [guard, setGuard] = useState(true);
+  const [result, setResult] = useState<{ eras: Era[]; interval: number; guard: boolean } | null>(null);
+
+  const run = () => {
+    const parsed = Number.parseInt(interval.replace(/,/g, ''), 10);
+    const safeInterval = Number.isFinite(parsed) && parsed > 0 ? parsed : 210_000;
+    setResult({
+      eras: computeEras({ halvingInterval: safeInterval, guard64: guard }),
+      interval: safeInterval,
+      guard,
+    });
+  };
+
+  const total = result ? result.eras[result.eras.length - 1].cumulative : null;
+  const blewCap = total !== null && total > MAX_MONEY;
+  const changedInterval = result !== null && result.interval !== 210_000;
+
+  return (
+    <details className="depth tamper">
+      <summary><span aria-hidden="true">🔧</span> Break it yourself</summary>
+      <div className="depth-body">
+        <p className="tamper-intro">
+          You just verified the rules. Now edit them and see what you'd actually get.
+        </p>
+        <label className="height-input-label">
+          Halving interval (Bitcoin uses 210,000):
+          <input
+            className="height-input"
+            type="text"
+            inputMode="numeric"
+            value={interval}
+            onChange={(e) => setIntervalValue(e.target.value)}
+          />
+        </label>
+        <label className="tamper-check">
+          <input type="checkbox" checked={!guard} onChange={(e) => setGuard(!e.target.checked)} />
+          <span>
+            Remove the <code>halvings &gt;= 64</code> guard (simulate the undefined C++ shift on
+            x86 hardware)
+          </span>
+        </label>
+        <button className="runbtn tamper-btn" onClick={run}>
+          ▶ Run my broken schedule
+        </button>
+        {result && total !== null && (
+          <Callout>
+            <strong>Your chain's total supply: {satsToBtc(total, 4)} BTC{result.guard ? '' : ' and still climbing'}.</strong>{' '}
+            {!result.guard && (
+              <>
+                Without the guard, the shift count wraps at 64 the way x86 hardware treats C++'s
+                undefined behavior, so era 65's reward snaps <em>back to 50 BTC</em> and the
+                schedule repeats forever. The cap is gone; that is precisely why validation.cpp
+                lines 1850–51 exist.{' '}
+              </>
+            )}
+            {changedInterval && result.guard && (
+              <>
+                Different interval, different money: your cap is now{' '}
+                {satsToBtc(total, 4)} BTC across {result.eras.length} eras.{' '}
+              </>
+            )}
+            {blewCap ? (
+              <>
+                <span className="chain-bad">✗ MAX_MONEY exceeded.</span> On the real network your
+                very first oversized coinbase dies with <code>bad-cb-amount</code> on every node
+                (Quest #1, Stop 4).
+              </>
+            ) : (
+              <>
+                The arithmetic works, but as Quest #4 showed: you just described a different
+                network with zero users, because every existing node rejects its blocks.
+              </>
+            )}
+          </Callout>
+        )}
+      </div>
+    </details>
+  );
+}
+
+/**
  * The "run it yourself" finale for Quest #1: animates every reward era,
  * fills the table and chart, and lands on the exact total supply,
  * computed live in the reader's own browser.
@@ -69,6 +157,7 @@ export function EmissionRunner({ finale }: RunnerProps) {
             <em>under</em> 21 million, forever, exactly as the ten lines predicted.
           </Callout>
         )}
+        {done && <TamperPanel />}
       </div>
       <div>
         <div className="viz-root">

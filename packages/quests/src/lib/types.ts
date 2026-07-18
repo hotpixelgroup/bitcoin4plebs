@@ -50,6 +50,24 @@ export interface Annotation {
   text: string;
 }
 
+/** One self-check question: multiple choice, self-graded in the browser. */
+export interface QuizItem {
+  question: string;
+  options: string[];
+  /** Index into options. */
+  answer: number;
+  /** Plain-English explanation shown after answering (RichText). */
+  explain: string;
+}
+
+/** A common misconception, punctured at the stop where the code disproves it. */
+export interface Myth {
+  /** The belief newbies arrive with, quoted. */
+  belief: string;
+  /** What the code actually says (RichText). */
+  reality: string;
+}
+
 /** One stop on a quest: prose on the left, real code on the right. */
 export interface Stop {
   id: string;
@@ -62,13 +80,21 @@ export interface Stop {
   annotations?: Annotation[];
   /** Open the annotations panel by default. */
   annotationsOpen?: boolean;
-  excerpt: CodeExcerpt;
+  /**
+   * The verbatim source excerpt. Optional so concept-only stops (Quest #0)
+   * can teach without code; when absent the stop renders full-width prose.
+   */
+  excerpt?: CodeExcerpt;
   /**
    * Optional inline interactive figure rendered below the stop, looked up
    * in the app's viz registry (mirrors Finale.runnerId). Quests stay
    * serializable data.
    */
   viz?: string;
+  /** A misconception this stop's code disproves. */
+  myth?: Myth;
+  /** Self-check questions rendered at the end of the stop. */
+  quiz?: QuizItem[];
 }
 
 /**

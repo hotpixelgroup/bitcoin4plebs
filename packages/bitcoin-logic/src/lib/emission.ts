@@ -56,7 +56,18 @@ export interface Era {
 export interface EmissionParams {
   halvingInterval?: number;
   initialSubsidy?: bigint;
+  /**
+   * Set false to remove the `halvings >= 64` stop from GetBlockSubsidy and
+   * simulate what typical x86 hardware does with the resulting undefined
+   * shift: the shift count wraps mod 64, so era 65 snaps BACK to the full
+   * initial reward and the "cap" inflates forever. This is precisely the
+   * bug the guard at validation.cpp:1850-51 exists to prevent.
+   */
+  guard64?: boolean;
 }
+
+/** How many eras to materialize when the 64-halving guard is removed. */
+const UNGUARDED_ERAS = 96;
 
 /**
  * Compute every era with a non-zero subsidy by running the halving loop
@@ -67,12 +78,21 @@ export interface EmissionParams {
 export function computeEras(params: EmissionParams = {}): Era[] {
   const interval = params.halvingInterval ?? SUBSIDY_HALVING_INTERVAL;
   const initial = params.initialSubsidy ?? INITIAL_SUBSIDY;
+  const guarded = params.guard64 ?? true;
   const eras: Era[] = [];
   let cumulative = 0n;
   for (let k = 0; ; k++) {
-    // Same shape as getBlockSubsidy: halve by right shift, stop at 64.
-    const subsidy = k >= 64 ? 0n : initial >> BigInt(k);
-    if (subsidy === 0n) break;
+    // Same shape as getBlockSubsidy: halve by right shift, stop at 64 —
+    // unless the guard is removed, in which case the shift wraps mod 64
+    // the way x86 hardware treats the undefined C++ shift.
+    const subsidy = guarded
+      ? k >= 64
+        ? 0n
+        : initial >> BigInt(k)
+      : initial >> BigInt(k % 64);
+    if (guarded && subsidy === 0n) break;
+    if (!guarded && k >= UNGUARDED_ERAS) break;
+    if (subsidy === 0n) continue; // unguarded: silent eras before the wrap at k = 64
     const minted = subsidy * BigInt(interval);
     cumulative += minted;
     eras.push({

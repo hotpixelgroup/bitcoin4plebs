@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import type { SourcePin, Stop } from '@bitcoin4plebs/quests';
 import { CodeCard } from './code-card.js';
 import { RichText } from './rich-text.js';
+import { SelfCheck } from './self-check.js';
 
 export interface StopSectionProps {
   stop: Stop;
@@ -30,7 +31,18 @@ export function StopSection({ stop, index, total, pin, viz }: StopSectionProps) 
       <p className="takeaway">
         <RichText text={stop.takeaway} />
       </p>
-      <div className="cols">
+      {stop.myth && (
+        <div className="myth">
+          <span className="myth-badge">myth</span>
+          <div>
+            <p className="myth-belief">“{stop.myth.belief}”</p>
+            <p className="myth-reality">
+              <RichText text={stop.myth.reality} />
+            </p>
+          </div>
+        </div>
+      )}
+      <div className={stop.excerpt ? 'cols' : 'stop-single'}>
         <div className="prose">
           {stop.prose.map((paragraph, i) => (
             <p key={i}>
@@ -55,9 +67,14 @@ export function StopSection({ stop, index, total, pin, viz }: StopSectionProps) 
             </details>
           )}
         </div>
-        <CodeCard excerpt={stop.excerpt} pin={pin} />
+        {stop.excerpt && <CodeCard excerpt={stop.excerpt} pin={pin} />}
       </div>
       {viz && <div className="stop-viz">{viz}</div>}
+      {stop.quiz && stop.quiz.length > 0 && (
+        <div className="stop-quiz">
+          <SelfCheck items={stop.quiz} />
+        </div>
+      )}
     </section>
   );
 }

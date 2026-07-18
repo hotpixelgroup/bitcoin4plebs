@@ -26,6 +26,10 @@ export const quest03: Quest = {
   stops: [
     {
       id: 'locked-boxes',
+      myth: {
+        belief: "My bitcoins are stored inside my wallet app, like files on my phone.",
+        reality: "Your coins are entries on the shared ledger, copied onto thousands of machines. The wallet holds only your **keys**. Delete the app and the coins sit unmoved on the ledger, spendable by anyone who holds the key, which had better still be you.",
+      },
       viz: 'utxo-flow',
       title: 'Your coins are locked boxes, not account balances',
       takeaway:
@@ -90,6 +94,18 @@ export const quest03: Quest = {
     },
     {
       id: 'op-checksig',
+      quiz: [
+        {
+          question: "What must a thief produce to spend your coins?",
+          options: [
+          "Your account password",
+          "A valid signature from your private key",
+          "Approval from a majority of miners",
+          ],
+          answer: 1,
+          explain: "The lock accepts exactly one thing: a signature that verifies against the public key it names. No signature, no spend; and forging one means guessing a 78-digit number.",
+        },
+      ],
       title: 'The moment of truth: OP_CHECKSIG',
       takeaway:
         'Deep inside the script engine, the classic address types all come down to this: a signature and a public key go onto a stack, and **one opcode** answers a single question. *Does this proof match this lock?* (Newer taproot spends run the same curve check directly in the engine; the question never changes.)',

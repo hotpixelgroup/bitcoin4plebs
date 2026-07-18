@@ -67,7 +67,7 @@ export function NavDrawer({ open, onClose }: NavDrawerProps) {
         <nav>
           <Link to="/" className={linkClass('/')} aria-current={current('/')}>
             <span className="drawer-link-num">⌂</span>
-            <span>Home — all quests</span>
+            <span>Home · all quests</span>
           </Link>
           {groups.map((group) => (
             <div key={group.track}>
@@ -92,6 +92,10 @@ export function NavDrawer({ open, onClose }: NavDrawerProps) {
           <Link to="/glossary" className={linkClass('/glossary')} aria-current={current('/glossary')}>
             <span className="drawer-link-num">§</span>
             <span>Glossary</span>
+          </Link>
+          <Link to="/sandbox" className={linkClass('/sandbox')} aria-current={current('/sandbox')}>
+            <span className="drawer-link-num">⚙</span>
+            <span>Sandbox · all the machines</span>
           </Link>
         </nav>
       </aside>

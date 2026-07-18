@@ -26,6 +26,18 @@ export const quest02: Quest = {
   stops: [
     {
       id: 'coinbase',
+      quiz: [
+        {
+          question: "What limits how much a miner may pay themselves in a block?",
+          options: [
+          "Nothing; miners choose their own reward",
+          "Fees + subsidy, checked by every node on the network",
+          "A fee schedule the developers publish",
+          ],
+          answer: 1,
+          explain: "The coinbase may claim at most the block subsidy plus the fees inside that block. Claim one satoshi more and every node rejects the block with bad-cb-amount (Quest #1, Stop 4).",
+        },
+      ],
       title: 'Where new coins are actually born',
       takeaway:
         'Every block\'s **first transaction** is special: it has no real input, and the miner writes themselves a check for up to **fees + subsidy**, the maximum the rules allow. This is the only place new bitcoin ever comes from.',
@@ -96,6 +108,10 @@ export const quest02: Quest = {
     },
     {
       id: 'the-switch',
+      myth: {
+        belief: "The halving is an event that someone at Bitcoin schedules and triggers.",
+        reality: "It's integer division. Block 839,999 divides to 3, block 840,000 divides to 4; the \"event\" is a quotient changing. Every future halving is already sitting in line 1848, waiting for its height.",
+      },
       title: 'Read the switch like a veteran now',
       takeaway:
         'You saw these ten lines in Quest #1. Read them again and notice: **there is no "halving event" in the code**, just integer division. Block 839,999 divides to 3; block 840,000 divides to 4. That\'s the whole ceremony.',

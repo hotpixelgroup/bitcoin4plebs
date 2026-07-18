@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { usePrefersReducedMotion } from '../lib/use-reduced-motion';
 import { VizFigure } from './viz-figure';
 
 /**
@@ -72,11 +73,16 @@ type Mode = 'idle' | 'valid' | 'invalid';
 export function GossipNetwork() {
   const [mode, setMode] = useState<Mode>('idle');
   const [wave, setWave] = useState(-1);
+  const reducedMotion = usePrefersReducedMotion();
 
   useEffect(() => {
     if (mode === 'idle') return;
-    setWave(0);
     const limit = mode === 'valid' ? MAX_HOP : 1;
+    if (reducedMotion) {
+      setWave(limit);
+      return;
+    }
+    setWave(0);
     const timer = setInterval(() => {
       setWave((w) => {
         if (w >= limit) {
@@ -87,7 +93,7 @@ export function GossipNetwork() {
       });
     }, 550);
     return () => clearInterval(timer);
-  }, [mode]);
+  }, [mode, reducedMotion]);
 
   const nodeState = (i: number): string => {
     if (mode === 'idle' || HOPS[i] > wave) return '';

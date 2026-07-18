@@ -92,13 +92,13 @@ export function MerkleLightning() {
           className={`preset ${mode === 'tamper' ? 'preset-active' : ''}`}
           onClick={() => setMode('tamper')}
         >
-          ⚡ tamper mode: click a transaction to corrupt it
+          <span aria-hidden="true">⚡</span> tamper mode: click a transaction to corrupt it
         </button>
         <button
           className={`preset ${mode === 'proof' ? 'preset-active' : ''}`}
           onClick={() => setMode('proof')}
         >
-          🔍 proof mode: click a transaction to prove it's included
+          <span aria-hidden="true">🔍</span> proof mode: click a transaction to prove it's included
         </button>
       </div>
       <svg className="merkle-svg" viewBox="0 0 640 260" role="img" aria-label="Merkle tree">

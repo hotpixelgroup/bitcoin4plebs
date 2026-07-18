@@ -62,6 +62,10 @@ export const quest10: Quest = {
     },
     {
       id: 'network-tag',
+      myth: {
+        belief: "An address is like an account number that the network registers to me.",
+        reality: "Nothing is registered anywhere, ever. An address is a spelling of a lock that your wallet invents offline; the network first learns it exists when someone pays it. That is why wallets can mint unlimited fresh addresses without asking anyone.",
+      },
       title: 'Why bc1, and where the old 1… and 3… addresses come from',
       takeaway:
         'Same file as the halving interval from Quest #1: the mainnet identity card. The legacy prefixes that make old addresses start with **1** or **3** are set here, and line 182 is the two letters in front of **every modern address on Earth**.',
@@ -111,6 +115,18 @@ export const quest10: Quest = {
     },
     {
       id: 'checksum',
+      quiz: [
+        {
+          question: "What does the bech32 checksum mathematically guarantee?",
+          options: [
+          "Nobody can steal from the address",
+          "Up to 4 typos in an address are always detected",
+          "The address can only be used once",
+          ],
+          answer: 1,
+          explain: "The BCH code behind PolyMod guarantees detection of up to 4 character errors within 89 characters, and no address is longer than 62. Security of the coins is a separate machine entirely: the lock and signature from Quest #3.",
+        },
+      ],
       title: 'The checksum: a mathematical promise that typos get caught',
       takeaway:
         'The last six letters of every address are a checksum, and this comment states its power **like a law**: the code is guaranteed to detect up to 3 errors in any 1,023 characters, and was hand-picked to guarantee **4 errors caught within 89 characters**. A bc1q address is 42 characters, and even the longest taproot addresses, at 62, sit well inside the window.',

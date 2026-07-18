@@ -26,6 +26,10 @@ export const quest04: Quest = {
   stops: [
     {
       id: 'no-admin-key',
+      myth: {
+        belief: "Bitcoin's developers can change the rules whenever enough of them agree.",
+        reality: "Developers publish code; they cannot make anyone run it. A rule change becomes Bitcoin only when node operators near-unanimously adopt it, and the developers' own comment on this screen says changing this value would fork them off the network.",
+      },
       title: 'There is no admin switch, and the developers say so in a comment',
       takeaway:
         'You met MAX_MONEY in Quest #1. Read its comment again with new eyes: even *this* constant\'s exact value is **"consensus critical"**, with the developers writing that **they too cannot touch it** without splitting the network.',
@@ -41,6 +45,18 @@ export const quest04: Quest = {
     },
     {
       id: 'majority-cant-print',
+      quiz: [
+        {
+          question: "What CAN an attacker with 51% of the hashpower actually do?",
+          options: [
+          "Print new coins for themselves",
+          "Reorder recent blocks and double-spend their own coins",
+          "Change the 21M cap",
+          ],
+          answer: 1,
+          explain: "Majority hashpower buys the ability to rewrite recent history, which enables double-spending coins the attacker recently spent. Their blocks still pass every validity check: no printing, no stealing keys, no rule changes.",
+        },
+      ],
       viz: 'fiftyone-race',
       title: "Even 51% of miners can't print a single coin",
       takeaway:

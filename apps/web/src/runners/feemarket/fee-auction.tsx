@@ -5,6 +5,7 @@ import {
   generateMempool,
 } from '@bitcoin4plebs/bitcoin-logic';
 import { Callout, RichText } from '@bitcoin4plebs/ui';
+import { usePrefersReducedMotion } from '../../lib/use-reduced-motion';
 import type { RunnerProps } from '../registry';
 
 const SEED = 42;
@@ -35,8 +36,15 @@ export function FeeAuction({ finale }: RunnerProps) {
     setPlaying(false);
   }, [feerate]);
 
+  const reducedMotion = usePrefersReducedMotion();
+
   useEffect(() => {
     if (!playing) return;
+    if (reducedMotion) {
+      setCleared(targetBlocks);
+      setPlaying(false);
+      return;
+    }
     const timer = setInterval(() => {
       setCleared((c) => {
         if (c + 1 >= targetBlocks) setPlaying(false);
@@ -44,7 +52,7 @@ export function FeeAuction({ finale }: RunnerProps) {
       });
     }, 800);
     return () => clearInterval(timer);
-  }, [playing, targetBlocks]);
+  }, [playing, targetBlocks, reducedMotion]);
 
   // How much of each band survives after `cleared` blocks skim the top.
   const remaining = useMemo(() => {

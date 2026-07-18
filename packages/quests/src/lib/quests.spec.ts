@@ -17,7 +17,7 @@ describe('quest content integrity', () => {
   it('has unique ids, slugs, and sequential numbers', () => {
     expect(new Set(quests.map((q) => q.id)).size).toBe(quests.length);
     expect(new Set(quests.map((q) => q.slug)).size).toBe(quests.length);
-    quests.forEach((q, i) => expect(q.number).toBe(i + 1));
+    quests.forEach((q, i) => expect(q.number).toBe(quests[0].number + i));
   });
 
   it('every excerpt’s lines match its declared line range, in order', () => {
@@ -25,7 +25,7 @@ describe('quest content integrity', () => {
       const excerpts = [
         ...quest.stops.map((s) => s.excerpt),
         ...(quest.finale?.translation ? [quest.finale.translation] : []),
-      ];
+      ].filter((e): e is NonNullable<typeof e> => e !== undefined);
       for (const excerpt of excerpts) {
         expect(excerpt.lines.length).toBe(excerpt.ref.endLine - excerpt.ref.startLine + 1);
         excerpt.lines.forEach((line, i) => {
@@ -39,6 +39,25 @@ describe('quest content integrity', () => {
     for (const quest of quests) {
       expect(quest.pin.commit).toMatch(/^[0-9a-f]{40}$/);
       expect(quest.pin.commit).toBe(quests[0].pin.commit);
+    }
+  });
+});
+
+describe('quiz and myth integrity', () => {
+  it('every quiz answer is a valid option index with an explanation', () => {
+    for (const quest of quests) {
+      for (const stop of quest.stops) {
+        for (const item of stop.quiz ?? []) {
+          expect(item.options.length, `${quest.id}/${stop.id}`).toBeGreaterThanOrEqual(2);
+          expect(item.answer, `${quest.id}/${stop.id}`).toBeGreaterThanOrEqual(0);
+          expect(item.answer, `${quest.id}/${stop.id}`).toBeLessThan(item.options.length);
+          expect(item.explain.length, `${quest.id}/${stop.id}`).toBeGreaterThan(20);
+        }
+        if (stop.myth) {
+          expect(stop.myth.belief.length, `${quest.id}/${stop.id}`).toBeGreaterThan(10);
+          expect(stop.myth.reality.length, `${quest.id}/${stop.id}`).toBeGreaterThan(20);
+        }
+      }
     }
   });
 });
@@ -92,6 +111,7 @@ describe.skipIf(!srcAvailable)('excerpts are VERBATIM from Bitcoin Core (BITCOIN
   it('every quoted line matches the source file exactly', () => {
     for (const quest of quests) {
       for (const stop of quest.stops) {
+        if (!stop.excerpt) continue;
         const { ref, lines } = stop.excerpt;
         const filePath = join(BITCOIN_SRC as string, ref.file);
         const source = readFileSync(filePath, 'utf8').split('\n');

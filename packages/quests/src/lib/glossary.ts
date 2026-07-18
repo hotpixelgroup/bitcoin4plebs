@@ -21,6 +21,14 @@ export interface GlossaryEntry {
   cite?: string;
   /** Quest number where the reader can verify this for themselves. */
   quest?: number;
+  /**
+   * Patterns that auto-link this term in quest prose and code excerpts
+   * (tap-to-define popovers). Lowercase patterns match case-insensitively
+   * on word boundaries in prose; patterns containing capitals, digits-mix,
+   * or underscores match case-sensitively (code identifiers). Entries
+   * without `match` are never auto-linked.
+   */
+  match?: string[];
 }
 
 /** Section order for the glossary page. */
@@ -45,6 +53,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'Satoshi (sat)',
+    match: ['satoshis'],
     category: 'Money & supply',
     definition:
       "The smallest unit of bitcoin and the only one the software actually counts. Every balance and payment is a whole number of satoshis: there are no fractions inside Bitcoin, which is why every computer on Earth computes identical results.",
@@ -53,6 +62,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'CAmount',
+    match: ['CAmount'],
     code: true,
     category: 'Money & supply',
     definition:
@@ -62,6 +72,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'COIN',
+    match: ['COIN'],
     code: true,
     category: 'Money & supply',
     definition:
@@ -71,6 +82,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'MAX_MONEY',
+    match: ['MAX_MONEY'],
     code: true,
     category: 'Money & supply',
     definition:
@@ -80,6 +92,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'Block subsidy',
+    match: ['block subsidy', 'subsidy'],
     category: 'Money & supply',
     definition:
       'The brand-new satoshis a miner is allowed to create in a block: 50 BTC at launch, halved every 210,000 blocks. The subsidy plus the block\'s fees is everything a miner may collect, and every node checks it.',
@@ -88,6 +101,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'GetBlockSubsidy',
+    match: ['GetBlockSubsidy'],
     code: true,
     category: 'Money & supply',
     definition:
@@ -97,6 +111,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'Halving',
+    match: ['halving', 'halvings'],
     category: 'Money & supply',
     definition:
       'Every 210,000 blocks (~4 years) the block subsidy is cut in half: 50 → 25 → 12.5 → … → 0. There is no ceremony: one block pays the old amount, the next pays the new one, and the change is enforced by every node running the same division.',
@@ -105,6 +120,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'nSubsidyHalvingInterval',
+    match: ['nSubsidyHalvingInterval'],
     code: true,
     category: 'Money & supply',
     definition:
@@ -121,6 +137,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'The 21 million cap',
+    match: ['21 million cap'],
     category: 'Money & supply',
     definition:
       'The sum of every block subsidy that will ever be paid: 2,099,999,997,690,000 satoshis, just *under* 21M BTC, because whole-number division discards remainders. An outcome of the schedule, not a setting; your own browser can sum it in Quest #1.',
@@ -128,6 +145,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'Unspendable coins',
+    match: ['unspendable'],
     category: 'Money & supply',
     definition:
       "Satoshis that exist on paper but can never move: the genesis block's 50 BTC (never entered into the spendable-coin database), rewards miners forgot to claim, and outputs provably burned. They're why a node's measured supply comes in slightly *under* the schedule.",
@@ -138,6 +156,7 @@ export const glossary: GlossaryEntry[] = [
   // --- Keys & ownership ---
   {
     term: 'Private key',
+    match: ['private key', 'private keys'],
     category: 'Keys & ownership',
     definition:
       'A gigantic secret number (roughly 78 digits). Whoever knows it can produce signatures that spend the coins locked to its public key, and that is the *entire* meaning of "owning" bitcoin. There is no account behind it and no reset button.',
@@ -145,6 +164,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'Public key',
+    match: ['public key', 'public keys'],
     category: 'Keys & ownership',
     definition:
       'The shareable half of a keypair, derived from the private key by one-way elliptic-curve math. Anyone can use it to *check* a signature; nobody can walk it backwards to the private key.',
@@ -152,6 +172,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'Digital signature',
+    match: ['signature', 'signatures'],
     category: 'Keys & ownership',
     definition:
       'A proof, computed from a private key and a specific transaction, that convinces every node the key-holder approved *this exact spend*. Valid for that transaction only; copying it elsewhere proves nothing.',
@@ -159,6 +180,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'secp256k1',
+    match: ['secp256k1'],
     category: 'Keys & ownership',
     definition:
       "The specific elliptic curve Bitcoin's signatures use. Its key space is a number with 78 digits, so guessing a key is not \"hard\" in the everyday sense; it is out of reach of every computer humanity will ever build.",
@@ -166,6 +188,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'Key space',
+    match: ['key space'],
     category: 'Keys & ownership',
     definition:
       'The set of all possible private keys: about 2²⁵⁶. If every human alive checked a billion keys per second since the Big Bang, the search would still be effectively at zero percent.',
@@ -173,6 +196,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'OP_CHECKSIG',
+    match: ['OP_CHECKSIG'],
     code: true,
     category: 'Keys & ownership',
     definition:
@@ -189,6 +213,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'Seed phrase',
+    match: ['seed phrase'],
     category: 'Keys & ownership',
     definition:
       'Typically 12 or 24 dictionary words encoding the randomness from which a wallet derives all its keys. Whoever has the words has the money, so they are for paper and steel, **never** for websites, photos, or anyone who asks. No legitimate service ever needs them.',
@@ -204,6 +229,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'Output / UTXO',
+    match: ['utxo', 'utxos'],
     category: 'Transactions & the mempool',
     definition:
       'The box your money actually lives in: an amount of satoshis plus a lock. "UTXO" = unspent transaction output, a box not yet opened. Your "balance" is just your wallet adding up boxes it holds keys for.',
@@ -220,6 +246,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'scriptPubKey',
+    match: ['scriptPubKey'],
     code: true,
     category: 'Transactions & the mempool',
     definition:
@@ -229,6 +256,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'scriptSig & witness',
+    match: ['scriptSig'],
     code: true,
     category: 'Transactions & the mempool',
     definition:
@@ -237,6 +265,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'Coinbase transaction',
+    match: ['coinbase'],
     category: 'Transactions & the mempool',
     definition:
       "The first transaction of every block; the only one allowed to create satoshis from nothing, and only up to subsidy + fees. Named after the free-form \"coinbase\" field it carries (Satoshi used it for a newspaper headline). Nothing to do with the company.",
@@ -252,6 +281,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'Feerate (sats per vbyte)',
+    match: ['feerate', 'vbytes', 'vbyte'],
     category: 'Transactions & the mempool',
     definition:
       'What miners actually sort by: fee divided by the transaction\'s size in virtual bytes. A small transaction paying a modest fee can outbid a huge one paying more in total. Roughly a million vbytes fit in a block.',
@@ -267,6 +297,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'Mempool',
+    match: ['mempool'],
     category: 'Transactions & the mempool',
     definition:
       "Each node's private waiting room of valid-but-unmined transactions. There is no global queue; every node keeps its own, and miners fill blocks from theirs, best-paying first.",
@@ -275,6 +306,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'AcceptToMemoryPool',
+    match: ['AcceptToMemoryPool'],
     code: true,
     category: 'Transactions & the mempool',
     definition:
@@ -284,6 +316,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'Confirmation',
+    match: ['confirmations', 'confirmation'],
     category: 'Transactions & the mempool',
     definition:
       'Your transaction is "confirmed" when a mined block includes it (that\'s 1 confirmation), and every block stacked on top adds another. Each one adds another block of proof-of-work an attacker would have to redo, and slashes their odds of ever catching up.',
@@ -301,6 +334,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'Block header',
+    match: ['block header', '80-byte header'],
     category: 'Blocks & mining',
     definition:
       'The 80 bytes miners actually hash: version, parent-block hash, merkle root, timestamp, difficulty bits, nonce. Everything else in a block is committed *through* the merkle root.',
@@ -308,6 +342,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'Block height',
+    match: ['block height'],
     category: 'Blocks & mining',
     definition:
       'A block\'s position in the chain, counting the genesis block as height 0. The halving schedule, and much else, is written in terms of height.',
@@ -315,6 +350,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'Hash (SHA-256)',
+    match: ['sha-256'],
     category: 'Blocks & mining',
     definition:
       'A function that turns any data into a fixed 256-bit fingerprint. Change one letter of the input and the output changes beyond recognition; nobody can steer it or run it backwards. Bitcoin\'s workhorse.',
@@ -322,6 +358,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'Double SHA-256',
+    match: ['double sha-256'],
     category: 'Blocks & mining',
     definition:
       "Bitcoin's convention for block and transaction IDs: run SHA-256, then run it again on the result. Your browser does exactly this in Quests #6 and #8, using the same function as every mining rig.",
@@ -329,6 +366,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'Merkle root',
+    match: ['merkle root', 'merkle tree', 'merkle'],
     category: 'Blocks & mining',
     definition:
       "One hash that fingerprints every transaction in a block, built by hashing pairs into a tree. It's how 80 bytes of header can commit to megabytes of transactions: touch any transaction and the root shatters.",
@@ -336,6 +374,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'Nonce',
+    match: ['nonce', 'nNonce'],
     code: true,
     category: 'Blocks & mining',
     definition:
@@ -345,6 +384,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'nBits & target',
+    match: ['nBits'],
     code: true,
     category: 'Blocks & mining',
     definition:
@@ -354,6 +394,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'Difficulty',
+    match: ['difficulty'],
     category: 'Blocks & mining',
     definition:
       'A human-friendly way of saying how low the target is, expressed as a multiple of the easiest-ever (genesis) difficulty. When you read "difficulty hit a new high," it means the target dropped again.',
@@ -361,6 +402,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'Difficulty adjustment',
+    match: ['difficulty adjustment', 'retarget', 'retargeting'],
     category: 'Blocks & mining',
     definition:
       'Every 2,016 blocks, each node measures how long they actually took versus the intended two weeks and retunes the target, with the correction clamped to 4× either way. A thermostat with no thermostat-keeper.',
@@ -368,6 +410,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'Proof-of-work',
+    match: ['proof-of-work', 'proof of work'],
     category: 'Blocks & mining',
     definition:
       'Evidence, checkable in microseconds, that enormous amounts of guessing went into finding a block: its hash is under the target, and hashes can\'t be steered. Expensive to produce, nearly free to verify: the asymmetry the whole system leans on.',
@@ -383,6 +426,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'Genesis block',
+    match: ['genesis block'],
     category: 'Blocks & mining',
     definition:
       'Block 0, mined by Satoshi on 3 January 2009, carrying that day\'s Times headline and 50 forever-unspendable BTC. Its parent pointer is all zeros, and every node re-checks its hash at every startup.',
@@ -391,6 +435,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'Reorg',
+    match: ['reorg', 'reorgs'],
     category: 'Blocks & mining',
     definition:
       'When two miners find blocks near-simultaneously, the chain briefly forks; nodes follow whichever branch accumulates more work, discarding the loser (usually one block deep). It\'s why exchanges wait for several confirmations.',
@@ -398,6 +443,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: '51% attack',
+    match: ['51% attack'],
     category: 'Blocks & mining',
     definition:
       'What a hashpower majority can actually do: reorder *recent* blocks (enabling double-spends of fresh payments). What it cannot do: print coins, steal keys, or change rules, because rule-breaking blocks are discarded by every node no matter how much work they carry.',
@@ -416,6 +462,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'Bech32',
+    match: ['bech32'],
     category: 'Addresses & encoding',
     definition:
       'The spelling system behind bc1q addresses: a 32-letter alphabet (5 bits per letter), a network prefix, and a 6-letter checksum with a proven typo-detection guarantee.',
@@ -424,6 +471,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'Bech32m',
+    match: ['bech32m'],
     category: 'Addresses & encoding',
     definition:
       'Bech32 with one constant changed, used for witness version 1 and up (bc1p taproot addresses). The tweak fixed an obscure weakness and made the two formats reject each other cleanly.',
@@ -431,6 +479,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'Human-readable part (bc)',
+    match: ['human-readable part'],
     code: true,
     category: 'Addresses & encoding',
     definition:
@@ -440,6 +489,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'Witness version',
+    match: ['witness version'],
     category: 'Addresses & encoding',
     definition:
       'The first data value of a modern address, 0–16: the lock\'s generation number. Version 0 is spelled `q` (hence bc1q…), version 1 is spelled `p` (taproot\'s bc1p…). New versions let Bitcoin upgrade locks without breaking old ones.',
@@ -447,6 +497,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'Witness program',
+    match: ['witness program'],
     category: 'Addresses & encoding',
     definition:
       'The payload of a modern address: 20 bytes (a public-key hash) or 32 bytes (a script hash or taproot key). Together with the version it reconstructs the exact scriptPubKey lock.',
@@ -454,6 +505,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'PolyMod',
+    match: ['PolyMod'],
     code: true,
     category: 'Addresses & encoding',
     definition:
@@ -463,6 +515,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'Base58 & legacy addresses',
+    match: ['base58'],
     category: 'Addresses & encoding',
     definition:
       'The older spelling: addresses starting with `1` (pay-to-public-key-hash, version byte 0) or `3` (pay-to-script-hash, byte 5), in an alphabet that drops 0/O/I/l. Still valid, still understood by every wallet, just an earlier generation of the same idea.',
@@ -471,6 +524,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'SegWit',
+    match: ['segwit'],
     category: 'Addresses & encoding',
     definition:
       'The 2017 soft fork ("segregated witness") that moved signature data into its own section, fixed transaction malleability, and introduced witness versions and bc1 addresses. Activated at block 481,824 after two years of public argument.',
@@ -479,6 +533,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'Taproot',
+    match: ['taproot'],
     category: 'Addresses & encoding',
     definition:
       'The 2021 soft fork adding witness version 1 (bc1p addresses) and Schnorr signatures, which makes complex locks look identical to simple ones on-chain. The most recent consensus change as of the pinned commit.',
@@ -487,6 +542,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'Little-endian',
+    match: ['little-endian'],
     category: 'Addresses & encoding',
     definition:
       'Bitcoin serializes numbers least-significant byte first, and displays hashes byte-reversed from how it computes them: the flip you performed to land on the famous genesis hash. Not a convention anyone loves; a convention everyone must follow exactly.',
@@ -510,6 +566,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'Initial block download (IBD)',
+    match: ['initial block download'],
     category: 'The network & your node',
     definition:
       'A new node\'s first days: fetch every block since 2009 from peers and re-run the audit on each (signature checks on deep history are skipped by default; see assumevalid), rebuilding the entire state of Bitcoin from block zero. Nobody hands your node a balance sheet; it derives one.',
@@ -517,6 +574,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'assumevalid',
+    match: ['assumevalid'],
     code: true,
     category: 'The network & your node',
     definition:
@@ -526,6 +584,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'nMinimumChainWork',
+    match: ['nMinimumChainWork'],
     code: true,
     category: 'The network & your node',
     definition:
@@ -535,6 +594,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'DNS seeds',
+    match: ['dns seeds', 'dns seed'],
     category: 'The network & your node',
     definition:
       "How a brand-new node finds the network with no signup: a short list of introduction services run by named developers, hard-coded and normally consulted only when the node knows no peers. Seeds can only say hello; every block they lead you to still gets fully verified.",
@@ -543,6 +603,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'Peer-to-peer gossip',
+    match: ['gossip'],
     category: 'The network & your node',
     definition:
       'How everything travels: your node tells its peers, they tell theirs. There is no central server to submit anything to, and every hop re-verifies before relaying, so lies die at the first honest node.',
@@ -550,6 +611,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'bitcoin-cli & RPC',
+    match: ['bitcoin-cli'],
     code: true,
     category: 'The network & your node',
     definition:
@@ -558,6 +620,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'gettxoutsetinfo',
+    match: ['gettxoutsetinfo'],
     code: true,
     category: 'The network & your node',
     definition:
@@ -567,6 +630,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'Pruned node',
+    match: ['pruned mode', 'pruned node'],
     category: 'The network & your node',
     definition:
       'A full node that verifies everything during sync but then discards old raw blocks, keeping only the current state (roughly 10 GB instead of a terabyte). Same rules enforced, same trust in nobody; it just can\'t serve history to others.',
@@ -574,6 +638,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'Light wallet (SPV)',
+    match: ['light wallet'],
     category: 'The network & your node',
     definition:
       "A wallet that checks proof-of-work headers but not full blocks, trusting that the heaviest chain is valid. Fine for coffee money; the opposite of this site's ethos for anything serious. It's the thing running a node graduates you from.",
@@ -581,6 +646,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'Mainnet & testnet',
+    match: ['mainnet', 'testnet'],
     category: 'The network & your node',
     definition:
       'Mainnet is the Bitcoin, with real value. Testnets are parallel play-money networks for breaking things safely: different prefixes (tb1 addresses), different genesis, worthless by design.',
@@ -588,6 +654,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'chainparams',
+    match: ['chainparams'],
     code: true,
     category: 'The network & your node',
     definition:
@@ -599,6 +666,7 @@ export const glossary: GlossaryEntry[] = [
   // --- Rules, forks & history ---
   {
     term: 'Consensus rules',
+    match: ['consensus rules', 'consensus-critical'],
     category: 'Rules, forks & history',
     definition:
       'The checks every node runs on every block and transaction: subsidy limits, signature validity, no double-spends, proof-of-work. Break one and your block isn\'t punished; it\'s *ignored*, by everyone, automatically.',
@@ -606,6 +674,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'Soft fork',
+    match: ['soft fork', 'soft forks'],
     category: 'Rules, forks & history',
     definition:
       'A *tightening* of the rules that old software still tolerates, and the only way Bitcoin\'s rules have changed in over a decade. Each one activated only after near-unanimous adoption, and its block height is carved into the code like a tree ring.',
@@ -614,6 +683,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'Hard fork',
+    match: ['hard fork', 'hard forks'],
     category: 'Rules, forks & history',
     definition:
       'A rule *loosening* that old nodes reject, which splits the network into two currencies unless literally everyone moves. Bitcoin\'s immune response to unwanted ones is Quest #4\'s lesson: changing your own code is easy; changing everyone else\'s is the hard part.',
@@ -621,6 +691,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'BIP',
+    match: ['bips'],
     category: 'Rules, forks & history',
     definition:
       '"Bitcoin Improvement Proposal": the public design documents changes go through (BIP34, BIP173/350 for addresses, and so on). Proposing costs nothing; only near-unanimous voluntary adoption makes one real.',
@@ -628,6 +699,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'Activation height',
+    match: ['activation height', 'activation heights'],
     category: 'Rules, forks & history',
     definition:
       "The exact block where an upgrade's rules switched on (BIP34 at 227,931, SegWit at 481,824, and friends), recorded permanently in chainparams. Bitcoin's constitutional history, machine-checkable.",
@@ -644,6 +716,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'CVE-2018-17144',
+    match: ['cve-2018-17144'],
     category: 'Rules, forks & history',
     definition:
       'The 2018 inflation bug: a refactor briefly made it possible (never exploited) for a miner to spend the same coin twice in one block. Quietly patched, then fully disclosed. The lesson isn\'t "Bitcoin is bug-free"; it\'s that the checks are public, so bugs get found and the fix is verifiable.',
@@ -658,6 +731,7 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'Pinned commit',
+    match: ['pinned commit'],
     category: 'Rules, forks & history',
     definition:
       'This site\'s anti-tampering rule: every excerpt is copied letter-for-letter from one exact snapshot of Bitcoin Core (commit `18c05d9`), and CI re-diffs all of them against the real repository on every change. The "verify on GitHub" link under each excerpt lets you do the same.',

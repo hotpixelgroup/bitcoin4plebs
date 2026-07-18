@@ -40,9 +40,9 @@ describe('App', () => {
         </MemoryRouter>
       );
       expect(screen.getByRole('heading', { level: 1, name: quest.title })).toBeInTheDocument();
-      // Every stop's verify link is present and pinned.
-      const links = screen.getAllByRole('link', { name: /Verify these lines on GitHub/i });
-      expect(links.length).toBe(quest.stops.length);
+      // Every excerpt-bearing stop's verify link is present and pinned.
+      const links = screen.queryAllByRole('link', { name: /Verify these lines on GitHub/i });
+      expect(links.length).toBe(quest.stops.filter((s) => s.excerpt).length);
       for (const link of links) {
         expect(link).toHaveAttribute('href', expect.stringContaining(quest.pin.commit));
       }
@@ -97,9 +97,10 @@ describe('App', () => {
       </MemoryRouter>
     );
     // The footer nav shows the following quest's title as a link card.
+    const next = quests[quests.indexOf(quest01) + 1];
     const footerNav = container.querySelector('.quest-nav');
     expect(footerNav).not.toBeNull();
-    expect(within(footerNav as HTMLElement).getByText(quests[1].title)).toBeInTheDocument();
+    expect(within(footerNav as HTMLElement).getByText(next.title)).toBeInTheDocument();
   });
 
   it('lets the reader mark a quest verified, persisted in localStorage', () => {
@@ -123,7 +124,7 @@ describe('App', () => {
     );
     fireEvent.click(screen.getByRole('button', { name: /Open navigation/i }));
     const drawer = screen.getByLabelText('Site navigation');
-    expect(within(drawer).getByText(/Home — all quests/i)).toBeInTheDocument();
+    expect(within(drawer).getByText(/Home · all quests/i)).toBeInTheDocument();
     expect(within(drawer).getByText('Glossary')).toBeInTheDocument();
     for (const quest of quests) {
       expect(within(drawer).getByText(quest.title)).toBeInTheDocument();

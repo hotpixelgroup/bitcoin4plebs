@@ -32,6 +32,10 @@ export const quest08: Quest = {
   stops: [
     {
       id: 'headline',
+      myth: {
+        belief: "Satoshi could have secretly mined the chain for months before announcing it.",
+        reality: "Block zero embeds the front page of that morning\u2019s Times, which means the chain provably could not have started before 3 January 2009. That is exactly why the headline is there.",
+      },
       title: 'A newspaper headline, hard-coded into block zero',
       takeaway:
         'The first block ever mined carries a message: **that day\'s front-page headline from The Times**. It\'s a timestamp you can\'t fake and, given what it says, a mission statement.',
@@ -116,6 +120,18 @@ export const quest08: Quest = {
     },
     {
       id: 'birth-certificate',
+      quiz: [
+        {
+          question: "What happens if your node's copy of the genesis block is corrupted?",
+          options: [
+          "It downloads a fresh copy and continues",
+          "The program refuses to start at all",
+          "It asks other nodes to vote",
+          ],
+          answer: 1,
+          explain: "Line 160 is an assert: at every startup the node re-hashes its genesis block, and if the result is not 000000000019d668\u2026 the program dies on the spot. Seventeen years on, every boot still checks the birth certificate.",
+        },
+      ],
       title: 'The exact numbers, and the check your node runs at every boot',
       takeaway:
         'Here is the birth certificate: timestamp, the winning nonce, the easiest-ever difficulty, 50 BTC. And below it, an `assert`, which means **your node refuses to even start** unless its own genesis block hashes to the famous value.',

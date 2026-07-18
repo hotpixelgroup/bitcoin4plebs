@@ -31,6 +31,10 @@ export const quest09: Quest = {
   stops: [
     {
       id: 'rebuild-history',
+      myth: {
+        belief: "Running a node is the same as mining, so it needs a warehouse of hardware.",
+        reality: "Nodes and miners do different jobs. A **node verifies**: any ordinary computer with disk space qualifies, and it holds the veto Quest #4 described. A **miner competes** for block rewards, and that contest does demand serious hardware. This quest is about the first job.",
+      },
       title: 'Day one: your node rebuilds history from block zero',
       takeaway:
         'Nobody hands your node a balance sheet. It starts from the Quest #8 genesis block and **re-derives the entire state of Bitcoin**, downloading every block since 2009 and re-running every check you\'ve read in this curriculum. Including this old friend, once per block, over 900,000 times.',
@@ -76,6 +80,18 @@ export const quest09: Quest = {
     },
     {
       id: 'assumevalid',
+      quiz: [
+        {
+          question: "By default, what does assumevalid let your node skip during initial sync?",
+          options: [
+          "All validation for old blocks",
+          "Script checks for blocks buried beneath a reviewed block hash",
+          "Nothing; every check always runs",
+          ],
+          answer: 1,
+          explain: "Only script verification (signatures being the expensive part) is skipped, and only beneath the reviewed hash. Proof-of-work, amounts, subsidies, and double-spend checks run in full from genesis, and -assumevalid=0 refuses even the script shortcut.",
+        },
+      ],
       title: 'The honesty stop: a shortcut called assumevalid',
       takeaway:
         'Full disclosure, in this site\'s tradition: out of the box, your node **skips script verification** (signature checking is the expensive part of it) for blocks buried below a reviewed block hash. Every non-script rule, from proof-of-work to amounts to double-spends, still runs on every block. And one flag turns even this shortcut off.',

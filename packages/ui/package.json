@@ -18,7 +18,8 @@
     "tags": ["scope:shared", "type:ui"]
   },
   "peerDependencies": {
-    "react": "19.0.0"
+    "react": "19.0.0",
+    "react-router-dom": "^6.29.0"
   },
   "devDependencies": {
     "@bitcoin4plebs/quests": "*"
