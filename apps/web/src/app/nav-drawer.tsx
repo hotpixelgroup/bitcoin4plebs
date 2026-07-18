@@ -50,6 +50,7 @@ export function NavDrawer({ open, onClose }: NavDrawerProps) {
   const groups = groupByTrack(quests);
   const linkClass = (to: string) =>
     `drawer-link ${location.pathname === to ? 'drawer-link-active' : ''}`;
+  const current = (to: string) => (location.pathname === to ? ('page' as const) : undefined);
 
   return (
     <>
@@ -64,7 +65,7 @@ export function NavDrawer({ open, onClose }: NavDrawerProps) {
           </button>
         </div>
         <nav>
-          <Link to="/" className={linkClass('/')}>
+          <Link to="/" className={linkClass('/')} aria-current={current('/')}>
             <span className="drawer-link-num">⌂</span>
             <span>Home — all quests</span>
           </Link>
@@ -76,6 +77,7 @@ export function NavDrawer({ open, onClose }: NavDrawerProps) {
                   key={quest.id}
                   to={`/quests/${quest.slug}`}
                   className={linkClass(`/quests/${quest.slug}`)}
+                  aria-current={current(`/quests/${quest.slug}`)}
                 >
                   <span className="drawer-link-num">#{quest.number}</span>
                   <span>
@@ -87,7 +89,7 @@ export function NavDrawer({ open, onClose }: NavDrawerProps) {
             </div>
           ))}
           <div className="drawer-track">Reference</div>
-          <Link to="/glossary" className={linkClass('/glossary')}>
+          <Link to="/glossary" className={linkClass('/glossary')} aria-current={current('/glossary')}>
             <span className="drawer-link-num">§</span>
             <span>Glossary</span>
           </Link>

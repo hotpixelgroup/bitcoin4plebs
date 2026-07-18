@@ -70,7 +70,7 @@ function Staircase({ height }: { height: number }) {
 
 /**
  * The halving time machine: any height in, everything the code implies
- * about it out — era, reward, supply so far, estimated date.
+ * about it out: era, reward, supply so far, estimated date.
  */
 export function HalvingClock({ finale }: RunnerProps) {
   const estimatedNow = useMemo(() => estimateHeightAtTime(Date.now()), []);
@@ -135,9 +135,8 @@ export function HalvingClock({ finale }: RunnerProps) {
             </>
           ) : (
             <>
-              {' '}
-              — past the final subsidy block. It mints <strong>zero</strong> new satoshis, and so
-              does every block after it, forever. Miners live on fees alone.
+              , which is past the final subsidy block. It mints <strong>zero</strong> new satoshis,
+              and so does every block after it, forever. Miners live on fees alone.
             </>
           )}
         </Callout>
@@ -146,7 +145,7 @@ export function HalvingClock({ finale }: RunnerProps) {
         <div className="viz-root">
           <div className="viz-title">The halving clock</div>
           <div className="viz-sub">
-            era · reward · supply · estimated date — computed from the code above
+            era · reward · supply · estimated date, all computed from the code above
           </div>
           <div className="stat-grid">
             <div className="stat">

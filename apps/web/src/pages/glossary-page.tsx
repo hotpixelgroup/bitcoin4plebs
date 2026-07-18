@@ -3,13 +3,13 @@ import { Link } from 'react-router-dom';
 import { GLOSSARY_CATEGORIES, glossary, quests } from '@bitcoin4plebs/quests';
 import { Callout, RichText } from '@bitcoin4plebs/ui';
 
-const DEFAULT_TITLE = "bitcoin4plebs — Don't trust. Verify.";
+const DEFAULT_TITLE = "bitcoin4plebs · Don't trust. Verify.";
 
 const slugByNumber = new Map(quests.map((quest) => [quest.number, quest.slug]));
 
 /**
  * The glossary: Bitcoin terms, the important variable names, and layman's
- * explanations — every entry citing the pinned source and linking to the
+ * explanations. Every entry cites the pinned source and links to the
  * quest where the reader can verify it instead of memorizing it.
  */
 export function GlossaryPage() {
@@ -38,7 +38,7 @@ export function GlossaryPage() {
         <p>
           Every Bitcoin term this site uses, the important variable names from the real source
           code, and plain-English explanations for all of them. Definitions are a starting point,
-          not an authority — where a term has a quest, the link takes you to the code that{' '}
+          not an authority. Where a term has a quest, the link takes you to the code that{' '}
           <strong>proves</strong> it.
         </p>
         <label className="height-input-label glossary-search-label">
@@ -88,7 +88,7 @@ export function GlossaryPage() {
 
       {filtered.length === 0 && (
         <Callout>
-          No terms match “{query}”. Try a shorter search — or tell us what's missing.
+          No terms match “{query}”. Try a shorter search, or tell us what's missing.
         </Callout>
       )}
     </main>

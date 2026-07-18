@@ -14,7 +14,7 @@ const MAX_REPLAY = 8;
 
 /**
  * The fee-auction runner: a deterministic model mempool, one slider, and
- * the real mechanism from miner.cpp — highest feerate first, ~1M vbytes
+ * the real mechanism from miner.cpp: highest feerate first, ~1M vbytes
  * per block, one block every ten minutes. The replay mines those blocks
  * before your eyes so "waiting for confirmation" becomes "waiting for the
  * waterline to reach your bid."
@@ -95,18 +95,18 @@ export function FeeAuction({ finale }: RunnerProps) {
           {estimate.timedOut ? (
             <>
               at {feerate} sat/vB your payment is <strong>still waiting after 20 blocks</strong>{' '}
-              (~3+ hours) — everything above your bid keeps filling the blocks. In the real
+              (~3+ hours), because everything above your bid keeps filling the blocks. In the real
               network you'd wait for a quiet moment, or bump your fee.
             </>
           ) : estimate.blocks === 1 ? (
             <>
-              your bid beats the crowd — <strong>next block</strong>, roughly{' '}
+              your bid beats the crowd: <strong>next block</strong>, roughly{' '}
               <strong>~{estimate.minutes} minutes</strong>. You outbid every full block's worth of
               waiting payments.
             </>
           ) : (
             <>
-              your payment confirms in about <strong>block {estimate.blocks}</strong> — roughly{' '}
+              your payment confirms in about <strong>block {estimate.blocks}</strong>, roughly{' '}
               <strong>~{estimate.minutes} minutes</strong>. Everything in the bands above your bid
               goes first; each block clears ~1M vbytes off the top.
             </>
@@ -146,8 +146,8 @@ export function FeeAuction({ finale }: RunnerProps) {
           {cleared > 0 && (
             <div className={`auction-progress ${confirmed ? 'mine-won' : ''}`}>
               {confirmed
-                ? `⛏ block ${cleared} mined after ~${cleared * 10} minutes — the waterline reached your bid. Confirmed. ✓`
-                : `⛏ block ${cleared} mined (~${cleared * 10} min) — ${(cleared * BLOCK_VBYTES / 1_000_000).toFixed(0)} MvB of better-paying traffic gone, yours still waiting…`}
+                ? `⛏ block ${cleared} mined after ~${cleared * 10} minutes. The waterline reached your bid. Confirmed. ✓`
+                : `⛏ block ${cleared} mined (~${cleared * 10} min): ${(cleared * BLOCK_VBYTES / 1_000_000).toFixed(0)} MvB of better-paying traffic gone, yours still waiting…`}
             </div>
           )}
           <div className="stat-grid">

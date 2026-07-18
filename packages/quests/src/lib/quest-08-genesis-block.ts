@@ -2,14 +2,14 @@ import type { Quest } from './types.js';
 import { BITCOIN_PIN } from './excerpts.js';
 
 /**
- * Quest #8 — Hash the genesis block yourself.
+ * Quest #8: Hash the genesis block yourself.
  *
  * First quest of the Advanced track: from rules to artifacts. The reader
  * decodes the newspaper headline Satoshi buried in block zero, then
  * reconstructs the 80-byte header from the four numbers in chainparams.cpp
  * and recomputes the most famous hash in Bitcoin, in their own browser.
  *
- * Every excerpt is VERBATIM from Bitcoin Core at the pinned commit — the
+ * Every excerpt is VERBATIM from Bitcoin Core at the pinned commit; the
  * BITCOIN_SRC test diffs every line against the real source.
  */
 export const quest08: Quest = {
@@ -18,32 +18,32 @@ export const quest08: Quest = {
   number: 8,
   kicker: "Don't trust. Verify.",
   track: 'Advanced',
-  title: 'Hash the genesis block — with your own machine.',
+  title: 'Hash the genesis block with your own machine.',
   summary:
-    'Block zero has been sitting in every node on Earth since January 2009. Decode the newspaper headline Satoshi buried in it — then recompute the most famous hash in Bitcoin and watch it match, byte for byte.',
+    'Block zero has been sitting in every node on Earth since January 2009. Decode the newspaper headline Satoshi buried in it, then recompute the most famous hash in Bitcoin and watch it match, byte for byte.',
   duration: '9 min',
   pin: BITCOIN_PIN,
   intro: [
-    'The Foundations quests taught you Bitcoin\'s **rules**. The Advanced quests are about **artifacts** — real objects on the real chain, starting with the very first one: the genesis block, mined by Satoshi on 3 January 2009. It isn\'t in a museum. Byte for byte, it sits on the disk of every node on Earth, and its exact construction is written in the file you\'re about to read.',
-    'By the end of this quest your own computer will have rebuilt block zero\'s header from four numbers, hashed it with the same double SHA-256 you ran in Quest #6, and reproduced the hash that every Bitcoin node checks **every time it starts up**.',
+    'The Foundations quests taught you Bitcoin\'s **rules**. The Advanced quests are about **artifacts**: real objects on the real chain, starting with the very first one, the genesis block, mined by Satoshi on 3 January 2009. It isn\'t in a museum. Byte for byte, it sits on the disk of every node on Earth, and its exact construction is written in the file you\'re about to read.',
+    'By the end of this quest your own computer will have rebuilt block zero\'s header from four numbers plus the merkle root of its single transaction, hashed it with the same double SHA-256 you ran in Quest #6, and reproduced the hash that every Bitcoin node checks **every time it starts up**.',
   ],
   promise:
-    "Every snippet below is copied verbatim from the Bitcoin Core source, pinned to commit [18c05d9](https://github.com/bitcoin/bitcoin/commit/18c05d93016b28a9afd4c716dfe00b6e0accb30b). Don't trust this page either — every stop links to the same lines on GitHub so you can check we didn't edit a word.",
+    "Every snippet below is copied verbatim from the Bitcoin Core source, pinned to commit [18c05d9](https://github.com/bitcoin/bitcoin/commit/18c05d93016b28a9afd4c716dfe00b6e0accb30b). Don't trust this page either: every stop links to the same lines on GitHub so you can check we didn't edit a word.",
   stops: [
     {
       id: 'headline',
       title: 'A newspaper headline, hard-coded into block zero',
       takeaway:
-        'The first block ever mined carries a message: **that day\'s front-page headline from The Times**. It\'s a timestamp you can\'t fake — and, given what it says, a mission statement.',
+        'The first block ever mined carries a message: **that day\'s front-page headline from The Times**. It\'s a timestamp you can\'t fake and, given what it says, a mission statement.',
       prose: [
-        'Why a headline? Proof of freshness. A block containing the 3 January 2009 front page **cannot have been mined before 3 January 2009** — Satoshi couldn\'t have pre-mined the chain in secret and backdated it. It\'s the same trick as photographing a hostage with today\'s newspaper, except the hostage is a monetary system.',
-        'And of all the headlines to land on: *Chancellor on brink of second bailout for banks*. Nobody can prove Satoshi chose it as commentary — but the code preserves it forever either way. When your node finishes this curriculum\'s journey and stores block zero, these exact bytes are what it stores.',
+        'Why a headline? Proof of freshness. A block containing the 3 January 2009 front page **cannot have been mined before 3 January 2009**, which means Satoshi couldn\'t have pre-mined the chain in secret and backdated it. It\'s the same trick as photographing a hostage with today\'s newspaper, except the hostage is a monetary system.',
+        'And of all the headlines to land on: *Chancellor on brink of second bailout for banks*. Nobody can prove Satoshi chose it as commentary, but the code preserves it forever either way. When your node finishes this curriculum\'s journey and stores block zero, these exact bytes are what it stores.',
       ],
       annotations: [
-        { lines: 'L71', text: 'The headline, verbatim, as a C string. In the finale you\'ll meet it again — as raw bytes inside the block itself.' },
+        { lines: 'L71', text: 'The headline, verbatim, as a C string. In the finale you\'ll meet it again, this time as raw bytes inside the block itself.' },
         {
           lines: 'L72',
-          text: 'The lock on the first 50 BTC ever minted: Satoshi\'s public key plus `OP_CHECKSIG` — Quest #3\'s locked box, serial number one.',
+          text: 'The lock on the first 50 BTC ever minted: Satoshi\'s public key plus `OP_CHECKSIG`. That\'s Quest #3\'s locked box, serial number one.',
         },
         { lines: 'L73', text: 'Hand both to the builder function you\'ll read at the next stop.' },
       ],
@@ -78,17 +78,17 @@ export const quest08: Quest = {
       viz: 'merkle-lightning',
       title: 'Block zero is built exactly like block 900,000',
       takeaway:
-        'No special cases: the genesis block is assembled from the same parts as every block since — one coinbase transaction and the 80-byte header you met in Quest #6. **One field gives away its rank: the previous-block hash is set to nothing.**',
+        'No special cases: the genesis block is assembled from the same parts as every block since, one coinbase transaction and the 80-byte header you met in Quest #6. **One field gives away its rank: the previous-block hash is set to nothing.**',
       prose: [
-        'Read the assembly. The headline is packed into the coinbase input (line 43 — the same trick miners use for messages to this day), the 50 BTC reward is locked to Satoshi\'s key (lines 44–45), and then the six header fields you know from Quest #6 are filled in, one per line.',
-        'Line 53 is the beautiful one: `hashPrevBlock.SetNull()`. Every other block that will ever exist points at a parent. This one points at **zero** — and that\'s not a placeholder, it\'s the definition of "first." When your node verifies history in Quest #9, it walks the parent pointers back until it lands exactly here.',
+        'Read the assembly. The headline is packed into the coinbase input (line 43, the same trick miners use for messages to this day), the 50 BTC reward is locked to Satoshi\'s key (lines 44–45), and then the six header fields you know from Quest #6 are filled in, one per line.',
+        'Line 53 is the beautiful one: `hashPrevBlock.SetNull()`. Every other block that will ever exist points at a parent. This one points at **zero**. That\'s not a placeholder, it\'s the definition of "first." When your node verifies history in Quest #9, it walks the parent pointers back until it lands exactly here.',
       ],
       annotations: [
-        { lines: 'L43', text: 'The headline goes into the coinbase\'s input script — you\'ll decode these exact bytes in the finale.' },
+        { lines: 'L43', text: 'The headline goes into the coinbase\'s input script; you\'ll decode these exact bytes in the finale.' },
         { lines: 'L44–45', text: 'The first 50 BTC, locked to Satoshi\'s public key.' },
         { lines: 'L48–51', text: 'Quest #6\'s header fields: time, difficulty bits, the winning nonce, version.' },
         { lines: 'L53', text: 'The birthmark: **no parent block exists**, so the pointer is all zeros.', },
-        { lines: 'L54', text: 'The merkle root — a fingerprint of the block\'s single transaction.' },
+        { lines: 'L54', text: 'The merkle root: a fingerprint of the block\'s single transaction.' },
       ],
       excerpt: {
         ref: { file: 'src/kernel/chainparams.cpp', startLine: 43, endLine: 55 },
@@ -116,22 +116,22 @@ export const quest08: Quest = {
     },
     {
       id: 'birth-certificate',
-      title: 'The exact numbers — and the check your node runs at every boot',
+      title: 'The exact numbers, and the check your node runs at every boot',
       takeaway:
-        'Here is the birth certificate: timestamp, the winning nonce, the easiest-ever difficulty, 50 BTC. And below it, an `assert` — **your node refuses to even start** unless its own genesis block hashes to the famous value.',
+        'Here is the birth certificate: timestamp, the winning nonce, the easiest-ever difficulty, 50 BTC. And below it, an `assert`, which means **your node refuses to even start** unless its own genesis block hashes to the famous value.',
       prose: [
-        'Four arguments on line 158: `1231006505` is 3 January 2009, 18:15:05 UTC. `2083236893` is a Quest #6 lottery ticket — the winning nonce, one value out of the four billion a 32-bit field allows. `0x1d00ffff` is the easiest difficulty Bitcoin has ever had, and it has only gone up since.',
-        'Then look at line 160. This is not documentation — `assert` means the program **checks its own birth certificate on startup and dies if it doesn\'t match**. If a single byte of the genesis construction were corrupted — in your download, on your disk, anywhere — your node would refuse to run. Seventeen years on, every node still verifies block zero before it verifies anything else. That hash is what you\'re about to recompute.',
+        'Four arguments on line 158: `1231006505` is 3 January 2009, 18:15:05 UTC. `2083236893` is a Quest #6 lottery ticket: the winning nonce, one value out of the four billion a 32-bit field allows. `0x1d00ffff` is the easiest difficulty Bitcoin has ever had, and it has never been that easy again.',
+        'Then look at line 160. This is not documentation; `assert` means the program **checks its own birth certificate on startup and dies if it doesn\'t match**. If a single byte of the genesis construction were corrupted (in your download, on your disk, anywhere), your node would refuse to run. Seventeen years on, every node still verifies block zero before it verifies anything else. That hash is what you\'re about to recompute.',
       ],
       annotationsOpen: true,
       annotations: [
         {
           lines: 'L158',
-          text: 'The four numbers: time `1231006505`, nonce `2,083,236,893`, bits `0x1d00ffff` (Quest #6\'s target encoding), version 1 — plus the 50 BTC reward.',
+          text: 'The four numbers: time `1231006505`, nonce `2,083,236,893`, bits `0x1d00ffff` (Quest #6\'s target encoding), version 1, plus the 50 BTC reward.',
         },
-        { lines: 'L159', text: 'Hash the freshly built block — double SHA-256 over the 80-byte header.' },
+        { lines: 'L159', text: 'Hash the freshly built block: double SHA-256 over the 80-byte header.' },
         { lines: 'L160', text: 'The check: if the result isn\'t `000000000019d668…`, the program refuses to start.' },
-        { lines: 'L161', text: 'Same deal for the merkle root — the block\'s single transaction is pinned too.' },
+        { lines: 'L161', text: 'Same deal for the merkle root: the block\'s single transaction is pinned too.' },
       ],
       excerpt: {
         ref: { file: 'src/kernel/chainparams.cpp', startLine: 158, endLine: 161 },
@@ -157,17 +157,17 @@ export const quest08: Quest = {
     },
     {
       id: 'raw-bytes',
-      title: 'The developers left you the raw bytes — and a confession',
+      title: 'The developers left you the raw bytes, and a confession',
       takeaway:
-        'Above the builder sits a printout of the finished block: the coinbase bytes with the headline inside (you\'ll decode them next) — and a strange confession: **the first 50 BTC can never be spent.**',
+        'Above the builder sits a printout of the finished block: the coinbase bytes with the headline inside (you\'ll decode them next), and a strange confession: **the first 50 BTC can never be spent.**',
       prose: [
-        'Read lines 59–61 slowly. Satoshi\'s code never entered the genesis reward into the database of spendable coins — so the network\'s very first 50 BTC are frozen forever. Bug or symbolism? Nobody knows. But it\'s enforced by every node, it\'s why the true supply runs *below* even Quest #1\'s schedule, and it matters again in Quest #9 when you make your own node count every coin in existence.',
-        'And that long hex string on line 65? That\'s not decoration — it\'s the genesis coinbase input, byte for byte. Somewhere in there, `54 68 65` spells "The". In the finale, your browser decodes the whole thing.',
+        'Read lines 59–61 slowly. Satoshi\'s code never entered the genesis reward into the database of spendable coins, so the network\'s very first 50 BTC are frozen forever. Bug or symbolism? Nobody knows. But it\'s enforced by every node, it\'s why the true supply runs *below* even Quest #1\'s schedule, and it matters again in Quest #9 when you make your own node count every coin in existence.',
+        'And that long hex string on line 65? That\'s not decoration; it\'s the genesis coinbase input, byte for byte. Somewhere in there, `54 68 65` spells "The". In the finale, your browser decodes the whole thing.',
       ],
       annotations: [
         { lines: 'L59–61', text: 'The confession: the genesis output "cannot be spent." Remember this when Quest #9 counts the coins.' },
-        { lines: 'L63', text: '`hash=000000000019d6` — the value from the Stop 3 assert, and the target of your recomputation.' },
-        { lines: 'L65', text: 'The raw coinbase. Its last 69 bytes are ASCII — the headline, hiding in plain hex.' },
+        { lines: 'L63', text: '`hash=000000000019d6`: the value from the Stop 3 assert, and the target of your recomputation.' },
+        { lines: 'L65', text: 'The raw coinbase. Its last 69 bytes are ASCII: the headline, hiding in plain hex.' },
       ],
       excerpt: {
         ref: { file: 'src/kernel/chainparams.cpp', startLine: 58, endLine: 68 },
@@ -198,7 +198,7 @@ export const quest08: Quest = {
   finale: {
     title: 'Recompute the most famous hash on Earth',
     takeaway:
-      'Your browser will now assemble the 80-byte header from the four numbers you just read — flipping each one to **little-endian**, the byte order Bitcoin actually serializes — hash it twice with SHA-256, and compare the result against the assert on line 160. Then it decodes the headline straight out of the coinbase bytes.',
+      'Your browser will now assemble the 80-byte header from the four numbers you just read plus the pinned merkle root, flipping each to **little-endian** (the byte order Bitcoin actually serializes), hash it twice with SHA-256, and compare the result against the assert on line 160. Then it decodes the headline straight out of the coinbase bytes.',
     runnerId: 'genesis-hash',
     translation: {
       ref: { file: 'this page · faithful JavaScript translation', startLine: 1, endLine: 10 },
@@ -206,7 +206,7 @@ export const quest08: Quest = {
       lines: [
         { n: 1, text: 'function buildGenesisHeader() {' },
         { n: 2, text: '  return leHex(1, 4)                 // nVersion' },
-        { n: 3, text: "    + '00'.repeat(32)                // hashPrevBlock — SetNull()" },
+        { n: 3, text: "    + '00'.repeat(32)                // hashPrevBlock: SetNull()" },
         { n: 4, text: '    + reverseBytes(MERKLE_ROOT)      // hashMerkleRoot' },
         { n: 5, text: '    + leHex(1231006505, 4)           // nTime' },
         { n: 6, text: '    + leHex(0x1d00ffff, 4)           // nBits' },
@@ -216,31 +216,31 @@ export const quest08: Quest = {
         { n: 10, text: "// must equal '000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f'" },
       ],
     },
-    note: "Runs entirely in your browser with WebCrypto's SHA-256 — the same function every mining rig runs. If this page had altered even one byte of the four numbers, the hash would shatter into something unrecognizable. That's the point.",
+    note: "Runs entirely in your browser with WebCrypto's SHA-256, the same function every mining rig runs. If this page had altered even one byte of the four numbers, the hash would shatter into something unrecognizable. That's the point.",
   },
   recap: {
     items: [
       {
-        text: '**Block zero carries that day\'s newspaper headline** — proof the chain wasn\'t pre-mined, preserved by every node forever.',
+        text: '**Block zero carries that day\'s newspaper headline**: proof the chain wasn\'t pre-mined, preserved by every node forever.',
         cite: 'chainparams.cpp:71',
       },
       {
-        text: '**The genesis block is built from the same parts as every block** — its only privilege is a parent pointer of all zeros.',
+        text: '**The genesis block is built from the same parts as every block**; its only privilege is a parent pointer of all zeros.',
         cite: 'chainparams.cpp:53',
       },
       {
-        text: '**Every node re-checks the genesis hash at every startup** — an assert, not a comment.',
+        text: '**Every node re-checks the genesis hash at every startup**: an assert, not a comment.',
         cite: 'chainparams.cpp:160',
       },
       {
-        text: '**The first 50 BTC are unspendable forever** — which is why the measured supply runs below even the schedule you verified in Quest #1.',
+        text: '**The first 50 BTC are unspendable forever**, which is why the measured supply runs below even the schedule you verified in Quest #1.',
         cite: 'chainparams.cpp:59',
       },
       {
-        text: '**You recomputed 000000000019d668… yourself** — from four numbers, two SHA-256 passes, and one byte-order flip. No archive, no authority, just arithmetic.',
+        text: '**You recomputed 000000000019d668… yourself**, from four numbers, one merkle root, two SHA-256 passes, and one byte-order flip. No archive, no authority, just arithmetic.',
       },
     ],
     closing:
-      "**Keep verifying:** every excerpt links to the identical lines on GitHub at the pinned commit. You just did something quietly profound: reproduced a seventeen-year-old artifact from first principles and proved no one has ever altered it. Next: stop reading history and start enforcing it — run your own node.",
+      "**Keep verifying:** every excerpt links to the identical lines on GitHub at the pinned commit. You just did something quietly profound: reproduced a seventeen-year-old artifact from first principles and proved no one has ever altered it. Next: stop reading history and start enforcing it. Run your own node.",
   },
 };

@@ -36,11 +36,24 @@ function SiteFooter() {
   return (
     <footer className="site-footer">
       <div className="wrap">
-        <div>
-          <span className="logo-accent">bitcoin4plebs</span> — understand Bitcoin's code without
-          taking anyone's word for it. <Link to="/glossary">Glossary</Link>
+        <div className="site-footer-row">
+          <span>
+            <span className="logo-accent">bitcoin4plebs</span> · understand Bitcoin's code without
+            taking anyone's word for it
+          </span>
+          <span className="site-footer-links">
+            <Link to="/">Quests</Link>
+            <Link to="/glossary">Glossary</Link>
+            <a
+              href="https://github.com/hotpixelgroup/bitcoin4plebs"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Source ↗
+            </a>
+          </span>
         </div>
-        <div>Source excerpts © Bitcoin Core developers, MIT License.</div>
+        <div>Source excerpts © Bitcoin Core developers, MIT License. Don't trust. Verify.</div>
       </div>
     </footer>
   );
@@ -52,13 +65,18 @@ export function App() {
 
   return (
     <div className="app">
+      <a className="skip-link" href="#main">
+        Skip to content
+      </a>
       <SiteHeader onMenu={() => setDrawerOpen(true)} />
       <NavDrawer open={drawerOpen} onClose={closeDrawer} />
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/glossary" element={<GlossaryPage />} />
-        <Route path="/quests/:slug" element={<QuestPage />} />
-      </Routes>
+      <div id="main" tabIndex={-1}>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/glossary" element={<GlossaryPage />} />
+          <Route path="/quests/:slug" element={<QuestPage />} />
+        </Routes>
+      </div>
       <SiteFooter />
     </div>
   );

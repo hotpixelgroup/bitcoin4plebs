@@ -161,7 +161,7 @@ export function MineABlock({ finale }: RunnerProps) {
             <strong>⛏ Block found!</strong> Nonce{' '}
             <strong>{state.nonce.toLocaleString('en-US')}</strong> produced a hash under your
             target after <strong>{state.attempts.toLocaleString('en-US')}</strong> attempts.
-            Notice there was no cleverness — attempt {state.attempts.toLocaleString('en-US')} knew
+            Notice there was no cleverness: attempt {state.attempts.toLocaleString('en-US')} knew
             nothing attempt 1 didn't. Now raise the difficulty one notch and feel the wall every
             miner lives against: each 4 extra zero bits ≈ 16× more guessing.
           </Callout>
@@ -198,7 +198,7 @@ export function MineABlock({ finale }: RunnerProps) {
             </code>
             {state.status === 'found' && (
               <div className="guess-verdict mine-won">
-                ✓ hash ≤ target — a valid block under your difficulty. That's all mining is.
+                ✓ hash ≤ target, so this is a valid block under your difficulty. That's all mining is.
               </div>
             )}
             {state.status === 'mining' && state.lastHash && (

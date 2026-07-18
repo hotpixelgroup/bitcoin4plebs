@@ -22,7 +22,7 @@ interface LiveBox {
  * The box builder: pay Bob 0.60 BTC out of boxes that don't divide.
  * Selected boxes are DESTROYED; brand-new boxes appear for Bob and for
  * your change; the fee is the visible gap. The point: there is no
- * account, no balance, no "0.6 leaves your box" — only boxes opened
+ * account, no balance, no "0.6 leaves your box": only boxes opened
  * whole and boxes created fresh, exactly like transaction.h says.
  */
 export function UtxoFlow() {
@@ -74,7 +74,7 @@ export function UtxoFlow() {
   return (
     <VizFigure
       title="The box builder"
-      caption="Pay Bob 0.60 BTC. Your money is boxes that only open whole — pick which to destroy."
+      caption="Pay Bob 0.60 BTC. Your money is boxes that only open whole, so pick which to destroy."
     >
       <div className="utxo-board">
         <div className="utxo-col">
@@ -96,7 +96,7 @@ export function UtxoFlow() {
                 >
                   <span className="utxo-box-label">{box.label}</span>
                   <span className="utxo-box-amount">{satsToBtc(box.sats)} BTC</span>
-                  {isSpent && <span className="utxo-box-note">destroyed — opened whole</span>}
+                  {isSpent && <span className="utxo-box-note">destroyed (opened whole)</span>}
                   {isSelected && !sent && <span className="utxo-box-note">will be destroyed</span>}
                 </button>
               );
@@ -145,10 +145,10 @@ export function UtxoFlow() {
                   sent.spent.length > 1 ? 'es' : ''
                 } stopped existing, ${sent.created.length} brand-new box${
                   sent.created.length > 1 ? 'es' : ''
-                } appeared, and the missing 0.0001 BTC — inputs minus outputs — is the fee, claimable by whichever miner buries this (Quest #2). Your "balance" was never a number in an account; it's just the sum of boxes your keys still open.`
+                } appeared, and the missing 0.0001 BTC (inputs minus outputs) is the fee, claimable by whichever miner buries this (Quest #2). Your "balance" was never a number in an account; it's just the sum of boxes your keys still open.`
               : enough
                 ? 'Note the problem change solves: your boxes don\'t add to exactly 0.6001. The transaction will destroy them whole and hand the surplus back to you as a brand-new box.'
-                : 'Boxes never open partially — to pay 0.6 you must destroy whole boxes covering at least 0.6001 (payment + fee), and take the rest back as change.'}
+                : 'Boxes never open partially: to pay 0.6 you must destroy whole boxes covering at least 0.6001 (payment + fee), and take the rest back as change.'}
           </p>
         </div>
       </div>

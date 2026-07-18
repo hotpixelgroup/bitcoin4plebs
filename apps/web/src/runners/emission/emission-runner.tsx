@@ -17,8 +17,8 @@ const STEP_MS = 110;
 
 /**
  * The "run it yourself" finale for Quest #1: animates every reward era,
- * fills the table and chart, and lands on the exact total supply —
- * computed live, in the reader's own browser.
+ * fills the table and chart, and lands on the exact total supply,
+ * computed live in the reader's own browser.
  */
 export function EmissionRunner({ finale }: RunnerProps) {
   // Number of eras revealed so far; 0 = not started.
@@ -63,7 +63,7 @@ export function EmissionRunner({ finale }: RunnerProps) {
         {done && (
           <Callout>
             <strong>What just happened:</strong> your computer computed all {ERAS.length} reward
-            eras. After era {ERAS.length} the reward shifts to zero and stays there — no block
+            eras. After era {ERAS.length} the reward shifts to zero and stays there: no block
             after height {formatHeight(ERAS[ERAS.length - 1].endHeight)} mints a single new
             satoshi. The rewards sum to <strong>{satsToBtc(TOTAL, 4)} BTC</strong>:{' '}
             <em>under</em> 21 million, forever, exactly as the ten lines predicted.
@@ -83,7 +83,7 @@ export function EmissionRunner({ finale }: RunnerProps) {
           <div className="hero-cap">
             {done ? (
               <>
-                <span className="ok">✓ cap holds</span> — {satsToBtc(MAX_MONEY - TOTAL, 4)} BTC
+                <span className="ok">✓ cap holds</span>: {satsToBtc(MAX_MONEY - TOTAL, 4)} BTC
                 below 21,000,000, verified on your machine
               </>
             ) : current ? (

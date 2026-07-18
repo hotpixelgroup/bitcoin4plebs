@@ -46,7 +46,7 @@ export interface SupplyChartProps {
 /**
  * The supply curve, drawn from era boundary points. Cumulative supply is
  * exactly piecewise-linear between halvings, so this polyline is not an
- * approximation — every vertex and every hover value is exact math.
+ * approximation: every vertex and every hover value is exact math.
  */
 export function SupplyChart({ eras, revealed, done }: SupplyChartProps) {
   const svgRef = useRef<SVGSVGElement>(null);
@@ -145,7 +145,7 @@ export function SupplyChart({ eras, revealed, done }: SupplyChartProps) {
             />
             <circle cx={x(TODAY)} cy={y(Number(supplyAtHeight(TODAY, eras)) / 1e8)} r={4} />
             <text x={x(TODAY)} y={y(Number(supplyAtHeight(TODAY, eras)) / 1e8) - 10} textAnchor="middle">
-              you are here — 95% already minted
+              you are here (95% already minted)
             </text>
           </g>
         )}
@@ -154,7 +154,7 @@ export function SupplyChart({ eras, revealed, done }: SupplyChartProps) {
         {revealed > 0 && <circle cx={last[0]} cy={last[1]} r={4} className="chart-dot" />}
         {done && (
           <text x={last[0] - 8} y={last[1] + 22} textAnchor="end" className="chart-end-label">
-            {satsToBtc(TOTAL, 4)} BTC — and no more, ever
+            {satsToBtc(TOTAL, 4)} BTC, and no more, ever
           </text>
         )}
         {/* crosshair */}

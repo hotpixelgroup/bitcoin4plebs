@@ -8,7 +8,7 @@ import {
 } from './excerpts.js';
 
 /**
- * Quest #1 — Verify the 21 Million Cap.
+ * Quest #1: Verify the 21 Million Cap.
  *
  * Every excerpt below is VERBATIM from Bitcoin Core at the pinned commit.
  * If you touch an excerpt, re-diff it against the source. A quest that
@@ -20,22 +20,22 @@ export const quest01: Quest = {
   number: 1,
   kicker: "Don't trust. Verify.",
   track: 'Foundations',
-  title: 'Verify the 21 Million Cap — with your own eyes.',
+  title: 'Verify the 21 Million Cap with your own eyes.',
   summary:
-    "You've been told there will only ever be 21 million bitcoin. See the ten lines of code that make it true — then run them yourself.",
+    "You've been told there will only ever be 21 million bitcoin. See the ten lines of code that make it true, then run them yourself.",
   duration: '10 min',
   pin: BITCOIN_PIN,
   intro: [
-    "You've been told there will only ever be 21 million bitcoin. Engineers say the code guarantees it. In the next five stops you'll look at that code yourself — **the real thing, not a summary** — and then run it.",
+    "You've been told there will only ever be 21 million bitcoin. Engineers say the code guarantees it. In the next five stops you'll look at that code yourself (**the real thing, not a summary**) and then run it.",
   ],
   promise:
-    "Every snippet below is copied verbatim from the Bitcoin Core source, pinned to commit [18c05d9](https://github.com/bitcoin/bitcoin/commit/18c05d93016b28a9afd4c716dfe00b6e0accb30b). Don't trust this page either — every stop links to the same lines on GitHub so you can check we didn't edit a word.",
+    "Every snippet below is copied verbatim from the Bitcoin Core source, pinned to commit [18c05d9](https://github.com/bitcoin/bitcoin/commit/18c05d93016b28a9afd4c716dfe00b6e0accb30b). Don't trust this page either: every stop links to the same lines on GitHub so you can check we didn't edit a word.",
   stops: [
     {
       id: 'satoshis',
       title: 'Bitcoin counts in satoshis, not bitcoin',
       takeaway:
-        'Inside the software there is no "bitcoin" — only whole numbers of **satoshis**. One bitcoin is defined as exactly 100,000,000 satoshis.',
+        'Inside the software there is no "bitcoin"; there are only whole numbers of **satoshis**. One bitcoin is defined as exactly 100,000,000 satoshis.',
       prose: [
         'This matters for what comes next: because everything is whole numbers (no decimals, no rounding modes, no floating point), every computer on Earth running this code gets **bit-for-bit identical** results. That\'s what makes global agreement possible.',
       ],
@@ -56,20 +56,20 @@ export const quest01: Quest = {
       viz: 'bitshift-halving',
       title: 'The entire emission schedule is ten lines of code',
       takeaway:
-        "This one small function decides how many new satoshis a miner may create in each block — **for all of history, past and future**. There is no committee, no dial, no admin panel. Just this.",
+        "This one small function decides how many new satoshis a miner may create in each block, **for all of history, past and future**. There is no committee, no dial, no admin panel. Just this.",
       prose: [
-        "Read it slowly, even if you've never seen code. A block's \"height\" is its position in the chain (the first block is height 0). The function starts at 50 BTC per block and cuts the reward in half every 210,000 blocks — the famous **halving**.",
-        'The halving trick is one operation: `>>=` shifts a binary number right, which for whole numbers means **divide by two and throw away the remainder**. Do that enough times to any number and it hits zero. That — not a "21,000,000" written anywhere — is where the cap comes from.',
+        "Read it slowly, even if you've never seen code. A block's \"height\" is its position in the chain (the first block is height 0). The function starts at 50 BTC per block and cuts the reward in half every 210,000 blocks: the famous **halving**.",
+        'The halving trick is one operation: `>>=` shifts a binary number right, which for whole numbers means **divide by two and throw away the remainder**. Do that enough times to any number and it hits zero. The cap comes from that arithmetic, not from a "21,000,000" rule. (The one 21,000,000 that does appear in the code is a sanity check, as Stop 5 will show you.)',
       ],
       annotationsOpen: true,
       annotations: [
         { lines: 'L1846', text: '"Given a block height, return the allowed new-coin reward, in satoshis."' },
         { lines: 'L1848', text: 'Count how many halvings have happened: height ÷ 210,000, whole part only.' },
         { lines: 'L1850–51', text: 'Safety rail: after 64 halvings the reward is forced to exactly zero forever.' },
-        { lines: 'L1853', text: 'Start at 50 BTC — written as 50 × COIN = 5,000,000,000 satoshis.' },
+        { lines: 'L1853', text: 'Start at 50 BTC (written as 50 × COIN = 5,000,000,000 satoshis).' },
         {
           lines: 'L1855',
-          text: 'Halve it once per elapsed halving. Whole numbers only, remainders discarded — which is why the total ends slightly *under* 21M.',
+          text: 'Halve it once per elapsed halving. Whole numbers only, remainders discarded, which is why the total ends slightly *under* 21M.',
         },
         { lines: 'L1856', text: "Return the answer. That's the whole monetary policy." },
       ],
@@ -79,10 +79,10 @@ export const quest01: Quest = {
       id: 'interval',
       title: 'Where "every 210,000 blocks" is set',
       takeaway:
-        "The halving interval isn't folklore — it's a parameter of the main Bitcoin network, set once, in this file. At ~10 minutes per block, 210,000 blocks ≈ **4 years**.",
+        "The halving interval isn't folklore. It's a parameter of the main Bitcoin network, set once, in this file. At ~10 minutes per block, 210,000 blocks ≈ **4 years**.",
       prose: [
-        'This is the file that defines what "the Bitcoin network" even is — its rules, its starting block, its magic numbers. Line 114 is the one the schedule function at Stop 2 reads.',
-        "Could someone change 210000 to 100? Sure — anyone can edit their own copy. But their node would then **disagree with every other node on Earth** about which blocks are valid, and the network would simply ignore them. Changing the code is easy; changing *everyone else's* code is the hard part. That is Bitcoin's actual security model, and you'll see it enforced at the next stop.",
+        'This is the file that defines what "the Bitcoin network" even is: its rules, its starting block, its magic numbers. Line 114 is the one the schedule function at Stop 2 reads.',
+        "Could someone change 210000 to 100? Sure: anyone can edit their own copy. But their node would then **disagree with every other node on Earth** about which blocks are valid, and the network would simply ignore them. Changing the code is easy; changing *everyone else's* code is the hard part. That is Bitcoin's actual security model, and you'll see it enforced at the next stop.",
       ],
       excerpt: {
         ref: { file: 'src/kernel/chainparams.cpp', startLine: 111, endLine: 114 },
@@ -99,15 +99,15 @@ export const quest01: Quest = {
       id: 'enforcement',
       title: 'The enforcement: every node checks every miner',
       takeaway:
-        'A schedule is just a promise unless something enforces it. Here it is: when any block arrives, **every node on the network** independently runs this check — and rejects the block if the miner paid themselves even one satoshi too much.',
+        'A schedule is just a promise unless something enforces it. Here it is: when any block arrives, **every node on the network** independently runs this check and rejects the block if the miner paid themselves even one satoshi too much.',
       prose: [
-        'This code runs inside the routine that connects a new block to the chain. It computes the maximum the miner is allowed to collect — transaction fees plus the Stop 2 subsidy — and compares it to what the miner actually claimed in the block\'s first transaction (the "coinbase").',
-        '**This is "don\'t trust, verify" in its purest form.** No node asks permission or takes another node\'s word. Tens of thousands of machines each re-run this arithmetic on every block, forever. A miner who prints extra coins doesn\'t get punished — they get *ignored*, their block discarded with the error you can read on line 2623: `bad-cb-amount`.',
+        'This code runs inside the routine that connects a new block to the chain. It computes the maximum the miner is allowed to collect (transaction fees plus the Stop 2 subsidy) and compares it to what the miner actually claimed in the block\'s first transaction (the "coinbase").',
+        '**This is "don\'t trust, verify" in its purest form.** No node asks permission or takes another node\'s word. Tens of thousands of machines each re-run this arithmetic on every block, forever. A miner who prints extra coins doesn\'t get punished; they get *ignored*, their block discarded with the error you can read on line 2623: `bad-cb-amount`.',
       ],
       annotations: [
         { lines: 'L2621', text: 'Allowed reward = fees paid by transactions in this block + the subsidy from Stop 2.' },
         { lines: 'L2622', text: 'Did the coinbase transaction pay out more than that?' },
-        { lines: 'L2623–24', text: 'If so: mark the block invalid — "coinbase pays too much" — and refuse it.' },
+        { lines: 'L2623–24', text: 'If so: mark the block invalid ("coinbase pays too much") and refuse it.' },
       ],
       excerpt: EXCERPT_COINBASE_ENFORCEMENT,
     },
@@ -115,10 +115,10 @@ export const quest01: Quest = {
       id: 'max-money',
       title: 'Honesty check: there is no "21,000,000" switch',
       takeaway:
-        'There **is** a 21,000,000 written in the code — but read the comment: it\'s a **sanity check**, not the thing that creates the cap. The cap is an *outcome* of the halving math you saw at Stop 2. We can prove that — next.',
+        'There **is** a 21,000,000 written in the code, but read the comment: it\'s a **sanity check**, not the thing that creates the cap. The cap is an *outcome* of the halving math you saw at Stop 2. We can prove that next.',
       prose: [
         'This is a detail engineers usually gloss over, and it\'s exactly the kind of thing you deserve to see for yourself. `MAX_MONEY` is a guard rail: no single amount may ever exceed it. The developers\' own comment tells you plainly that it is *"not the total money supply."*',
-        'So where does the real number come from? Nowhere — it **emerges**. Start at 50 BTC, halve every 210,000 blocks, discard remainders, and the sum of every block reward ever converges just under 21 million. The only way to be sure is to do the arithmetic. So let\'s do it.',
+        'So where does the real number come from? Nowhere: it **emerges**. Start at 50 BTC, halve every 210,000 blocks, discard remainders, and the sum of every block reward ever converges just under 21 million. The only way to be sure is to do the arithmetic. So let\'s do it.',
       ],
       excerpt: EXCERPT_MAX_MONEY,
     },
@@ -126,7 +126,7 @@ export const quest01: Quest = {
   finale: {
     title: 'Now run it yourself',
     takeaway:
-      "Below is the Stop 2 function translated line-for-line into your browser's language — compare them side by side. Press the button and your own computer will compute the reward for **every block era in Bitcoin's future** and add them up. Nobody's word required.",
+      "Below is the Stop 2 function translated line-for-line into your browser's language; compare them side by side. Press the button and your own computer will compute the reward for **every block era in Bitcoin's future** and add them up. Nobody's word required.",
     runnerId: 'emission-schedule',
     translation: {
       ref: { file: 'this page · faithful JavaScript translation', startLine: 1, endLine: 7 },
@@ -141,27 +141,27 @@ export const quest01: Quest = {
         { n: 7, text: '}' },
       ],
     },
-    note: "Runs entirely on your machine, in exact whole-number arithmetic — the same kind Bitcoin uses. This site is open source, so you can check the translation too.",
+    note: "Runs entirely on your machine, in exact whole-number arithmetic, the same kind Bitcoin uses. This site is open source, so you can check the translation too.",
   },
   recap: {
     items: [
       {
-        text: "**Bitcoin's money is whole numbers of satoshis** — exact math, identical on every computer.",
+        text: "**Bitcoin's money is whole numbers of satoshis**: exact math, identical on every computer.",
         cite: 'amount.h',
       },
       {
-        text: '**The entire emission policy is ten lines** — 50 BTC, halved every 210,000 blocks, mathematically forced to zero.',
+        text: '**The entire emission policy is ten lines**: 50 BTC, halved every 210,000 blocks, mathematically forced to zero.',
         cite: 'validation.cpp:1846',
       },
       {
-        text: '**Every node independently rejects any miner who overpays themselves** — enforcement without trust.',
+        text: '**Every node independently rejects any miner who overpays themselves**: enforcement without trust.',
         cite: 'validation.cpp:2621',
       },
       {
-        text: '**The 21M cap is an outcome, not a setting** — and your own computer just summed the schedule to 20,999,999.9769 BTC.',
+        text: '**The 21M cap is an outcome, not a setting**, and your own computer just summed the schedule to 20,999,999.9769 BTC.',
       },
     ],
     closing:
-      "**Keep verifying:** every code excerpt on this page links to the identical lines on GitHub at the pinned commit. If you have the Bitcoin source on your computer, you can also open the files yourself — same paths, same line numbers. Taking anyone's word for it — including ours — is optional. That's the point.",
+      "**Keep verifying:** every code excerpt on this page links to the identical lines on GitHub at the pinned commit. If you have the Bitcoin source on your computer, you can also open the files yourself: same paths, same line numbers. Taking anyone's word for it, ours included, is optional. That's the point.",
   },
 };

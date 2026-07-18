@@ -24,7 +24,7 @@ const UNIVERSE_MULTIPLE = YEARS_AT_TRILLION / AGE_OF_UNIVERSE_YEARS;
 
 /**
  * The brute-force futility runner: really guesses random keys, really
- * counts them — and then does the honest arithmetic on the key space.
+ * counts them, and then does the honest arithmetic on the key space.
  */
 export function GuessTheKey({ finale }: RunnerProps) {
   const [running, setRunning] = useState(false);
@@ -50,8 +50,9 @@ export function GuessTheKey({ finale }: RunnerProps) {
       <div className="prose">
         <p>
           The lock on a bitcoin output accepts exactly one thing: a signature from the right
-          private key. There are no other doors. So the only theoretical attack is the dumbest one
-          imaginable — <strong>guess keys until one fits</strong>. Let's actually try it.
+          private key. There are no other doors. So the simplest attack is the dumbest one imaginable:
+          <strong>guess keys until one fits</strong>. Let's actually try it. (Cleverer math can
+          roughly halve the exponent, to ~2¹²⁸ steps. Still hopeless, as you'll see.)
         </p>
         <button className="runbtn" onClick={() => setRunning((r) => !r)}>
           {running ? '⏸ Pause the attack' : attempts === 0 ? '▶ Start guessing keys' : '▶ Resume the attack'}
@@ -67,15 +68,16 @@ export function GuessTheKey({ finale }: RunnerProps) {
             <strong>{attempts.toLocaleString('en-US')}</strong> genuinely random guesses
             {rate > 0 && <> (~{rate.toLocaleString('en-US')}/sec)</>} and found{' '}
             <strong>0 keys</strong>. Expected time to finish at this pace:{' '}
-            <strong>unimaginably longer than the numbers on the right</strong> — and those already
-            assume an attacker ten billion times faster than you.
+            <strong>unimaginably longer than the numbers on the right</strong>, and those already
+            assume an attacker with a trillion guesses per second, roughly 25 million of these
+            browser tabs.
           </Callout>
         )}
       </div>
       <div>
         <div className="viz-root">
           <div className="viz-title">The honest arithmetic</div>
-          <div className="viz-sub">exact integer math on the key space — no rounding tricks</div>
+          <div className="viz-sub">exact integer math on the key space, no rounding tricks</div>
           <div className="stat-grid">
             <div className="stat">
               <div className="stat-label">possible private keys</div>

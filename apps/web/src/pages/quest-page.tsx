@@ -2,11 +2,12 @@ import { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { getQuestBySlug, quests } from '@bitcoin4plebs/quests';
 import { Callout, RichText, StopSection } from '@bitcoin4plebs/ui';
+import { ReadProgress } from '../app/read-progress';
 import { useVerifiedQuests } from '../lib/progress';
 import { getRunner } from '../runners/registry';
 import { getViz } from '../vizzes/registry';
 
-const DEFAULT_TITLE = "bitcoin4plebs — Don't trust. Verify.";
+const DEFAULT_TITLE = "bitcoin4plebs · Don't trust. Verify.";
 
 /**
  * The generic quest engine: renders ANY quest from its data alone.
@@ -48,9 +49,19 @@ export function QuestPage() {
 
   return (
     <main className="wrap">
+      <ReadProgress />
       <section className="hero">
         <div className="kicker">{quest.kicker}</div>
         <h1>{quest.title}</h1>
+        <div className="quest-meta">
+          <span className="quest-meta-chip is-track">{quest.track ?? 'Foundations'}</span>
+          <span className="quest-meta-chip">quest {quest.number} of {quests.length}</span>
+          <span className="quest-meta-chip">{quest.duration} read</span>
+          <span className="quest-meta-chip">
+            {quest.stops.length} stops{quest.finale ? ' + finale' : ''}
+          </span>
+          {isVerified && <span className="quest-meta-chip is-verified">✓ verified by you</span>}
+        </div>
         {quest.intro.map((paragraph, i) => (
           <p key={i}>
             <RichText text={paragraph} />
@@ -111,10 +122,10 @@ export function QuestPage() {
           className={`verify-toggle ${isVerified ? 'on' : ''}`}
           onClick={() => toggle(quest.slug)}
         >
-          {isVerified ? '✓ Verified with my own eyes' : 'Mark as verified — I saw it myself'}
+          {isVerified ? '✓ Verified with my own eyes' : 'Mark as verified: I saw it myself'}
         </button>
         <p className="verify-note">
-          Saved only in your browser. Nobody grades you here — that's the point.
+          Saved only in your browser. Nobody grades you here. That's the point.
         </p>
       </section>
 

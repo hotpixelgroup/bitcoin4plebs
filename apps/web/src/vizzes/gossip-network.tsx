@@ -4,7 +4,7 @@ import { VizFigure } from './viz-figure';
 /**
  * A deterministic little peer-to-peer network: you on the left, two rings
  * of peers, each connected to a few neighbors. Broadcast a valid payment
- * and watch it ripple outward — every node verifying before relaying.
+ * and watch it ripple outward, every node verifying before relaying.
  * Broadcast a rule-breaker and watch it die at the first honest hop.
  */
 
@@ -32,7 +32,7 @@ const EDGES: Array<[number, number]> = (() => {
   const edges: Array<[number, number]> = [];
   const dist = (a: number, b: number) =>
     (NODES[a].x - NODES[b].x) ** 2 + (NODES[a].y - NODES[b].y) ** 2;
-  // Everyone links to their 3 nearest peers — no hub, no server.
+  // Everyone links to their 3 nearest peers: no hub, no server.
   for (let a = 0; a < NODES.length; a++) {
     const nearest = NODES.map((_, b) => b)
       .filter((b) => b !== a)
@@ -101,7 +101,7 @@ export function GossipNetwork() {
   return (
     <VizFigure
       title="The gossip network"
-      caption="No server, no center — just neighbors telling neighbors, and every single node auditing before it relays."
+      caption="No server, no center: just neighbors telling neighbors, and every single node auditing before it relays."
     >
       <div className="net-controls">
         <button className="runbtn net-btn" onClick={() => setMode('valid')} disabled={mode === 'valid' && !done}>
@@ -151,14 +151,14 @@ export function GossipNetwork() {
       </svg>
       <p className="viz-readout">
         {mode === 'idle' &&
-          'Your node knows a few peers, who know a few peers. There is nowhere to "submit" a transaction — press a button and watch how anything travels.'}
+          'Your node knows a few peers, who know a few peers. There is nowhere to "submit" a transaction. Press a button and watch how anything travels.'}
         {mode === 'valid' &&
           (done
-            ? 'Seconds, and the whole network carries your payment — but look at what each hop did: verified first (✓), relayed second. Nothing was trusted anywhere along the way; your transaction was re-audited at every single machine it touched.'
-            : 'Rippling outward — each node runs the full AcceptToMemoryPool gauntlet (✓) BEFORE telling its own peers…')}
+            ? 'Seconds, and the whole network carries your payment. But look at what each hop did: verified first (✓), relayed second. Nothing was trusted anywhere along the way; your transaction was re-audited at every single machine it touched.'
+            : 'Rippling outward: each node runs the full AcceptToMemoryPool gauntlet (✓) BEFORE telling its own peers…')}
         {mode === 'invalid' &&
           (done
-            ? "Dead at hop one. Your neighbors checked it (the same checks from Quests #1 and #3), rejected it, and told no one. That's the immune system: a lie doesn't get argued with or reported — beyond its author, it simply never exists."
+            ? "Dead at hop one. Your neighbors checked it (the same checks from Quests #1 and #3), rejected it, and told no one. That's the immune system: a lie doesn't get argued with or reported; beyond its author, it simply never exists."
             : 'Your neighbors are checking it…')}
       </p>
     </VizFigure>

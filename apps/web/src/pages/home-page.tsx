@@ -33,6 +33,10 @@ export function HomePage() {
   const { verified } = useVerifiedQuests();
   const verifiedCount = quests.filter((q) => verified[q.slug]).length;
   const groups = groupByTrack(quests);
+  const vizCount = quests.reduce(
+    (n, q) => n + q.stops.filter((s) => s.viz).length + (q.finale ? 1 : 0),
+    0
+  );
 
   return (
     <main className="wrap">
@@ -42,21 +46,52 @@ export function HomePage() {
         <p>
           Millions of people hold bitcoin on the word of engineers they've never met. You don't
           have to. Each <strong>verification quest</strong> below walks you through the{' '}
-          <strong>real Bitcoin Core source code</strong> — pinned, annotated in plain English, and
-          runnable — so you can see for yourself what's true.
+          <strong>real Bitcoin Core source code</strong>. The code is pinned, annotated in plain
+          English, and runnable, so you can see for yourself what's true.
         </p>
-        {verifiedCount > 0 && (
+        <div className="hero-stats">
+          <span className="hero-stat">
+            <b>{quests.length}</b> quests
+          </span>
+          <span className="hero-stat">
+            <b>{vizCount}</b> interactive figures
+          </span>
+          <span className="hero-stat">
+            <b>80</b>-term glossary
+          </span>
+          <span className="hero-stat">
+            every excerpt <b>CI-verified</b>
+          </span>
+        </div>
+        {verifiedCount > 0 ? (
           <p className="hero-progress">
             ✓ You've verified {verifiedCount} of {quests.length} quests with your own eyes.
           </p>
+        ) : (
+          <Link className="hero-cta" to={`/quests/${quests[0].slug}`}>
+            Start Quest #1: verify the 21 million cap →
+          </Link>
         )}
       </section>
 
-      {groups.map((group) => (
+      {groups.map((group) => {
+        const done = group.quests.filter((q) => verified[q.slug]).length;
+        return (
         <section key={group.track} className="track">
           <div className="track-head">
-            <h2>{group.track}</h2>
-            {TRACK_BLURBS[group.track] && <p className="track-blurb">{TRACK_BLURBS[group.track]}</p>}
+            <div className="track-head-main">
+              <h2>{group.track}</h2>
+              {TRACK_BLURBS[group.track] && <p className="track-blurb">{TRACK_BLURBS[group.track]}</p>}
+            </div>
+            <div className="track-meter">
+              <span className="track-meter-bar">
+                <span
+                  className="track-meter-fill"
+                  style={{ width: `${(done / group.quests.length) * 100}%` }}
+                />
+              </span>
+              {done} / {group.quests.length} verified
+            </div>
           </div>
           <div className="quest-list">
             {group.quests.map((quest) => (
@@ -75,7 +110,8 @@ export function HomePage() {
             ))}
           </div>
         </section>
-      ))}
+        );
+      })}
     </main>
   );
 }

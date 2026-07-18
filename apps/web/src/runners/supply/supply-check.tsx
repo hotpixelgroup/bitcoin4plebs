@@ -9,11 +9,11 @@ import {
 import { Callout, RichText } from '@bitcoin4plebs/ui';
 import type { RunnerProps } from '../registry';
 
-/** Handy heights: the story so far, plus the release's own reviewed checkpoint. */
+/** Handy heights: the story so far, plus the release's assumevalid block. */
 const PRESETS = [
   { label: 'Genesis (0)', height: 0 },
   { label: 'Last 50 BTC block (209,999)', height: 209_999 },
-  { label: 'Reviewed checkpoint (938,343)', height: 938_343 },
+  { label: 'Assumevalid block (938,343)', height: 938_343 },
   { label: 'Final subsidy block (6,929,999)', height: 6_929_999 },
 ];
 
@@ -21,7 +21,7 @@ const PRESETS = [
  * The supply-check runner: Quest #1's schedule computed to exact satoshis
  * at any height, side by side with the reader's own node's gettxoutsetinfo
  * measurement. Schedule minus measurement = the destroyed coins the node
- * itemizes — never a negative number, or Quest #1's check was a lie.
+ * itemizes; never a negative number, or Quest #1's check was a lie.
  */
 export function SupplyCheck({ finale }: RunnerProps) {
   const [heightText, setHeightText] = useState('938343');
@@ -40,7 +40,7 @@ export function SupplyCheck({ finale }: RunnerProps) {
     <div className="cols">
       <div className="prose">
         <p>
-          On a synced node, this is the whole ceremony — one command, answered from your own
+          On a synced node, this is the whole ceremony. One command, answered from your own
           disk:
         </p>
         <pre className="cmd-card">{`$ bitcoin-cli gettxoutsetinfo
@@ -115,7 +115,7 @@ export function SupplyCheck({ finale }: RunnerProps) {
                   </div>
                 ) : reportedSats === null ? (
                   <div className="guess-verdict">
-                    That doesn't parse as a BTC amount — digits and up to 8 decimals, e.g.{' '}
+                    That doesn't parse as a BTC amount: digits and up to 8 decimals, e.g.{' '}
                     <code>19994825.30930052</code>.
                   </div>
                 ) : (
@@ -123,16 +123,17 @@ export function SupplyCheck({ finale }: RunnerProps) {
                     <code className="guess-hex">{satsToBtc(reportedSats)} BTC</code>
                     {(delta as bigint) >= 0n ? (
                       <div className="guess-verdict mine-won">
-                        ✓ {satsToBtc(delta as bigint)} BTC <em>under</em> the schedule — coins
-                        destroyed or never claimed (Satoshi's frozen 50 BTC among them). Your
-                        node itemizes them as <code>total_unspendable_amount</code>. No hidden
+                        ✓ {satsToBtc(delta as bigint)} BTC <em>under</em> the schedule: coins
+                        destroyed or never claimed (Satoshi's frozen 50 BTC among them). A
+                        node with coinstatsindex even itemizes them as{' '}
+                        <code>total_unspendable_amount</code>. No hidden
                         inflation: measurement ≤ schedule, exactly as Quest #1's check
                         guarantees.
                       </div>
                     ) : (
                       <div className="guess-verdict delta-bad">
-                        ✗ {satsToBtc(-(delta as bigint))} BTC <em>over</em> the schedule —
-                        that's impossible under the bad-cb-amount check every node runs. First
+                        ✗ {satsToBtc(-(delta as bigint))} BTC <em>over</em> the schedule,
+                        which is impossible under the bad-cb-amount check every node runs. First
                         suspect: the height above doesn't match the height your node reported.
                         Make the two match and compare again.
                       </div>

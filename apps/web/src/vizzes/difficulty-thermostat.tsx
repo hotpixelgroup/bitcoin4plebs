@@ -13,7 +13,7 @@ interface Tick {
 /**
  * The thermostat: blocks arrive at random (a real exponential clock whose
  * speed is hashrate ÷ difficulty). Yank the hashrate and watch intervals
- * drift off the 10-minute line — then watch the retarget measure reality
+ * drift off the 10-minute line, then watch the retarget measure reality
  * and snap them back. Nobody steers; the rule steers.
  */
 export function DifficultyThermostat() {
@@ -65,7 +65,7 @@ export function DifficultyThermostat() {
   return (
     <VizFigure
       title="The thermostat"
-      caption="Each bar is one block's arrival time. Change the world's hashrate; watch the rule — not a person — respond."
+      caption="Each bar is one block's arrival time. Change the world's hashrate; watch the rule (not a person) respond."
     >
       <div className="thermo-controls">
         <label className="height-input-label race-slider-label">
@@ -85,7 +85,7 @@ export function DifficultyThermostat() {
             miners flood in (2×)
           </button>
           <button className="preset" onClick={() => setHashrate(Math.max(0.25, hashrate / 2))}>
-            May 2021: half vanish overnight
+            2021 China ban: half the hashrate exits
           </button>
           <button className="runbtn thermo-btn" onClick={() => setRunning((r) => !r)}>
             {running ? '⏸ pause' : ticks.length ? '▶ resume' : '▶ start the clock'}
@@ -125,8 +125,8 @@ export function DifficultyThermostat() {
       </div>
       <p className="viz-readout">
         {ticks.length === 0
-          ? `Every ${EPOCH} blocks (standing in for Bitcoin's 2,016) the network measures how long they actually took against the ten-minute ideal, and corrects — clamped to 4× per step, exactly like pow.cpp. Start the clock, then sabotage it with the buttons.`
-          : `Fast orange bars mean too much hashrate for the current difficulty; tall pale bars mean too little. The dotted marks are retargets — reality measured, difficulty ${difficulty > 1 ? 'raised' : difficulty < 1 ? 'lowered' : 'held'}, average dragged back toward 10. No operator exists: you just watched blind arithmetic absorb whatever you threw at it.`}
+          ? `Every ${EPOCH} blocks (standing in for Bitcoin's 2,016) the network measures how long they actually took against the ten-minute ideal, and corrects, clamped to 4× per step, exactly like pow.cpp. Start the clock, then sabotage it with the buttons.`
+          : `Fast orange bars mean too much hashrate for the current difficulty; tall pale bars mean too little. The dotted marks are retargets: reality measured, difficulty ${difficulty > 1 ? 'raised' : difficulty < 1 ? 'lowered' : 'held'}, average dragged back toward 10. No operator exists: you just watched blind arithmetic absorb whatever you threw at it.`}
       </p>
     </VizFigure>
   );

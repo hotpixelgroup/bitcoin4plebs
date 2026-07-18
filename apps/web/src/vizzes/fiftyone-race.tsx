@@ -7,7 +7,7 @@ const HOPELESS_LEAD = 40;
 /**
  * The catch-up race: an attacker who wants to rewrite a payment buried
  * under z confirmations must out-mine the entire honest network from z
- * blocks behind. Run a thousand races and watch the exponential wall —
+ * blocks behind. Run a thousand races and watch the exponential wall,
  * then remember what winning would even buy them (reordering, never
  * printing).
  */
@@ -22,7 +22,7 @@ export function FiftyoneRace() {
     let wins = 0;
     for (let race = 0; race < RACES; race++) {
       // Attacker starts z blocks behind; each new block is theirs with
-      // probability p. "Caught up" = the deficit ever reaches zero — the
+      // probability p. "Caught up" = the deficit ever reaches zero: the
       // exact event the whitepaper's (q/p)^z formula prices.
       let deficit = confirmations;
       for (let step = 0; step < 4000 && deficit > 0 && deficit < HOPELESS_LEAD; step++) {
@@ -109,15 +109,15 @@ export function FiftyoneRace() {
       )}
       <p className="viz-readout">
         {!result &&
-          'Each race: the payment sits under the chosen confirmations, and the attacker secretly mines an alternative history, needing to overtake the honest chain. First dot grid shows 200 of the races — green means the attacker caught up.'}
+          'Each race: the payment sits under the chosen confirmations, and the attacker secretly mines an alternative history, needing to overtake the honest chain. First dot grid shows 200 of the races; green means the attacker caught up.'}
         {result &&
           q < 0.5 &&
-          `Every extra confirmation multiplies the attacker's required luck — that's the exponential (q/p)^z from Satoshi's whitepaper, and why "wait for 6" is folk wisdom with math behind it. And notice the fine print of "winning": ${
+          `Every extra confirmation multiplies the attacker's required luck. That's the exponential (q/p)^z from Satoshi's whitepaper, and why "wait for 6" is folk wisdom with math behind it. And notice the fine print of "winning": ${
             result.wins > 0 ? 'even the green dots' : 'even a win'
-          } only lets the attacker take back coins THEY recently spent. The coinbase audit from Quest #1 still runs on their rewritten blocks — reordering is possible with luck; printing never is.`}
+          } only lets the attacker take back coins THEY recently spent. The coinbase audit from Quest #1 still runs on their rewritten blocks: reordering is possible with luck; printing never is.`}
         {result &&
           q >= 0.5 &&
-          'With a true majority the attacker eventually catches any depth — that\'s the honest meaning of "51% attack." But look closely at the prize: they can reorder recent history and double-spend their OWN coins. Their rewritten blocks still pass through every node\'s subsidy and signature audits — majority hashpower cannot print a satoshi or touch your keys (Quest #4).'}
+          'With a true majority the attacker eventually catches any depth; that\'s the honest meaning of "51% attack." But look closely at the prize: they can reorder recent history and double-spend their OWN coins. Their rewritten blocks still pass through every node\'s subsidy and signature audits, so majority hashpower cannot print a satoshi or touch your keys (Quest #4).'}
       </p>
     </VizFigure>
   );

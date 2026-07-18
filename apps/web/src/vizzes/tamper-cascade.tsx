@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { doubleSha256Hex, hashMeetsTarget, targetForZeroBits } from '@bitcoin4plebs/bitcoin-logic';
 import { VizFigure } from './viz-figure';
 
-/** Toy difficulty: ~1,000 attempts per block — instant here, eternal at real difficulty. */
+/** Toy difficulty: ~1,000 attempts per block. Instant here, eternal at real difficulty. */
 const ZERO_BITS = 10;
 const TARGET = targetForZeroBits(ZERO_BITS);
 
@@ -83,7 +83,7 @@ export function TamperCascade() {
 
   const edit = async (index: number, data: string) => {
     setEverTampered(true);
-    // The tamperer rewrites the data but keeps the old nonce — so the
+    // The tamperer rewrites the data but keeps the old nonce, so the
     // block's recomputed hash no longer meets the target, and every later
     // block points at a hash that no longer exists.
     const next = blocks.slice();
@@ -166,8 +166,8 @@ export function TamperCascade() {
         {brokenCount > 0
           ? `One edit, ${brokenCount} invalid block${brokenCount > 1 ? 's' : ''}: your rewritten block fails its own proof-of-work, and every later block points at a parent hash that no longer exists. To cover your tracks you must re-mine them ALL, oldest first.`
           : everTampered && lastWork
-            ? `Chain repaired — block ${lastWork.height} took ${lastWork.tries.toLocaleString('en-US')} attempts (${lastWork.ms} ms) at this toy difficulty. At real difficulty each block costs the ENTIRE NETWORK ~10 minutes — and while you re-mined your ${blocks.length}, honest nodes added more on top and moved the finish line. That race is what "immutable" actually means.`
-            : 'Every block\'s hash is computed from its contents AND its parent\'s hash — real double SHA-256, live. Change one letter of history in any block and watch what happens downstream.'}
+            ? `Chain repaired: block ${lastWork.height} took ${lastWork.tries.toLocaleString('en-US')} attempts (${lastWork.ms} ms) at this toy difficulty. At real difficulty each block costs the ENTIRE NETWORK ~10 minutes, and while you re-mined your ${blocks.length}, honest nodes added more on top and moved the finish line. That race is what "immutable" actually means.`
+            : 'Every block\'s hash is computed from its contents AND its parent\'s hash (real double SHA-256, live). Change one letter of history in any block and watch what happens downstream.'}
       </p>
     </VizFigure>
   );

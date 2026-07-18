@@ -7,7 +7,7 @@ import {
 import { RichText } from '@bitcoin4plebs/ui';
 import type { RunnerProps } from '../registry';
 
-/** Textbook addresses from the BIP-173/350 specifications — nobody's wallet. */
+/** Textbook addresses from the BIP-173/350 specifications; nobody's wallet. */
 const PRESETS = [
   { label: 'The textbook bc1q (v0)', address: 'bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4' },
   { label: 'Taproot bc1p (v1)', address: 'bc1p0xlxvlhemja6c4dqv22uapctqupfhlxm9h8z3k2e72q4k9hcz7vqzk5jj0' },
@@ -22,15 +22,15 @@ interface Typo {
 
 /** What the witness program means in Quest #3 terms, by version + size. */
 function programMeaning(version: number, length: number): string {
-  if (version === 0 && length === 20) return 'the 20-byte hash of a public key — Quest #3\'s lock';
-  if (version === 0 && length === 32) return 'the 32-byte hash of a script — a lock made of conditions';
+  if (version === 0 && length === 20) return 'the 20-byte hash of a public key: Quest #3\'s lock';
+  if (version === 0 && length === 32) return 'the 32-byte hash of a script: a lock made of conditions';
   if (version === 1 && length === 32) return 'a 32-byte taproot public key (2021\'s upgrade, Quest #4)';
   return `${length} bytes of witness program`;
 }
 
 /**
  * The address-xray runner: decode any bech32 address into prefix, version,
- * program, and checksum with the real algorithm — then plant a typo on
+ * program, and checksum with the real algorithm, then plant a typo on
  * command and watch the checksum from bech32.cpp catch it.
  */
 export function AddressXray({ finale }: RunnerProps) {
@@ -90,7 +90,7 @@ export function AddressXray({ finale }: RunnerProps) {
         {typo && (
           <p className="finale-note addr-typo-note">
             Changed character {typo.index + 1} from <code>{typo.original}</code> to{' '}
-            <code>{typo.replacement}</code> — one letter, like a shaky copy-paste.
+            <code>{typo.replacement}</code>: one letter, like a shaky copy-paste.
           </p>
         )}
         {finale.note && (
@@ -147,7 +147,7 @@ export function AddressXray({ finale }: RunnerProps) {
                     {dec.hrp === 'bc'
                       ? 'mainnet (chainparams.cpp:182)'
                       : dec.hrp === 'tb'
-                        ? 'testnet — a mainnet wallet says "expected bc, got tb"'
+                        ? 'testnet, so a mainnet wallet says "expected bc, got tb"'
                         : 'not a Bitcoin mainnet prefix'}
                   </span>
                 </span>
@@ -190,8 +190,8 @@ export function AddressXray({ finale }: RunnerProps) {
           )}
           <div className={`guess-verdict ${dec.ok ? 'mine-won' : 'delta-bad'}`}>
             {dec.ok
-              ? '✓ checksum passes — every wallet on Earth would accept this spelling'
-              : '✗ rejected — no wallet will build a lock from this string, and no coins can be lost to it'}
+              ? '✓ checksum passes; any wallet that understands this address type would accept it'
+              : '✗ rejected. No wallet will build a lock from this string, and no coins can be lost to it'}
           </div>
         </div>
       </div>

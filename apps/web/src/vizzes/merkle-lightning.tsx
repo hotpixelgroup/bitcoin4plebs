@@ -25,8 +25,8 @@ const Y = (level: number): number => 212 - level * 59;
 type Mode = 'tamper' | 'proof';
 
 /**
- * Merkle lightning: eight transactions hashed pairwise up to one root —
- * how an 80-byte header owns a whole block. Corrupt any leaf and the
+ * Merkle lightning: eight transactions hashed pairwise up to one root,
+ * which is how an 80-byte header owns a whole block. Corrupt any leaf and the
  * damage climbs its exact path; or flip to proof mode and see the three
  * sibling hashes that prove a transaction's inclusion.
  */
@@ -85,20 +85,20 @@ export function MerkleLightning() {
   return (
     <VizFigure
       title="Merkle lightning"
-      caption="Eight transactions, hashed in pairs, up to one root — the single line the block header commits to."
+      caption="Eight transactions, hashed in pairs, up to one root: the single line the block header commits to."
     >
       <div className="preset-row">
         <button
           className={`preset ${mode === 'tamper' ? 'preset-active' : ''}`}
           onClick={() => setMode('tamper')}
         >
-          ⚡ tamper mode — click a transaction to corrupt it
+          ⚡ tamper mode: click a transaction to corrupt it
         </button>
         <button
           className={`preset ${mode === 'proof' ? 'preset-active' : ''}`}
           onClick={() => setMode('proof')}
         >
-          🔍 proof mode — click a transaction to prove it's included
+          🔍 proof mode: click a transaction to prove it's included
         </button>
       </div>
       <svg className="merkle-svg" viewBox="0 0 640 260" role="img" aria-label="Merkle tree">
@@ -139,7 +139,7 @@ export function MerkleLightning() {
               )}
               {l === 3 && (
                 <text x={X(l, i)} y={Y(l) - 20} className="merkle-label">
-                  merkle root — this goes in the 80-byte header
+                  merkle root: this goes in the 80-byte header
                 </text>
               )}
             </g>
@@ -149,9 +149,9 @@ export function MerkleLightning() {
       <p className="viz-readout">
         {mode === 'tamper'
           ? corrupted.size === 0
-            ? 'Click any transaction to flip one byte of it. All hashes here are computed live — watch exactly which ones notice.'
-            : `The corruption climbs its exact path to the root — so the root in the header changes, so the block's hash changes, so its proof-of-work dies (Quest #7's cascade). One flipped byte anywhere in a block is unhideable, and this tree is why.`
-          : `To prove ${LEAVES[proofLeaf]} is inside this block, you don't need the other seven transactions — just the 3 highlighted sibling hashes: hash your transaction, combine upward, and land on the root. Eight transactions need 3 hashes; a real block's thousands need only ~12. That's how a phone can check inclusion against an 80-byte header.`}
+            ? 'Click any transaction to flip one byte of it. All hashes here are computed live, so watch exactly which ones notice.'
+            : `The corruption climbs its exact path to the root, so the root in the header changes, so the block's hash changes, so its proof-of-work dies (Quest #7's cascade). One flipped byte anywhere in a block is unhideable, and this tree is why.`
+          : `To prove ${LEAVES[proofLeaf]} is inside this block, you don't need the other seven transactions; you need just the 3 highlighted sibling hashes: hash your transaction, combine upward, and land on the root. Eight transactions need 3 hashes; a real block's thousands need only ~12. That's how a phone can check inclusion against an 80-byte header.`}
       </p>
     </VizFigure>
   );

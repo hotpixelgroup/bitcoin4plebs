@@ -40,7 +40,7 @@ export function ForkYourself({ finale }: RunnerProps) {
     <div className="cols">
       <div className="prose">
         <p>
-          The source is open — so open it. Pick your own consensus parameters below. This is
+          The source is open, so open it. Pick your own consensus parameters below. This is
           exactly what anyone on Earth can do to Bitcoin's code, right now, no permission needed.
         </p>
         <label className="fork-label">
@@ -89,7 +89,7 @@ export function ForkYourself({ finale }: RunnerProps) {
       <div>
         <div className="viz-root">
           <div className="viz-title">Your chain vs. Bitcoin</div>
-          <div className="viz-sub">same ten lines of arithmetic — your parameters vs. everyone else's</div>
+          <div className="viz-sub">same ten lines of arithmetic: your parameters vs. everyone else's</div>
           <div className="stat-grid">
             <div className="stat">
               <div className="stat-label">your chain's total supply</div>
@@ -108,16 +108,16 @@ export function ForkYourself({ finale }: RunnerProps) {
             (isConsensus ? (
               <Callout>
                 <strong>✓ You're in consensus.</strong> You picked Bitcoin's own parameters, so
-                your node computes the same 20,999,999.9769 BTC as everyone else's — your blocks
-                validate everywhere. This agreement, recomputed independently by every node on
+                your node computes the same 20,999,999.9769 BTC as everyone else's, and your
+                blocks validate everywhere. This agreement, recomputed independently by every node on
                 every block, <em>is</em> Bitcoin.
               </Callout>
             ) : (
               <Callout>
-                <strong>⚠ Congratulations — you've forked yourself off the network.</strong> Your
+                <strong>⚠ Congratulations: you've forked yourself off the network.</strong> Your
                 chain now promises {satsToBtc(yourTotal, 4)} coins, so the first block you produce
-                under these rules is <strong>invalid to every Bitcoin node on Earth</strong> — they
-                check it against <em>their</em> arithmetic, not yours (remember{' '}
+                under these rules is <strong>invalid to every Bitcoin node on Earth</strong>, because
+                they check it against <em>their</em> arithmetic, not yours (remember{' '}
                 <code>bad-cb-amount</code>). You didn't change Bitcoin. You left it. Changing the
                 code was never the hard part; changing <em>everyone else's</em> code is.
               </Callout>

@@ -31,8 +31,8 @@ const SAMPLES: Sample[] = [
   },
   {
     id: 'cve-2018',
-    title: '② The 2018 attack: spend the same coin twice',
-    description: 'Both inputs point at the identical outpoint — the CVE-2018-17144 shape.',
+    title: '② The 2018 near-miss: spend the same coin twice',
+    description: 'Both inputs point at the identical outpoint, which is the CVE-2018-17144 shape.',
     tx: {
       vin: [
         { txid: 'c0ffee…01', vout: 0 },
@@ -44,7 +44,7 @@ const SAMPLES: Sample[] = [
   {
     id: 'cve-2010',
     title: '③ The 2010-style money printer',
-    description: 'Two outputs of 11,000,000 BTC each — 22M total, more than can ever exist.',
+    description: 'Two outputs of 11,000,000 BTC each: 22M total, more than can ever exist.',
     tx: {
       vin: [{ txid: 'c0ffee…01', vout: 0 }],
       vout: [{ value: 11_000_000n * COIN }, { value: 11_000_000n * COIN }],
@@ -84,10 +84,10 @@ export function RunTheCheck({ finale }: RunnerProps) {
         )}
         {results && (
           <Callout>
-            <strong>What just happened:</strong> the honest transaction passed; both historic
-            attacks died instantly, with the <em>exact error strings</em> a real node emits. These
-            two checks run on every transaction, on every node, every time — the scars of 2010 and
-            2018, permanently on duty.
+            <strong>What just happened:</strong> the honest transaction passed; the 2010 attack and the 2018 close call both died
+            instantly, with the <em>exact error strings</em> a real node emits. These two checks
+            run on every transaction, on every node, every time: the scars of 2010 and 2018,
+            permanently on duty.
           </Callout>
         )}
       </div>

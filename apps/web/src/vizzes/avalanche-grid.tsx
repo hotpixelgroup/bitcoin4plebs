@@ -15,7 +15,7 @@ function bitsOf(hex: string): boolean[] {
 /**
  * The avalanche: type anything, watch all 256 bits of its double SHA-256
  * reshuffle. The point a reader must feel in their fingers: one keystroke
- * flips ~half the bits, with no pattern — so a hash can only be rerolled,
+ * flips ~half the bits, with no pattern, so a hash can only be rerolled,
  * never steered. That's the whole reason mining is a lottery.
  */
 export function AvalancheGrid() {
@@ -70,8 +70,8 @@ export function AvalancheGrid() {
           {flipped === null
             ? '256 bits, waiting for your first edit.'
             : flipped === 0
-              ? 'Same text, same 256 bits — hashing is perfectly repeatable.'
-              : `Your last edit flipped ${flipped} of 256 bits (orange = changed). No pattern, no steering — a fresh lottery ticket every time. Mining is pressing this button until the top rows come up all-dark by pure luck.`}
+              ? 'Same text, same 256 bits: hashing is perfectly repeatable.'
+              : `Your last edit flipped ${flipped} of 256 bits (orange = changed). No pattern, no steering, just a fresh lottery ticket every time. Mining is pressing this button until the top rows come up all-dark by pure luck.`}
         </p>
       </div>
     </VizFigure>
