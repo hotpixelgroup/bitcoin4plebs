@@ -122,12 +122,6 @@ a:hover {
 .logo:hover .logo-tag {
   color: var(--ink-2);
 }
-.logo-compact {
-  gap: 9px;
-}
-.logo-compact .logo-word {
-  font-size: 16px;
-}
 @media (max-width: 620px) {
   .logo-tag {
     display: none;
@@ -1145,7 +1139,12 @@ tr:last-child td {
   padding: 4px 10px 14px;
   border-bottom: 1px solid var(--hairline);
   margin-bottom: 10px;
-  font-weight: 700;
+}
+.drawer-title {
+  font-weight: 800;
+  font-size: 16px;
+  letter-spacing: -0.015em;
+  color: var(--ink);
 }
 .drawer-close {
   font: 400 15px var(--sans);
