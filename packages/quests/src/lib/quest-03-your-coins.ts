@@ -18,6 +18,10 @@ export const quest03: Quest = {
     'No account, no password, no fraud department. Your coins sit in public view, protected only by math. See the exact check every thief would have to defeat.',
   duration: '10 min',
   pin: BITCOIN_PIN,
+  story: {
+    stage: "locked to Ana",
+    text: "Ana's 0.6 BTC sits in public view, in locked boxes anyone can see and only her key can open. The box builder below is literally her situation: to pay Bo she must destroy whole boxes and mint a fresh one locked to him.",
+  },
   intro: [
     'Here\'s an uncomfortable fact: your bitcoin is **public**. Anyone can see the coins, and there is no login page, no fraud department, and no password reset between a thief and your money. So what actually stops them? Three pieces of code (a lock, a checkpoint, and one opcode) plus a number so large it defends you better than any bank vault ever could.',
   ],

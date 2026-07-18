@@ -19,6 +19,10 @@ export const quest05: Quest = {
     "The uncomfortable quest: twice in Bitcoin's history, bugs could have inflated the supply. Read the fixes (the code cites the CVEs by name) and run the attacks against today's checks.",
   duration: '9 min',
   pin: BITCOIN_PIN,
+  story: {
+    stage: "guarded by scars",
+    text: "When Ana presses send, her transaction will walk through CheckTransaction: the door with 2010's and 2018's scars on it. Attacks that once threatened the whole ledger now bounce off checks her payment clears in microseconds.",
+  },
   intro: [
     "After four quests of \"the code guarantees it,\" you've earned the uncomfortable truth: **code has bugs, and Bitcoin's has had serious ones**. In 2010 someone printed 184 billion BTC. In 2018, a bug that could have allowed coin inflation sat undiscovered for nearly two years. If \"don't trust, verify\" means anything, it has to survive this quest, so let's look straight at it.",
   ],

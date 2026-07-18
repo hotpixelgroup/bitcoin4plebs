@@ -19,8 +19,8 @@ interface LiveBox {
 }
 
 /**
- * The box builder: pay Bob 0.60 BTC out of boxes that don't divide.
- * Selected boxes are DESTROYED; brand-new boxes appear for Bob and for
+ * The box builder: Ana pays Bo 0.60 BTC out of boxes that don't divide.
+ * Selected boxes are DESTROYED; brand-new boxes appear for Bo and for
  * your change; the fee is the visible gap. The point: there is no
  * account, no balance, no "0.6 leaves your box": only boxes opened
  * whole and boxes created fresh, exactly like transaction.h says.
@@ -48,7 +48,7 @@ export function UtxoFlow() {
 
   const send = () => {
     const created: LiveBox[] = [
-      { id: 'bob', label: "Bob's new box", sats: PAYMENT, owner: 'bob' },
+      { id: 'bob', label: "Bo's new box", sats: PAYMENT, owner: 'bob' },
     ];
     if (change > 0n) {
       created.push({ id: 'change', label: 'Change (new box, yours)', sats: change, owner: 'you' });
@@ -74,7 +74,7 @@ export function UtxoFlow() {
   return (
     <VizFigure
       title="The box builder"
-      caption="Pay Bob 0.60 BTC. Your money is boxes that only open whole, so pick which to destroy."
+      caption="Be Ana: pay Bo 0.60 BTC for the bike. Money is boxes that only open whole, so pick which to destroy."
     >
       <div className="utxo-board">
         <div className="utxo-col">
@@ -106,7 +106,7 @@ export function UtxoFlow() {
                 <span className="utxo-box-label">{box.label}</span>
                 <span className="utxo-box-amount">{satsToBtc(box.sats)} BTC</span>
                 <span className="utxo-box-note">
-                  {box.owner === 'bob' ? "locked to Bob's key" : 'locked to a fresh key of yours'}
+                  {box.owner === 'bob' ? "locked to Bo's key" : 'locked to a fresh key of yours'}
                 </span>
               </div>
             ))}
@@ -130,7 +130,7 @@ export function UtxoFlow() {
           {!sent && (
             <button className="runbtn" onClick={send} disabled={!enough}>
               {enough
-                ? `▶ Send: Bob 0.6 + change ${satsToBtc(change)} + fee 0.0001`
+                ? `▶ Send: Bo 0.6 + change ${satsToBtc(change)} + fee 0.0001`
                 : `Select boxes worth ≥ ${satsToBtc(PAYMENT + FEE)} BTC`}
             </button>
           )}

@@ -20,6 +20,10 @@ export const quest11: Quest = {
     'Reading about swimming only goes so far. Bitcoin ships with built-in practice networks where the coins are worthless by design: get some free, send a real transaction, and watch your own txid confirm.',
   duration: '15 min',
   pin: BITCOIN_PIN,
+  story: {
+    stage: "your turn",
+    text: "You've followed Ana's payment from idea to burial. Now be Ana: send your own payment on the practice network, then watch every stage of this story happen to **your** txid in the tracker below.",
+  },
   intro: [
     'Ten quests of reading and verifying deserve a graduation exercise you can *feel*: sending a real Bitcoin transaction. Not a simulation, a real one, signed by a real wallet and mined into a real chain. The trick is choosing which chain.',
     'Bitcoin Core ships several complete parallel networks. This quest uses **signet**, the stable practice network: real software, real blocks, real wallets, and coins that anyone can get for free, which is exactly what makes them worthless. Perfect.',

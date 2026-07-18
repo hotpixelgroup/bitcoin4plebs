@@ -62,6 +62,20 @@ describe('quiz and myth integrity', () => {
   });
 });
 
+describe('story thread integrity', () => {
+  it('every quest carries a chapter with a unique stage label', () => {
+    const stages = quests.map((q) => q.story?.stage);
+    for (const [i, stage] of stages.entries()) {
+      expect(stage, quests[i].id).toBeTruthy();
+      expect((stage as string).length, quests[i].id).toBeLessThanOrEqual(20);
+    }
+    expect(new Set(stages).size).toBe(quests.length);
+    for (const quest of quests) {
+      expect(quest.story?.text.length, quest.id).toBeGreaterThan(80);
+    }
+  });
+});
+
 describe('glossary integrity', () => {
   it('has unique terms with non-empty definitions', () => {
     expect(new Set(glossary.map((e) => e.term)).size).toBe(glossary.length);

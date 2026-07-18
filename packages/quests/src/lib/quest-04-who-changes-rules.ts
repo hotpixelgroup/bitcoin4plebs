@@ -18,6 +18,10 @@ export const quest04: Quest = {
     'There is no admin key, no board, no upgrade server. See why even 51% of miners can\'t print a coin, then fork the rules yourself to feel where the power actually lives.',
   duration: '9 min',
   pin: BITCOIN_PIN,
+  story: {
+    stage: "nobody's permission",
+    text: "Count who Ana has asked so far: nobody. No bank approved her, no company can freeze her boxes, no government can rewrite the rules mid-payment. The comment you're about to read is the developers admitting even *they* can't.",
+  },
   intro: [
     'Every system you\'ve ever used has an owner who can change the rules on you: a bank, a platform, a government. Bitcoin\'s strangest property is that it doesn\'t. This quest looks for the admin switch, finds out what happens to rule-breakers with majority power, and reads the scars of the times the rules *did* change. It ends with you changing them yourself, to see exactly what that gets you.',
   ],

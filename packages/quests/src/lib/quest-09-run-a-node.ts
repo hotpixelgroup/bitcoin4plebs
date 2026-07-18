@@ -22,6 +22,10 @@ export const quest09: Quest = {
     'The final quest leaves the browser. Install the program whose source you\'ve been reading, let it re-verify seventeen years of history on your machine, then ask it (not us, not an explorer, not anyone) how many bitcoin exist.',
   duration: '12 min',
   pin: BITCOIN_PIN,
+  story: {
+    stage: "audited forever",
+    text: "Every node that ever syncs will re-check Ana's payment: her signature, her amounts, her block's proof-of-work. Bo doesn't keep a receipt. Fifty thousand machines keep it for him, and after this quest, yours can too.",
+  },
   intro: [
     'For eight quests you\'ve **read** the law. Running a node is how you **enforce** it. A node is nothing exotic: it\'s Bitcoin Core, the exact program whose source code you\'ve been reading, running on a computer you control. No coding required: if you can install a browser, you can run a node.',
     'What it costs: disk space (roughly 1 TB for the full chain, or ~10 GB in pruned mode), some bandwidth, and a few days of patience for the initial sync. What it buys: **every claim this curriculum made stops being our word and becomes your machine\'s measurement.** This quest walks through what the program actually does with those days, and ends with the supply audit Quest #1 promised you.',

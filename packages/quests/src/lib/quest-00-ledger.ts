@@ -20,6 +20,10 @@ export const quest00: Quest = {
     'No code in this one, promise. Five minutes on the oldest idea in money: a list of who paid whom, why whoever keeps the list holds all the power, and the trick that changed that.',
   duration: '6 min',
   pin: BITCOIN_PIN,
+  story: {
+    stage: "an idea",
+    text: "Meet **Ana**. She's buying **Bo's** used bike for 0.6 BTC, and you're going to follow that payment through every machine Bitcoin has. Right now it is nothing but an idea: a line that needs adding to a shared list, exactly like the village entries above.",
+  },
   intro: [
     'Every other quest on this site shows you real Bitcoin source code. This one shows you **none**, on purpose. Before the code can mean anything, you need the idea underneath it, and the idea is older than computers: a **ledger**, which is just a list of who paid whom.',
     'Read these four stops and the rest of the site stops being "programming" and starts being something much simpler: *checking a list*.',

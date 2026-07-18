@@ -23,6 +23,10 @@ export const quest08: Quest = {
     'Block zero has been sitting in every node on Earth since January 2009. Decode the newspaper headline Satoshi buried in it, then recompute the most famous hash in Bitcoin and watch it match, byte for byte.',
   duration: '9 min',
   pin: BITCOIN_PIN,
+  story: {
+    stage: "chained to 2009",
+    text: "Bo's payment now lives in a block whose parent pointer chains back, hash by hash, through every block ever mined, to the one carrying a 2009 newspaper headline. Ana's bike money and the genesis block are links in the same chain.",
+  },
   intro: [
     'The Foundations quests taught you Bitcoin\'s **rules**. The Advanced quests are about **artifacts**: real objects on the real chain, starting with the very first one, the genesis block, mined by Satoshi on 3 January 2009. It isn\'t in a museum. Byte for byte, it sits on the disk of every node on Earth, and its exact construction is written in the file you\'re about to read.',
     'By the end of this quest your own computer will have rebuilt block zero\'s header from four numbers plus the merkle root of its single transaction, hashed it with the same double SHA-256 you ran in Quest #6, and reproduced the hash that every Bitcoin node checks **every time it starts up**.',

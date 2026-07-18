@@ -18,6 +18,10 @@ export const quest02: Quest = {
     'No ceremony, no announcement: one block pays 3.125 BTC and the next pays 1.5625. See the code that makes the switch, and drive the halving clock yourself.',
   duration: '8 min',
   pin: BITCOIN_PIN,
+  story: {
+    stage: "rationed by code",
+    text: "If Ana's satoshis were minted in 2010, they arrived fifty at a time. Minted this year, they'd trickle in at 3.125. Same rules, same list; the tap just narrows every 210,000 blocks, which is why nobody can mint her a bonus.",
+  },
   intro: [
     'Every four years the financial press counts down to "the halving" like it\'s a rocket launch. But nothing is launched and nobody presses a button. A halving is just an ordinary block whose height happens to cross a line in the arithmetic you already verified in Quest #1. This quest shows you **where new coins are physically claimed**, **why the line arrives every ~4 years**, and **what changes the moment it\'s crossed**.',
   ],

@@ -19,6 +19,10 @@ export const quest07: Quest = {
     'Follow one payment through the whole machine: the mempool\'s front door, the same checks you read in Quest #3, the fee auction, and burial under proof-of-work. Then bid in the auction yourself.',
   duration: '8 min',
   pin: BITCOIN_PIN,
+  story: {
+    stage: "sent and buried",
+    text: "This is the chapter where it happens. Ana presses send: old boxes destroyed, Bo's new box minted with her change beside it, signature attached, gossip spreading. Her fee wins the auction, a miner's ticket lands, and Bo's bike money is buried under proof-of-work.",
+  },
   intro: [
     'You press send. Your wallet shows "pending," then "1 confirmation," then quietly stops mentioning it. Between those moments your transaction traveled through nearly every piece of code you\'ve read in this curriculum. This quest, the last of the foundations, follows it the whole way and shows you the one decision that was ever actually yours: **the fee**.',
     'First, what your wallet did: it picked some of your locked boxes (Quest #3), wrote new boxes for the recipient and your change, and signed the whole thing with your key. Then it handed the result to a node and knocked on this door:',

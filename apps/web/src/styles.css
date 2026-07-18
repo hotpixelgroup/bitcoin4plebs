@@ -2960,6 +2960,112 @@ tr:last-child td {
   color: var(--bad);
 }
 
+/* ——— the ana-pays-bo story strip ——— */
+
+.story {
+  margin-top: 22px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, var(--surface-2), var(--surface) 55%);
+  padding: 16px 18px;
+}
+.story-head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.story-badge {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #0d0d0d;
+  background: var(--brand);
+  border-radius: 999px;
+  padding: 2px 10px;
+}
+.story-chapter {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--muted);
+}
+.story-rail {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  margin-bottom: 10px;
+}
+.story-stage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex: 0 0 auto;
+  padding: 4px 13px 0;
+  color: var(--muted);
+  text-align: center;
+}
+.story-stage:hover {
+  text-decoration: none;
+  color: var(--ink);
+}
+.story-stage:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 9px;
+  left: calc(50% + 7px);
+  width: calc(100% - 14px);
+  height: 2px;
+  background: var(--grid);
+}
+.story-past:not(:last-child)::after {
+  background: rgba(47, 191, 79, 0.45);
+}
+.story-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--code-surface);
+  border: 2px solid var(--baseline);
+  z-index: 1;
+}
+.story-past .story-dot {
+  border-color: var(--good);
+  background: rgba(47, 191, 79, 0.35);
+}
+.story-now .story-dot {
+  border-color: var(--brand);
+  background: var(--brand);
+  box-shadow: 0 0 0 4px var(--brand-soft);
+}
+.story-past {
+  color: rgba(198, 196, 185, 0.7);
+}
+.story-now {
+  color: var(--brand);
+  font-weight: 700;
+}
+.story-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+.story-text {
+  color: var(--ink-2);
+  font-size: 14.5px;
+  max-width: 840px;
+}
+.story-text strong {
+  color: var(--ink);
+}
+
 /* ——— scrollbars ——— */
 
 * {

@@ -15,7 +15,7 @@ interface Block {
 }
 
 const INITIAL_DATA = [
-  'alice pays bob 2 BTC',
+  'ana pays bo 2 BTC',
   'carol pays dan 5 BTC',
   'you pay pleb 1 BTC',
   'erin pays frank 3 BTC',

@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { getQuestBySlug, quests } from '@bitcoin4plebs/quests';
 import { Callout, FeynmanBox, RichText, StopSection } from '@bitcoin4plebs/ui';
 import { ReadProgress } from '../app/read-progress';
+import { StoryStrip } from '../app/story-strip';
 import { isFreshVisitor, recordReadPosition, useVerifiedQuests } from '../lib/progress';
 import { getRunner } from '../runners/registry';
 import { getViz } from '../vizzes/registry';
@@ -113,6 +114,7 @@ export function QuestPage() {
         <p className="promise">
           <RichText text={quest.promise} />
         </p>
+        <StoryStrip quest={quest} />
       </section>
 
       {quest.stops.map((stop, i) => {

@@ -18,6 +18,10 @@ export const quest06: Quest = {
     'Miners aren\'t "solving complex equations": they\'re rolling a cosmic dice by hashing 80 bytes over and over. See the one-line rule and the difficulty thermostat, then mine a block yourself.',
   duration: '9 min',
   pin: BITCOIN_PIN,
+  story: {
+    stage: "awaiting a winner",
+    text: "Somewhere, a machine is guessing numbers that will seal Ana's payment into a block. The miner doesn't know her, can't read her name (there isn't one), and can't alter a satoshi of it. They just hash, and collect her fee if they win.",
+  },
   intro: [
     'You\'ve heard mining described as "computers solving complex math problems." That\'s wrong in an important way: there is no equation, no cleverness, no partial credit. Mining is **guessing**: hashing a tiny 80-byte header trillions of times with different lucky numbers until the output happens to be small enough. This quest shows you the whole machine: the header, the one-line rule, and the thermostat that keeps the guessing honest. Then you\'ll mine a block yourself, for real, in this tab.',
   ],

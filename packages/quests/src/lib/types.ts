@@ -160,6 +160,15 @@ export interface Quest {
   };
   /** Optional explain-it-back exercise rendered after the recap. */
   feynman?: Feynman;
+  /**
+   * This quest's chapter of the running story: one payment (Ana buys
+   * Bo's bike) followed through the whole curriculum. The stage label
+   * feeds the journey strip; the text is the chapter (RichText).
+   */
+  story?: {
+    stage: string;
+    text: string;
+  };
 }
 
 /** Build a "verify on GitHub" URL for an excerpt at a quest's pinned commit. */

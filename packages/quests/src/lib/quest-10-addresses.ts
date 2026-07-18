@@ -23,6 +23,10 @@ export const quest10: Quest = {
     'You\'ve copy-pasted bc1q… strings a hundred times. They\'re not accounts, and coins never "sit" at them. X-ray the spelling: the network tag, the 32-letter alphabet, and checksum math that catches every typo. Then break one on purpose.',
   duration: '10 min',
   pin: BITCOIN_PIN,
+  story: {
+    stage: "spelled for humans",
+    text: "One rewound detail: how did Ana know where to send? Bo texted her an address, which you now know is his lock spelled in 42 letters with a checksum. Had she mistyped even one, nothing would have moved. That's why.",
+  },
   intro: [
     'Quest #3 showed you that your coins are **locked boxes**, and Quest #9\'s node counted every box in existence. So what\'s an *address*? When someone "sends you bitcoin," their wallet builds a new box locked to you, and the address is simply **the recipe for your lock, spelled so a human can carry it**: over a phone call, in a QR code, on a napkin.',
     'That spelling problem is harsher than it looks. One wrong character in a plain bank account number can wire money to a stranger. Bitcoin has no fraud department to call afterward, so the address format itself has to make a typo *arithmetically impossible to miss*. This quest reads that machinery: the encoder, the network tag, the alphabet, and a checksum the developers back with a mathematical guarantee.',

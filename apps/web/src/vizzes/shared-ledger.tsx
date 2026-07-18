@@ -10,11 +10,11 @@ import { VizFigure } from './viz-figure';
 
 const KEEPERS = ['You', 'Bea', 'Carl', 'Mallory'] as const;
 
-const STARTING_ENTRIES = ['Ann pays Bea 3', 'Bea pays Carl 1', 'Carl pays you 2'];
+const STARTING_ENTRIES = ['Ana pays Bea 3', 'Bea pays Carl 1', 'Carl pays you 2'];
 
 const HONEST_ENTRIES = [
-  'Dan pays Mallory 2',
-  'You pay Ann 1',
+  'Bo pays Mallory 2',
+  'You pay Ana 1',
   'Bea pays Dan 4',
   'Mallory pays Carl 1',
 ];

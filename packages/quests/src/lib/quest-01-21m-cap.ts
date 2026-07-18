@@ -25,6 +25,10 @@ export const quest01: Quest = {
     "You've been told there will only ever be 21 million bitcoin. See the ten lines of code that make it true, then run them yourself.",
   duration: '10 min',
   pin: BITCOIN_PIN,
+  story: {
+    stage: "minted long ago",
+    text: "Where did the 0.6 BTC Ana is about to spend come from? Not a bank. Every satoshi of it was born as part of some block's subsidy, under the exact schedule you're verifying now, and then changed hands until it reached her.",
+  },
   intro: [
     "You've been told there will only ever be 21 million bitcoin. Engineers say the code guarantees it. In the next five stops you'll look at that code yourself (**the real thing, not a summary**) and then run it.",
   ],
