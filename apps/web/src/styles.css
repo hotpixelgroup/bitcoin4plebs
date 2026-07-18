@@ -68,13 +68,61 @@ a:hover {
   flex-wrap: wrap;
 }
 .logo {
-  font-weight: 700;
-  font-size: 17px;
-  letter-spacing: 0.2px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
   color: var(--ink);
 }
 .logo:hover {
   text-decoration: none;
+}
+.logo-mark {
+  display: block;
+  flex-shrink: 0;
+}
+.logo:hover .logo-mark-hl {
+  fill: #ffa93d;
+}
+.logo-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.05;
+}
+.logo-word {
+  font-weight: 800;
+  font-size: 18.5px;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+}
+.logo-4 {
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 1.04em;
+  color: var(--brand);
+  padding: 0 1px;
+}
+.logo-tag {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.19em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 3px;
+  white-space: nowrap;
+}
+.logo:hover .logo-tag {
+  color: var(--ink-2);
+}
+.logo-compact {
+  gap: 9px;
+}
+.logo-compact .logo-word {
+  font-size: 16px;
+}
+@media (max-width: 620px) {
+  .logo-tag {
+    display: none;
+  }
 }
 .logo-accent {
   color: var(--brand);

@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import type { Quest } from '@bitcoin4plebs/quests';
 import { quests } from '@bitcoin4plebs/quests';
 import { useVerifiedQuests } from '../lib/progress';
+import { SiteLogo } from './site-logo';
 
 export interface NavDrawerProps {
   open: boolean;
@@ -56,7 +57,7 @@ export function NavDrawer({ open, onClose }: NavDrawerProps) {
       <div className={`drawer-overlay ${open ? 'drawer-overlay-open' : ''}`} onClick={onClose} />
       <aside className={`drawer ${open ? 'drawer-open' : ''}`} aria-label="Site navigation" aria-hidden={!open}>
         <div className="drawer-head">
-          <span className="logo-accent">bitcoin4plebs</span>
+          <SiteLogo compact />
           <button className="drawer-close" onClick={onClose} aria-label="Close navigation">
             ✕
           </button>

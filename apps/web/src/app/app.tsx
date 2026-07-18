@@ -1,24 +1,20 @@
 import { useCallback, useState } from 'react';
-import { Link, Route, Routes, useLocation } from 'react-router-dom';
+import { Link, Route, Routes } from 'react-router-dom';
 import { PINNED_COMMIT_SHORT } from '@bitcoin4plebs/bitcoin-logic';
 import { GlossaryPage } from '../pages/glossary-page';
 import { HomePage } from '../pages/home-page';
 import { QuestPage } from '../pages/quest-page';
 import { NavDrawer } from './nav-drawer';
+import { SiteLogo } from './site-logo';
 
 function SiteHeader({ onMenu }: { onMenu: () => void }) {
-  const location = useLocation();
-  const onQuest = location.pathname.startsWith('/quests/');
   return (
     <header className="site-header">
       <div className="wrap">
         <button className="nav-toggle" onClick={onMenu} aria-label="Open navigation">
           ☰
         </button>
-        <Link to="/" className="logo">
-          <span className="logo-accent">bitcoin4plebs</span>
-          {onQuest && ' · Quest'}
-        </Link>
+        <SiteLogo />
         <div className="pin">
           source pinned: bitcoin/bitcoin @ <b>{PINNED_COMMIT_SHORT}</b>
         </div>
