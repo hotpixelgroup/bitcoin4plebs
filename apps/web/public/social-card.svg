@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <radialGradient id="glow" cx="0.18" cy="0.12" r="0.9">
+      <stop offset="0" stop-color="#f7931a" stop-opacity="0.13"/>
+      <stop offset="0.5" stop-color="#f7931a" stop-opacity="0.03"/>
+      <stop offset="1" stop-color="#f7931a" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="cardline" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#f7931a" stop-opacity="0.0"/>
+      <stop offset="0.35" stop-color="#f7931a" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#f7931a" stop-opacity="0.0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- background -->
+  <rect width="1200" height="630" fill="#0b0b0a"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <rect x="0" y="626" width="1200" height="4" fill="#f7931a"/>
+  <rect x="0" y="0" width="1200" height="2" fill="url(#cardline)"/>
+
+  <!-- logo mark -->
+  <g transform="translate(64,58)">
+    <rect x="0" y="0" width="76" height="76" rx="18" fill="#111110" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+    <rect x="0" y="30" width="6.5" height="15" rx="3.2" fill="#f7931a"/>
+    <rect x="19" y="19" width="31" height="8" rx="4" fill="#898781"/>
+    <rect x="19" y="34" width="41" height="8" rx="4" fill="#f7931a"/>
+    <rect x="19" y="49" width="24" height="8" rx="4" fill="#898781" opacity="0.55"/>
+  </g>
+
+  <!-- wordmark -->
+  <text x="164" y="102" font-family="Helvetica Neue, Arial, sans-serif" font-size="42" font-weight="800" letter-spacing="-1" fill="#f6f5f1">bitcoin<tspan fill="#f7931a" font-family="Menlo, monospace" font-weight="700">4</tspan>plebs</text>
+  <text x="166" y="130" font-family="Menlo, monospace" font-size="15" letter-spacing="4.5" fill="#908e86">DON'T TRUST. VERIFY.</text>
+
+  <!-- headline -->
+  <text x="64" y="266" font-family="Helvetica Neue, Arial, sans-serif" font-size="64" font-weight="800" letter-spacing="-1.5" fill="#f6f5f1">Understand Bitcoin's code.</text>
+  <text x="64" y="342" font-family="Helvetica Neue, Arial, sans-serif" font-size="64" font-weight="800" letter-spacing="-1.5" fill="#f6f5f1">No engineering degree <tspan fill="#f7931a">required.</tspan></text>
+
+  <!-- subline -->
+  <text x="64" y="398" font-family="Helvetica Neue, Arial, sans-serif" font-size="24" fill="#c6c4b9">Read the real source. Run the real math. Take nobody's word for it.</text>
+
+  <!-- mini code card -->
+  <g transform="translate(64,442)">
+    <rect x="0" y="0" width="1072" height="118" rx="16" fill="#111110" stroke="rgba(255,255,255,0.14)" stroke-width="1.5"/>
+    <rect x="0" y="0" width="1072" height="38" rx="16" fill="#161615"/>
+    <rect x="0" y="22" width="1072" height="16" fill="#161615"/>
+    <line x1="0" y1="38" x2="1072" y2="38" stroke="rgba(255,255,255,0.1)"/>
+    <text x="20" y="25" font-family="Menlo, monospace" font-size="14" fill="#c6c4b9">src/validation.cpp · lines 1846–1857 · pinned @ 18c05d9</text>
+    <text x="962" y="25" font-family="Menlo, monospace" font-size="12" font-weight="bold" letter-spacing="1" fill="#2fbf4f">REAL SOURCE</text>
+
+    <text x="20" y="64" font-family="Menlo, monospace" font-size="16" fill="#55534e">1853</text>
+    <text x="76" y="64" font-family="Menlo, monospace" font-size="16" fill="#e8e6df">CAmount nSubsidy = 50 * COIN;</text>
+
+    <rect x="6" y="74" width="1060" height="26" fill="rgba(247,147,26,0.09)"/>
+    <rect x="6" y="74" width="4" height="26" fill="#f7931a"/>
+    <text x="20" y="92" font-family="Menlo, monospace" font-size="16" fill="#55534e">1855</text>
+    <text x="76" y="92" font-family="Menlo, monospace" font-size="16" fill="#e8e6df">nSubsidy &gt;&gt;= halvings;  <tspan fill="#908e86">// the entire 21M cap, right there</tspan></text>
+  </g>
+
+  <!-- stats row -->
+  <text x="64" y="600" font-family="Menlo, monospace" font-size="17" fill="#908e86">12 quests · 22 interactive figures · 80-term glossary · <tspan fill="#f7931a">every excerpt CI-verified against bitcoin/bitcoin</tspan></text>
+</svg>
