@@ -1,6 +1,6 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { quest01, quests } from '@bitcoin4plebs/quests';
+import { glossary, quest01, quests } from '@bitcoin4plebs/quests';
 import { getRunner } from '../runners/registry';
 import App from './app';
 
@@ -12,7 +12,8 @@ describe('App', () => {
       </MemoryRouter>
     );
     expect(screen.getByText(/No engineering degree required/i)).toBeInTheDocument();
-    expect(screen.getByText(quest01.title)).toBeInTheDocument();
+    // Heading role scopes to the home card, not the (hidden) nav drawer link.
+    expect(screen.getByRole('heading', { name: quest01.title })).toBeInTheDocument();
   });
 
   it('renders a quest page from data alone, including verbatim source', () => {
@@ -76,13 +77,15 @@ describe('App', () => {
   });
 
   it('links each quest to the next one in curriculum order', () => {
-    render(
+    const { container } = render(
       <MemoryRouter initialEntries={[`/quests/${quest01.slug}`]}>
         <App />
       </MemoryRouter>
     );
     // The footer nav shows the following quest's title as a link card.
-    expect(screen.getByText(quests[1].title)).toBeInTheDocument();
+    const footerNav = container.querySelector('.quest-nav');
+    expect(footerNav).not.toBeNull();
+    expect(within(footerNav as HTMLElement).getByText(quests[1].title)).toBeInTheDocument();
   });
 
   it('lets the reader mark a quest verified, persisted in localStorage', () => {
@@ -96,5 +99,34 @@ describe('App', () => {
     expect(screen.getByRole('button', { name: /Verified with my own eyes/i })).toBeInTheDocument();
     expect(localStorage.getItem('b4p.verified.v1')).toContain(quest01.slug);
     localStorage.clear();
+  });
+
+  it('opens the flyout nav listing every quest plus Home and Glossary', () => {
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <App />
+      </MemoryRouter>
+    );
+    fireEvent.click(screen.getByRole('button', { name: /Open navigation/i }));
+    const drawer = screen.getByLabelText('Site navigation');
+    expect(within(drawer).getByText(/Home — all quests/i)).toBeInTheDocument();
+    expect(within(drawer).getByText('Glossary')).toBeInTheDocument();
+    for (const quest of quests) {
+      expect(within(drawer).getByText(quest.title)).toBeInTheDocument();
+    }
+  });
+
+  it('renders the full glossary with search filtering', () => {
+    const { container } = render(
+      <MemoryRouter initialEntries={['/glossary']}>
+        <App />
+      </MemoryRouter>
+    );
+    expect(screen.getByRole('heading', { level: 1, name: 'Glossary' })).toBeInTheDocument();
+    expect(container.querySelectorAll('dt')).toHaveLength(glossary.length);
+    fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'PolyMod' } });
+    const remaining = container.querySelectorAll('dt');
+    expect(remaining.length).toBeGreaterThan(0);
+    expect(remaining.length).toBeLessThan(glossary.length);
   });
 });

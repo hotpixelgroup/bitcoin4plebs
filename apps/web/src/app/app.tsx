@@ -1,14 +1,20 @@
+import { useCallback, useState } from 'react';
 import { Link, Route, Routes, useLocation } from 'react-router-dom';
 import { PINNED_COMMIT_SHORT } from '@bitcoin4plebs/bitcoin-logic';
+import { GlossaryPage } from '../pages/glossary-page';
 import { HomePage } from '../pages/home-page';
 import { QuestPage } from '../pages/quest-page';
+import { NavDrawer } from './nav-drawer';
 
-function SiteHeader() {
+function SiteHeader({ onMenu }: { onMenu: () => void }) {
   const location = useLocation();
   const onQuest = location.pathname.startsWith('/quests/');
   return (
     <header className="site-header">
       <div className="wrap">
+        <button className="nav-toggle" onClick={onMenu} aria-label="Open navigation">
+          ☰
+        </button>
         <Link to="/" className="logo">
           <span className="logo-accent">bitcoin4plebs</span>
           {onQuest && ' · Quest'}
@@ -27,7 +33,7 @@ function SiteFooter() {
       <div className="wrap">
         <div>
           <span className="logo-accent">bitcoin4plebs</span> — understand Bitcoin's code without
-          taking anyone's word for it.
+          taking anyone's word for it. <Link to="/glossary">Glossary</Link>
         </div>
         <div>Source excerpts © Bitcoin Core developers, MIT License.</div>
       </div>
@@ -36,11 +42,16 @@ function SiteFooter() {
 }
 
 export function App() {
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const closeDrawer = useCallback(() => setDrawerOpen(false), []);
+
   return (
     <div className="app">
-      <SiteHeader />
+      <SiteHeader onMenu={() => setDrawerOpen(true)} />
+      <NavDrawer open={drawerOpen} onClose={closeDrawer} />
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/glossary" element={<GlossaryPage />} />
         <Route path="/quests/:slug" element={<QuestPage />} />
       </Routes>
       <SiteFooter />

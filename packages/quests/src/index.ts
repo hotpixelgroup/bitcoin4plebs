@@ -1,6 +1,7 @@
 export * from './lib/types.js';
 export * from './lib/registry.js';
 export * from './lib/excerpts.js';
+export * from './lib/glossary.js';
 export { quest01 } from './lib/quest-01-21m-cap.js';
 export { quest02 } from './lib/quest-02-halving.js';
 export { quest03 } from './lib/quest-03-your-coins.js';
@@ -8,3 +9,6 @@ export { quest04 } from './lib/quest-04-who-changes-rules.js';
 export { quest05 } from './lib/quest-05-inflation-bug.js';
 export { quest06 } from './lib/quest-06-mining.js';
 export { quest07 } from './lib/quest-07-press-send.js';
+export { quest08 } from './lib/quest-08-genesis-block.js';
+export { quest09 } from './lib/quest-09-run-a-node.js';
+export { quest10 } from './lib/quest-10-addresses.js';

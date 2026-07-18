@@ -1,6 +1,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { GLOSSARY_CATEGORIES, glossary } from './glossary.js';
 import { quests } from './registry.js';
 
 /**
@@ -38,6 +39,37 @@ describe('quest content integrity', () => {
     for (const quest of quests) {
       expect(quest.pin.commit).toMatch(/^[0-9a-f]{40}$/);
       expect(quest.pin.commit).toBe(quests[0].pin.commit);
+    }
+  });
+});
+
+describe('glossary integrity', () => {
+  it('has unique terms with non-empty definitions', () => {
+    expect(new Set(glossary.map((e) => e.term)).size).toBe(glossary.length);
+    for (const entry of glossary) {
+      expect(entry.definition.length, entry.term).toBeGreaterThan(40);
+    }
+  });
+
+  it('uses only declared categories, and every category has entries', () => {
+    const declared = new Set<string>(GLOSSARY_CATEGORIES);
+    for (const entry of glossary) {
+      expect(declared.has(entry.category), `${entry.term}: ${entry.category}`).toBe(true);
+    }
+    for (const category of GLOSSARY_CATEGORIES) {
+      expect(
+        glossary.some((e) => e.category === category),
+        category
+      ).toBe(true);
+    }
+  });
+
+  it('cross-links only to quests that exist', () => {
+    const numbers = new Set(quests.map((q) => q.number));
+    for (const entry of glossary) {
+      if (entry.quest !== undefined) {
+        expect(numbers.has(entry.quest), `${entry.term} → Quest #${entry.quest}`).toBe(true);
+      }
     }
   });
 });
