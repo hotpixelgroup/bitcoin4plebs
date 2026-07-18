@@ -69,6 +69,28 @@ export function StopSection({ stop, index, total, pin, viz }: StopSectionProps) 
         </div>
         {stop.excerpt && <CodeCard excerpt={stop.excerpt} pin={pin} />}
       </div>
+      {stop.contrast && stop.contrast.length > 0 && (
+        <div className="contrast-wrap">
+          <table className="contrast" aria-label="Bank versus Bitcoin comparison">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Your bank</th>
+                <th>Bitcoin</th>
+              </tr>
+            </thead>
+            <tbody>
+              {stop.contrast.map((row) => (
+                <tr key={row.aspect}>
+                  <td>{row.aspect}</td>
+                  <td>{row.bank}</td>
+                  <td>{row.bitcoin}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
       {viz && <div className="stop-viz">{viz}</div>}
       {stop.quiz && stop.quiz.length > 0 && (
         <div className="stop-quiz">

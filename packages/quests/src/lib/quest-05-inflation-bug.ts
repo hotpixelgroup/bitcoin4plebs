@@ -180,4 +180,9 @@ export const quest05: Quest = {
     closing:
       "**Keep verifying:** every excerpt links to the identical lines on GitHub at the pinned commit. \"Don't trust, verify\" was never a promise that the code is perfect. It's the reason imperfect code can still be trustworthy: because anyone, including you, can check it. You just did, five times.",
   },
+  feynman: {
+    prompt: "Explain why the 2010 and 2018 bugs make Bitcoin look stronger, not weaker, in two sentences.",
+    model:
+      "Both bugs were found, fixed, and documented in public, and the fixes still run on every transaction with the CVE numbers written next to them. Public code means wounds become permanent armor instead of secrets.",
+  },
 };

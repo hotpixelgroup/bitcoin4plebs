@@ -4,6 +4,8 @@ import { PINNED_COMMIT_SHORT } from '@bitcoin4plebs/bitcoin-logic';
 import { GlossaryPage } from '../pages/glossary-page';
 import { HomePage } from '../pages/home-page';
 import { QuestPage } from '../pages/quest-page';
+import { QuestionsPage } from '../pages/questions-page';
+import { ReviewPage } from '../pages/review-page';
 import { SandboxPage } from '../pages/sandbox-page';
 import { NavDrawer } from './nav-drawer';
 import { LogoMark } from './site-logo';
@@ -48,8 +50,10 @@ function SiteFooter() {
           </span>
           <span className="site-footer-links">
             <Link to="/">Quests</Link>
+            <Link to="/questions">Questions</Link>
             <Link to="/glossary">Glossary</Link>
             <Link to="/sandbox">Sandbox</Link>
+            <Link to="/review">Review</Link>
             <a
               href="https://github.com/hotpixelgroup/bitcoin4plebs"
               target="_blank"
@@ -96,6 +100,8 @@ export function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/glossary" element={<GlossaryPage />} />
+          <Route path="/questions" element={<QuestionsPage />} />
+          <Route path="/review" element={<ReviewPage />} />
           <Route path="/sandbox" element={<SandboxPage />} />
           <Route path="/quests/:slug" element={<QuestPage />} />
         </Routes>

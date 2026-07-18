@@ -166,4 +166,9 @@ export const quest02: Quest = {
     closing:
       "**Keep verifying:** every excerpt links to the identical lines on GitHub at the pinned commit. Next time someone tells you the halving is \"priced in\" or \"delayed\" or \"controlled by the miners,\" you've read the ten lines that say otherwise.",
   },
+  feynman: {
+    prompt: "Explain what happens at a halving, in two sentences, without the word \"event.\"",
+    model:
+      "The reward formula divides the block height by 210,000 and halves the payout once per whole step, so when the height crosses a multiple, the same code simply returns half as much. Nothing is triggered and nobody acts; a quotient changes.",
+  },
 };

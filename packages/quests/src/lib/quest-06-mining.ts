@@ -202,4 +202,9 @@ export const quest06: Quest = {
     closing:
       "**Keep verifying:** every excerpt links to the identical lines on GitHub at the pinned commit. Next time someone says miners \"solve complex equations\" or \"control Bitcoin,\" you know better on both counts: they buy lottery tickets with electricity, under a rule you've read, at odds no one sets. And as Quest #4 showed, the rules aren't theirs to change.",
   },
+  feynman: {
+    prompt: "Explain mining to a friend, in two sentences, without the phrase \"math problems.\"",
+    model:
+      "Mining is guessing: hash an 80-byte block header over and over until the output happens to be a small enough number, like a lottery where tickets cost electricity. Checking a winner takes one hash, which is why the whole world can verify what took a warehouse to find.",
+  },
 };

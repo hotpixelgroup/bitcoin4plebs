@@ -126,4 +126,9 @@ export const quest04: Quest = {
     closing:
       "**Keep verifying:** every excerpt links to the identical lines on GitHub at the pinned commit. \"Who can change Bitcoin's rules?\" has a precise answer: anyone can change the code, and no one can make you run it. The veto is yours; that's what running a node means.",
   },
+  feynman: {
+    prompt: "Explain who controls Bitcoin, in two sentences.",
+    model:
+      "Nobody, enforceably: developers can propose code but every node operator chooses whether to run it, and blocks that break the current rules are ignored no matter how much mining power backs them. Rules have only ever changed by near-unanimous voluntary adoption.",
+  },
 };

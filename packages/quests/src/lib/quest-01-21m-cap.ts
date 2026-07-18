@@ -180,4 +180,9 @@ export const quest01: Quest = {
     closing:
       "**Keep verifying:** every code excerpt on this page links to the identical lines on GitHub at the pinned commit. If you have the Bitcoin source on your computer, you can also open the files yourself: same paths, same line numbers. Taking anyone's word for it, ours included, is optional. That's the point.",
   },
+  feynman: {
+    prompt: "Explain the 21 million cap to a friend in two sentences.",
+    model:
+      "New bitcoin appears on a fixed schedule: 50 per block at the start, halved every 210,000 blocks, with remainders thrown away, so the total of every reward ever converges just under 21 million. It is arithmetic every node re-checks on every block, not a setting anyone can raise.",
+  },
 };

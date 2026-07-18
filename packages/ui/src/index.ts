@@ -5,3 +5,4 @@ export * from './lib/callout.js';
 export * from './lib/highlight.js';
 export * from './lib/self-check.js';
 export * from './lib/glossary-term.js';
+export * from './lib/feynman-box.js';

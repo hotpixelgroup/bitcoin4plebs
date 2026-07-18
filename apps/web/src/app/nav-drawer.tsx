@@ -89,6 +89,14 @@ export function NavDrawer({ open, onClose }: NavDrawerProps) {
             </div>
           ))}
           <div className="drawer-track">Reference</div>
+          <Link to="/questions" className={linkClass('/questions')} aria-current={current('/questions')}>
+            <span className="drawer-link-num">?</span>
+            <span>Got a question? Start there</span>
+          </Link>
+          <Link to="/review" className={linkClass('/review')} aria-current={current('/review')}>
+            <span className="drawer-link-num">↻</span>
+            <span>Daily review · five minutes</span>
+          </Link>
           <Link to="/glossary" className={linkClass('/glossary')} aria-current={current('/glossary')}>
             <span className="drawer-link-num">§</span>
             <span>Glossary</span>

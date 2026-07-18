@@ -60,6 +60,11 @@ export const quest03: Quest = {
     },
     {
       id: 'checkpoint',
+      contrast: [
+        { aspect: "What protects your money", bank: "The bank\u2019s login, staff, and fraud department", bitcoin: "A signature check run by every node on Earth" },
+        { aspect: "Password reset", bank: "Call the bank", bitcoin: "Does not exist: the key is the ownership" },
+        { aspect: "Who can reverse a payment", bank: "The bank or the card network", bitcoin: "Nobody, once it is buried under work" },
+      ],
       title: 'Every new spend passes this checkpoint',
       takeaway:
         'When a transaction tries to spend your boxes, **every node validating it runs this loop**, giving every input its script-and-signature check. Fail one, and the whole transaction is rejected by the entire network.',
@@ -169,5 +174,10 @@ export const quest03: Quest = {
     ],
     closing:
       "**Keep verifying:** every excerpt links to the identical lines on GitHub at the pinned commit. The protection on your coins isn't a company's promise; it's a check you've now read, run by machines that answer to nobody. Guard the key; the code guards the rest.",
+  },
+  feynman: {
+    prompt: "Explain to a friend why nobody can spend your bitcoin, in two sentences.",
+    model:
+      "Your coins sit in public locked boxes that open only for a signature from your private key, and every computer on the network independently checks that signature on every spend. The only attack left is guessing a 78-digit number.",
   },
 };

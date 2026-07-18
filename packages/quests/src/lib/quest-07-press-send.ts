@@ -106,6 +106,11 @@ export const quest07: Quest = {
     },
     {
       id: 'the-auction',
+      contrast: [
+        { aspect: "Who processes payments", bank: "The bank, business hours apply", bitcoin: "An open auction among miners, every ~10 minutes, forever" },
+        { aspect: "Fees", bank: "Set by the institution", bitcoin: "Your own bid against the crowd" },
+        { aspect: "Settlement", bank: "Days, reversible", bitcoin: "About an hour to deep burial, then final" },
+      ],
       myth: {
         belief: "Miners charge a processing fee for each transaction, like a payment company.",
         reality: "Nobody sets or charges fees. You *bid* whatever you like, and miners simply take the best-paying megabyte of waiting transactions first. A quiet mempool confirms tiny bids next block; a busy one prices you out until you raise yours.",
@@ -196,5 +201,10 @@ export const quest07: Quest = {
     ],
     closing:
       "**Keep verifying:** every excerpt links to the identical lines on GitHub at the pinned commit. That completes the foundations. And the point of all seven quests: from the 21M cap to your coffee payment, every promise Bitcoin makes is a piece of code that you, a certified pleb, have now read with your own eyes. Ready to leave the classroom? The Advanced track is next: rebuild the genesis block from four numbers, then run a node and audit the money supply yourself. Don't trust. Verify. You just did.",
+  },
+  feynman: {
+    prompt: "Explain what happens after you press send, in three sentences.",
+    model:
+      "Your wallet builds and signs the transaction, hands it to one node, and every node that hears about it re-checks it before passing it on. It waits in each node's mempool while miners take the best-paying transactions first, so your fee is a bid. Once mined, every later block buries it under more proof-of-work.",
   },
 };

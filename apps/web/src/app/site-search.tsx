@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { glossary, quests } from '@bitcoin4plebs/quests';
+import { glossary, questions, quests } from '@bitcoin4plebs/quests';
 
 /**
  * Site-wide search: one client-side index over quest titles, stops, and
@@ -10,7 +10,7 @@ import { glossary, quests } from '@bitcoin4plebs/quests';
  */
 
 interface Hit {
-  kind: 'quest' | 'stop' | 'term';
+  kind: 'quest' | 'stop' | 'term' | 'question';
   title: string;
   detail: string;
   to: string;
@@ -34,6 +34,13 @@ const INDEX: Hit[] = [
       haystack: `${stop.title} ${stop.takeaway}`.toLowerCase(),
     }))
   ),
+  ...questions.map((q): Hit => ({
+    kind: 'question',
+    title: q.question,
+    detail: q.short.replace(/\*\*|\*|`/g, '').slice(0, 110),
+    to: q.stop ? `/quests/${q.slug}#${q.stop}` : `/quests/${q.slug}`,
+    haystack: `${q.question} ${q.short}`.toLowerCase(),
+  })),
   ...glossary.map((entry): Hit => ({
     kind: 'term',
     title: entry.term,
@@ -57,7 +64,7 @@ function search(query: string): Hit[] {
   return scored.slice(0, 12).map((s) => s.hit);
 }
 
-const KIND_LABEL = { quest: 'quest', stop: 'stop', term: 'glossary' } as const;
+const KIND_LABEL = { quest: 'quest', stop: 'stop', term: 'glossary', question: 'question' } as const;
 
 export function SiteSearch({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [query, setQuery] = useState('');

@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { glossary, quest01, quests } from '@bitcoin4plebs/quests';
+import { glossary, quest01, questions, quests } from '@bitcoin4plebs/quests';
 import { getRunner } from '../runners/registry';
 import { getViz } from '../vizzes/registry';
 import App from './app';
@@ -129,6 +129,37 @@ describe('App', () => {
     for (const quest of quests) {
       expect(within(drawer).getByText(quest.title)).toBeInTheDocument();
     }
+  });
+
+  it('routes every newbie question to a real quest and stop', () => {
+    for (const q of questions) {
+      const quest = quests.find((candidate) => candidate.slug === q.slug);
+      expect(quest, `question "${q.question}" → ${q.slug}`).toBeDefined();
+      if (q.stop) {
+        expect(
+          quest?.stops.some((stop) => stop.id === q.stop),
+          `question "${q.question}" → ${q.slug}#${q.stop}`
+        ).toBe(true);
+      }
+    }
+    expect(questions.length).toBeGreaterThanOrEqual(20);
+  });
+
+  it('renders the question index and the review deck', () => {
+    const { unmount } = render(
+      <MemoryRouter initialEntries={['/questions']}>
+        <App />
+      </MemoryRouter>
+    );
+    expect(screen.getByRole('heading', { level: 1, name: /Got a question/i })).toBeInTheDocument();
+    unmount();
+    render(
+      <MemoryRouter initialEntries={['/review']}>
+        <App />
+      </MemoryRouter>
+    );
+    expect(screen.getByRole('heading', { level: 1, name: /Daily review/i })).toBeInTheDocument();
+    expect(document.querySelectorAll('.flashcard').length).toBe(5);
   });
 
   it('renders the full glossary with search filtering', () => {

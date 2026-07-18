@@ -7,6 +7,20 @@ import { RichText } from './rich-text.js';
  * nothing recorded anywhere. Wrong answers get the explanation too,
  * because the explanation is the point.
  */
+const MISS_KEY = 'b4p.quiz-misses.v1';
+
+/** Remember a missed question so the review deck can resurface it. */
+function recordMiss(item: QuizItem): void {
+  try {
+    const raw = localStorage.getItem(MISS_KEY);
+    const all = raw ? (JSON.parse(raw) as Record<string, QuizItem & { cleared: number }>) : {};
+    all[item.question] = { ...item, cleared: 0 };
+    localStorage.setItem(MISS_KEY, JSON.stringify(all));
+  } catch {
+    // Private browsing: review just won't remember.
+  }
+}
+
 function Question({ item, index }: { item: QuizItem; index: number }) {
   const [picked, setPicked] = useState<number | null>(null);
 
@@ -24,7 +38,10 @@ function Question({ item, index }: { item: QuizItem; index: number }) {
               key={i}
               className={`quiz-option ${state}`}
               disabled={picked !== null}
-              onClick={() => setPicked(i)}
+              onClick={() => {
+                setPicked(i);
+                if (i !== item.answer) recordMiss(item);
+              }}
             >
               <span className="quiz-letter">{String.fromCharCode(65 + i)}</span>
               <span>{option}</span>

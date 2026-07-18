@@ -259,4 +259,9 @@ export const quest08: Quest = {
     closing:
       "**Keep verifying:** every excerpt links to the identical lines on GitHub at the pinned commit. You just did something quietly profound: reproduced a seventeen-year-old artifact from first principles and proved no one has ever altered it. Next: stop reading history and start enforcing it. Run your own node.",
   },
+  feynman: {
+    prompt: "Explain why the newspaper headline is in block zero, in two sentences.",
+    model:
+      "A block containing the morning paper of 3 January 2009 cannot have been created earlier, so the headline proves the chain was not secretly pre-mined. That it happens to be about bank bailouts reads like a mission statement, and the code preserves it forever either way.",
+  },
 };

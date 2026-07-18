@@ -95,6 +95,16 @@ export interface Stop {
   myth?: Myth;
   /** Self-check questions rendered at the end of the stop. */
   quiz?: QuizItem[];
+  /** Bank-vs-Bitcoin contrast rows, anchoring the concept in familiar ground. */
+  contrast?: Array<{ aspect: string; bank: string; bitcoin: string }>;
+}
+
+/** The explain-it-back exercise at the end of a quest (Feynman technique). */
+export interface Feynman {
+  /** e.g. "Explain the 21M cap to a friend in two sentences." */
+  prompt: string;
+  /** A model answer revealed for self-comparison (RichText). */
+  model: string;
 }
 
 /**
@@ -148,6 +158,8 @@ export interface Quest {
     items: RecapItem[];
     closing: string;
   };
+  /** Optional explain-it-back exercise rendered after the recap. */
+  feynman?: Feynman;
 }
 
 /** Build a "verify on GitHub" URL for an excerpt at a quest's pinned commit. */

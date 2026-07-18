@@ -214,4 +214,9 @@ export const quest10: Quest = {
     closing:
       "**Keep verifying:** every excerpt links to the identical lines on GitHub at the pinned commit. And carry this one home: coins never \"go to\" an address; they sit in boxes on every node's disk, and the address was only ever the spelling of the lock. Reuse tells the whole world those boxes belong together, so let your wallet hand out a fresh one each time. It can mint them forever, and now you know why.",
   },
+  feynman: {
+    prompt: "Explain what an address is, in two sentences.",
+    model:
+      "An address is not an account: it is the recipe for a lock, spelled in a 32-letter alphabet with a checksum that mathematically catches up to four typos. Your wallet invents them offline for free, and the network first hears of one when somebody pays it.",
+  },
 };

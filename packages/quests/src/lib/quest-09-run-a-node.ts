@@ -218,4 +218,9 @@ export const quest09: Quest = {
     closing:
       "**This is graduation.** Nine quests ago you held bitcoin on the word of engineers you'd never met. Now: you've read the emission schedule and its enforcement, watched keys defeat thieves, forked the rules and felt why forking is powerless, mined a block, rebuilt the genesis block from four numbers. And you know exactly what a node does all day, fine print included. Run one. From then on, when someone asks how you know there will only ever be 21 million bitcoin, you have the only answer that was ever worth anything: *because I checked.*",
   },
+  feynman: {
+    prompt: "Explain what running a node gets you, in two sentences.",
+    model:
+      "Your own computer downloads every block since 2009 and re-runs every rule, then answers questions like \"how many bitcoin exist\" from its own disk. Every claim about Bitcoin stops being someone's word and becomes your machine's measurement.",
+  },
 };

@@ -52,6 +52,11 @@ export const quest00: Quest = {
     },
     {
       id: 'the-copy-problem',
+      contrast: [
+        { aspect: "Who keeps the ledger", bank: "The bank keeps the only copy", bitcoin: "Everyone who wants a copy keeps a full one" },
+        { aspect: "Who can edit it", bank: "The keeper, and whoever compels the keeper", bitcoin: "Nobody: new lines must pass rules every copy checks" },
+        { aspect: "What a frozen account means", bank: "The keeper declined you", bitcoin: "No mechanism for it exists in the rules" },
+      ],
       title: 'Whoever keeps the list rules the list',
       takeaway:
         'One list with one keeper means the keeper is in charge: they can freeze a line, edit a line, or add a line for themselves. The fix sounds absurd at first: **let everyone keep a full copy, and agree on rules for new lines.**',
@@ -135,5 +140,10 @@ export const quest00: Quest = {
     ],
     closing:
       "**Next:** the first page of the rulebook. Quest #1 shows you the ten lines that decide how new money appears on the list, and then your own browser runs them. No trust required; that's the house style here.",
+  },
+  feynman: {
+    prompt: "Explain to a friend, in two sentences, what money actually is.",
+    model:
+      "Money is a shared memory of who is owed what, and everything from cash to banking apps is just a way of keeping that list. The only questions that matter about any money are who keeps the list and what stops them from editing it.",
   },
 };

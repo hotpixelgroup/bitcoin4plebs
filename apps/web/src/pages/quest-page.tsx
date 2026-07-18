@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { getQuestBySlug, quests } from '@bitcoin4plebs/quests';
-import { Callout, RichText, StopSection } from '@bitcoin4plebs/ui';
+import { Callout, FeynmanBox, RichText, StopSection } from '@bitcoin4plebs/ui';
 import { ReadProgress } from '../app/read-progress';
 import { isFreshVisitor, recordReadPosition, useVerifiedQuests } from '../lib/progress';
 import { getRunner } from '../runners/registry';
@@ -161,6 +161,7 @@ export function QuestPage() {
         <Callout>
           <RichText text={quest.recap.closing} />
         </Callout>
+        {quest.feynman && <FeynmanBox feynman={quest.feynman} />}
         <button
           className={`verify-toggle ${isVerified ? 'on' : ''}`}
           onClick={() => toggle(quest.slug)}

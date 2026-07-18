@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import type { Quest } from '@bitcoin4plebs/quests';
 import { quests } from '@bitcoin4plebs/quests';
+import { Diploma } from '../app/diploma';
 import { latestReadPosition, useVerifiedQuests } from '../lib/progress';
 
 /** One-line subtitles for each curriculum track (view concern, so kept here). */
@@ -64,11 +65,15 @@ export function HomePage() {
             every excerpt <b>CI-verified</b>
           </span>
         </div>
-        {verifiedCount > 0 && (
+        {verifiedCount > 0 && verifiedCount < quests.length && (
           <p className="hero-progress">
             ✓ You've verified {verifiedCount} of {quests.length} quests with your own eyes.
           </p>
         )}
+        {verifiedCount === quests.length && <Diploma />}
+        <p className="hero-question-link">
+          Arriving with a question? <Link to="/questions">Find your way in →</Link>
+        </p>
         {(() => {
           const resume = latestReadPosition(verified);
           const resumeQuest = resume ? quests.find((q) => q.slug === resume.slug) : undefined;
