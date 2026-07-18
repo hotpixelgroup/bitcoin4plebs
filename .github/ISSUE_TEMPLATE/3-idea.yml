@@ -1,0 +1,21 @@
+name: Quest idea or improvement
+description: Propose a new quest, figure, or a better way to teach something.
+title: "[idea] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: The idea
+      description: What should exist, and what question would it answer for a newcomer?
+    validations:
+      required: true
+  - type: textarea
+    id: value
+    attributes:
+      label: Who does it help
+      description: What misunderstanding does it fix, or what can a reader verify afterward that they could not before?
+  - type: markdown
+    attributes:
+      value: |
+        For new quests, please wait for a thumbs-up here before building. Every quest must carry verbatim pinned excerpts, a story chapter, a runnable finale, and quizzes, so scope is worth agreeing on first.
