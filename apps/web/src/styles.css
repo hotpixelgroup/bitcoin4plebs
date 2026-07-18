@@ -966,6 +966,48 @@ tr:last-child td {
   font-weight: 600;
 }
 
+/* ——— address x-ray runner ——— */
+
+.addr-input {
+  max-width: 100%;
+  font-size: 13px;
+}
+.addr-display {
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  min-height: 1.6em;
+}
+.addr-hrp {
+  color: var(--brand);
+  font-weight: 700;
+}
+.addr-sep {
+  color: var(--muted);
+}
+.addr-data {
+  color: var(--ink-2);
+}
+.addr-check {
+  color: #86b6ef;
+}
+.addr-typo {
+  color: #e66767;
+  font-weight: 700;
+  text-decoration: underline wavy;
+}
+.addr-legend {
+  font-size: 12px;
+  color: var(--muted);
+  font-family: var(--mono);
+  margin: 2px 0 14px;
+}
+.addr-invalid {
+  color: #e66767;
+}
+.addr-typo-note code {
+  color: var(--brand);
+}
+
 /* ——— recap ——— */
 
 .recap {

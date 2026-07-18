@@ -7,3 +7,4 @@ export * from './lib/keyspace.js';
 export * from './lib/pow.js';
 export * from './lib/fee-market.js';
 export * from './lib/genesis.js';
+export * from './lib/bech32.js';

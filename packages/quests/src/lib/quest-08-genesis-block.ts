@@ -240,6 +240,6 @@ export const quest08: Quest = {
       },
     ],
     closing:
-      "**Keep verifying:** every excerpt links to the identical lines on GitHub at the pinned commit. You just did something quietly profound: reproduced a seventeen-year-old artifact from first principles and proved no one has ever altered it. One quest remains — stop reading history and start enforcing it: run your own node.",
+      "**Keep verifying:** every excerpt links to the identical lines on GitHub at the pinned commit. You just did something quietly profound: reproduced a seventeen-year-old artifact from first principles and proved no one has ever altered it. Next: stop reading history and start enforcing it — run your own node.",
   },
 };

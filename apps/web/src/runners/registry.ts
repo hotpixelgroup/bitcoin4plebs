@@ -1,5 +1,6 @@
 import type { ComponentType } from 'react';
 import type { Finale } from '@bitcoin4plebs/quests';
+import { AddressXray } from './address/address-xray';
 import { EmissionRunner } from './emission/emission-runner';
 import { FeeAuction } from './feemarket/fee-auction';
 import { ForkYourself } from './fork/fork-yourself';
@@ -29,6 +30,7 @@ const runners: Record<string, ComponentType<RunnerProps>> = {
   'fee-auction': FeeAuction,
   'genesis-hash': GenesisHash,
   'supply-check': SupplyCheck,
+  'address-xray': AddressXray,
 };
 
 export function getRunner(id: string): ComponentType<RunnerProps> | undefined {

@@ -8,6 +8,7 @@ import { quest06 } from './quest-06-mining.js';
 import { quest07 } from './quest-07-press-send.js';
 import { quest08 } from './quest-08-genesis-block.js';
 import { quest09 } from './quest-09-run-a-node.js';
+import { quest10 } from './quest-10-addresses.js';
 
 /**
  * The quest registry, in curriculum order — each quest builds on the
@@ -25,6 +26,7 @@ export const quests: Quest[] = [
   quest07,
   quest08,
   quest09,
+  quest10,
 ];
 
 export function getQuestBySlug(slug: string): Quest | undefined {
