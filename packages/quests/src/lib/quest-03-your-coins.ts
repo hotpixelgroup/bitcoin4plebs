@@ -26,6 +26,7 @@ export const quest03: Quest = {
   stops: [
     {
       id: 'locked-boxes',
+      viz: 'utxo-flow',
       title: 'Your coins are locked boxes, not account balances',
       takeaway:
         'Bitcoin has no accounts. Your "balance" is a pile of **outputs** — little locked boxes, each holding satoshis and a lock. Read the developers\' own comment: the lock says who *must be able to sign* to open it.',

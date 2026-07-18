@@ -24,6 +24,10 @@ const y = (btc: number) => Y0 - (btc / VMAX) * (Y0 - Y1);
 
 const TOTAL = totalSupply();
 
+/** Roughly the present day: the reviewed checkpoint height from chainparams.cpp:142. */
+const TODAY = 938_343;
+const HALVINGS = [1, 2, 3, 4].map((k) => k * SUBSIDY_HALVING_INTERVAL);
+
 interface Hover {
   height: number;
   px: number;
@@ -121,6 +125,30 @@ export function SupplyChart({ eras, revealed, done }: SupplyChartProps) {
         <text x={X0 + 6} y={y(21_000_000) - 6} textAnchor="start" className="chart-tick">
           MAX_MONEY · 21,000,000
         </text>
+        {/* halving markers + the reader's place in history */}
+        {done &&
+          HALVINGS.map((h) => (
+            <g key={h} className="chart-halving">
+              <line x1={x(h)} x2={x(h)} y1={Y0 - 8} y2={Y0} />
+              <text x={x(h)} y={Y0 - 12} textAnchor="middle">
+                ½
+              </text>
+            </g>
+          ))}
+        {done && (
+          <g className="chart-today">
+            <line
+              x1={x(TODAY)}
+              x2={x(TODAY)}
+              y1={y(Number(supplyAtHeight(TODAY, eras)) / 1e8)}
+              y2={Y0}
+            />
+            <circle cx={x(TODAY)} cy={y(Number(supplyAtHeight(TODAY, eras)) / 1e8)} r={4} />
+            <text x={x(TODAY)} y={y(Number(supplyAtHeight(TODAY, eras)) / 1e8) - 10} textAnchor="middle">
+              you are here — 95% already minted
+            </text>
+          </g>
+        )}
         {/* the supply curve */}
         <polyline points={points.map((p) => p.join(',')).join(' ')} className="chart-series" />
         {revealed > 0 && <circle cx={last[0]} cy={last[1]} r={4} className="chart-dot" />}

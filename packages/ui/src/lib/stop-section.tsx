@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import type { SourcePin, Stop } from '@bitcoin4plebs/quests';
 import { CodeCard } from './code-card.js';
 import { RichText } from './rich-text.js';
@@ -9,13 +10,15 @@ export interface StopSectionProps {
   /** Total number of stops in the quest. */
   total: number;
   pin: SourcePin;
+  /** Resolved inline interactive figure for this stop (from stop.viz). */
+  viz?: ReactNode;
 }
 
 /**
  * One quest stop: split-screen with three depths of explanation on the
  * left (takeaway → prose → line-by-line) and the real code on the right.
  */
-export function StopSection({ stop, index, total, pin }: StopSectionProps) {
+export function StopSection({ stop, index, total, pin, viz }: StopSectionProps) {
   return (
     <section className="stop" id={stop.id}>
       <div className="stop-head">
@@ -54,6 +57,7 @@ export function StopSection({ stop, index, total, pin }: StopSectionProps) {
         </div>
         <CodeCard excerpt={stop.excerpt} pin={pin} />
       </div>
+      {viz && <div className="stop-viz">{viz}</div>}
     </section>
   );
 }

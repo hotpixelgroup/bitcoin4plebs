@@ -41,6 +41,7 @@ export const quest04: Quest = {
     },
     {
       id: 'majority-cant-print',
+      viz: 'fiftyone-race',
       title: "Even 51% of miners can't print a single coin",
       takeaway:
         'The famous "51% attack" can *reorder recent* transactions — but it **cannot** print coins, steal your keys, or change the rules, because rule-breaking blocks are discarded by every node **regardless of how much work they carry**.',
@@ -52,6 +53,7 @@ export const quest04: Quest = {
     },
     {
       id: 'how-rules-change',
+      viz: 'activation-timeline',
       title: 'So how did the rules ever change? Read the scars',
       takeaway:
         'Bitcoin\'s rules **have** changed — carefully, rarely, and by near-unanimous adoption. Each upgrade\'s activation block is **carved permanently into the code**, like rings in a tree trunk.',

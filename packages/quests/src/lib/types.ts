@@ -63,6 +63,12 @@ export interface Stop {
   /** Open the annotations panel by default. */
   annotationsOpen?: boolean;
   excerpt: CodeExcerpt;
+  /**
+   * Optional inline interactive figure rendered below the stop, looked up
+   * in the app's viz registry (mirrors Finale.runnerId). Quests stay
+   * serializable data.
+   */
+  viz?: string;
 }
 
 /**

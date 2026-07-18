@@ -26,6 +26,7 @@ export const quest06: Quest = {
   stops: [
     {
       id: 'the-header',
+      viz: 'avalanche-grid',
       title: 'The whole "puzzle" is 80 bytes — and Satoshi explains it in a comment',
       takeaway:
         'This comment has survived since 2009, and it *is* the mining explainer: collect transactions, then **"scan through nonce values"** until the block\'s hash "satisfies proof-of-work requirements." No equations. Scanning.',
@@ -97,6 +98,7 @@ export const quest06: Quest = {
     },
     {
       id: 'thermostat',
+      viz: 'difficulty-thermostat',
       title: 'The thermostat: measure two weeks, clamp the correction',
       takeaway:
         'Every 2,016 blocks, the network measures how long they *actually* took versus the 14 days they *should* have taken — and clamps the correction to **4× in either direction**, so not even a massive hashrate shock can whipsaw the clock.',

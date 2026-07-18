@@ -28,6 +28,7 @@ export const quest07: Quest = {
   stops: [
     {
       id: 'front-door',
+      viz: 'gossip-network',
       title: 'The front door: AcceptToMemoryPool',
       takeaway:
         'Before your transaction goes *anywhere*, the first node it meets audits it through this function. Pass, and the node adds it to its **mempool** — the waiting room — and gossips it onward. Fail, and it dies here, silently.',
@@ -124,6 +125,7 @@ export const quest07: Quest = {
     },
     {
       id: 'set-in-stone',
+      viz: 'tamper-cascade',
       title: 'Confirmed — and then buried',
       takeaway:
         'A miner wins Quest #6\'s lottery with your transaction inside their block. That\'s **1 confirmation**. Every later block buries yours under more proof-of-work — and that, says this 2009 comment, is the whole finality machine.',

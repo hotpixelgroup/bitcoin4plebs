@@ -75,6 +75,7 @@ export const quest08: Quest = {
     },
     {
       id: 'construction',
+      viz: 'merkle-lightning',
       title: 'Block zero is built exactly like block 900,000',
       takeaway:
         'No special cases: the genesis block is assembled from the same parts as every block since — one coinbase transaction and the 80-byte header you met in Quest #6. **One field gives away its rank: the previous-block hash is set to nothing.**',

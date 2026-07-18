@@ -4,6 +4,7 @@ import { getQuestBySlug, quests } from '@bitcoin4plebs/quests';
 import { Callout, RichText, StopSection } from '@bitcoin4plebs/ui';
 import { useVerifiedQuests } from '../lib/progress';
 import { getRunner } from '../runners/registry';
+import { getViz } from '../vizzes/registry';
 
 const DEFAULT_TITLE = "bitcoin4plebs — Don't trust. Verify.";
 
@@ -60,15 +61,19 @@ export function QuestPage() {
         </p>
       </section>
 
-      {quest.stops.map((stop, i) => (
-        <StopSection
-          key={stop.id}
-          stop={stop}
-          index={i + 1}
-          total={quest.stops.length}
-          pin={quest.pin}
-        />
-      ))}
+      {quest.stops.map((stop, i) => {
+        const Viz = stop.viz ? getViz(stop.viz) : undefined;
+        return (
+          <StopSection
+            key={stop.id}
+            stop={stop}
+            index={i + 1}
+            total={quest.stops.length}
+            pin={quest.pin}
+            viz={Viz ? <Viz /> : undefined}
+          />
+        );
+      })}
 
       {quest.finale && (
         <section className="stop finale" id="finale">

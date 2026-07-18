@@ -32,6 +32,7 @@ export const quest10: Quest = {
   stops: [
     {
       id: 'respelled-lock',
+      viz: 'address-pipeline',
       title: 'An address is a spelling of a lock, not a place',
       takeaway:
         'Here is the whole recipe for a modern address: take the 20-byte hash of your public key (Quest #3), put a version number in front, regroup the bits, spell it in bech32 with the network\'s prefix. **The address IS the lock, re-spelled for humans.**',

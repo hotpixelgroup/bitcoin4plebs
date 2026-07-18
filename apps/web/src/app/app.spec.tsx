@@ -2,6 +2,7 @@ import { fireEvent, render, screen, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { glossary, quest01, quests } from '@bitcoin4plebs/quests';
 import { getRunner } from '../runners/registry';
+import { getViz } from '../vizzes/registry';
 import App from './app';
 
 describe('App', () => {
@@ -55,6 +56,19 @@ describe('App', () => {
         expect(getRunner(quest.finale.runnerId), `runner ${quest.finale.runnerId}`).toBeDefined();
       }
     }
+  });
+
+  it('has a registered visualization for every stop that declares one', () => {
+    let wired = 0;
+    for (const quest of quests) {
+      for (const stop of quest.stops) {
+        if (stop.viz) {
+          expect(getViz(stop.viz), `viz ${stop.viz} (${quest.id}/${stop.id})`).toBeDefined();
+          wired++;
+        }
+      }
+    }
+    expect(wired).toBeGreaterThanOrEqual(10);
   });
 
   it('shows a friendly not-found page for unknown quests', () => {

@@ -53,6 +53,7 @@ export const quest01: Quest = {
     },
     {
       id: 'schedule',
+      viz: 'bitshift-halving',
       title: 'The entire emission schedule is ten lines of code',
       takeaway:
         "This one small function decides how many new satoshis a miner may create in each block — **for all of history, past and future**. There is no committee, no dial, no admin panel. Just this.",
