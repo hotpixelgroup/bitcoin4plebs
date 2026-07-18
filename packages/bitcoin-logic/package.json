@@ -1,0 +1,21 @@
+{
+  "name": "@bitcoin4plebs/bitcoin-logic",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "@bitcoin4plebs/source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "import": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./package.json": "./package.json"
+  },
+  "nx": {
+    "tags": ["scope:shared", "type:domain"]
+  },
+  "dependencies": {}
+}

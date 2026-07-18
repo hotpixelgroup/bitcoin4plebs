@@ -1,0 +1,14 @@
+{
+  "name": "@bitcoin4plebs/web",
+  "version": "0.0.1",
+  "private": true,
+  "nx": {
+    "projectType": "application",
+    "tags": ["scope:web"]
+  },
+  "devDependencies": {
+    "@bitcoin4plebs/bitcoin-logic": "*",
+    "@bitcoin4plebs/quests": "*",
+    "@bitcoin4plebs/ui": "*"
+  }
+}

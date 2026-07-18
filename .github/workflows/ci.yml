@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          filter: tree:0
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: 'npm'
+
+      - run: npm ci
+
+      # "Don't trust, verify" applied to ourselves: fetch the real Bitcoin
+      # Core source at the pinned commit (read from constants.ts, so there
+      # is exactly one place the pin lives), then let the quests test diff
+      # every excerpt on the site against it, letter for letter.
+      - name: Fetch pinned Bitcoin Core source
+        run: |
+          PIN=$(grep -oE "[0-9a-f]{40}" packages/bitcoin-logic/src/lib/constants.ts | head -1)
+          echo "Pinned commit: $PIN"
+          git init --quiet /tmp/bitcoin-pinned
+          cd /tmp/bitcoin-pinned
+          git remote add origin https://github.com/bitcoin/bitcoin.git
+          git sparse-checkout set src
+          git fetch --quiet --depth=1 --filter=blob:none origin "$PIN"
+          git checkout --quiet FETCH_HEAD
+
+      - run: npx nx run-many -t lint test build typecheck
+        env:
+          BITCOIN_SRC: /tmp/bitcoin-pinned

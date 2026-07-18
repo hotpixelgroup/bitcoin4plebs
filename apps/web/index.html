@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>bitcoin4plebs — Don't trust. Verify.</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Understand Bitcoin's actual source code — no engineering degree required. Guided verification quests over the real, pinned Bitcoin Core source."
+    />
+    <style>
+      html {
+        background: #0d0d0d;
+      }
+    </style>
+    <script>
+      // GitHub Pages SPA redirect (spa-github-pages): 404.html encodes the
+      // deep link as a query param; decode it back into a real path here.
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
