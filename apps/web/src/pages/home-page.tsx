@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import type { Quest } from '@bitcoin4plebs/quests';
 import { quests } from '@bitcoin4plebs/quests';
 import { Diploma } from '../app/diploma';
+import { TodayPanel } from '../app/today-panel';
 import { latestReadPosition, useVerifiedQuests } from '../lib/progress';
 
 /** One-line subtitles for each curriculum track (view concern, so kept here). */
@@ -94,6 +95,8 @@ export function HomePage() {
           return null;
         })()}
       </section>
+
+      <TodayPanel />
 
       {groups.map((group) => {
         const done = group.quests.filter((q) => verified[q.slug]).length;
