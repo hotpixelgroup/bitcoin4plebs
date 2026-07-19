@@ -3696,6 +3696,108 @@ tr:last-child td {
   line-height: 1.55;
 }
 
+/* ——— cluster detective (Quest #15 finale) ——— */
+.cd-brief {
+  font-size: 14px;
+  color: var(--ink-2);
+  margin: 4px 0 14px;
+}
+.cd-ledger {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.cd-tx {
+  border: 1px solid var(--baseline);
+  border-radius: var(--radius);
+  background: var(--card);
+  padding: 10px 14px;
+}
+.cd-tx-label {
+  font-size: 12.5px;
+  color: var(--muted);
+  margin-bottom: 7px;
+}
+.cd-tx-id {
+  font-family: var(--mono);
+  font-weight: 700;
+  color: var(--ink-2);
+}
+.cd-tx-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.cd-side {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.cd-arrow {
+  color: var(--muted);
+  font-family: var(--mono);
+}
+.cd-addr {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-2);
+  background: var(--page);
+  border: 1px solid var(--baseline);
+  border-radius: 7px;
+  padding: 5px 9px;
+  cursor: pointer;
+  transition: border-color 0.15s var(--ease), color 0.15s var(--ease);
+}
+.cd-addr:hover {
+  border-color: var(--brand);
+}
+.cd-addr-picked {
+  border-color: var(--brand);
+  color: var(--brand);
+}
+.cd-addr-cluster {
+  border-color: var(--bad);
+  color: var(--bad);
+  border-style: solid;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--bad) 35%, transparent);
+}
+
+/* ——— channel simulator (Quest #16 finale) ——— */
+.chan-balance {
+  margin-bottom: 14px;
+}
+.chan-bar {
+  height: 14px;
+  border-radius: 999px;
+  border: 1px solid var(--baseline);
+  background: color-mix(in srgb, var(--good) 22%, var(--card));
+  overflow: hidden;
+}
+.chan-bar-ana {
+  height: 100%;
+  background: color-mix(in srgb, var(--brand) 65%, var(--card));
+  transition: width 0.35s var(--ease);
+}
+@media (prefers-reduced-motion: reduce) {
+  .chan-bar-ana {
+    transition: none;
+  }
+}
+.chan-legend {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 7px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-2);
+}
+.chan-stats {
+  margin: 14px 0;
+}
+
 /* ——— core vs knots reference page ——— */
 .cvk-next {
   display: flex;

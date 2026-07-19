@@ -205,4 +205,22 @@ export const questions: NewbieQuestion[] = [
     slug: 'your-keys-your-coins',
     stop: 'what-kills-wallets',
   },
+  {
+    question: 'Can everyone see my transactions?',
+    short: 'Yes, forever, and no: the ledger is public but records addresses, not names. Whether the two get linked is a discipline your wallet already practices for you.',
+    slug: 'who-can-see-your-money',
+    stop: 'glass-ledger',
+  },
+  {
+    question: 'Why does my wallet show a different address every time?',
+    short: "It's protecting you: fresh addresses are free (one seed makes infinitely many) and reusing one stitches your payments together for any watcher.",
+    slug: 'who-can-see-your-money',
+    stop: 'fresh-addresses',
+  },
+  {
+    question: 'Is Lightning real Bitcoin?',
+    short: 'A real channel balance is a signed Bitcoin transaction you can enforce on-chain yourself; the caveat is custodial apps, which hold an IOU instead. Read the actual scripts.',
+    slug: 'a-thousand-coffees',
+    stop: 'the-network',
+  },
 ];

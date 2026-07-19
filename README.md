@@ -6,9 +6,9 @@
 
 **Live site: https://hotpixelgroup.github.io/bitcoin4plebs/**
 
-Millions of people hold bitcoin on the word of engineers they've never met. This site exists so they don't have to. Each **verification quest** walks a non-technical reader through the *real* Bitcoin Core source code: verbatim excerpts pinned to a specific commit, annotated in plain English, with a "run it yourself" finale that proves the claim on the reader's own machine. One running story (Ana buys Bo's bike for 0.6 BTC) threads through all fifteen quests, and the home page opens with a live panel that takes exactly one number on trust and computes the rest in your browser.
+Millions of people hold bitcoin on the word of engineers they've never met. This site exists so they don't have to. Each **verification quest** walks a non-technical reader through the *real* Bitcoin Core source code: verbatim excerpts pinned to a specific commit, annotated in plain English, with a "run it yourself" finale that proves the claim on the reader's own machine. One running story (Ana buys Bo's bike for 0.6 BTC) threads through all seventeen quests, and the home page opens with a live panel that takes exactly one number on trust and computes the rest in your browser.
 
-The curriculum is fifteen quests in five tracks:
+The curriculum is seventeen quests in six tracks:
 
 **Start here** · 0: What even is a ledger?
 
@@ -18,13 +18,15 @@ The curriculum is fifteen quests in five tracks:
 
 **Zoom out** · 12: Who keeps Bitcoin usable when no one is in charge? (the fee-floor thermostat from `txmempool.cpp`, blind best-bid block assembly, the economic-node veto, and a stress-the-network simulator) · 13: The data wars: what is the ledger for? (OP_RETURN's history, the inscription flood, Core v30 vs. Knots, and BIP-110 quoted verbatim from a second pinned repo, both camps steelmanned)
 
-**Take it home** · 14: Where do your coins live while you sleep? (wallets as keychains, the BIP-39 recipe quoted verbatim and run 1:1 in-browser, what actually kills wallets, and a seed studio that mints practice phrases and breaks their checksums on purpose)
+**Take it home** · 14: Where do your coins live while you sleep? (wallets as keychains, the BIP-39 recipe quoted verbatim and run 1:1 in-browser, what actually kills wallets, and a seed studio that mints practice phrases and breaks their checksums on purpose) · 15: Who can see your money? (the glass ledger, Core's avoid-reuse and fresh-change code, clustering heuristics, and a cluster-detective finale where you run the analyst's playbook and then starve it)
+
+**Beyond the chain** · 16: Where do a thousand coffees fit? (payment channels from the BOLT specifications, a third pinned repository: the 2-of-2 funding script and the OP_IF revocation penalty verbatim, plus a channel simulator with a cheat button)
 
 There are also reference pages comparing [Bitcoin Core and Bitcoin Knots](https://hotpixelgroup.github.io/bitcoin4plebs/core-vs-knots) as software choices and mapping [wallet types](https://hotpixelgroup.github.io/bitcoin4plebs/wallets), brandlessly.
 
 ## Principles
 
-1. **The real code is always on screen.** Every excerpt is copied verbatim from `bitcoin/bitcoin` (and, for BIP documents, `bitcoin/bips`) at pinned commits and links to the same lines on GitHub. Don't trust this site either: verify it.
+1. **The real code is always on screen.** Every excerpt is copied verbatim from `bitcoin/bitcoin` (and, for specification documents, `bitcoin/bips` and `lightning/bolts`) at pinned commits and links to the same lines on GitHub. Don't trust this site either: verify it.
 2. **The AI/author is a tour guide, never an oracle.** Explanations sit *next to* the source, not in place of it.
 3. **Quests are data, not pages.** One generic engine renders every quest, so new quests are content files, and could even come from an API later without touching the app.
 4. **Verification runs in CI.** The unit tests assert the famous numbers (33 eras, block 6,929,999, 2,099,999,997,690,000 satoshis, the genesis hash) against the same logic the site runs, and CI fetches Bitcoin Core at the pinned commit and diffs **every excerpt on the site against the real source, letter for letter**, on every push and every pull request.
@@ -46,12 +48,13 @@ npx nx dev web        # dev server on http://localhost:4200
 npx nx run-many -t lint test build typecheck
 ```
 
-To also run the verbatim-excerpt check locally, point `BITCOIN_SRC` and
-`BIPS_SRC` at checkouts of Bitcoin Core and the BIPs repo at the pinned
-commits (both pins live in `packages/quests/src/lib/excerpts.ts`):
+To also run the verbatim-excerpt check locally, point `BITCOIN_SRC`,
+`BIPS_SRC`, and `BOLTS_SRC` at checkouts of Bitcoin Core, the BIPs, and
+the Lightning BOLTs at the pinned commits (all pins live in
+`packages/quests/src/lib/excerpts.ts`):
 
 ```sh
-BITCOIN_SRC=~/bitcoin BIPS_SRC=~/bips npx nx test @bitcoin4plebs/quests
+BITCOIN_SRC=~/bitcoin BIPS_SRC=~/bips BOLTS_SRC=~/bolts npx nx test @bitcoin4plebs/quests
 ```
 
 ## Deploy

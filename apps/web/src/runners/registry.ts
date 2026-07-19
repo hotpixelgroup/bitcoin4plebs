@@ -1,6 +1,8 @@
 import type { ComponentType } from 'react';
 import type { Finale } from '@bitcoin4plebs/quests';
 import { AddressXray } from './address/address-xray';
+import { ChannelSimulator } from './lightning/channel-simulator';
+import { ClusterDetective } from './privacy/cluster-detective';
 import { EmissionRunner } from './emission/emission-runner';
 import { FeeAuction } from './feemarket/fee-auction';
 import { ForkYourself } from './fork/fork-yourself';
@@ -39,6 +41,8 @@ const runners: Record<string, ComponentType<RunnerProps>> = {
   'stress-network': StressNetwork,
   'policy-picker': PolicyPicker,
   'seed-studio': SeedStudio,
+  'cluster-detective': ClusterDetective,
+  'channel-simulator': ChannelSimulator,
 };
 
 export function getRunner(id: string): ComponentType<RunnerProps> | undefined {

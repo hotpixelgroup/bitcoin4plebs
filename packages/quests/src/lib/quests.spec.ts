@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { BIPS_PIN } from './excerpts.js';
+import { OVERRIDE_PINS } from './excerpts.js';
 import { GLOSSARY_CATEGORIES, glossary } from './glossary.js';
 import { entryPaths, prerequisites } from './paths.js';
 import { quests } from './registry.js';
@@ -44,13 +44,16 @@ describe('quest content integrity', () => {
     }
   });
 
-  it('excerpt pin overrides all point at the one declared bips pin', () => {
-    expect(BIPS_PIN.commit).toMatch(/^[0-9a-f]{40}$/);
+  it('excerpt pin overrides all match a declared pin exactly', () => {
+    for (const pin of OVERRIDE_PINS) {
+      expect(pin.commit, pin.repo).toMatch(/^[0-9a-f]{40}$/);
+    }
     for (const quest of quests) {
       for (const stop of quest.stops) {
         if (stop.excerpt?.pin) {
-          expect(stop.excerpt.pin.repo, `${quest.id}/${stop.id}`).toBe(BIPS_PIN.repo);
-          expect(stop.excerpt.pin.commit, `${quest.id}/${stop.id}`).toBe(BIPS_PIN.commit);
+          const declared = OVERRIDE_PINS.find((p) => p.repo === stop.excerpt?.pin?.repo);
+          expect(declared, `${quest.id}/${stop.id}: unknown repo ${stop.excerpt.pin.repo}`).toBeTruthy();
+          expect(stop.excerpt.pin.commit, `${quest.id}/${stop.id}`).toBe(declared?.commit);
         }
       }
     }
@@ -156,20 +159,28 @@ describe('glossary integrity', () => {
   });
 });
 
-const BITCOIN_SRC = process.env['BITCOIN_SRC'];
-const BIPS_SRC = process.env['BIPS_SRC'];
-const srcAvailable = !!BITCOIN_SRC && existsSync(BITCOIN_SRC);
-const bipsAvailable = !!BIPS_SRC && existsSync(BIPS_SRC);
+/** Repo name → local checkout env var, one entry per pinned source. */
+const SRC_ENV: Record<string, string | undefined> = {
+  'bitcoin/bitcoin': process.env['BITCOIN_SRC'],
+  'bitcoin/bips': process.env['BIPS_SRC'],
+  'lightning/bolts': process.env['BOLTS_SRC'],
+};
+const available = (repo: string) => {
+  const dir = SRC_ENV[repo];
+  return !!dir && existsSync(dir);
+};
+const srcAvailable = available('bitcoin/bitcoin');
 
 describe('the verbatim check itself', () => {
   it('cannot be silently skipped in CI', () => {
-    // Locally the check is optional (point BITCOIN_SRC / BIPS_SRC at pinned
-    // checkouts to run it); in CI the workflow fetches both pinned sources,
-    // so absence there means the site's core integrity claim is no longer
-    // being tested.
+    // Locally the checks are optional (point BITCOIN_SRC / BIPS_SRC /
+    // BOLTS_SRC at pinned checkouts to run them); in CI the workflow
+    // fetches every pinned source, so absence there means the site's core
+    // integrity claim is no longer being tested.
     if (process.env['CI']) {
-      expect(srcAvailable, 'CI must set BITCOIN_SRC to a pinned Bitcoin Core checkout').toBe(true);
-      expect(bipsAvailable, 'CI must set BIPS_SRC to a pinned bips checkout').toBe(true);
+      for (const repo of Object.keys(SRC_ENV)) {
+        expect(available(repo), `CI must set the checkout env var for ${repo}`).toBe(true);
+      }
     }
   });
 });
@@ -180,12 +191,11 @@ describe.skipIf(!srcAvailable)('excerpts are VERBATIM from their pinned sources'
       for (const stop of quest.stops) {
         if (!stop.excerpt) continue;
         const { ref, lines, pin } = stop.excerpt;
-        const fromBips = pin?.repo === 'bitcoin/bips';
-        // Locally the bips checkout is optional; the CI guard above makes it
-        // mandatory where it matters.
-        if (fromBips && !bipsAvailable) continue;
-        const root = fromBips ? (BIPS_SRC as string) : (BITCOIN_SRC as string);
-        const filePath = join(root, ref.file);
+        const repo = pin?.repo ?? 'bitcoin/bitcoin';
+        // Locally the non-Core checkouts are optional; the CI guard above
+        // makes them mandatory where it matters.
+        if (repo !== 'bitcoin/bitcoin' && !available(repo)) continue;
+        const filePath = join(SRC_ENV[repo] as string, ref.file);
         const source = readFileSync(filePath, 'utf8').split('\n');
         for (const line of lines) {
           const actual = source[line.n - 1];

@@ -28,15 +28,17 @@ jobs:
       - run: npm ci
 
       # "Don't trust, verify" applied to ourselves: fetch the real sources at
-      # their pinned commits (both pins live in packages/quests excerpts.ts),
+      # their pinned commits (all pins live in packages/quests excerpts.ts),
       # then let the quests test diff every excerpt on the site against them,
-      # letter for letter. Two pins: Bitcoin Core code and BIP documents.
-      - name: Fetch pinned sources (Bitcoin Core + BIPs)
+      # letter for letter. Three pins: Bitcoin Core, the BIPs, the BOLTs.
+      - name: Fetch pinned sources (Bitcoin Core + BIPs + BOLTs)
         run: |
           PIN=$(grep -A2 "'bitcoin/bitcoin'" packages/quests/src/lib/excerpts.ts | grep -oE "[0-9a-f]{40}" | head -1)
           BIPS=$(grep -A2 "'bitcoin/bips'" packages/quests/src/lib/excerpts.ts | grep -oE "[0-9a-f]{40}" | head -1)
+          BOLTS=$(grep -A2 "'lightning/bolts'" packages/quests/src/lib/excerpts.ts | grep -oE "[0-9a-f]{40}" | head -1)
           echo "Pinned bitcoin: $PIN"
           echo "Pinned bips:    $BIPS"
+          echo "Pinned bolts:   $BOLTS"
           git init --quiet /tmp/bitcoin-pinned
           (
             cd /tmp/bitcoin-pinned
@@ -52,8 +54,16 @@ jobs:
             git fetch --quiet --depth=1 --filter=blob:none origin "$BIPS"
             git checkout --quiet FETCH_HEAD
           )
+          git init --quiet /tmp/bolts-pinned
+          (
+            cd /tmp/bolts-pinned
+            git remote add origin https://github.com/lightning/bolts.git
+            git fetch --quiet --depth=1 --filter=blob:none origin "$BOLTS"
+            git checkout --quiet FETCH_HEAD
+          )
 
       - run: npx nx run-many -t lint test build typecheck
         env:
           BITCOIN_SRC: /tmp/bitcoin-pinned
           BIPS_SRC: /tmp/bips-pinned
+          BOLTS_SRC: /tmp/bolts-pinned

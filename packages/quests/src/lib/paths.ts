@@ -68,6 +68,8 @@ export const prerequisites: Record<number, number[]> = {
   12: [6, 7],
   13: [12, 4],
   14: [3, 11],
+  15: [7, 14],
+  16: [3, 12],
 };
 
 /** Group consecutive quests that share a track, preserving curriculum order. */

@@ -244,6 +244,32 @@ export const glossary: GlossaryEntry[] = [
     quest: 14,
   },
 
+  {
+    term: 'Change output',
+    match: ['change output', 'change address'],
+    category: 'Transactions & the mempool',
+    definition:
+      "Coins are boxes spent whole, so paying 0.6 from a 1.0 box creates a second output returning 0.4 to yourself: the change. Watchers guess which output is change to keep following you; your wallet fights back by sending change to a brand-new address every time (`GetNewChangeDestination`, the name is the policy).",
+    cite: 'wallet.cpp:2639',
+    quest: 15,
+  },
+  {
+    term: 'Clustering (chain analysis)',
+    match: ['clustering', 'chain analysis', 'common-input'],
+    category: 'Transactions & the mempool',
+    definition:
+      'The watcher\'s craft: collapsing many addresses into one presumed owner, mainly via the common-input heuristic (inputs spent together share a signer) plus change detection. The whitepaper itself warned multi-input spends "necessarily reveal" common ownership. Defense is behavioral: fresh addresses, deliberate spending, no careless consolidation.',
+    quest: 15,
+  },
+  {
+    term: 'Coin control',
+    match: ['coin control'],
+    category: 'Transactions & the mempool',
+    definition:
+      'A wallet feature that lets you choose exactly which of your coin-boxes fund a payment, instead of letting automatic selection merge them. The manual override for privacy: what gets spent together gets clustered together, so choosing is power.',
+    quest: 15,
+  },
+
   // --- Transactions & the mempool ---
   {
     term: 'Transaction',
@@ -820,6 +846,31 @@ export const glossary: GlossaryEntry[] = [
     definition:
       "How block space is really measured since SegWit: a block holds 4,000,000 weight units, where ordinary bytes cost 4 each and witness (signature) bytes cost 1, which is the \"75% discount\" inscriptions exploit. Divide by 4 and you get the friendlier unit: ~1,000,000 vbytes per block. A typical payment spends ~560 of the 4M, about one seven-thousandth of a block.",
     quest: 13,
+  },
+  {
+    term: 'Lightning Network',
+    match: ['Lightning Network', 'Lightning'],
+    category: 'The network & your node',
+    definition:
+      'A network of payment channels above the base chain: coins locked to two keys, balances updated by mutually signed splits nobody broadcasts, cheating punished by the revocation script, and payments routed across channels between strangers. A thousand payments, two on-chain transactions; the chain is the courtroom, not the cash register.',
+    quest: 16,
+  },
+  {
+    term: 'Payment channel',
+    match: ['payment channel', 'payment channels'],
+    category: 'The network & your node',
+    definition:
+      "Two parties lock coins in a 2-of-2 multisig on-chain, then pay each other by re-signing the split off-chain, each update revoking the last. Either side can exit to the chain unilaterally with the latest state; broadcasting an old one forfeits everything to the counterparty's penalty key (BOLT #3, quoted verbatim in Quest #16).",
+    cite: '03-transactions.md:79',
+    quest: 16,
+  },
+  {
+    term: 'Revocation key',
+    match: ['revocation key', 'revocation'],
+    category: 'The network & your node',
+    definition:
+      "The secret each channel party surrenders for its *previous* state whenever the balance updates: the price of the new split. Holding it makes the counterparty's old commitment instantly spendable via the OP_IF penalty branch, which is what makes stale states radioactive and channels honest.",
+    quest: 16,
   },
   {
     term: 'UASF (user-activated soft fork)',

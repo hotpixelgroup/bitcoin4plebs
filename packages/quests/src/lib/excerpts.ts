@@ -21,6 +21,19 @@ export const BIPS_PIN: SourcePin = {
   commit: '8c369ac8e60629ac6c032ffe21bb5ec5b35213d7',
 };
 
+/**
+ * Third pin, for excerpts quoted from the Lightning specifications
+ * (the BOLTs). Same letter-for-letter rules, diffed in CI against this
+ * exact commit (BOLTS_SRC locally).
+ */
+export const BOLTS_PIN: SourcePin = {
+  repo: 'lightning/bolts',
+  commit: '94eb038c42e664dd7862faeec6508ccd25f63ff8',
+};
+
+/** Every pin an excerpt may override to, keyed by repo name. */
+export const OVERRIDE_PINS: readonly SourcePin[] = [BIPS_PIN, BOLTS_PIN];
+
 /** GetBlockSubsidy — the entire emission policy. */
 export const EXCERPT_GET_BLOCK_SUBSIDY: CodeExcerpt = {
   ref: { file: 'src/validation.cpp', startLine: 1846, endLine: 1857 },
