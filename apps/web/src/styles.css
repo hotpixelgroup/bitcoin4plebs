@@ -394,12 +394,6 @@ h1 {
   color: var(--brand);
   font-weight: 600;
 }
-.quest-card-soon {
-  opacity: 0.55;
-}
-.quest-card-soon .quest-card-num {
-  color: var(--muted);
-}
 
 /* ——— quest stops ——— */
 
