@@ -6,5 +6,6 @@ export * from './lib/tx-check.js';
 export * from './lib/keyspace.js';
 export * from './lib/pow.js';
 export * from './lib/fee-market.js';
+export * from './lib/fee-floor.js';
 export * from './lib/genesis.js';
 export * from './lib/bech32.js';

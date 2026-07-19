@@ -18,7 +18,7 @@ export interface CodeCardProps {
  * scriptPubKey…) wrapped in tap-to-define glossary popovers. The stored
  * text is untouched; definitions are applied only at render time.
  */
-function CodeLineContent({ text, language }: { text: string; language: 'cpp' | 'ts' }) {
+function CodeLineContent({ text, language }: { text: string; language: 'cpp' | 'ts' | 'text' }) {
   const terms = findCodeTerms(text);
   if (!terms.length) return <>{highlightLine(text, language)}</>;
   const nodes: ReactNode[] = [];

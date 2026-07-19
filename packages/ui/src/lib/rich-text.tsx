@@ -1,4 +1,5 @@
 import { Fragment, type ReactNode } from 'react';
+import { Link } from 'react-router-dom';
 import { GlossaryTerm, entryForCodeToken, linkFirstTerm } from './glossary-term.js';
 
 /**
@@ -38,6 +39,15 @@ function renderToken(token: string, key: number, link: boolean): ReactNode {
   }
   const linkMatch = /^\[([^\]]+)\]\(([^)]+)\)$/.exec(token);
   if (linkMatch) {
+    // Site-internal paths route through the SPA router; external URLs open
+    // in a new tab.
+    if (linkMatch[2].startsWith('/')) {
+      return (
+        <Link key={key} to={linkMatch[2]}>
+          {linkMatch[1]}
+        </Link>
+      );
+    }
     return (
       <a key={key} href={linkMatch[2]} target="_blank" rel="noopener noreferrer">
         {linkMatch[1]}

@@ -6,6 +6,7 @@ import { BitshiftHalving } from './bitshift-halving';
 import { DifficultyThermostat } from './difficulty-thermostat';
 import { FiftyoneRace } from './fiftyone-race';
 import { GossipNetwork } from './gossip-network';
+import { IncentiveMachine } from './incentive-machine';
 import { MerkleLightning } from './merkle-lightning';
 import { SharedLedger } from './shared-ledger';
 import { TamperCascade } from './tamper-cascade';
@@ -28,6 +29,7 @@ const vizzes: Record<string, ComponentType> = {
   'merkle-lightning': MerkleLightning,
   'address-pipeline': AddressPipeline,
   'shared-ledger': SharedLedger,
+  'incentive-machine': IncentiveMachine,
 };
 
 export function getViz(id: string): ComponentType | undefined {

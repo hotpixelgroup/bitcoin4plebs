@@ -1,6 +1,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { BIPS_PIN } from './excerpts.js';
 import { GLOSSARY_CATEGORIES, glossary } from './glossary.js';
 import { quests } from './registry.js';
 
@@ -39,6 +40,18 @@ describe('quest content integrity', () => {
     for (const quest of quests) {
       expect(quest.pin.commit).toMatch(/^[0-9a-f]{40}$/);
       expect(quest.pin.commit).toBe(quests[0].pin.commit);
+    }
+  });
+
+  it('excerpt pin overrides all point at the one declared bips pin', () => {
+    expect(BIPS_PIN.commit).toMatch(/^[0-9a-f]{40}$/);
+    for (const quest of quests) {
+      for (const stop of quest.stops) {
+        if (stop.excerpt?.pin) {
+          expect(stop.excerpt.pin.repo, `${quest.id}/${stop.id}`).toBe(BIPS_PIN.repo);
+          expect(stop.excerpt.pin.commit, `${quest.id}/${stop.id}`).toBe(BIPS_PIN.commit);
+        }
+      }
     }
   });
 });
@@ -108,26 +121,35 @@ describe('glossary integrity', () => {
 });
 
 const BITCOIN_SRC = process.env['BITCOIN_SRC'];
+const BIPS_SRC = process.env['BIPS_SRC'];
 const srcAvailable = !!BITCOIN_SRC && existsSync(BITCOIN_SRC);
+const bipsAvailable = !!BIPS_SRC && existsSync(BIPS_SRC);
 
 describe('the verbatim check itself', () => {
   it('cannot be silently skipped in CI', () => {
-    // Locally the check is optional (point BITCOIN_SRC at a checkout to run
-    // it); in CI the workflow fetches the pinned source, so absence there
-    // means the site's core integrity claim is no longer being tested.
+    // Locally the check is optional (point BITCOIN_SRC / BIPS_SRC at pinned
+    // checkouts to run it); in CI the workflow fetches both pinned sources,
+    // so absence there means the site's core integrity claim is no longer
+    // being tested.
     if (process.env['CI']) {
       expect(srcAvailable, 'CI must set BITCOIN_SRC to a pinned Bitcoin Core checkout').toBe(true);
+      expect(bipsAvailable, 'CI must set BIPS_SRC to a pinned bips checkout').toBe(true);
     }
   });
 });
 
-describe.skipIf(!srcAvailable)('excerpts are VERBATIM from Bitcoin Core (BITCOIN_SRC)', () => {
+describe.skipIf(!srcAvailable)('excerpts are VERBATIM from their pinned sources', () => {
   it('every quoted line matches the source file exactly', () => {
     for (const quest of quests) {
       for (const stop of quest.stops) {
         if (!stop.excerpt) continue;
-        const { ref, lines } = stop.excerpt;
-        const filePath = join(BITCOIN_SRC as string, ref.file);
+        const { ref, lines, pin } = stop.excerpt;
+        const fromBips = pin?.repo === 'bitcoin/bips';
+        // Locally the bips checkout is optional; the CI guard above makes it
+        // mandatory where it matters.
+        if (fromBips && !bipsAvailable) continue;
+        const root = fromBips ? (BIPS_SRC as string) : (BITCOIN_SRC as string);
+        const filePath = join(root, ref.file);
         const source = readFileSync(filePath, 'utf8').split('\n');
         for (const line of lines) {
           const actual = source[line.n - 1];

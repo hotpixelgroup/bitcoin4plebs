@@ -8,7 +8,9 @@ import { GenesisHash } from './genesis/genesis-hash';
 import { HalvingClock } from './halving/halving-clock';
 import { GuessTheKey } from './keyspace/guess-the-key';
 import { MineABlock } from './mining/mine-a-block';
+import { PolicyPicker } from './policy/policy-picker';
 import { SignetTracker } from './signet/signet-tracker';
+import { StressNetwork } from './stress/stress-network';
 import { SupplyCheck } from './supply/supply-check';
 import { RunTheCheck } from './txcheck/run-the-check';
 
@@ -33,6 +35,8 @@ const runners: Record<string, ComponentType<RunnerProps>> = {
   'supply-check': SupplyCheck,
   'address-xray': AddressXray,
   'signet-tracker': SignetTracker,
+  'stress-network': StressNetwork,
+  'policy-picker': PolicyPicker,
 };
 
 export function getRunner(id: string): ComponentType<RunnerProps> | undefined {

@@ -35,7 +35,12 @@ function isCommentLine(line: string): boolean {
   return t.startsWith('//') || t.startsWith('/*') || t.startsWith('*');
 }
 
-export function highlightLine(line: string, language: 'cpp' | 'ts'): ReactNode {
+export function highlightLine(line: string, language: 'cpp' | 'ts' | 'text'): ReactNode {
+  // Non-code sources (BIP documents) render verbatim with no token colors.
+  if (language === 'text') {
+    // eslint-disable-next-line react/jsx-no-useless-fragment -- normalizes string to ReactNode
+    return <>{line}</>;
+  }
   if (isCommentLine(line)) {
     return <span className="tok-comment">{line}</span>;
   }

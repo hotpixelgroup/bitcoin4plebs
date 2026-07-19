@@ -67,7 +67,7 @@ export function StopSection({ stop, index, total, pin, viz }: StopSectionProps) 
             </details>
           )}
         </div>
-        {stop.excerpt && <CodeCard excerpt={stop.excerpt} pin={pin} />}
+        {stop.excerpt && <CodeCard excerpt={stop.excerpt} pin={stop.excerpt.pin ?? pin} />}
       </div>
       {stop.contrast && stop.contrast.length > 0 && (
         <div className="contrast-wrap">

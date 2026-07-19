@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link, Route, Routes } from 'react-router-dom';
 import { PINNED_COMMIT_SHORT } from '@bitcoin4plebs/bitcoin-logic';
+import { CoreVsKnotsPage } from '../pages/core-vs-knots-page';
 import { GlossaryPage } from '../pages/glossary-page';
 import { HomePage } from '../pages/home-page';
 import { QuestPage } from '../pages/quest-page';
@@ -103,6 +104,7 @@ export function App() {
           <Route path="/questions" element={<QuestionsPage />} />
           <Route path="/review" element={<ReviewPage />} />
           <Route path="/sandbox" element={<SandboxPage />} />
+          <Route path="/core-vs-knots" element={<CoreVsKnotsPage />} />
           <Route path="/quests/:slug" element={<QuestPage />} />
         </Routes>
       </div>

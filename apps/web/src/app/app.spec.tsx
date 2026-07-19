@@ -40,12 +40,16 @@ describe('App', () => {
         </MemoryRouter>
       );
       expect(screen.getByRole('heading', { level: 1, name: quest.title })).toBeInTheDocument();
-      // Every excerpt-bearing stop's verify link is present and pinned.
+      // Every excerpt-bearing stop's verify link is present and pinned to
+      // its own source: the quest pin, or the excerpt's override (bips).
+      const excerptStops = quest.stops.filter((s) => s.excerpt);
       const links = screen.queryAllByRole('link', { name: /Verify these lines on GitHub/i });
-      expect(links.length).toBe(quest.stops.filter((s) => s.excerpt).length);
-      for (const link of links) {
-        expect(link).toHaveAttribute('href', expect.stringContaining(quest.pin.commit));
-      }
+      expect(links.length).toBe(excerptStops.length);
+      links.forEach((link, i) => {
+        const pin = excerptStops[i].excerpt?.pin ?? quest.pin;
+        expect(link).toHaveAttribute('href', expect.stringContaining(pin.commit));
+        expect(link).toHaveAttribute('href', expect.stringContaining(pin.repo));
+      });
       unmount();
     }
   });

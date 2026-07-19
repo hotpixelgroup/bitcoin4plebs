@@ -97,6 +97,14 @@ export function NavDrawer({ open, onClose }: NavDrawerProps) {
             <span className="drawer-link-num">↻</span>
             <span>Daily review · five minutes</span>
           </Link>
+          <Link
+            to="/core-vs-knots"
+            className={linkClass('/core-vs-knots')}
+            aria-current={current('/core-vs-knots')}
+          >
+            <span className="drawer-link-num">⑂</span>
+            <span>Core vs. Knots · which node?</span>
+          </Link>
           <Link to="/glossary" className={linkClass('/glossary')} aria-current={current('/glossary')}>
             <span className="drawer-link-num">§</span>
             <span>Glossary</span>

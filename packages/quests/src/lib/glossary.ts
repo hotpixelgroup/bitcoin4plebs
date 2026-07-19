@@ -561,8 +561,33 @@ export const glossary: GlossaryEntry[] = [
     term: 'Bitcoin Core',
     category: 'The network & your node',
     definition:
-      'The reference implementation descended from Satoshi\'s original code: the program whose source every quest excerpt is copied from, at one pinned commit. Not the only implementation, but the one the overwhelming majority of nodes run.',
+      'The reference implementation descended from Satoshi\'s original code: the program whose source every quest excerpt is copied from, at one pinned commit. Not the only implementation (see Bitcoin Knots), but the one most nodes run. [Core vs. Knots, side by side](/core-vs-knots).',
     quest: 9,
+  },
+  {
+    term: 'Bitcoin Knots',
+    match: ['Knots'],
+    category: 'The network & your node',
+    definition:
+      'A derivative of Bitcoin Core maintained by Luke Dashjr: the same consensus engine with a patch set of much stricter relay-policy defaults (data filtering on, bare multisig off). Its 2025 growth was node operators voting against Core v30\'s open OP_RETURN default. [Core vs. Knots, side by side](/core-vs-knots).',
+    quest: 13,
+  },
+  {
+    term: 'Relay policy',
+    match: ['relay policy'],
+    category: 'The network & your node',
+    definition:
+      'Each node\'s own rules about which waiting transactions it will pass along: fee minimums, data limits, standardness. Policy is personal taste, not law; a transaction your node refuses to relay can still reach a miner another way, and once mined, your node accepts the block. Only consensus binds everyone.',
+    cite: 'policy.cpp:137',
+    quest: 12,
+  },
+  {
+    term: 'Economic node',
+    match: ['economic node', 'economic nodes'],
+    category: 'The network & your node',
+    definition:
+      'A full node whose operator accepts bitcoin as payment: an exchange, a merchant, you when someone pays you. These are the nodes whose rules define which chain is "bitcoin," because miners can only sell coins the economy recognizes. In 2017 they outvoted over 80% of hashpower without mining anything.',
+    quest: 12,
   },
   {
     term: 'Initial block download (IBD)',
@@ -734,6 +759,41 @@ export const glossary: GlossaryEntry[] = [
     match: ['pinned commit'],
     category: 'Rules, forks & history',
     definition:
-      'This site\'s anti-tampering rule: every excerpt is copied letter-for-letter from one exact snapshot of Bitcoin Core (commit `18c05d9`), and CI re-diffs all of them against the real repository on every change. The "verify on GitHub" link under each excerpt lets you do the same.',
+      'This site\'s anti-tampering rule: every excerpt is copied letter-for-letter from one exact snapshot of its source repository (Bitcoin Core at commit `18c05d9`, the BIPs repository at `8c369ac`), and CI re-diffs all of them against the real repositories on every change. The "verify on GitHub" link under each excerpt lets you do the same.',
+  },
+  {
+    term: 'OP_RETURN',
+    code: true,
+    match: ['OP_RETURN'],
+    category: 'Transactions & the mempool',
+    definition:
+      'An output type that declares "this carries data and can never be spent," letting nodes prune it instead of tracking it forever. Added in 2014 as harm reduction for data stuffing; how much of it a node relays (`-datacarriersize`) became Bitcoin\'s loudest argument in 2025.',
+    cite: 'policy.h:84',
+    quest: 13,
+  },
+  {
+    term: 'Inscription',
+    match: ['inscription', 'inscriptions'],
+    category: 'Transactions & the mempool',
+    definition:
+      'Data (often an image or token mint) parked inside taproot witness space, where SegWit prices bytes at a 75% discount. The 2023 inscription waves outbid ordinary payments across the whole mempool and reignited the war over what the ledger is for.',
+    quest: 13,
+  },
+  {
+    term: 'Fee floor (rolling minimum)',
+    match: ['fee floor'],
+    category: 'Transactions & the mempool',
+    definition:
+      'The mempool\'s automatic price of admission when it overflows: eviction ratchets the floor up to what the evicted bidder paid, then the floor decays by half every 12 hours until it snaps back to zero. Congestion prices itself and cures itself; nobody chooses the number.',
+    cite: 'txmempool.cpp:851',
+    quest: 12,
+  },
+  {
+    term: 'UASF (user-activated soft fork)',
+    match: ['UASF'],
+    category: 'Rules, forks & history',
+    definition:
+      'A rule change enforced by economic nodes on a schedule regardless of miner support: the 2017 escalation that pressured miners into activating SegWit and sank the SegWit2x hard fork. The proof, run live, that hashpower follows the economy and not the reverse.',
+    quest: 12,
   },
 ];

@@ -27,21 +27,33 @@ jobs:
 
       - run: npm ci
 
-      # "Don't trust, verify" applied to ourselves: fetch the real Bitcoin
-      # Core source at the pinned commit (read from constants.ts, so there
-      # is exactly one place the pin lives), then let the quests test diff
-      # every excerpt on the site against it, letter for letter.
-      - name: Fetch pinned Bitcoin Core source
+      # "Don't trust, verify" applied to ourselves: fetch the real sources at
+      # their pinned commits (both pins live in packages/quests excerpts.ts),
+      # then let the quests test diff every excerpt on the site against them,
+      # letter for letter. Two pins: Bitcoin Core code and BIP documents.
+      - name: Fetch pinned sources (Bitcoin Core + BIPs)
         run: |
-          PIN=$(grep -oE "[0-9a-f]{40}" packages/bitcoin-logic/src/lib/constants.ts | head -1)
-          echo "Pinned commit: $PIN"
+          PIN=$(grep -A2 "'bitcoin/bitcoin'" packages/quests/src/lib/excerpts.ts | grep -oE "[0-9a-f]{40}" | head -1)
+          BIPS=$(grep -A2 "'bitcoin/bips'" packages/quests/src/lib/excerpts.ts | grep -oE "[0-9a-f]{40}" | head -1)
+          echo "Pinned bitcoin: $PIN"
+          echo "Pinned bips:    $BIPS"
           git init --quiet /tmp/bitcoin-pinned
-          cd /tmp/bitcoin-pinned
-          git remote add origin https://github.com/bitcoin/bitcoin.git
-          git sparse-checkout set src
-          git fetch --quiet --depth=1 --filter=blob:none origin "$PIN"
-          git checkout --quiet FETCH_HEAD
+          (
+            cd /tmp/bitcoin-pinned
+            git remote add origin https://github.com/bitcoin/bitcoin.git
+            git sparse-checkout set src
+            git fetch --quiet --depth=1 --filter=blob:none origin "$PIN"
+            git checkout --quiet FETCH_HEAD
+          )
+          git init --quiet /tmp/bips-pinned
+          (
+            cd /tmp/bips-pinned
+            git remote add origin https://github.com/bitcoin/bips.git
+            git fetch --quiet --depth=1 --filter=blob:none origin "$BIPS"
+            git checkout --quiet FETCH_HEAD
+          )
 
       - run: npx nx run-many -t lint test build typecheck
         env:
           BITCOIN_SRC: /tmp/bitcoin-pinned
+          BIPS_SRC: /tmp/bips-pinned

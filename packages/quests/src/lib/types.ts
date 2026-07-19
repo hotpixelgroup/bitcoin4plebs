@@ -38,8 +38,15 @@ export interface CodeLine {
 /** A verbatim code excerpt with provenance. */
 export interface CodeExcerpt {
   ref: SourceRef;
-  language: 'cpp' | 'ts';
+  /** 'text' is for non-code sources (e.g. a BIP document) — no highlighting. */
+  language: 'cpp' | 'ts' | 'text';
   lines: CodeLine[];
+  /**
+   * Pin override for excerpts quoted from a repo other than the quest's own
+   * pin (e.g. bitcoin/bips). Verbatim-checked in CI against that repo's
+   * pinned checkout exactly like Bitcoin Core excerpts.
+   */
+  pin?: SourcePin;
 }
 
 /** A line-by-line plain-English annotation. */

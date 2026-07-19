@@ -163,4 +163,28 @@ export const questions: NewbieQuestion[] = [
     short: 'Yes: Bitcoin ships with built-in practice networks where the coins are worthless by design. Send your first transaction with play money.',
     slug: 'send-your-first-play-bitcoin',
   },
+  {
+    question: 'Why are fees sometimes huge? Is that Bitcoin failing?',
+    short: 'Fees are an open auction for limited space, and spikes are demand doing the bidding. The code even guarantees every spike decays: the floor halves every 12 hours.',
+    slug: 'who-keeps-bitcoin-usable',
+    stop: 'fee-floor',
+  },
+  {
+    question: 'Can miners censor my transaction?',
+    short: 'One miner can skip you; that just donates your fee to the next one. Block assembly is a blind best-bid-first auction, and you can read the loop.',
+    slug: 'who-keeps-bitcoin-usable',
+    stop: 'auctioneer',
+  },
+  {
+    question: 'Who decides what counts as "spam" on Bitcoin?',
+    short: 'Right now: nobody, which is exactly the fight. Your node can filter what it relays, the auction prices what confirms, and BIP-110 proposes moving the question into consensus.',
+    slug: 'the-data-wars',
+    stop: 'the-flood',
+  },
+  {
+    question: 'Should I run Bitcoin Core or Bitcoin Knots?',
+    short: 'Same consensus, different relay taste and governance. Either one gives you full sovereignty; the comparison page and this stop give you the honest trade-offs.',
+    slug: 'the-data-wars',
+    stop: 'the-split',
+  },
 ];

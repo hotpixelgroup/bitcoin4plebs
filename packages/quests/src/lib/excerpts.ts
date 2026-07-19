@@ -11,6 +11,16 @@ export const BITCOIN_PIN: SourcePin = {
   commit: '18c05d93016b28a9afd4c716dfe00b6e0accb30b',
 };
 
+/**
+ * Second pin, for excerpts quoted from BIP documents. Same rules as the
+ * Bitcoin Core pin: letter-for-letter verbatim, diffed in CI against this
+ * exact commit of the bips repo (BIPS_SRC locally).
+ */
+export const BIPS_PIN: SourcePin = {
+  repo: 'bitcoin/bips',
+  commit: '8c369ac8e60629ac6c032ffe21bb5ec5b35213d7',
+};
+
 /** GetBlockSubsidy — the entire emission policy. */
 export const EXCERPT_GET_BLOCK_SUBSIDY: CodeExcerpt = {
   ref: { file: 'src/validation.cpp', startLine: 1846, endLine: 1857 },
@@ -60,6 +70,20 @@ export const EXCERPT_MAX_MONEY: CodeExcerpt = {
     { n: 25, text: ' * */' },
     { n: 26, text: 'static constexpr CAmount MAX_MONEY = 21000000 * COIN;', highlight: true },
     { n: 27, text: 'inline bool MoneyRange(const CAmount& nValue) { return (nValue >= 0 && nValue <= MAX_MONEY); }' },
+  ],
+};
+
+/** The datacarrier relay-policy defaults — the most argued-about lines in Bitcoin right now. */
+export const EXCERPT_DATACARRIER_DEFAULTS: CodeExcerpt = {
+  ref: { file: 'src/policy/policy.h', startLine: 79, endLine: 84 },
+  language: 'cpp',
+  lines: [
+    { n: 79, text: '/** Default for -datacarrier */' },
+    { n: 80, text: 'static const bool DEFAULT_ACCEPT_DATACARRIER = true;', highlight: true },
+    { n: 81, text: '/**' },
+    { n: 82, text: ' * Default setting for -datacarriersize in vbytes.' },
+    { n: 83, text: ' */' },
+    { n: 84, text: 'static const unsigned int MAX_OP_RETURN_RELAY = MAX_STANDARD_TX_WEIGHT / WITNESS_SCALE_FACTOR;', highlight: true },
   ],
 };
 

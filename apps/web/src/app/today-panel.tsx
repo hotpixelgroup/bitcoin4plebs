@@ -135,7 +135,7 @@ export function TodayPanel() {
             {mintedPct !== null ? `${mintedPct.toFixed(1)}% of the cap` : '·'} · computed here
           </span>
         </Link>
-        <Link to="/quests/what-happens-when-you-press-send" className="today-tile">
+        <Link to="/quests/who-keeps-bitcoin-usable" className="today-tile">
           <span className="today-label">fee to confirm fast</span>
           <span className="today-value">
             {data?.fastestFee !== undefined ? `${data.fastestFee} sat/vB` : '·····'}

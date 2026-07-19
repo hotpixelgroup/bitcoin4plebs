@@ -13,7 +13,7 @@ const CHAPTERS = quests.filter(
  * The running story: one payment (Ana buys Bo's bike for 0.6 BTC)
  * followed through the entire curriculum. Each quest page shows where
  * the payment is now, on a journey rail whose stages double as
- * navigation. Twelve lessons, one continuous story.
+ * navigation. One continuous story through every quest.
  */
 export function StoryStrip({ quest }: { quest: Quest }) {
   const railRef = useRef<HTMLDivElement>(null);

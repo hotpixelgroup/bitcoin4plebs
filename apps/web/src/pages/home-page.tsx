@@ -10,6 +10,8 @@ const TRACK_BLURBS: Record<string, string> = {
   'Start here': 'Five minutes of mental model. No code and no jargon: what a ledger is, and why copies plus rules changed everything.',
   Foundations: 'The rulebook, one page at a time: where the money comes from, why yours is yours, and who enforces it all.',
   Advanced: 'Leave the classroom: real artifacts, real byte order, and finally a node of your own.',
+  'Zoom out':
+    'From the code to the network: the incentive machine that keeps it all usable with nobody in charge, and the fight over what a ledger is for.',
 };
 
 interface TrackGroup {

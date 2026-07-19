@@ -32,19 +32,24 @@ npx nx run-many -t lint test typecheck build
 
 ## The iron rule: excerpts are verbatim
 
-Every `CodeExcerpt` in `packages/quests` is diffed letter for letter against Bitcoin Core at the pinned commit. The pin lives in exactly one place: `packages/bitcoin-logic/src/lib/constants.ts`. CI fetches the real source and runs the diff on every push and every PR, so this rule enforces itself. But you will want to run it locally:
+Every `CodeExcerpt` in `packages/quests` is diffed letter for letter against its pinned source: Bitcoin Core for code, the BIPs repository for BIP documents. Both pins live in exactly one place: `packages/quests/src/lib/excerpts.ts` (`BITCOIN_PIN` and `BIPS_PIN`). CI fetches both real sources and runs the diff on every push and every PR, so this rule enforces itself. But you will want to run it locally:
 
 ```sh
-# One-time: fetch Bitcoin Core's src/ tree at the pinned commit (shallow, ~sparse)
-PIN=$(grep -oE "[0-9a-f]{40}" packages/bitcoin-logic/src/lib/constants.ts | head -1)
+# One-time: fetch both sources at their pinned commits (shallow)
+PIN=$(grep -A2 "'bitcoin/bitcoin'" packages/quests/src/lib/excerpts.ts | grep -oE "[0-9a-f]{40}" | head -1)
+BIPS=$(grep -A2 "'bitcoin/bips'" packages/quests/src/lib/excerpts.ts | grep -oE "[0-9a-f]{40}" | head -1)
 git init ~/bitcoin-pinned && cd ~/bitcoin-pinned
 git remote add origin https://github.com/bitcoin/bitcoin.git
 git sparse-checkout set src
 git fetch --depth=1 --filter=blob:none origin "$PIN"
 git checkout FETCH_HEAD
+cd - && git init ~/bips-pinned && cd ~/bips-pinned
+git remote add origin https://github.com/bitcoin/bips.git
+git fetch --depth=1 --filter=blob:none origin "$BIPS"
+git checkout FETCH_HEAD
 
 # Then, from the bitcoin4plebs repo:
-BITCOIN_SRC=~/bitcoin-pinned npx nx test @bitcoin4plebs/quests
+BITCOIN_SRC=~/bitcoin-pinned BIPS_SRC=~/bips-pinned npx nx test @bitcoin4plebs/quests
 ```
 
 Never "clean up" an excerpt: not whitespace, not a typo in a comment, nothing. If Core's code is ugly, the site shows it ugly. That is the point of the site.
