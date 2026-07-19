@@ -165,6 +165,8 @@ export const quest05: Quest = {
     note: 'Same logic, same error strings, running in your browser in exact integer arithmetic.',
   },
   recap: {
+    tryIt:
+      'Search for a 2018 news story about the inflation bug and read it with fresh eyes. Count how many of its claims you can now check against the two functions you just read.',
     items: [
       {
         text: '**Bitcoin\'s code has had real, serious bugs**: 184 billion BTC existed for a few hours in 2010.',

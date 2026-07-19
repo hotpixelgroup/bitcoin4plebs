@@ -159,6 +159,8 @@ export const quest03: Quest = {
     note: 'The key space is the secp256k1 curve order, a 78-digit number. The math runs in exact integer arithmetic; the guessing really is random.',
   },
   recap: {
+    tryIt:
+      "Find the 'sign message' feature most wallets hide in a menu, and sign the sentence 'this key is mine.' You just ran the same math `OP_CHECKSIG` demands, with zero coins at risk.",
     items: [
       {
         text: '**Your coins are locked boxes, not entries in an account**: possession of the key is ownership.',

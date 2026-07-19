@@ -149,6 +149,8 @@ export const quest02: Quest = {
     note: 'Dates are estimates anchored to the real April 2024 halving (block 840,000) at the 10-minute target from chainparams.cpp:128; real blocks drift a little.',
   },
   recap: {
+    tryIt:
+      "Look up the current block height anywhere, then divide by 210,000 in your head. The whole number is the era; the distance to the next multiple is the halving countdown. Check yourself against the home page's live panel.",
     items: [
       {
         text: '**New coins are born in the coinbase transaction**: an input from nowhere, an output of fees + subsidy, written by the miner and audited by everyone.',

@@ -167,6 +167,8 @@ export const quest11: Quest = {
     note: 'This tracker asks a public signet node (mempool.space) about your txid, which means trusting their answer. Quest #9 is the cure: your own node answers the same questions from its own disk. No txid yet? The sample button follows a real, already-confirmed signet payment.',
   },
   recap: {
+    tryIt:
+      'Tomorrow, without re-reading this quest, send a second signet payment from memory. If your hands know the steps, the mechanics are yours for life.',
     items: [
       {
         text: '**Practice networks are built into Bitcoin itself**: signet lives in the same file as mainnet, with the same rules and its own training-wheel signature.',

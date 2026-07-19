@@ -164,6 +164,8 @@ export const quest01: Quest = {
     note: "Runs entirely on your machine, in exact whole-number arithmetic, the same kind Bitcoin uses. This site is open source, so you can check the translation too.",
   },
   recap: {
+    tryIt:
+      "Open [validation.cpp line 1846](https://github.com/bitcoin/bitcoin/blob/18c05d93016b28a9afd4c716dfe00b6e0accb30b/src/validation.cpp#L1846) on your phone, with no site in the middle, and read the ten lines yourself. That's the entire emission policy, and now you can find it unassisted.",
     items: [
       {
         text: "**Bitcoin's money is whole numbers of satoshis**: exact math, identical on every computer.",

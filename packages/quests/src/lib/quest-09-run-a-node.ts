@@ -198,6 +198,8 @@ export const quest09: Quest = {
     note: 'No node yet? The calculator still shows what a node at that height must report. When yours finishes syncing, come back and close the loop: schedule on the left, your own machine\'s measurement on the right, and nobody\'s word anywhere in between.',
   },
   recap: {
+    tryIt:
+      "Price out a node tonight: an old laptop or a small single-board computer plus a 2 TB drive is genuinely enough. You don't have to run one this month. Just notice that nothing and nobody can stop you.",
     items: [
       {
         text: '**A node re-derives all of Bitcoin from block zero**: days of CPU spent re-running every check in this curriculum against every block since 2009.',

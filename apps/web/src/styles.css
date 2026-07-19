@@ -3338,6 +3338,57 @@ tr:last-child td {
   margin-top: 10px;
 }
 
+/* ——— try this in the wild (recap field assignment) ——— */
+.tryit {
+  display: block;
+  border: 1px solid color-mix(in srgb, var(--brand) 40%, transparent);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--brand) 6%, transparent);
+  padding: 13px 16px;
+  margin: 18px 0;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+.tryit-badge {
+  display: block;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--brand);
+  margin-bottom: 6px;
+}
+
+/* ——— story cast avatars ——— */
+.story-cast {
+  display: inline-flex;
+  margin-right: 7px;
+  vertical-align: middle;
+}
+.story-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 19px;
+  height: 19px;
+  border-radius: 50%;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 700;
+  border: 1.5px solid var(--page);
+}
+.story-avatar-ana {
+  background: color-mix(in srgb, var(--brand) 28%, var(--card));
+  color: var(--brand);
+}
+.story-avatar-bo {
+  background: color-mix(in srgb, var(--good) 24%, var(--card));
+  color: var(--good);
+  margin-left: -6px;
+}
+
 /* ——— seed studio (Quest #14 finale) ——— */
 .seed-controls {
   display: flex;

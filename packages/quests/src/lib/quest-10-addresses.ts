@@ -194,6 +194,8 @@ export const quest10: Quest = {
     note: 'The default is the textbook address from BIP-173, the segwit address-format spec (no real person\'s wallet). This page\'s decoder is tested against the official BIP-173/350 vectors, including a sweep proving all ~1,300 possible single-character typos of that address get caught.',
   },
   recap: {
+    tryIt:
+      "Next time you're about to paste an address, change one character on purpose and watch the wallet refuse it. Undo, paste clean, send. Ten seconds, and you've watched the checksum guard your money.",
     items: [
       {
         text: '**An address is a re-spelling of a lock**: version + key-hash + checksum. Nothing is registered anywhere; senders rebuild the lock from the letters.',

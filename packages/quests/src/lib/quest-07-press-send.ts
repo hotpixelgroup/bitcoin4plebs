@@ -186,6 +186,8 @@ export const quest07: Quest = {
     note: 'A deterministic model mempool (the real one changes second to second), but the auction mechanism is exactly the one you just read: sort by fee-per-vbyte, fill ~1,000,000 vbytes, repeat.',
   },
   recap: {
+    tryIt:
+      "Before your next real payment, note the fee your wallet suggests, then check a public mempool view and see where that bid would sit in the queue. You're reading the auction now, not obeying a fee oracle.",
     items: [
       {
         text: '**There is no "submit" server.** Your transaction spreads node to node, and every node re-audits it before carrying it.',

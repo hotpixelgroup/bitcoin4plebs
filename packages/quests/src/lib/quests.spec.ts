@@ -89,6 +89,15 @@ describe('story thread integrity', () => {
   });
 });
 
+describe('try-it-in-the-wild integrity', () => {
+  it('every quest sends the reader into the world with one concrete action', () => {
+    for (const quest of quests) {
+      expect(quest.recap.tryIt, quest.id).toBeTruthy();
+      expect((quest.recap.tryIt as string).length, quest.id).toBeGreaterThan(40);
+    }
+  });
+});
+
 describe('glossary integrity', () => {
   it('has unique terms with non-empty definitions', () => {
     expect(new Set(glossary.map((e) => e.term)).size).toBe(glossary.length);

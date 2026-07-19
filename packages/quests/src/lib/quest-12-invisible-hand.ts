@@ -252,6 +252,8 @@ export const quest12: Quest = {
     note: 'The fee floor uses the site\'s 1:1 translation of GetMinFee and trackPackageRemoved (txmempool.cpp:838–868), with the clock sped up so 12 simulated hours pass in seconds. Reward math is GetBlockSubsidy from Quest #1.',
   },
   recap: {
+    tryIt:
+      "Next time fees make the news, open the home page's live panel and note the number. Check again two days later. You'll watch the half-life do exactly what the code promised.",
     items: [
       {
         text: '**Congestion sets its own price and its own cure**: eviction ratchets the fee floor up; a 12-hour half-life decays it back to zero.',

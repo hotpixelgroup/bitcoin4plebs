@@ -136,6 +136,8 @@ export const quest00: Quest = {
     },
   ],
   recap: {
+    tryIt:
+      'Next time you split a bill with friends, watch who keeps the tally and what happens when two memories disagree. Whatever settles it, a person, an app, a bank, is the referee Bitcoin replaced with copies and rules.',
     items: [
       { text: '**Money is a ledger**: a list of who paid whom. Cash and banks are just ways of keeping it.' },
       { text: '**One keeper means one ruler.** The fix: everyone keeps a full copy and agrees on mechanical rules for new lines.' },

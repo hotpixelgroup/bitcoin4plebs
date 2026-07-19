@@ -202,6 +202,8 @@ export const quest13: Quest = {
     note: 'The relay check mirrors IsStandardTx (policy.cpp:137–156): compare each OP_RETURN script\'s size to your -datacarriersize budget. Consensus validity of the arriving block is independent of your policy, which is the entire point.',
   },
   recap: {
+    tryIt:
+      'Find one thread of the data-wars argument in the wild, on a mailing list or a forum, and score both sides against the steelmen here. Notice how much of the shouting you can now translate into positions.',
     items: [
       {
         text: '**OP_RETURN was harm reduction**: prunable declared data instead of fake addresses that poison the UTXO set forever.',

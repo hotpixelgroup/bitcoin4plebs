@@ -160,6 +160,12 @@ export function QuestPage() {
             </li>
           ))}
         </ul>
+        {quest.recap.tryIt && (
+          <p className="tryit">
+            <span className="tryit-badge">try this in the wild</span>
+            <RichText text={quest.recap.tryIt} />
+          </p>
+        )}
         <Callout>
           <RichText text={quest.recap.closing} />
         </Callout>

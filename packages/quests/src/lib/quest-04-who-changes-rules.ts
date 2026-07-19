@@ -110,6 +110,8 @@ export const quest04: Quest = {
     note: 'This runs the same halving arithmetic you verified in Quest #1, with your parameters instead of Bitcoin\'s. Changing the code was never the hard part.',
   },
   recap: {
+    tryIt:
+      "Next headline that says 'Bitcoin is changing X,' ask one question: policy or consensus? You now know the difference, and you know consensus has changed exactly six times in seventeen years.",
     items: [
       {
         text: '**No admin switch exists**: the developers themselves note in the code that changing consensus values forks you off the network.',

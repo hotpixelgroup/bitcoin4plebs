@@ -186,6 +186,8 @@ export const quest06: Quest = {
     note: 'Same hash function as Bitcoin (SHA-256 twice), same rule (hash ≤ target). The real network\'s target is astronomically harder (roughly 10^17 times harder than this page\'s hardest setting), which is exactly why it takes warehouses, not laptops.',
   },
   recap: {
+    tryIt:
+      'Open any block explorer and time the next three blocks as they arrive. The thermostat aims at ten minutes; the lottery adds variance. Feeling that wobble firsthand is the mental model.',
     items: [
       {
         text: '**Mining is scanning, not solving.** Satoshi\'s own 2009 comment says so: hash the 80-byte header, "scan through nonce values."',

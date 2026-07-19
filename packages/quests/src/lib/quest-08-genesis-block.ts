@@ -239,6 +239,8 @@ export const quest08: Quest = {
     note: "Runs entirely in your browser with WebCrypto's SHA-256, the same function every mining rig runs. If this page had altered even one byte of the four numbers, the hash would shatter into something unrecognizable. That's the point.",
   },
   recap: {
+    tryIt:
+      'Look up block 0 on any explorer and find the Times headline in the coinbase data yourself. Every copy of the chain carries it, and you now know how to walk in and read it.',
     items: [
       {
         text: '**Block zero carries that day\'s newspaper headline**: proof the chain wasn\'t pre-mined, preserved by every node forever.',

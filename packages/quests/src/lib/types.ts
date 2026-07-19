@@ -166,6 +166,12 @@ export interface Quest {
   recap: {
     items: RecapItem[];
     closing: string;
+    /**
+     * One concrete real-world action (RichText) that turns the quest's
+     * understanding into a habit: something the reader can do this week
+     * with no setup and no risk.
+     */
+    tryIt?: string;
   };
   /** Optional explain-it-back exercise rendered after the recap. */
   feynman?: Feynman;

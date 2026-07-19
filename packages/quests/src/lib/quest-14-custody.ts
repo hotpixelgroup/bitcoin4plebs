@@ -225,6 +225,8 @@ export const quest14: Quest = {
     note: 'Runs the algorithm from the pinned BIP text 1:1 (entropy → SHA-256 checksum → 11-bit words → PBKDF2 seed) via your browser\'s WebCrypto, cross-checked in our tests against an independent implementation and the pinned wordlist. Practice phrases only: for real funds, generate on a dedicated offline device, never in a browser.',
   },
   recap: {
+    tryIt:
+      "Run a fire drill this week, no funds involved: write down where your backups would live, who would find them, and what you'd do if your phone died tonight. Gaps found on paper are free.",
     items: [
       {
         text: '**Wallets hold keys, ledgers hold coins, exchanges hold promises.** Restore-from-words works on any device because the coins never moved.',

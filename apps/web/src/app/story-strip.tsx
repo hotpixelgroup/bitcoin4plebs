@@ -34,7 +34,11 @@ export function StoryStrip({ quest }: { quest: Quest }) {
     <aside className="story" aria-label="Ana pays Bo: the running story">
       <div className="story-head">
         <span className="story-badge">
-          <span aria-hidden="true">🚲</span> ana pays bo
+          <span className="story-cast" aria-hidden="true">
+            <span className="story-avatar story-avatar-ana">A</span>
+            <span className="story-avatar story-avatar-bo">B</span>
+          </span>
+          ana pays bo
         </span>
         <span className="story-chapter">
           chapter {index + 1} of {CHAPTERS.length}
