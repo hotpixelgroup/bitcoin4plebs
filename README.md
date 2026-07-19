@@ -56,7 +56,26 @@ BITCOIN_SRC=~/bitcoin BIPS_SRC=~/bips npx nx test @bitcoin4plebs/quests
 
 ## Deploy
 
-Pushing to `main` runs `.github/workflows/deploy.yml`, which builds `apps/web` with `VITE_BASE=/<repo-name>/` and publishes to GitHub Pages (enable **Settings → Pages → Source: GitHub Actions** once). Deep links work via the `public/404.html` SPA fallback.
+Pushing to `main` runs `.github/workflows/deploy.yml`, which builds `apps/web` with `VITE_BASE=/<repo-name>/` and publishes to GitHub Pages (enable **Settings → Pages → Source: GitHub Actions** once). Deep links work via the `public/404.html` SPA fallback. The site is an installable PWA: after one visit, the entire curriculum works offline (live-data panels degrade gracefully).
+
+## Don't trust our server either
+
+The site is a static build, so you can reproduce it and compare it against what we actually serve:
+
+```sh
+git clone https://github.com/hotpixelgroup/bitcoin4plebs.git
+cd bitcoin4plebs && npm ci
+VITE_BASE=/bitcoin4plebs/ npx nx build web
+```
+
+Then compare `apps/web/dist/` with the live site. Asset filenames are content-hashed, so verifying `index.html` transitively pins the bundles it references:
+
+```sh
+curl -s https://hotpixelgroup.github.io/bitcoin4plebs/index.html | shasum -a 256
+shasum -a 256 apps/web/dist/index.html
+```
+
+In our testing, two clean builds are byte-for-byte identical on the same Node major (24). A different toolchain version may legitimately differ; anything else is a bug, and we'd like an [issue](https://github.com/hotpixelgroup/bitcoin4plebs/issues/new/choose) about it, loudly.
 
 ## Contributing
 

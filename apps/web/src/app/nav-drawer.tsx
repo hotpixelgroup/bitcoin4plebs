@@ -1,27 +1,11 @@
 import { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import type { Quest } from '@bitcoin4plebs/quests';
-import { quests } from '@bitcoin4plebs/quests';
+import { groupQuestsByTrack, quests } from '@bitcoin4plebs/quests';
 import { useVerifiedQuests } from '../lib/progress';
 
 export interface NavDrawerProps {
   open: boolean;
   onClose: () => void;
-}
-
-/** Group consecutive quests that share a track, preserving curriculum order. */
-function groupByTrack(all: Quest[]): Array<{ track: string; quests: Quest[] }> {
-  const groups: Array<{ track: string; quests: Quest[] }> = [];
-  for (const quest of all) {
-    const track = quest.track ?? 'Foundations';
-    const last = groups[groups.length - 1];
-    if (last && last.track === track) {
-      last.quests.push(quest);
-    } else {
-      groups.push({ track, quests: [quest] });
-    }
-  }
-  return groups;
 }
 
 /**
@@ -47,7 +31,7 @@ export function NavDrawer({ open, onClose }: NavDrawerProps) {
     return () => window.removeEventListener('keydown', onKey);
   }, [open, onClose]);
 
-  const groups = groupByTrack(quests);
+  const groups = groupQuestsByTrack(quests);
   const linkClass = (to: string) =>
     `drawer-link ${location.pathname === to ? 'drawer-link-active' : ''}`;
   const current = (to: string) => (location.pathname === to ? ('page' as const) : undefined);
@@ -92,6 +76,10 @@ export function NavDrawer({ open, onClose }: NavDrawerProps) {
           <Link to="/questions" className={linkClass('/questions')} aria-current={current('/questions')}>
             <span className="drawer-link-num">?</span>
             <span>Got a question? Start there</span>
+          </Link>
+          <Link to="/map" className={linkClass('/map')} aria-current={current('/map')}>
+            <span className="drawer-link-num">▦</span>
+            <span>The map · what builds on what</span>
           </Link>
           <Link to="/review" className={linkClass('/review')} aria-current={current('/review')}>
             <span className="drawer-link-num">↻</span>

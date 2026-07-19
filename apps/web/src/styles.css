@@ -3338,6 +3338,204 @@ tr:last-child td {
   margin-top: 10px;
 }
 
+/* ——— why are you here? (entry paths) ——— */
+.paths {
+  border: 1px solid var(--baseline);
+  border-radius: var(--radius);
+  background: var(--card);
+  padding: 18px 20px;
+  margin-bottom: 26px;
+}
+.paths-head {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  margin-bottom: 12px;
+}
+.paths-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.paths-blurb {
+  margin: 0 0 12px;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+.paths-steps {
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.paths-step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--baseline);
+  border-radius: var(--radius);
+  background: var(--page);
+  padding: 10px 14px;
+  font-size: 14px;
+  color: var(--ink);
+  text-decoration: none;
+  transition: border-color 0.15s var(--ease);
+}
+.paths-step:hover {
+  border-color: var(--brand);
+}
+.paths-step-num {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid var(--brand);
+  color: var(--brand);
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+}
+.paths-note {
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* ——— the map ——— */
+.map {
+  display: grid;
+  gap: 18px;
+  margin-bottom: 40px;
+}
+.map-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0 0;
+}
+.map-key {
+  font-family: var(--mono);
+  font-size: 11px;
+  border: 1px solid var(--baseline);
+  border-radius: 999px;
+  padding: 3px 10px;
+  color: var(--muted);
+}
+.map-key-done {
+  color: var(--good);
+  border-color: color-mix(in srgb, var(--good) 45%, transparent);
+}
+.map-key-dep {
+  color: var(--brand);
+  border-color: color-mix(in srgb, var(--brand) 50%, transparent);
+}
+.map-key-unlock {
+  color: var(--ink-2);
+  border-style: dashed;
+}
+.map-track-name {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.map-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.map-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  max-width: 100%;
+  text-align: left;
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--ink-2);
+  background: var(--card);
+  border: 1px solid var(--baseline);
+  border-radius: 999px;
+  padding: 7px 13px;
+  cursor: pointer;
+  transition: border-color 0.15s var(--ease), color 0.15s var(--ease), opacity 0.15s var(--ease);
+}
+.map-pill:hover {
+  border-color: var(--brand);
+}
+.map-pill-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+}
+.map-pill-done {
+  border-color: color-mix(in srgb, var(--good) 40%, transparent);
+}
+.map-pill-done .map-pill-num {
+  color: var(--good);
+}
+.map-pill-sel {
+  border-color: var(--brand);
+  color: var(--brand);
+  box-shadow: var(--glow);
+}
+.map-pill-dep {
+  border-color: var(--brand);
+  border-style: dashed;
+}
+.map-pill-unlock {
+  border-style: dashed;
+  border-color: var(--ink-2);
+}
+.map-detail {
+  border: 1px solid var(--baseline);
+  border-left: 3px solid var(--brand);
+  border-radius: var(--radius);
+  background: var(--card);
+  padding: 15px 18px;
+}
+.map-detail-title {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.map-detail-body {
+  margin: 0 0 12px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+.map-ref {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: var(--brand);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.map-hint {
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--muted);
+}
+
 /* ——— try this in the wild (recap field assignment) ——— */
 .tryit {
   display: block;

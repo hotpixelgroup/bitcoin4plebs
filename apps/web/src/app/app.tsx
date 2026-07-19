@@ -4,6 +4,7 @@ import { PINNED_COMMIT_SHORT } from '@bitcoin4plebs/bitcoin-logic';
 import { CoreVsKnotsPage } from '../pages/core-vs-knots-page';
 import { GlossaryPage } from '../pages/glossary-page';
 import { HomePage } from '../pages/home-page';
+import { MapPage } from '../pages/map-page';
 import { QuestPage } from '../pages/quest-page';
 import { QuestionsPage } from '../pages/questions-page';
 import { ReviewPage } from '../pages/review-page';
@@ -107,6 +108,7 @@ export function App() {
           <Route path="/sandbox" element={<SandboxPage />} />
           <Route path="/core-vs-knots" element={<CoreVsKnotsPage />} />
           <Route path="/wallets" element={<WalletsPage />} />
+          <Route path="/map" element={<MapPage />} />
           <Route path="/quests/:slug" element={<QuestPage />} />
         </Routes>
       </div>

@@ -14,3 +14,4 @@ export { quest08 } from './lib/quest-08-genesis-block.js';
 export { quest09 } from './lib/quest-09-run-a-node.js';
 export { quest10 } from './lib/quest-10-addresses.js';
 export { quest11 } from './lib/quest-11-first-send.js';
+export * from './lib/paths.js';

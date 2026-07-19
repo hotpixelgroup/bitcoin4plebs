@@ -1,9 +1,82 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import type { Quest } from '@bitcoin4plebs/quests';
-import { quests } from '@bitcoin4plebs/quests';
+import { entryPaths, glossary, groupQuestsByTrack, quests } from '@bitcoin4plebs/quests';
 import { Diploma } from '../app/diploma';
 import { TodayPanel } from '../app/today-panel';
 import { latestReadPosition, useVerifiedQuests } from '../lib/progress';
+
+const PATH_KEY = 'b4p.path.v1';
+
+/** The "why are you here?" chooser: four personas, each a three-quest on-ramp. */
+function EntryPathsSection() {
+  const { verified } = useVerifiedQuests();
+  const [pathId, setPathId] = useState<string | null>(() => {
+    try {
+      return localStorage.getItem(PATH_KEY);
+    } catch {
+      return null;
+    }
+  });
+  const choose = (id: string | null) => {
+    setPathId(id);
+    try {
+      if (id) localStorage.setItem(PATH_KEY, id);
+      else localStorage.removeItem(PATH_KEY);
+    } catch {
+      // Private browsing.
+    }
+  };
+  const active = entryPaths.find((p) => p.id === pathId);
+
+  return (
+    <section className="paths" aria-label="Pick a starting path">
+      <div className="paths-head">Why are you here?</div>
+      <div className="paths-chips" role="group" aria-label="Pick the reason that sounds like you">
+        {entryPaths.map((p) => (
+          <button
+            key={p.id}
+            className={`preset ${p.id === pathId ? 'preset-active' : ''}`}
+            aria-pressed={p.id === pathId}
+            onClick={() => choose(p.id === pathId ? null : p.id)}
+          >
+            {p.prompt}
+          </button>
+        ))}
+      </div>
+      {active ? (
+        <div className="paths-active">
+          <p className="paths-blurb">{active.blurb}</p>
+          <ol className="paths-steps">
+            {active.questNumbers.map((n, i) => {
+              const quest = quests.find((q) => q.number === n);
+              if (!quest) return null;
+              return (
+                <li key={n}>
+                  <Link to={`/quests/${quest.slug}`} className="paths-step">
+                    <span className="paths-step-num">{i + 1}</span>
+                    <span>
+                      Quest #{quest.number}: {quest.title}
+                      {verified[quest.slug] && <span className="drawer-check"> ✓</span>}
+                    </span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ol>
+          <p className="paths-note">
+            Three quests, about half an hour. Everything else will still be here.{' '}
+            <Link to="/map">See the whole map →</Link>
+          </p>
+        </div>
+      ) : (
+        <p className="paths-note">
+          Pick one, or just scroll: the tracks below run in order.{' '}
+          <Link to="/map">See the whole map →</Link>
+        </p>
+      )}
+    </section>
+  );
+}
 
 /** One-line subtitles for each curriculum track (view concern, so kept here). */
 const TRACK_BLURBS: Record<string, string> = {
@@ -16,30 +89,11 @@ const TRACK_BLURBS: Record<string, string> = {
     'The last mile: what a wallet actually stores, what the 12 words really are, and the five habits that keep coins safe from everything but you.',
 };
 
-interface TrackGroup {
-  track: string;
-  quests: Quest[];
-}
-
-/** Group consecutive quests that share a track, preserving curriculum order. */
-function groupByTrack(all: Quest[]): TrackGroup[] {
-  const groups: TrackGroup[] = [];
-  for (const quest of all) {
-    const track = quest.track ?? 'Foundations';
-    const last = groups[groups.length - 1];
-    if (last && last.track === track) {
-      last.quests.push(quest);
-    } else {
-      groups.push({ track, quests: [quest] });
-    }
-  }
-  return groups;
-}
 
 export function HomePage() {
   const { verified } = useVerifiedQuests();
   const verifiedCount = quests.filter((q) => verified[q.slug]).length;
-  const groups = groupByTrack(quests);
+  const groups = groupQuestsByTrack(quests);
   const vizCount = quests.reduce(
     (n, q) => n + q.stops.filter((s) => s.viz).length + (q.finale ? 1 : 0),
     0
@@ -64,7 +118,7 @@ export function HomePage() {
             <b>{vizCount}</b> interactive figures
           </span>
           <span className="hero-stat">
-            <b>80</b>-term glossary
+            <b>{glossary.length}</b>-term glossary
           </span>
           <span className="hero-stat">
             every excerpt <b>CI-verified</b>
@@ -99,6 +153,8 @@ export function HomePage() {
           return null;
         })()}
       </section>
+
+      <EntryPathsSection />
 
       <TodayPanel />
 

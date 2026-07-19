@@ -3,6 +3,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { BIPS_PIN } from './excerpts.js';
 import { GLOSSARY_CATEGORIES, glossary } from './glossary.js';
+import { entryPaths, prerequisites } from './paths.js';
 import { quests } from './registry.js';
 
 /**
@@ -94,6 +95,32 @@ describe('try-it-in-the-wild integrity', () => {
     for (const quest of quests) {
       expect(quest.recap.tryIt, quest.id).toBeTruthy();
       expect((quest.recap.tryIt as string).length, quest.id).toBeGreaterThan(40);
+    }
+  });
+});
+
+describe('entry paths and prerequisites integrity', () => {
+  const numbers = new Set(quests.map((q) => q.number));
+
+  it('every entry path names three real quests and a unique id', () => {
+    expect(new Set(entryPaths.map((p) => p.id)).size).toBe(entryPaths.length);
+    for (const path of entryPaths) {
+      expect(path.questNumbers.length, path.id).toBe(3);
+      for (const n of path.questNumbers) {
+        expect(numbers.has(n), `${path.id} → Quest #${n}`).toBe(true);
+      }
+      expect(path.blurb.length, path.id).toBeGreaterThan(40);
+    }
+  });
+
+  it('prerequisites reference only real quests, never themselves', () => {
+    for (const [quest, deps] of Object.entries(prerequisites)) {
+      const n = Number(quest);
+      expect(numbers.has(n), `Quest #${quest}`).toBe(true);
+      for (const dep of deps) {
+        expect(numbers.has(dep), `Quest #${quest} → #${dep}`).toBe(true);
+        expect(dep, `Quest #${quest} depends on itself`).not.toBe(n);
+      }
     }
   });
 });
