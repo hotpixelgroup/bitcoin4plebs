@@ -187,4 +187,22 @@ export const questions: NewbieQuestion[] = [
     slug: 'the-data-wars',
     stop: 'the-split',
   },
+  {
+    question: 'What actually is a seed phrase?',
+    short: 'One giant random number wearing a word costume, with a built-in checksum so typos announce themselves. Read the recipe from the BIP itself, then mint practice phrases.',
+    slug: 'your-keys-your-coins',
+    stop: 'twelve-words',
+  },
+  {
+    question: 'Is it safe to leave my coins on an exchange?',
+    short: 'An exchange balance is a promise, not coins: the company holds the keys, you hold an IOU. Mt. Gox and FTX graded that promise. Learn what withdrawing actually means.',
+    slug: 'your-keys-your-coins',
+    stop: 'keys-not-coins',
+  },
+  {
+    question: 'What happens if my hardware wallet breaks or burns?',
+    short: 'Nothing, if your seed words survive: the device holds keys, not coins. Restore the words on any replacement and everything reappears.',
+    slug: 'your-keys-your-coins',
+    stop: 'what-kills-wallets',
+  },
 ];

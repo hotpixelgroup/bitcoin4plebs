@@ -104,6 +104,8 @@ export interface Stop {
   quiz?: QuizItem[];
   /** Bank-vs-Bitcoin contrast rows, anchoring the concept in familiar ground. */
   contrast?: Array<{ aspect: string; bank: string; bitcoin: string }>;
+  /** Optional column headers for the contrast table (default: Your bank / Bitcoin). */
+  contrastLabels?: { left: string; right: string };
 }
 
 /** The explain-it-back exercise at the end of a quest (Feynman technique). */

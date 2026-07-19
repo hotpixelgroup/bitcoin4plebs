@@ -12,6 +12,8 @@ const TRACK_BLURBS: Record<string, string> = {
   Advanced: 'Leave the classroom: real artifacts, real byte order, and finally a node of your own.',
   'Zoom out':
     'From the code to the network: the incentive machine that keeps it all usable with nobody in charge, and the fight over what a ledger is for.',
+  'Take it home':
+    'The last mile: what a wallet actually stores, what the 12 words really are, and the five habits that keep coins safe from everything but you.',
 };
 
 interface TrackGroup {

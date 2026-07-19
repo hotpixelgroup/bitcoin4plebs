@@ -6,9 +6,9 @@
 
 **Live site: https://hotpixelgroup.github.io/bitcoin4plebs/**
 
-Millions of people hold bitcoin on the word of engineers they've never met. This site exists so they don't have to. Each **verification quest** walks a non-technical reader through the *real* Bitcoin Core source code: verbatim excerpts pinned to a specific commit, annotated in plain English, with a "run it yourself" finale that proves the claim on the reader's own machine. One running story (Ana buys Bo's bike for 0.6 BTC) threads through all fourteen quests, and the home page opens with a live panel that takes exactly one number on trust and computes the rest in your browser.
+Millions of people hold bitcoin on the word of engineers they've never met. This site exists so they don't have to. Each **verification quest** walks a non-technical reader through the *real* Bitcoin Core source code: verbatim excerpts pinned to a specific commit, annotated in plain English, with a "run it yourself" finale that proves the claim on the reader's own machine. One running story (Ana buys Bo's bike for 0.6 BTC) threads through all fifteen quests, and the home page opens with a live panel that takes exactly one number on trust and computes the rest in your browser.
 
-The curriculum is fourteen quests in four tracks:
+The curriculum is fifteen quests in five tracks:
 
 **Start here** · 0: What even is a ledger?
 
@@ -18,7 +18,9 @@ The curriculum is fourteen quests in four tracks:
 
 **Zoom out** · 12: Who keeps Bitcoin usable when no one is in charge? (the fee-floor thermostat from `txmempool.cpp`, blind best-bid block assembly, the economic-node veto, and a stress-the-network simulator) · 13: The data wars: what is the ledger for? (OP_RETURN's history, the inscription flood, Core v30 vs. Knots, and BIP-110 quoted verbatim from a second pinned repo, both camps steelmanned)
 
-There is also a reference page comparing [Bitcoin Core and Bitcoin Knots](https://hotpixelgroup.github.io/bitcoin4plebs/core-vs-knots) as software choices.
+**Take it home** · 14: Where do your coins live while you sleep? (wallets as keychains, the BIP-39 recipe quoted verbatim and run 1:1 in-browser, what actually kills wallets, and a seed studio that mints practice phrases and breaks their checksums on purpose)
+
+There are also reference pages comparing [Bitcoin Core and Bitcoin Knots](https://hotpixelgroup.github.io/bitcoin4plebs/core-vs-knots) as software choices and mapping [wallet types](https://hotpixelgroup.github.io/bitcoin4plebs/wallets), brandlessly.
 
 ## Principles
 

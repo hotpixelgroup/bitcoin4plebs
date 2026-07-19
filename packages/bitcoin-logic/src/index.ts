@@ -7,5 +7,6 @@ export * from './lib/keyspace.js';
 export * from './lib/pow.js';
 export * from './lib/fee-market.js';
 export * from './lib/fee-floor.js';
+export * from './lib/bip39.js';
 export * from './lib/genesis.js';
 export * from './lib/bech32.js';

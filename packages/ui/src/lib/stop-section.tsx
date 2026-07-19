@@ -71,12 +71,12 @@ export function StopSection({ stop, index, total, pin, viz }: StopSectionProps) 
       </div>
       {stop.contrast && stop.contrast.length > 0 && (
         <div className="contrast-wrap">
-          <table className="contrast" aria-label="Bank versus Bitcoin comparison">
+          <table className="contrast" aria-label="Side-by-side comparison">
             <thead>
               <tr>
                 <th></th>
-                <th>Your bank</th>
-                <th>Bitcoin</th>
+                <th>{stop.contrastLabels?.left ?? 'Your bank'}</th>
+                <th>{stop.contrastLabels?.right ?? 'Bitcoin'}</th>
               </tr>
             </thead>
             <tbody>

@@ -57,5 +57,5 @@
   </g>
 
   <!-- stats row -->
-  <text x="64" y="600" font-family="Menlo, monospace" font-size="17" fill="#908e86">14 quests · 25 interactive figures · 87-term glossary · <tspan fill="#f7931a">every excerpt CI-verified against the pinned sources</tspan></text>
+  <text x="64" y="600" font-family="Menlo, monospace" font-size="17" fill="#908e86">15 quests · 26 interactive figures · 91-term glossary · <tspan fill="#f7931a">every excerpt CI-verified against the pinned sources</tspan></text>
 </svg>

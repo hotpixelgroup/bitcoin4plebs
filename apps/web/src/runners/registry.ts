@@ -9,6 +9,7 @@ import { HalvingClock } from './halving/halving-clock';
 import { GuessTheKey } from './keyspace/guess-the-key';
 import { MineABlock } from './mining/mine-a-block';
 import { PolicyPicker } from './policy/policy-picker';
+import { SeedStudio } from './seed/seed-studio';
 import { SignetTracker } from './signet/signet-tracker';
 import { StressNetwork } from './stress/stress-network';
 import { SupplyCheck } from './supply/supply-check';
@@ -37,6 +38,7 @@ const runners: Record<string, ComponentType<RunnerProps>> = {
   'signet-tracker': SignetTracker,
   'stress-network': StressNetwork,
   'policy-picker': PolicyPicker,
+  'seed-studio': SeedStudio,
 };
 
 export function getRunner(id: string): ComponentType<RunnerProps> | undefined {

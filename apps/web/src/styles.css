@@ -3338,6 +3338,115 @@ tr:last-child td {
   margin-top: 10px;
 }
 
+/* ——— seed studio (Quest #14 finale) ——— */
+.seed-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 16px 0;
+}
+.seed-grid {
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 8px;
+}
+.seed-word {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 14px;
+  color: var(--ink);
+  background: var(--card);
+  border: 1px solid var(--baseline);
+  border-radius: var(--radius);
+  padding: 8px 11px;
+}
+.seed-word-bad {
+  border-color: var(--bad);
+  color: var(--bad);
+}
+.seed-word-num {
+  font-size: 10.5px;
+  color: var(--muted);
+  min-width: 16px;
+  text-align: right;
+}
+.seed-check {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  border-radius: var(--radius);
+  padding: 9px 13px;
+  margin-bottom: 14px;
+  border: 1px solid;
+}
+.seed-check-ok {
+  color: var(--good);
+  border-color: color-mix(in srgb, var(--good) 45%, transparent);
+  background: color-mix(in srgb, var(--good) 8%, transparent);
+}
+.seed-check-bad {
+  color: var(--bad);
+  border-color: color-mix(in srgb, var(--bad) 45%, transparent);
+  background: color-mix(in srgb, var(--bad) 8%, transparent);
+}
+.seed-actions {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+.seed-pass {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--muted);
+}
+.seed-pass input {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--ink);
+  background: var(--card);
+  border: 1px solid var(--baseline);
+  border-radius: var(--radius);
+  padding: 7px 10px;
+  min-width: 240px;
+}
+.seed-pass input:focus {
+  outline: none;
+  border-color: var(--brand);
+}
+.seed-out {
+  border: 1px solid var(--baseline);
+  border-radius: var(--radius);
+  background: var(--card);
+  padding: 13px 16px;
+}
+.seed-hex {
+  display: block;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--brand);
+  word-break: break-all;
+  margin: 8px 0;
+  line-height: 1.6;
+}
+.seed-note {
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
 /* ——— core vs knots reference page ——— */
 .cvk-next {
   display: flex;

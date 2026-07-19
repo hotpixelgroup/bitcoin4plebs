@@ -213,10 +213,35 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'Seed phrase',
-    match: ['seed phrase'],
+    match: ['seed phrase', 'seed words', 'mnemonic'],
     category: 'Keys & ownership',
     definition:
-      'Typically 12 or 24 dictionary words encoding the randomness from which a wallet derives all its keys. Whoever has the words has the money, so they are for paper and steel, **never** for websites, photos, or anyone who asks. No legitimate service ever needs them.',
+      'Typically 12 or 24 dictionary words encoding the randomness from which a wallet derives all its keys: one giant random number in costume, with a built-in checksum so typos announce themselves (BIP-39, quoted and run in Quest #14). Whoever has the words has the money, so they are for paper and steel, **never** for websites, photos, or anyone who asks. No legitimate service ever needs them.',
+    quest: 14,
+  },
+  {
+    term: 'Passphrase (the 25th word)',
+    match: ['passphrase'],
+    category: 'Keys & ownership',
+    definition:
+      'An optional extra word mixed into the seed derivation. Every value produces a different, valid wallet, including the empty one, so a thief with your paper still has nothing, and a mistyped passphrase opens a perfectly real, perfectly empty wallet with no error message. Power and hazard in equal measure; back it up like the words.',
+    quest: 14,
+  },
+  {
+    term: 'Hardware wallet',
+    match: ['hardware wallet', 'hardware signer'],
+    category: 'Keys & ownership',
+    definition:
+      'A small offline device whose one job is holding keys and signing transactions without the keys ever touching a networked computer. It stores keys, not coins: destroy the device, restore the seed words on any replacement, and everything reappears. The seed backup is the wallet; the gadget is a safe way to use it.',
+    quest: 14,
+  },
+  {
+    term: 'Self-custody',
+    match: ['self-custody'],
+    category: 'Keys & ownership',
+    definition:
+      'Holding your own keys instead of an IOU: nobody can freeze, lend, or lose your coins but you. The trade is responsibility for a single well-made backup. The opposite is custodial holding, where a company keeps the keys and you keep a promise, a promise Mt. Gox and FTX customers remember well.',
+    quest: 14,
   },
 
   // --- Transactions & the mempool ---
@@ -281,10 +306,10 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'Feerate (sats per vbyte)',
-    match: ['feerate', 'vbytes', 'vbyte'],
+    match: ['feerate', 'vbytes', 'vbyte', 'sat/vB', 'sats per vbyte'],
     category: 'Transactions & the mempool',
     definition:
-      'What miners actually sort by: fee divided by the transaction\'s size in virtual bytes. A small transaction paying a modest fee can outbid a huge one paying more in total. Roughly a million vbytes fit in a block.',
+      "What miners actually sort by: fee divided by the transaction's size in **virtual bytes**, so a small transaction can outbid a huge one paying more in total. For feel: a typical one-input, two-output payment is ~140 vbytes, so 10 sat/vB means ~1,400 sats of total fee, whether you send 0.001 BTC or 1,000. A block fits ~1,000,000 vbytes: up to ~7,000 of the simplest payments, a few thousand in practice.",
     cite: 'miner.cpp:302',
     quest: 7,
   },
@@ -319,7 +344,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['confirmations', 'confirmation'],
     category: 'Transactions & the mempool',
     definition:
-      'Your transaction is "confirmed" when a mined block includes it (that\'s 1 confirmation), and every block stacked on top adds another. Each one adds another block of proof-of-work an attacker would have to redo, and slashes their odds of ever catching up.',
+      'Your transaction is "confirmed" when a mined block includes it (that\'s 1 confirmation), and every block stacked on top adds another. Each one adds another block of proof-of-work an attacker would have to redo, and slashes their odds of ever catching up. For feel: one confirmation is ~10 minutes, six (the customary "final" for large sums) is about an hour.',
     quest: 7,
   },
 
@@ -784,9 +809,17 @@ export const glossary: GlossaryEntry[] = [
     match: ['fee floor'],
     category: 'Transactions & the mempool',
     definition:
-      'The mempool\'s automatic price of admission when it overflows: eviction ratchets the floor up to what the evicted bidder paid, then the floor decays by half every 12 hours until it snaps back to zero. Congestion prices itself and cures itself; nobody chooses the number.',
+      'The mempool\'s automatic price of admission when it overflows: eviction ratchets the floor up to what the evicted bidder paid, then the floor decays by half every 12 hours until it snaps back to zero. For feel: even a 100× fee spike decays to nothing in under four days of calm, faster once the queue drains. Congestion prices itself and cures itself; nobody chooses the number.',
     cite: 'txmempool.cpp:851',
     quest: 12,
+  },
+  {
+    term: 'Weight units',
+    match: ['weight units', 'weight unit'],
+    category: 'Transactions & the mempool',
+    definition:
+      "How block space is really measured since SegWit: a block holds 4,000,000 weight units, where ordinary bytes cost 4 each and witness (signature) bytes cost 1, which is the \"75% discount\" inscriptions exploit. Divide by 4 and you get the friendlier unit: ~1,000,000 vbytes per block. A typical payment spends ~560 of the 4M, about one seven-thousandth of a block.",
+    quest: 13,
   },
   {
     term: 'UASF (user-activated soft fork)',
