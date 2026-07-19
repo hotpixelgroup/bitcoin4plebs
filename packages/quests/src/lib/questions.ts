@@ -35,7 +35,7 @@ export const questions: NewbieQuestion[] = [
   },
   {
     question: 'Who is in charge of Bitcoin?',
-    short: 'Nobody, enforceably: rules only change when node operators near-unanimously adopt new code, which has happened six times in seventeen years.',
+    short: 'Nobody, and the code makes that enforceable. Rules only change when node operators adopt new code nearly unanimously, which has happened six times in seventeen years.',
     slug: 'who-can-change-bitcoins-rules',
     stop: 'how-rules-change',
   },

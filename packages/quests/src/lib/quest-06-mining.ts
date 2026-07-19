@@ -40,7 +40,7 @@ export const quest06: Quest = {
         'This comment has survived since 2009, and it *is* the mining explainer: collect transactions, then **"scan through nonce values"** until the block\'s hash "satisfies proof-of-work requirements." No equations. Scanning.',
       prose: [
         'Six fields, 80 bytes: this is everything a miner hashes. Five of them are essentially fixed: version, the previous block\'s hash (which chains blocks together), a fingerprint of all included transactions (`hashMerkleRoot`), a timestamp, and the current difficulty (`nBits`).',
-        'The last field is the star: `nNonce`, literally "number used once." It exists for one purpose: to be *changed*. Hash the header, get a wrong answer, bump the nonce, hash again. Modern mining machines do this **hundreds of trillions of times per second**, and every attempt is as dumb as the last. (The 32-bit nonce holds only ~4 billion values, so real rigs exhaust it in a blink, then tweak the timestamp or the coinbase to refresh the search space and scan again.) That dumbness is the point, because a lottery where tickets cost electricity can\'t be talked, bribed, or reasoned into a different winner.',
+        'The last field is the star: `nNonce`, literally "number used once." It exists for one purpose: to be *changed*. Hash the header, get a wrong answer, bump the nonce, hash again. Modern mining machines do this **hundreds of trillions of times per second**, and every attempt is as dumb as the last. The 32-bit nonce holds only ~4 billion values, so real rigs exhaust it in a blink. Then they tweak the timestamp or the coinbase to refresh the search space and scan again. That dumbness is the point, because a lottery where tickets cost electricity can\'t be talked, bribed, or reasoned into a different winner.',
       ],
       annotations: [
         { lines: 'L19–24', text: 'The original design note: build a block, "scan through nonce values," broadcast when solved. Mining in three sentences, since 2009.' },
@@ -121,7 +121,7 @@ export const quest06: Quest = {
       viz: 'difficulty-thermostat',
       title: 'The thermostat: measure two weeks, clamp the correction',
       takeaway:
-        'Every 2,016 blocks, the network measures how long they *actually* took versus the 14 days they *should* have taken, and clamps the correction to **4× in either direction**, so not even a massive hashrate shock can whipsaw the clock.',
+        'Every 2,016 blocks, the network measures how long they *actually* took versus the 14 days they *should* have taken. The correction is clamped to **4× in either direction**, so not even a massive hashrate shock can whipsaw the clock.',
       prose: [
         'This is how "one block per ten minutes" survives mining machines getting a trillion times faster since 2009: the rules *measure reality* and adjust. Blocks came too fast? The target shrinks: harder lottery. Miners left and blocks crawled? It grows: easier lottery.',
         'Lines 57–60 are pure engineering paranoia, and worth loving: even if the measured fortnight looks absurd (an attack, a bug, half the hashrate vanishing overnight), one adjustment can never change difficulty by more than 4×. Every node computes this identical correction from the chain itself: no committee meets, no one announces the new difficulty. It\'s a thermostat, not a central bank.',

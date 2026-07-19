@@ -64,7 +64,7 @@ export const quest04: Quest = {
       viz: 'fiftyone-race',
       title: "Even 51% of miners can't print a single coin",
       takeaway:
-        'The famous "51% attack" can *reorder recent* transactions, but it **cannot** print coins, steal your keys, or change the rules, because rule-breaking blocks are discarded by every node **regardless of how much work they carry**.',
+        'The famous "51% attack" can *reorder recent* transactions. It **cannot** print coins, steal your keys, or change the rules, because every node discards rule-breaking blocks **regardless of how much work they carry**.',
       prose: [
         'Read this check one more time. It\'s the same five lines from Quest #1, and this is their most important property: nothing in them asks how much mining power produced the block. A block with an oversized coinbase is invalid with 1% of the world\'s hashrate behind it, and exactly as invalid with 99%.',
         'This is the part of Bitcoin most people get backwards. Miners don\'t vote on what\'s valid; they *compete for the reward within* rules that nodes enforce. A miner majority that starts breaking rules doesn\'t take over Bitcoin; it exiles itself onto a chain that every wallet, exchange, and node running this code simply cannot see.',
@@ -133,6 +133,6 @@ export const quest04: Quest = {
   feynman: {
     prompt: "Explain who controls Bitcoin, in two sentences.",
     model:
-      "Nobody, enforceably: developers can propose code but every node operator chooses whether to run it, and blocks that break the current rules are ignored no matter how much mining power backs them. Rules have only ever changed by near-unanimous voluntary adoption.",
+      "Nobody, and the code makes that stick. Developers can propose code, but every node operator chooses whether to run it. Blocks that break the current rules are ignored no matter how much mining power backs them. Rules have only ever changed by near-unanimous voluntary adoption.",
   },
 };

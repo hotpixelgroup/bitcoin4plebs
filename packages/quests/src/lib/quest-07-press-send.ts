@@ -80,10 +80,10 @@ export const quest07: Quest = {
       id: 'gauntlet',
       title: 'The gauntlet is code you\'ve already read',
       takeaway:
-        'Inside the acceptance check, your old friends report for duty: **CheckTransaction** (Quest #5\'s bug-scarred door) and, right here, **CheckInputScripts**, the Quest #3 signature loop, guarding the *waiting room* just like it guards the chain.',
+        'Inside the acceptance check, your old friends report for duty. **CheckTransaction** is Quest #5\'s bug-scarred door. **CheckInputScripts**, right here, is the Quest #3 signature loop, guarding the *waiting room* just like it guards the chain.',
       prose: [
         'Line 1151 should look familiar: it\'s the exact function from Quest #3, Stop 2, running the full script-and-signature check on every input *before* your transaction is even allowed to wait for a block. Your payment proves it owns its coins thousands of times before it\'s mined once.',
-        'The comment on line 1150 is a lovely detail: signatures are checked **last**, because they\'re the expensive part, and a node being spammed with garbage shouldn\'t burn CPU verifying signatures on transactions that fail the cheap checks. Even the *ordering* of the gauntlet is defensive engineering; the mempool is a fortress that assumes siege.',
+        'The comment on line 1150 is a lovely detail. Signatures are checked **last**, because they\'re the expensive part. A node being spammed with garbage shouldn\'t burn CPU verifying signatures on transactions that fail the cheap checks. Even the *ordering* of the gauntlet is defensive engineering; the mempool is a fortress that assumes siege.',
       ],
       annotations: [
         { lines: 'L1149–50', text: 'Scripts and signatures checked last: cheapest checks first, so spam can\'t exhaust the CPU.' },
@@ -123,7 +123,7 @@ export const quest07: Quest = {
       takeaway:
         'Blocks hold about a million "virtual bytes"; the waiting room often holds far more. Miners resolve this the obvious way: **highest fee-per-byte first**. This is the loop that fills a block, best-paying chunk by best-paying chunk.',
       prose: [
-        'Here is Quest #2\'s coinbase seen from the other side. `GetBlockBuilderChunk` hands the miner the best-paying bundle of waiting transactions; the loop adds bundle after bundle until the block is full or (line 307) everything left pays less than the miner\'s floor: *"Everything else we might consider has a lower feerate."* Your transaction confirms when the auction reaches your bid.',
+        'Here is Quest #2\'s coinbase seen from the other side. `GetBlockBuilderChunk` hands the miner the best-paying bundle of waiting transactions. The loop adds bundle after bundle until the block is full, or until (line 307) everything left pays under the miner\'s floor: *"Everything else we might consider has a lower feerate."* Your transaction confirms when the auction reaches your bid.',
         'Nobody set this price. There\'s no fee schedule and no toll booth operator, just scarce block space, an open auction, and miners who (as Quest #1 taught you) can only collect fees the coinbase audit allows. When you choose a fee, you are bidding against every other pending payment on Earth for the next million vbytes of eternity.',
       ],
       annotations: [
@@ -155,7 +155,7 @@ export const quest07: Quest = {
       takeaway:
         'A miner wins Quest #6\'s lottery with your transaction inside their block. That\'s **1 confirmation**. Every later block buries yours under more proof-of-work, and that, says this 2009 comment, is the whole finality machine.',
       prose: [
-        'Read Satoshi\'s comment once more, from your transaction\'s point of view this time: your payment was hashed into the tree (line 19), a nonce was found for the header above it (line 20), and the block was broadcast "to everyone" (line 21). Every node re-audited every transaction in it (yours included, one last time) before extending the chain.',
+        'Read Satoshi\'s comment once more, from your transaction\'s point of view this time. Your payment was hashed into the tree (line 19). A nonce was found for the header above it (line 20). The block was broadcast "to everyone" (line 21). And every node re-audited every transaction in it, yours included, one last time, before extending the chain.',
         'Why do exchanges wait for six confirmations? Because "undoing" your transaction now means re-mining its block *plus* every block stacked on top, faster than the honest network extends the chain. That\'s Quest #6\'s lottery, but needing to be won repeatedly, against a network guessing roughly a billion trillion times per second. Your coffee payment ends up defended by more raw computation than any military on Earth commands. Then your wallet just says: **confirmed**.',
       ],
       annotations: [

@@ -75,7 +75,7 @@ export const quest05: Quest = {
         'Block 74,638 contained outputs summing to **184 billion BTC**. A value-overflow bug let the impossible total *wrap around* into a valid-looking number. The comment on line 23 still cites the CVE.',
       prose: [
         'In 2010, amounts were added up in fixed-size integers with no overflow guard. An attacker crafted two outputs so enormous their *sum* wrapped around (like a car odometer rolling past 999,999) and landed on a small, innocent-looking total. The network accepted it, and for a few hours, 184,467,440,737 BTC existed.',
-        'The response set the template Bitcoin still follows: within hours, a fix added the per-output and running-total checks you\'re reading; the honest chain re-converged past the poisoned block, and the printed coins ceased to exist. Notice line 32\'s `MoneyRange`: that is *exactly* the MAX_MONEY sanity check whose comment you read in Quest #1, doing the job it was hardened for.',
+        'The response set the template Bitcoin still follows. Within hours, a fix added the per-output and running-total checks you\'re reading. The honest chain re-converged past the poisoned block, and the printed coins ceased to exist. Notice line 32\'s `MoneyRange`: that is *exactly* the MAX_MONEY sanity check whose comment you read in Quest #1, doing the job it was hardened for.',
       ],
       annotations: [
         { lines: 'L23', text: 'The scar, named: "see CVE-2010-5139".' },

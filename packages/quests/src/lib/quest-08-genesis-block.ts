@@ -29,7 +29,7 @@ export const quest08: Quest = {
   },
   intro: [
     'The Foundations quests taught you Bitcoin\'s **rules**. The Advanced quests are about **artifacts**: real objects on the real chain, starting with the very first one, the genesis block, mined by Satoshi on 3 January 2009. It isn\'t in a museum. Byte for byte, it sits on the disk of every node on Earth, and its exact construction is written in the file you\'re about to read.',
-    'By the end of this quest your own computer will have rebuilt block zero\'s header from four numbers plus the merkle root of its single transaction, hashed it with the same double SHA-256 you ran in Quest #6, and reproduced the hash that every Bitcoin node checks **every time it starts up**.',
+    'By the end of this quest, your own computer will have rebuilt block zero\'s header from four numbers plus the merkle root of its single transaction. It will hash that header with the same double SHA-256 you ran in Quest #6. And it will reproduce the hash that every Bitcoin node checks **every time it starts up**.',
   ],
   promise:
     "Every snippet below is copied verbatim from the Bitcoin Core source, pinned to commit [18c05d9](https://github.com/bitcoin/bitcoin/commit/18c05d93016b28a9afd4c716dfe00b6e0accb30b). Don't trust this page either: every stop links to the same lines on GitHub so you can check we didn't edit a word.",
@@ -88,7 +88,7 @@ export const quest08: Quest = {
       takeaway:
         'No special cases: the genesis block is assembled from the same parts as every block since, one coinbase transaction and the 80-byte header you met in Quest #6. **One field gives away its rank: the previous-block hash is set to nothing.**',
       prose: [
-        'Read the assembly. The headline is packed into the coinbase input (line 43, the same trick miners use for messages to this day), the 50 BTC reward is locked to Satoshi\'s key (lines 44–45), and then the six header fields you know from Quest #6 are filled in, one per line.',
+        'Read the assembly. The headline is packed into the coinbase input (line 43, the same trick miners use for messages to this day). The 50 BTC reward is locked to Satoshi\'s key (lines 44–45). Then the six header fields you know from Quest #6 are filled in, one per line.',
         'Line 53 is the beautiful one: `hashPrevBlock.SetNull()`. Every other block that will ever exist points at a parent. This one points at **zero**. That\'s not a placeholder, it\'s the definition of "first." When your node verifies history in Quest #9, it walks the parent pointers back until it lands exactly here.',
       ],
       annotations: [
@@ -218,7 +218,7 @@ export const quest08: Quest = {
   finale: {
     title: 'Recompute the most famous hash on Earth',
     takeaway:
-      'Your browser will now assemble the 80-byte header from the four numbers you just read plus the pinned merkle root, flipping each to **little-endian** (the byte order Bitcoin actually serializes), hash it twice with SHA-256, and compare the result against the assert on line 160. Then it decodes the headline straight out of the coinbase bytes.',
+      'Your browser will now assemble the 80-byte header from the four numbers you just read plus the pinned merkle root, flipping each to **little-endian** (the byte order Bitcoin actually serializes). It hashes the header twice with SHA-256 and compares the result against the assert on line 160. Then it decodes the headline straight out of the coinbase bytes.',
     runnerId: 'genesis-hash',
     translation: {
       ref: { file: 'this page · faithful JavaScript translation', startLine: 1, endLine: 10 },

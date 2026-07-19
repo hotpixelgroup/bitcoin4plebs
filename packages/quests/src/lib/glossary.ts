@@ -784,7 +784,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['pinned commit'],
     category: 'Rules, forks & history',
     definition:
-      'This site\'s anti-tampering rule: every excerpt is copied letter-for-letter from one exact snapshot of its source repository (Bitcoin Core at commit `18c05d9`, the BIPs repository at `8c369ac`), and CI re-diffs all of them against the real repositories on every change. The "verify on GitHub" link under each excerpt lets you do the same.',
+      'This site\'s anti-tampering rule. Every excerpt is copied letter-for-letter from one exact snapshot of its source repository: Bitcoin Core at commit `18c05d9`, the BIPs repository at `8c369ac`. Automated checks re-diff all of them against the real repositories on every change, and the "verify on GitHub" link under each excerpt lets you do the same.',
   },
   {
     term: 'OP_RETURN',

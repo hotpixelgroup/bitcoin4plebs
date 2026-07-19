@@ -103,7 +103,7 @@ export const quest10: Quest = {
         'Count the letters: exactly 32, so each carries exactly 5 bits. Four characters are banished on purpose: **1, b, i, o**, the ones humans mistake for l, 6, l and 0. The alphabet itself is typo defense, before any mathematics runs.',
       prose: [
         'This single line is why you\'ll never agonize over `0` versus `O` in a bitcoin address again: the confusable characters simply aren\'t in the language. (The `1` right after `bc` isn\'t data; it\'s the separator between prefix and data, and it can\'t be confused with anything *because* the alphabet contains no other `1`.)',
-        'Two more rules complete the spelling: an address is valid in all-lowercase or all-UPPERCASE but **never mixed** (one more class of transcription error, eliminated), and the first data letter you\'ll usually see, `q`, is this alphabet\'s spelling of the number 0: the witness version from Stop 1, hiding in plain sight.',
+        'Two more rules complete the spelling. An address is valid in all-lowercase or all-UPPERCASE but **never mixed**, which eliminates one more class of transcription error. And the first data letter you\'ll usually see, `q`, is this alphabet\'s spelling of the number 0: the witness version from Stop 1, hiding in plain sight.',
       ],
       annotations: [
         { lines: 'L23', text: '32 characters, 5 bits each. Your entire address is one large number, written in base 32.' },
@@ -133,7 +133,7 @@ export const quest10: Quest = {
       ],
       title: 'The checksum: a mathematical promise that typos get caught',
       takeaway:
-        'The last six letters of every address are a checksum, and this comment states its power **like a law**: the code is guaranteed to detect up to 3 errors in any 1,023 characters, and was hand-picked to guarantee **4 errors caught within 89 characters**. A bc1q address is 42 characters, and even the longest taproot addresses, at 62, sit well inside the window.',
+        'The last six letters of every address are a checksum, and this comment states its power **like a law**. The code is guaranteed to detect up to 3 errors in any 1,023 characters. It was hand-picked to guarantee **4 errors caught within 89 characters**. A bc1q address is 42 characters, and even the longest taproot addresses, at 62, sit well inside the window.',
       prose: [
         'You don\'t need the Galois-field algebra (nobody\'s quizzing you); you need the *contract* in the last three highlighted lines. This isn\'t "we probably notice typos." It\'s a proven property of a BCH code, chosen from many candidates specifically to over-deliver on short strings like addresses. Mistype one, two, three, even four characters of a bc1 address, and validation **cannot** come out clean.',
         'Every wallet on Earth runs this polynomial before letting you send: the six-letter checksum must come out exact, and the network prefix and every data letter feed into it. And in this site\'s honesty tradition: with *five or more* simultaneous errors the guarantee lapses, and a corrupted address slips through with odds of about one in a billion (2³⁰). Even the fine print here comes quantified. In the finale, you\'ll try to sneak a typo past it yourself.',

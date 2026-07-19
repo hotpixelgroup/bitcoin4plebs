@@ -25,7 +25,7 @@ export const quest14: Quest = {
     text: "Ana started this story with sats in an exchange app: an IOU with a login screen. Tonight she generates twelve words on an offline device, writes them with a pencil, and withdraws everything to an address only those words control. The exchange now holds nothing of hers but a memory.",
   },
   intro: [
-    "Fourteen quests taught you to verify Bitcoin. This one teaches you to **keep** it, because the sad truth of this industry is that almost nobody loses coins to broken cryptography, and thousands of people lose them every year to a photographed seed phrase, a phishing site, or an exchange that turned out to be a hole in the shape of a bank.",
+    "Fourteen quests taught you to verify Bitcoin. This one teaches you to **keep** it. The sad truth of this industry is that almost nobody loses coins to broken cryptography. Thousands of people lose them every year to a photographed seed phrase, a phishing site, or an exchange that turned out to be a hole in the shape of a bank.",
     "Everything here builds on what you've proven: coins are entries on the shared ledger (Quest #0), locked to keys (Quest #3), in a keyspace no attacker can search (Quest #3's finale). The last piece is the one between the chair and the keyboard: **where those keys live, and how they survive you being human.**",
   ],
   promise:
