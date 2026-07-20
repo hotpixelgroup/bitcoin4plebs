@@ -45,6 +45,30 @@ export const GLOSSARY_CATEGORIES = [
 export const glossary: GlossaryEntry[] = [
   // --- Money & supply ---
   {
+    term: 'Properties of money',
+    match: ['properties of money', 'properties of good money'],
+    category: 'Money & supply',
+    definition:
+      "The scorecard societies have used implicitly for millennia to pick money: scarcity, durability, portability, divisibility, fungibility, and verifiability. Whatever scored best won the job. Bitcoin trades weaker fungibility (its ledger is public) for unmatched verifiability, the one property no earlier money let ordinary people check themselves (Quest #17).",
+    quest: 17,
+  },
+  {
+    term: 'Double-spend problem',
+    match: ['double-spend', 'double spend', 'double-spending'],
+    category: 'Money & supply',
+    definition:
+      "The reason digital cash was impossible for decades: a coin made of data can be copied and 'spent' many times, so preventing it required a trusted middleman keeping the master list. Bitcoin was the first system to stop double-spending with no middleman, using a shared ledger and rules every node checks. That, not the price, is the invention (Quest #17).",
+    quest: 17,
+  },
+  {
+    term: 'Fungibility',
+    match: ['fungibility', 'fungible'],
+    category: 'Money & supply',
+    definition:
+      'The property that every unit is interchangeable with every other: one clean $20 spends like any other $20. Bitcoin is only mixed here, honestly, because the ledger is public (Quest #15), so a coin can carry a visible history that some parties may treat differently. One of the few money properties gold and cash beat it on.',
+    quest: 17,
+  },
+  {
     term: 'Bitcoin / bitcoin (BTC)',
     category: 'Money & supply',
     definition:
@@ -375,6 +399,14 @@ export const glossary: GlossaryEntry[] = [
   },
 
   // --- Blocks & mining ---
+  {
+    term: 'Unforgeable costliness',
+    match: ['unforgeable costliness'],
+    category: 'Blocks & mining',
+    definition:
+      "Why proof-of-work burns energy on purpose. A block is essentially a receipt that real electricity was spent to make it, and that cost is what makes it impossible to fake cheaply, the digital equivalent of the labor in a gold bar. Making mining 'efficient' would not improve Bitcoin; it would destroy the security the cost provides (Quest #18).",
+    quest: 18,
+  },
   {
     term: 'Block',
     category: 'Blocks & mining',

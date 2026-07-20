@@ -223,4 +223,22 @@ export const questions: NewbieQuestion[] = [
     slug: 'a-thousand-coffees',
     stop: 'the-network',
   },
+  {
+    question: 'Why is Bitcoin worth anything at all?',
+    short: "Same reason anything is money (its properties plus who accepts it), plus one nothing had before: you can verify all of it yourself. \"Backed by nothing\" is true of the dollar too.",
+    slug: 'why-is-this-money',
+    stop: 'nothing-is-backed',
+  },
+  {
+    question: "I can't afford a whole bitcoin, is it too late?",
+    short: "A misunderstanding: Bitcoin is counted in satoshis, 100 million per coin, so you hold and send any fraction. Whole-coin pricing is a display choice, not a minimum.",
+    slug: 'why-is-this-money',
+    stop: 'checkable-scarcity',
+  },
+  {
+    question: "Doesn't Bitcoin waste a huge amount of energy?",
+    short: 'It really does use a country\'s worth of power, and the mix is not all clean. But that energy is the product, not overhead: it is what makes the ledger impossible to forge. Both columns, honestly.',
+    slug: 'does-bitcoin-waste-energy',
+    stop: 'the-objection',
+  },
 ];

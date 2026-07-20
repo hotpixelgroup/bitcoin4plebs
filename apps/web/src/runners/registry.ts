@@ -3,6 +3,8 @@ import type { Finale } from '@bitcoin4plebs/quests';
 import { AddressXray } from './address/address-xray';
 import { ChannelSimulator } from './lightning/channel-simulator';
 import { ClusterDetective } from './privacy/cluster-detective';
+import { DoubleSpend } from './doublespend/double-spend';
+import { RewriteCost } from './rewrite/rewrite-cost';
 import { EmissionRunner } from './emission/emission-runner';
 import { FeeAuction } from './feemarket/fee-auction';
 import { ForkYourself } from './fork/fork-yourself';
@@ -43,6 +45,8 @@ const runners: Record<string, ComponentType<RunnerProps>> = {
   'seed-studio': SeedStudio,
   'cluster-detective': ClusterDetective,
   'channel-simulator': ChannelSimulator,
+  'double-spend': DoubleSpend,
+  'rewrite-cost': RewriteCost,
 };
 
 export function getRunner(id: string): ComponentType<RunnerProps> | undefined {

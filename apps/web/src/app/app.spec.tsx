@@ -84,6 +84,24 @@ describe('App', () => {
     expect(screen.getByText(/Quest not found/i)).toBeInTheDocument();
   });
 
+  it('renders the map and draws dependency edges on selection without crashing', () => {
+    // Regression guard: the map computes SVG edges from live layout in a
+    // layout effect; an unstable callback once looped it to a crash that
+    // vitest missed because no test mounted /map. Mount it and select.
+    render(
+      <MemoryRouter initialEntries={['/map']}>
+        <App />
+      </MemoryRouter>
+    );
+    expect(screen.getByRole('heading', { level: 1, name: 'The map' })).toBeInTheDocument();
+    const pills = screen.getAllByRole('button', { name: /^#\d+/ });
+    expect(pills.length).toBe(quests.length);
+    // Selecting a quest with prerequisites must not throw.
+    const withPrereq = screen.getByRole('button', { name: new RegExp(`^#7\\b`) });
+    fireEvent.click(withPrereq);
+    expect(screen.getByText(/Builds on/)).toBeInTheDocument();
+  });
+
   it('groups the home page into curriculum tracks', () => {
     render(
       <MemoryRouter initialEntries={['/']}>

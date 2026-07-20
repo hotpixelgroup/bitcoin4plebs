@@ -16,6 +16,8 @@ import { quest13 } from './quest-13-data-wars.js';
 import { quest14 } from './quest-14-custody.js';
 import { quest15 } from './quest-15-privacy.js';
 import { quest16 } from './quest-16-lightning.js';
+import { quest17 } from './quest-17-why-money.js';
+import { quest18 } from './quest-18-energy.js';
 
 /**
  * The quest registry, in curriculum order — each quest builds on the
@@ -41,6 +43,8 @@ export const quests: Quest[] = [
   quest14,
   quest15,
   quest16,
+  quest17,
+  quest18,
 ];
 
 export function getQuestBySlug(slug: string): Quest | undefined {

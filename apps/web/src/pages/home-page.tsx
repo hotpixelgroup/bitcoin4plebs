@@ -89,6 +89,8 @@ const TRACK_BLURBS: Record<string, string> = {
     'The last mile: what a wallet actually stores, what the 12 words really are, the habits that keep coins safe, and who can see what on a glass ledger.',
   'Beyond the chain':
     'The closing move: how a thousand payments fit into two transactions, read from the Lightning specs, honest limits included.',
+  'The big questions':
+    'The two things everyone asks first and can only truly answer last: why is this money at all, and does it waste energy? Both answered from the ground up.',
 };
 
 

@@ -3442,6 +3442,34 @@ tr:last-child td {
   color: var(--ink-2);
   border-style: dashed;
 }
+.map-grid {
+  position: relative;
+  display: grid;
+  gap: 18px;
+}
+.map-edges {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: visible;
+  z-index: 0;
+}
+.map-edge-dep {
+  stroke: var(--brand);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 3;
+  opacity: 0.7;
+}
+.map-edge-unlock {
+  stroke: var(--ink-2);
+  stroke-width: 1.5;
+  stroke-dasharray: 2 4;
+  opacity: 0.5;
+}
+.map-row {
+  position: relative;
+  z-index: 1;
+}
 .map-track-name {
   font-family: var(--mono);
   font-size: 11.5px;
@@ -3796,6 +3824,297 @@ tr:last-child td {
 }
 .chan-stats {
   margin: 14px 0;
+}
+
+/* ——— energy to security (Quest #18 viz) ——— */
+.e2s-flow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.e2s-stage {
+  font-family: var(--mono);
+  font-size: 12px;
+  padding: 6px 11px;
+  border-radius: 999px;
+  border: 1px solid var(--baseline);
+  color: var(--ink-2);
+}
+.e2s-energy {
+  border-color: color-mix(in srgb, var(--brand) 45%, transparent);
+  color: var(--brand);
+}
+.e2s-wall {
+  border-color: color-mix(in srgb, var(--good) 45%, transparent);
+  color: var(--good);
+}
+.e2s-arrow {
+  color: var(--muted);
+  font-family: var(--mono);
+}
+.e2s-wallarea {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 18px;
+  align-items: end;
+  margin-bottom: 14px;
+}
+.e2s-stack {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 3px;
+}
+.e2s-brick {
+  width: 96px;
+  padding: 6px 0;
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--good);
+  background: color-mix(in srgb, var(--good) 12%, var(--card));
+  border: 1px solid color-mix(in srgb, var(--good) 35%, transparent);
+  border-radius: 4px;
+  animation: e2s-rise 0.3s var(--ease) both;
+}
+@keyframes e2s-rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .e2s-brick {
+    animation: none;
+  }
+}
+.e2s-metric {
+  margin-bottom: 12px;
+}
+.e2s-metric-num {
+  display: block;
+  font-family: var(--mono);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.e2s-metric-label {
+  font-size: 12.5px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.e2s-note {
+  font-size: 13px;
+  color: var(--ink-2);
+  margin: 8px 0 0;
+}
+.e2s-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* ——— rewrite cost (Quest #18 finale) ——— */
+.rw-sub {
+  font-size: 14px;
+  color: var(--ink-2);
+  line-height: 1.55;
+  margin: 14px 0;
+}
+.rw-stats {
+  margin-bottom: 16px;
+}
+.rw-punch {
+  font-size: 14.5px;
+  color: var(--ink-2);
+  line-height: 1.6;
+  margin: 14px 0 0;
+}
+
+/* ——— money scorecard (Quest #17 viz) ——— */
+.sc-grid {
+  display: grid;
+  gap: 4px;
+  margin-bottom: 14px;
+}
+.sc-row {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  gap: 8px;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+  background: var(--card);
+  border: 1px solid var(--baseline);
+  border-radius: var(--radius);
+  padding: 10px 13px;
+  cursor: pointer;
+  font: inherit;
+  color: var(--ink-2);
+  transition: border-color 0.15s var(--ease);
+}
+.sc-row:hover {
+  border-color: var(--brand);
+}
+.sc-row-open {
+  border-color: var(--brand);
+  box-shadow: var(--glow);
+}
+.sc-head {
+  cursor: default;
+  background: transparent;
+  border-color: transparent;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-bottom: 0;
+}
+.sc-head:hover {
+  border-color: transparent;
+}
+.sc-prop {
+  font-size: 14px;
+  color: var(--ink);
+}
+.sc-cell {
+  font-size: 13px;
+  letter-spacing: 2px;
+  text-align: center;
+}
+.sc-strong {
+  color: var(--good);
+}
+.sc-medium {
+  color: var(--brand);
+}
+.sc-weak {
+  color: var(--muted);
+}
+.sc-detail {
+  border: 1px solid var(--baseline);
+  border-radius: var(--radius);
+  background: var(--card);
+  padding: 14px 16px;
+}
+.sc-detail-q {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--brand);
+  margin-bottom: 10px;
+}
+.sc-detail-row {
+  display: flex;
+  gap: 12px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--ink-2);
+  padding: 4px 0;
+}
+.sc-tag {
+  flex: 0 0 82px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding-top: 2px;
+}
+
+/* ——— double-spend duel (Quest #17 finale) ——— */
+.ds-coin {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  border: 1.5px solid var(--brand);
+  border-radius: 50%;
+  width: 92px;
+  height: 92px;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+.ds {
+  text-align: center;
+}
+.ds-brief {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--ink-2);
+  text-align: left;
+  margin: 14px 0;
+}
+.ds-coin-face {
+  font-family: var(--mono);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--brand);
+}
+.ds-coin-sub {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+}
+.ds-race {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 6px 0 4px;
+}
+.ds-tx {
+  border: 1px solid var(--baseline);
+  border-radius: var(--radius);
+  background: var(--card);
+  padding: 12px 14px;
+  text-align: left;
+  transition: border-color 0.2s var(--ease), opacity 0.2s var(--ease);
+}
+.ds-tx-won {
+  border-color: var(--good);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--good) 35%, transparent);
+}
+.ds-tx-lost {
+  border-color: var(--bad);
+  opacity: 0.6;
+}
+.ds-tx-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 5px;
+}
+.ds-tx-note {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--muted);
+}
+.ds-avatar-carol {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 19px;
+  height: 19px;
+  border-radius: 50%;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 700;
+  border: 1.5px solid var(--page);
+  background: color-mix(in srgb, var(--brand) 20%, var(--card));
+  color: var(--brand);
 }
 
 /* ——— core vs knots reference page ——— */

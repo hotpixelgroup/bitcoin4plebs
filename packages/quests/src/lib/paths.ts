@@ -22,8 +22,8 @@ export const entryPaths: EntryPath[] = [
     id: 'skeptic',
     prompt: "Someone told me it's a scam",
     blurb:
-      'Three quests that replace vibes with arithmetic: what money even is, the supply cap you can check yourself, and the night the cap was attacked and held.',
-    questNumbers: [0, 1, 5],
+      'Three quests that replace vibes with reasoning: what money even is, why this is money at all, and the night its supply was attacked and held.',
+    questNumbers: [0, 17, 5],
   },
   {
     id: 'holder',
@@ -45,6 +45,13 @@ export const entryPaths: EntryPath[] = [
     blurb:
       'The blockspace auction, the machine that keeps it usable with nobody in charge, and the live fight over what a ledger is for, from primary sources.',
     questNumbers: [7, 12, 13],
+  },
+  {
+    id: 'green',
+    prompt: "Isn't it an environmental disaster?",
+    blurb:
+      'Take the objection seriously: how mining actually works, what the energy buys that nothing else can, and the honest accounting neither side usually gives.',
+    questNumbers: [18, 6, 9],
   },
 ];
 
@@ -70,6 +77,8 @@ export const prerequisites: Record<number, number[]> = {
   14: [3, 11],
   15: [7, 14],
   16: [3, 12],
+  17: [0, 1],
+  18: [6, 4],
 };
 
 /** Group consecutive quests that share a track, preserving curriculum order. */
