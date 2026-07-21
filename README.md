@@ -1,6 +1,7 @@
 # bitcoin4plebs
 
 [![CI](https://github.com/hotpixelgroup/bitcoin4plebs/actions/workflows/ci.yml/badge.svg)](https://github.com/hotpixelgroup/bitcoin4plebs/actions/workflows/ci.yml)
+[![19 quests](https://img.shields.io/badge/quests-19-f7931a)](https://hotpixelgroup.github.io/bitcoin4plebs/)
 
 **Understand Bitcoin's code. No engineering degree required.**
 
