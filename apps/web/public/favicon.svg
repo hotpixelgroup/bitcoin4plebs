@@ -1,7 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect x="1" y="1" width="30" height="30" rx="7.5" fill="#141413" stroke="rgba(255,255,255,0.28)"/>
-  <rect x="1" y="13" width="2.6" height="6" rx="1.3" fill="#f7931a"/>
-  <rect x="8" y="8" width="13" height="3.2" rx="1.6" fill="#898781"/>
-  <rect x="8" y="14.4" width="17" height="3.2" rx="1.6" fill="#f7931a"/>
-  <rect x="8" y="20.8" width="10" height="3.2" rx="1.6" fill="#898781" fill-opacity="0.55"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <rect width="32" height="32" rx="7" fill="#f7931a"/>
+  <!-- the two vertical prongs of the Bitcoin B, drawn as vectors (font-independent) -->
+  <rect x="11.1" y="5.4" width="1.9" height="4.4" rx="0.8" fill="#161513"/>
+  <rect x="13.8" y="5.4" width="1.9" height="4.4" rx="0.8" fill="#161513"/>
+  <rect x="11.1" y="22.2" width="1.9" height="4.4" rx="0.8" fill="#161513"/>
+  <rect x="13.8" y="22.2" width="1.9" height="4.4" rx="0.8" fill="#161513"/>
+  <!-- B body: stem + two bowls -->
+  <rect x="10.3" y="8" width="4.7" height="16" rx="1.2" fill="#161513"/>
+  <rect x="10.3" y="8" width="10.6" height="7.7" rx="3.85" fill="#161513"/>
+  <rect x="10.3" y="15.1" width="11.5" height="8.9" rx="4.45" fill="#161513"/>
+  <!-- counters, carved in the tile colour -->
+  <rect x="15.2" y="10.3" width="4.4" height="3.2" rx="1.6" fill="#f7931a"/>
+  <rect x="15.2" y="17.4" width="5.0" height="4.1" rx="2.05" fill="#f7931a"/>
 </svg>
