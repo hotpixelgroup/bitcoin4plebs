@@ -18,13 +18,18 @@
   <rect x="0" y="626" width="1200" height="4" fill="#f7931a"/>
   <rect x="0" y="0" width="1200" height="2" fill="url(#cardline)"/>
 
-  <!-- logo mark -->
-  <g transform="translate(64,58)">
-    <rect x="0" y="0" width="76" height="76" rx="18" fill="#111110" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
-    <rect x="0" y="30" width="6.5" height="15" rx="3.2" fill="#f7931a"/>
-    <rect x="19" y="19" width="31" height="8" rx="4" fill="#898781"/>
-    <rect x="19" y="34" width="41" height="8" rx="4" fill="#f7931a"/>
-    <rect x="19" y="49" width="24" height="8" rx="4" fill="#898781" opacity="0.55"/>
+  <!-- logo mark: the Bitcoin B tile (matches the favicon exactly, scaled 2.375x from its 32px source) -->
+  <g transform="translate(64,58) scale(2.375)">
+    <rect width="32" height="32" rx="7" fill="#f7931a"/>
+    <rect x="11.1" y="5.4" width="1.9" height="4.4" rx="0.8" fill="#161513"/>
+    <rect x="13.8" y="5.4" width="1.9" height="4.4" rx="0.8" fill="#161513"/>
+    <rect x="11.1" y="22.2" width="1.9" height="4.4" rx="0.8" fill="#161513"/>
+    <rect x="13.8" y="22.2" width="1.9" height="4.4" rx="0.8" fill="#161513"/>
+    <rect x="10.3" y="8" width="4.7" height="16" rx="1.2" fill="#161513"/>
+    <rect x="10.3" y="8" width="10.6" height="7.7" rx="3.85" fill="#161513"/>
+    <rect x="10.3" y="15.1" width="11.5" height="8.9" rx="4.45" fill="#161513"/>
+    <rect x="15.2" y="10.3" width="4.4" height="3.2" rx="1.6" fill="#f7931a"/>
+    <rect x="15.2" y="17.4" width="5.0" height="4.1" rx="2.05" fill="#f7931a"/>
   </g>
 
   <!-- wordmark -->
