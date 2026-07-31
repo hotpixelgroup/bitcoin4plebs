@@ -25,7 +25,7 @@ The curriculum is nineteen quests in seven tracks:
 
 **The big questions** · 17: Why is this money at all? (the "backed by nothing" category error, the properties-of-money scorecard scoring gold/cash/Bitcoin honestly, the double-spend problem Bitcoin actually solved, and a double-spend duel you can try to break) · 18: Does Bitcoin waste energy? (the objection taken seriously, why the energy cost *is* the security rather than a side effect, an honest accounting of the sources, and a "price a rewrite" calculator)
 
-There are also reference pages comparing [Bitcoin Core and Bitcoin Knots](https://hotpixelgroup.github.io/bitcoin4plebs/core-vs-knots) as software choices and mapping [wallet types](https://hotpixelgroup.github.io/bitcoin4plebs/wallets), brandlessly.
+There are also reference pages, all brandless: a [security playbook](https://hotpixelgroup.github.io/bitcoin4plebs/security) for generating keys with real entropy, backing them up so they survive fire and forgetting, and running multisig; a map of [wallet types](https://hotpixelgroup.github.io/bitcoin4plebs/wallets); a comparison of [Bitcoin Core and Bitcoin Knots](https://hotpixelgroup.github.io/bitcoin4plebs/core-vs-knots) as software choices; and [the map](https://hotpixelgroup.github.io/bitcoin4plebs/map) of what builds on what.
 
 ## Principles
 
