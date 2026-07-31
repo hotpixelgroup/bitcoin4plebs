@@ -126,7 +126,7 @@ export function SecurityPage() {
           <RichText text="Two mistakes destroy the randomness, and both are common. The first is inventing your own 'clever' phrase, a favourite quote, a birthday, a pattern. Software that turns text into a key is called a **brain wallet**, and wallets built that way get emptied within minutes by bots that try every phrase humans think of. Never choose your own words; let real randomness choose them. The second is trusting a black box: a wallet generates a seed and you have no way to know its randomness was real." />
         </p>
         <p>
-          <RichText text="The verify-don't-trust answer is to **add your own randomness**. Good hardware wallets let you flip a coin or roll dice and feed the results in, then the device still computes the checksum so the phrase is valid. Now the randomness is partly yours, and you never had to trust the machine's hidden dice. Twelve words is already 128 bits, more combinations than there are atoms in a mountain; **24 words (256 bits)** is the belt-and-braces maximum for serious savings." />
+          <RichText text="The verify-don't-trust answer is to **add your own randomness**. Good hardware wallets let you flip a coin or roll dice and feed the results in, then the device still computes the checksum so the phrase is valid. Now the randomness is partly yours, and you never had to trust the machine's hidden dice. Twelve words is already 128 bits, which is 2^128 possible phrases: a **39-digit number**, and you can feel exactly how hopeless guessing it is in [Quest #3's finale](/quests/what-stops-someone-spending-your-coins). **24 words (256 bits)** is the belt-and-braces maximum the standard allows." />
         </p>
         <Callout>
           <strong>The generation rules, short.</strong>{' '}
@@ -152,14 +152,14 @@ export function SecurityPage() {
           <RichText text="You choose a rule like **2 of 3**: three keys exist, held in three different places, and any **two** of them together can spend, but no single one can. Read what that buys you, because it fixes the two worst nightmares at the same time. A **thief** who steals one key (breaks into one location, compromises one device) still cannot move a coin; they would need to breach two places at once. And **you** can lose one key entirely, a device dies, a location burns, and still recover everything with the other two. Single-key custody makes you choose which disaster to fear; multisig answers both." />
         </p>
         <p>
-          <RichText text="To do it well, spread the keys so no one event takes two: different devices (ideally different makers), different physical locations, and, for many people, a **collaborative-custody** service that holds just one of the three, so a company can help you recover but can never spend on its own. Start at 2 of 3; it is the sweet spot of safety and simplicity." />
+          <RichText text="To do it well, spread the keys so that no single event can take two of them. Use different devices, ideally from different makers. Keep them in different physical locations. Many people also let a **collaborative-custody** service hold one of the three: the company can help you recover, but with only one key it can never spend on its own. Start at 2 of 3. It is the sweet spot of safety and simplicity." />
         </p>
         <Callout>
           <strong>The multisig footgun almost everyone hits.</strong>{' '}
           <RichText text="A multisig wallet needs more than the seeds to rebuild: it needs the **wallet configuration** (the public keys of all the signers, sometimes called the descriptor). Lose that and even all your seeds may not reassemble the wallet. So back up the configuration file alongside every seed backup. It contains no secrets, so it is safe to keep copies, and it is the piece people forget until the day they need it." />
         </Callout>
         <p>
-          <RichText text="Multisig is graduate-level, and more moving parts means more procedure to get wrong, so **rehearse the whole thing on signet** ([Quest #11](/quests/send-your-first-play-bitcoin)) before a real coin is involved: create it, receive to it, lose a key on purpose, and recover. When the recovery drill is boring, you are ready." />
+          <RichText text="Multisig is graduate-level, and more moving parts means more procedure to get wrong. So **rehearse the whole thing on signet** ([Quest #11](/quests/send-your-first-play-bitcoin)) before a real coin is involved. Create it, receive to it, lose a key on purpose, and recover from that loss. When the recovery drill has become boring, you are ready." />
         </p>
 
         <h2>Day to day: how people actually get fooled</h2>
