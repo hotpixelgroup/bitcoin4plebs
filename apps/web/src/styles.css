@@ -3199,7 +3199,7 @@ tr:last-child td {
   font-size: 13px;
   font-weight: 600;
   color: var(--ink-2);
-  background: var(--card);
+  background: var(--surface);
   border: 1px solid var(--baseline);
   border-radius: 999px;
   padding: 8px 14px;
@@ -3229,7 +3229,7 @@ tr:last-child td {
 .im-detail {
   border: 1px solid var(--baseline);
   border-radius: var(--radius);
-  background: var(--card);
+  background: var(--surface);
   padding: 14px 16px;
   margin-bottom: 12px;
 }
@@ -3292,7 +3292,7 @@ tr:last-child td {
   border: 1px solid var(--baseline);
   border-left: 3px solid var(--baseline);
   border-radius: var(--radius);
-  background: var(--card);
+  background: var(--surface);
   padding: 13px 16px;
 }
 .stress-step:last-child {
@@ -3342,7 +3342,7 @@ tr:last-child td {
 .paths {
   border: 1px solid var(--baseline);
   border-radius: var(--radius);
-  background: var(--card);
+  background: var(--surface);
   padding: 18px 20px;
   margin-bottom: 26px;
 }
@@ -3493,7 +3493,7 @@ tr:last-child td {
   font-size: 13px;
   line-height: 1.35;
   color: var(--ink-2);
-  background: var(--card);
+  background: var(--surface);
   border: 1px solid var(--baseline);
   border-radius: 999px;
   padding: 7px 13px;
@@ -3532,7 +3532,7 @@ tr:last-child td {
   border: 1px solid var(--baseline);
   border-left: 3px solid var(--brand);
   border-radius: var(--radius);
-  background: var(--card);
+  background: var(--surface);
   padding: 15px 18px;
 }
 .map-detail-title {
@@ -3606,11 +3606,11 @@ tr:last-child td {
   border: 1.5px solid var(--page);
 }
 .story-avatar-ana {
-  background: color-mix(in srgb, var(--brand) 28%, var(--card));
+  background: color-mix(in srgb, var(--brand) 28%, var(--surface));
   color: var(--brand);
 }
 .story-avatar-bo {
-  background: color-mix(in srgb, var(--good) 24%, var(--card));
+  background: color-mix(in srgb, var(--good) 24%, var(--surface));
   color: var(--good);
   margin-left: -6px;
 }
@@ -3639,7 +3639,7 @@ tr:last-child td {
   font-family: var(--mono);
   font-size: 14px;
   color: var(--ink);
-  background: var(--card);
+  background: var(--surface);
   border: 1px solid var(--baseline);
   border-radius: var(--radius);
   padding: 8px 11px;
@@ -3692,7 +3692,7 @@ tr:last-child td {
   font-family: var(--mono);
   font-size: 13px;
   color: var(--ink);
-  background: var(--card);
+  background: var(--surface);
   border: 1px solid var(--baseline);
   border-radius: var(--radius);
   padding: 7px 10px;
@@ -3705,7 +3705,7 @@ tr:last-child td {
 .seed-out {
   border: 1px solid var(--baseline);
   border-radius: var(--radius);
-  background: var(--card);
+  background: var(--surface);
   padding: 13px 16px;
 }
 .seed-hex {
@@ -3738,7 +3738,7 @@ tr:last-child td {
 .cd-tx {
   border: 1px solid var(--baseline);
   border-radius: var(--radius);
-  background: var(--card);
+  background: var(--surface);
   padding: 10px 14px;
 }
 .cd-tx-label {
@@ -3799,12 +3799,12 @@ tr:last-child td {
   height: 14px;
   border-radius: 999px;
   border: 1px solid var(--baseline);
-  background: color-mix(in srgb, var(--good) 22%, var(--card));
+  background: color-mix(in srgb, var(--good) 22%, var(--surface));
   overflow: hidden;
 }
 .chan-bar-ana {
   height: 100%;
-  background: color-mix(in srgb, var(--brand) 65%, var(--card));
+  background: color-mix(in srgb, var(--brand) 65%, var(--surface));
   transition: width 0.35s var(--ease);
 }
 @media (prefers-reduced-motion: reduce) {
@@ -3873,7 +3873,7 @@ tr:last-child td {
   font-family: var(--mono);
   font-size: 10.5px;
   color: var(--good);
-  background: color-mix(in srgb, var(--good) 12%, var(--card));
+  background: color-mix(in srgb, var(--good) 12%, var(--surface));
   border: 1px solid color-mix(in srgb, var(--good) 35%, transparent);
   border-radius: 4px;
   animation: e2s-rise 0.3s var(--ease) both;
@@ -3949,7 +3949,7 @@ tr:last-child td {
   align-items: center;
   width: 100%;
   text-align: left;
-  background: var(--card);
+  background: var(--surface);
   border: 1px solid var(--baseline);
   border-radius: var(--radius);
   padding: 10px 13px;
@@ -4001,7 +4001,7 @@ tr:last-child td {
 .sc-detail {
   border: 1px solid var(--baseline);
   border-radius: var(--radius);
-  background: var(--card);
+  background: var(--surface);
   padding: 14px 16px;
 }
 .sc-detail-q {
@@ -4074,7 +4074,7 @@ tr:last-child td {
 .ds-tx {
   border: 1px solid var(--baseline);
   border-radius: var(--radius);
-  background: var(--card);
+  background: var(--surface);
   padding: 12px 14px;
   text-align: left;
   transition: border-color 0.2s var(--ease), opacity 0.2s var(--ease);
@@ -4113,8 +4113,279 @@ tr:last-child td {
   font-size: 10px;
   font-weight: 700;
   border: 1.5px solid var(--page);
-  background: color-mix(in srgb, var(--brand) 20%, var(--card));
+  background: color-mix(in srgb, var(--brand) 20%, var(--surface));
   color: var(--brand);
+}
+
+/* ——— wallets: the custody line ——— */
+.wal-side-head {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  margin-bottom: 10px;
+}
+.wal-side-sub {
+  display: block;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  text-transform: none;
+  color: var(--muted);
+  margin-top: 3px;
+}
+.wal-side-you .wal-side-head {
+  color: var(--brand);
+}
+.wal-rule {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 18px 0;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.wal-rule::before,
+.wal-rule::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--baseline) 20%,
+    var(--baseline) 80%,
+    transparent
+  );
+}
+.wal-cards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+.wal-cards-3 {
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+}
+.wal-card {
+  border: 1px solid var(--baseline);
+  border-radius: var(--radius);
+  background: var(--surface);
+  padding: 13px 15px;
+}
+.wal-side-you .wal-card {
+  border-color: color-mix(in srgb, var(--brand) 34%, var(--baseline));
+}
+.wal-card-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.wal-card-sub {
+  font-size: 12.5px;
+  color: var(--muted);
+  margin: 2px 0 10px;
+}
+.wal-facts {
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+.wal-fact dt {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.wal-fact dd {
+  margin: 2px 0 0;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+.wal-card-good {
+  margin-top: 11px;
+  padding-top: 10px;
+  border-top: 1px solid var(--baseline);
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+.wal-card-k {
+  display: block;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--brand);
+  margin-bottom: 3px;
+}
+.wal-card-note {
+  margin-top: 9px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--bad);
+}
+
+/* ——— wallets: two pockets ——— */
+.wal-pockets {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 12px;
+  align-items: center;
+}
+.wal-pocket {
+  border: 1px solid var(--baseline);
+  border-radius: var(--radius);
+  background: var(--surface);
+  padding: 13px 15px;
+}
+.wal-pocket-hot {
+  border-color: color-mix(in srgb, var(--brand) 34%, var(--baseline));
+}
+.wal-pocket-cold {
+  border-color: color-mix(in srgb, var(--good) 34%, var(--baseline));
+}
+.wal-pocket-head {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.wal-pocket-hot .wal-pocket-head {
+  color: var(--brand);
+}
+.wal-pocket-cold .wal-pocket-head {
+  color: var(--good);
+}
+.wal-pocket-tool {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 4px 0 9px;
+}
+.wal-pocket ul {
+  margin: 0;
+  padding-left: 16px;
+  display: grid;
+  gap: 5px;
+}
+.wal-pocket li {
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--ink-2);
+}
+.wal-pocket-move {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--muted);
+  text-align: center;
+  white-space: nowrap;
+}
+.wal-pocket-move::before {
+  content: '←';
+  display: block;
+  font-size: 15px;
+  color: var(--brand);
+  margin-bottom: 2px;
+}
+@media (max-width: 700px) {
+  .wal-pockets {
+    grid-template-columns: 1fr;
+  }
+  .wal-pocket-move::before {
+    content: '↑';
+  }
+}
+
+/* ——— wallets: the five checks and the gate ——— */
+.wal-checks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+.wal-check {
+  display: flex;
+  gap: 13px;
+  border: 1px solid var(--baseline);
+  border-radius: var(--radius);
+  background: var(--surface);
+  padding: 13px 15px;
+}
+.wal-check-n {
+  flex: 0 0 auto;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--brand);
+  padding-top: 2px;
+}
+.wal-check-ask {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.4;
+}
+.wal-check-look {
+  margin-top: 7px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+.wal-check-k {
+  display: block;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 2px;
+}
+.wal-check-why {
+  margin-top: 6px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+.wal-gate {
+  margin-top: 14px;
+  border: 1px dashed color-mix(in srgb, var(--bad) 50%, transparent);
+  border-radius: var(--radius);
+  padding: 13px 15px;
+}
+.wal-gate-head {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--bad);
+  margin-bottom: 6px;
+}
+.wal-gate-q {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.4;
+}
+.wal-gate-why {
+  margin: 7px 0 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ink-2);
 }
 
 /* ——— security playbook ——— */
@@ -4140,7 +4411,7 @@ tr:last-child td {
   padding: 16px 18px 14px;
   border: 1px solid var(--baseline);
   border-radius: var(--radius);
-  background: var(--card);
+  background: var(--surface);
 }
 .secviz-cap {
   font-family: var(--mono);
@@ -4170,7 +4441,7 @@ tr:last-child td {
   gap: 14px;
   border: 1px solid var(--baseline);
   border-radius: var(--radius);
-  background: var(--card);
+  background: var(--surface);
   padding: 13px 16px;
 }
 .tier-meter {
@@ -4413,7 +4684,7 @@ tr:last-child td {
 .sec-col {
   border: 1px solid var(--baseline);
   border-radius: var(--radius);
-  background: var(--card);
+  background: var(--surface);
   padding: 14px 16px 16px;
 }
 .sec-do {
@@ -4486,7 +4757,7 @@ tr:last-child td {
 .pp-table {
   border: 1px solid var(--baseline);
   border-radius: var(--radius);
-  background: var(--card);
+  background: var(--surface);
   overflow: hidden;
   margin-bottom: 16px;
 }
