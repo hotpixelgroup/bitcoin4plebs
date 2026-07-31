@@ -200,6 +200,12 @@ export const questions: NewbieQuestion[] = [
     stop: 'keys-not-coins',
   },
   {
+    question: 'How do I actually keep my bitcoin safe?',
+    short: "Guard one secret well: generate offline with real randomness, back it up on steel in two places, test the restore, and for serious amounts use multisig. The full playbook is on the [security page](/security).",
+    slug: 'your-keys-your-coins',
+    stop: 'the-rules',
+  },
+  {
     question: 'What happens if my hardware wallet breaks or burns?',
     short: 'Nothing, if your seed words survive: the device holds keys, not coins. Restore the words on any replacement and everything reappears.',
     slug: 'your-keys-your-coins',

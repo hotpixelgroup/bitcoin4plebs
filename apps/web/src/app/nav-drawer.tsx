@@ -97,6 +97,10 @@ export function NavDrawer({ open, onClose }: NavDrawerProps) {
             <span className="drawer-link-num">⚷</span>
             <span>Wallets · who holds your keys?</span>
           </Link>
+          <Link to="/security" className={linkClass('/security')} aria-current={current('/security')}>
+            <span className="drawer-link-num">🛡</span>
+            <span>Keep it safe · security playbook</span>
+          </Link>
           <Link to="/glossary" className={linkClass('/glossary')} aria-current={current('/glossary')}>
             <span className="drawer-link-num">§</span>
             <span>Glossary</span>

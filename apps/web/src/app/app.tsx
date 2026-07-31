@@ -9,6 +9,7 @@ import { QuestPage } from '../pages/quest-page';
 import { QuestionsPage } from '../pages/questions-page';
 import { ReviewPage } from '../pages/review-page';
 import { SandboxPage } from '../pages/sandbox-page';
+import { SecurityPage } from '../pages/security-page';
 import { WalletsPage } from '../pages/wallets-page';
 import { NavDrawer } from './nav-drawer';
 import { LogoMark } from './site-logo';
@@ -108,6 +109,7 @@ export function App() {
           <Route path="/sandbox" element={<SandboxPage />} />
           <Route path="/core-vs-knots" element={<CoreVsKnotsPage />} />
           <Route path="/wallets" element={<WalletsPage />} />
+          <Route path="/security" element={<SecurityPage />} />
           <Route path="/map" element={<MapPage />} />
           <Route path="/quests/:slug" element={<QuestPage />} />
         </Routes>

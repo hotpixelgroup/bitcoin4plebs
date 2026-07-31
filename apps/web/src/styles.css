@@ -4117,6 +4117,73 @@ tr:last-child td {
   color: var(--brand);
 }
 
+/* ——— security playbook: always / never columns ——— */
+.sec-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin: 18px 0 26px;
+}
+@media (max-width: 700px) {
+  .sec-cols {
+    grid-template-columns: 1fr;
+  }
+}
+.sec-col {
+  border: 1px solid var(--baseline);
+  border-radius: var(--radius);
+  background: var(--card);
+  padding: 14px 16px 16px;
+}
+.sec-do {
+  border-color: color-mix(in srgb, var(--good) 40%, transparent);
+}
+.sec-never {
+  border-color: color-mix(in srgb, var(--bad) 40%, transparent);
+}
+.sec-col-head {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.sec-do .sec-col-head {
+  color: var(--good);
+}
+.sec-never .sec-col-head {
+  color: var(--bad);
+}
+.sec-col ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 9px;
+}
+.sec-col li {
+  position: relative;
+  padding-left: 20px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+.sec-col li::before {
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-family: var(--mono);
+}
+.sec-do li::before {
+  content: '✓';
+  color: var(--good);
+}
+.sec-never li::before {
+  content: '✕';
+  color: var(--bad);
+}
+
 /* ——— core vs knots reference page ——— */
 .cvk-next {
   display: flex;
