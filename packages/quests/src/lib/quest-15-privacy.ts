@@ -173,6 +173,7 @@ export const quest15: Quest = {
         'You cannot make the glass frosted, but you can stop writing your name on it: **fresh addresses (automatic), deliberate spending, your own node, and knowing exactly who already holds your links**. Privacy here is hygiene, not wizardry.',
       prose: [
         "The realistic list, in order of value. **One:** let your wallet's fresh-address behavior work; never hand out one address twice when you can avoid it. **Two:** spend deliberately: consolidating every coin you own into one transaction is publishing your net worth; some wallets offer *coin control* so you choose which boxes open together. **Three:** run your own node for your own wallet (Quest #9): asking someone else's server about your addresses tells that server exactly which addresses are yours, and a block explorer is just such a server with a nice interface. **Four:** remember who holds off-chain links: the exchange that KYC'd you, the merchant you shipped to. On-chain discipline can't unsay those.",
+        "Two more tools deserve an honest mention. **Collaborative transactions** attack the common-input heuristic directly: a CoinJoin mixes many strangers' inputs into one transaction so \"spent together, owned together\" stops being true, and a PayJoin hides in plain sight, with the *recipient* adding an input to an ordinary-looking payment so the heuristic silently fails. And one off-chain link people hand out casually: the wallet's **xpub**, the master public key. Anyone you share it with can derive every address you will ever use and watch your whole balance and history forever. Fine for your own watch-only setup on your own node; never a thing to paste into someone else's service.",
         "And the honest frame, because this site doesn't sell fog: none of this is about hiding wrongdoing, any more than envelopes are. It's about your salary, your savings, and your donations not being a public dataset joined to your name for strangers, advertisers, and thieves (Quest #14's threat list applies: people who can see wealth can target it). The ledger is glass by design and it bought you a bank with no banker. Handle it accordingly.",
       ],
     },
@@ -200,6 +201,9 @@ export const quest15: Quest = {
       },
       {
         text: '**The links that hurt most are off-chain**: exchanges and merchants already hold name-to-address joins no heuristic needs.',
+      },
+      {
+        text: '**The heuristics have answers**: CoinJoins and PayJoins break common-input clustering on purpose, and an xpub pasted into a service is your whole history, leaked.',
       },
     ],
     closing:

@@ -141,7 +141,7 @@ export const quest11: Quest = {
       takeaway:
         'Ten minutes, three steps, zero risk: get a practice wallet, collect free signet coins from a faucet, and send some. **This site never sees your keys**; the wallet and the network do all the real work, which is the point.',
       prose: [
-        'Step one, a wallet: install [Sparrow Wallet](https://sparrowwallet.com) on a computer and switch its network to *Signet* (Tools → Network), or use any wallet that lists signet support. Create a fresh wallet and let it generate a practice seed phrase. (House rule from the glossary applies even here: never type a seed phrase that guards real money into anything.)',
+        'Step one, a wallet: install [Sparrow Wallet](https://sparrowwallet.com) on a computer and restart it in signet mode (Tools → Restart in Signet), or use any wallet that lists signet support. Create a fresh wallet and let it generate a practice seed phrase. (House rule from the glossary applies even here: never type a seed phrase that guards real money into anything.)',
         'Step two, free coins: copy a receive address from your wallet (it will start with tb1) and paste it into a public signet faucet such as [signetfaucet.com](https://signetfaucet.com). Coins arrive within a block or two. Step three, the graduation move: send some back to the faucet\'s return address, or to a second address of your own. Your wallet builds the boxes (Quest #3), signs, and gossips it (Quest #7). Then copy the **transaction ID** it shows you and bring it to the finale below.',
       ],
       quiz: [

@@ -82,6 +82,12 @@ export const questions: NewbieQuestion[] = [
     stop: 'the-auction',
   },
   {
+    question: 'My transaction is stuck. Am I just out of luck?',
+    short: 'No: the sender can rebroadcast it with a higher bid (replace-by-fee), and even the recipient can bump it by spending the unconfirmed coins with a generous fee (child-pays-for-parent).',
+    slug: 'what-happens-when-you-press-send',
+    stop: 'stuck-transaction',
+  },
+  {
     question: 'Who sets the fees?',
     short: 'Nobody. You bid whatever you like; miners take the best-paying megabyte first. An empty waiting room confirms tiny bids next block.',
     slug: 'what-happens-when-you-press-send',

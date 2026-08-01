@@ -115,6 +115,10 @@ export const quest03: Quest = {
           explain: "The lock accepts exactly one thing: a signature that verifies against the public key it names. No signature, no spend; and forging one means guessing a 78-digit number.",
         },
       ],
+      myth: {
+        belief: "A quantum computer will guess everyone's keys one day soon, so none of this is safe.",
+        reality: "Not with any machine on the horizon: breaking this curve takes a fault-tolerant quantum computer millions of times beyond anything built, and coins behind **fresh, never-spent-from addresses** (whose public keys aren't even public yet) are safer still. If such machines ever loom, Bitcoin migrates to post-quantum signatures by the same near-unanimous upgrade process from Quest #4. It is a roadmap item to watch, not a doomsday.",
+      },
       title: 'The moment of truth: OP_CHECKSIG',
       takeaway:
         'Deep inside the script engine, the classic address types all come down to this: a signature and a public key go onto a stack, and **one opcode** answers a single question. *Does this proof match this lock?* (Newer taproot spends run the same curve check directly in the engine; the question never changes.)',

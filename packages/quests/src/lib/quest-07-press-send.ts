@@ -149,6 +149,29 @@ export const quest07: Quest = {
       },
     },
     {
+      id: 'stuck-transaction',
+      quiz: [
+        {
+          question: "A payment *to you* is stuck with a fee too low for this week's mempool. What can you, the recipient, do?",
+          options: [
+          "Nothing; only the sender can ever speed up a transaction",
+          "Spend the unconfirmed coins in a high-fee child transaction, so miners take parent and child as a package",
+          "Ask a mining pool to make an exception",
+          ],
+          answer: 1,
+          explain: "Miners price a transaction together with its unconfirmed parents, so a generous fee on the child (child-pays-for-parent) pulls the underpaid parent into a block with it. The sender's own escape hatch is replace-by-fee: rebroadcasting the same payment at a higher bid.",
+        },
+      ],
+      title: 'Underbid? You are not stuck',
+      takeaway:
+        'Bid too low and the auction simply passes you by, but the story doesn\'t end there. The sender can **replace** the transaction with a higher bid, and even the *recipient* can bump it, by spending the unconfirmed coins with a fat fee.',
+      prose: [
+        'First escape hatch, for the sender: **replace-by-fee (RBF)**. If your wallet marks the transaction as replaceable when it sends (most good wallets do by default), you can rebroadcast the payment with a higher fee and nodes swap the old bid out of the waiting room for the new one. The replacement rules (BIP-125) are pure auction logic: the new bid must pay strictly more than what it replaces, which is exactly what un-sticking takes. One habit flows from this: an unconfirmed, replaceable payment is not yet money in hand, which is why serious settlements wait for a confirmation (the next stop).',
+        'Second hatch, and the one most people never hear about: **child-pays-for-parent (CPFP)**. Even the *recipient* of a stuck payment can rescue it. Remember from Quest #3 that coins are boxes: the unconfirmed payment\'s output is already yours to spend. Spend it immediately in a "child" transaction with a generous fee, and miners, who price bundles of transactions together (the chunks you read at the last stop), will take parent and child as a package. The child\'s fee effectively covers both, and it works even when the sender never enabled RBF.',
+        'Neither trick touches a rule you\'ve verified; they are bids in the same auction, placed with better information. And that is the deeper lesson of this quest: on Bitcoin a stuck transaction is a *pricing* problem, and pricing problems have owner-operated solutions. Nobody to call, nothing to file. Just a better bid.',
+      ],
+    },
+    {
       id: 'set-in-stone',
       viz: 'tamper-cascade',
       title: 'Confirmed, and then buried',
@@ -200,6 +223,9 @@ export const quest07: Quest = {
       {
         text: '**Confirmation time is an auction, not a queue.** Your fee bids against every pending payment for scarce block space.',
         cite: 'miner.cpp:302',
+      },
+      {
+        text: '**An underbid is recoverable**: the sender rebroadcasts at a higher bid (RBF); even the recipient can bump it by spending the unconfirmed coins with a fat fee (CPFP).',
       },
       {
         text: '**Finality is burial under proof-of-work**: each new block multiplies the cost of undoing yours. No court, just cumulative electricity.',

@@ -219,6 +219,14 @@ export const glossary: GlossaryEntry[] = [
     quest: 3,
   },
   {
+    term: 'Quantum computing (the footnote)',
+    match: ['quantum'],
+    category: 'Keys & ownership',
+    definition:
+      "The one honest asterisk on \"keys are unguessable.\" Breaking secp256k1 needs Shor's algorithm running on a fault-tolerant quantum computer millions of times beyond anything built. The nuance Bitcoiners track: coins behind fresh, never-spent-from addresses (public key not yet revealed) are the safest, and if the machines ever loom, migrating to post-quantum signatures is a soft-fork question (Quest #4), not an overnight emergency.",
+    quest: 3,
+  },
+  {
     term: 'OP_CHECKSIG',
     match: ['OP_CHECKSIG'],
     code: true,
@@ -291,6 +299,14 @@ export const glossary: GlossaryEntry[] = [
     category: 'Transactions & the mempool',
     definition:
       'A wallet feature that lets you choose exactly which of your coin-boxes fund a payment, instead of letting automatic selection merge them. The manual override for privacy: what gets spent together gets clustered together, so choosing is power.',
+    quest: 15,
+  },
+  {
+    term: 'CoinJoin & PayJoin',
+    match: ['coinjoin', 'payjoin'],
+    category: 'Transactions & the mempool',
+    definition:
+      'Collaborative transactions that break the common-input heuristic on purpose. A CoinJoin mixes many strangers\' inputs into one transaction, so "spent together, owned together" stops being true. A PayJoin is subtler: the *recipient* adds an input to an ordinary-looking payment, so the heuristic silently fails while nothing looks unusual. The watcher\'s one great trick, answered.',
     quest: 15,
   },
 
@@ -396,6 +412,31 @@ export const glossary: GlossaryEntry[] = [
     definition:
       'Your transaction is "confirmed" when a mined block includes it (that\'s 1 confirmation), and every block stacked on top adds another. Each one adds another block of proof-of-work an attacker would have to redo, and slashes their odds of ever catching up. For feel: one confirmation is ~10 minutes, six (the customary "final" for large sums) is about an hour.',
     quest: 7,
+  },
+  {
+    term: 'Replace-by-fee (RBF)',
+    match: ['replace-by-fee', 'rbf'],
+    category: 'Transactions & the mempool',
+    definition:
+      "The sender's escape hatch for an underbid transaction: rebroadcast the payment with a higher fee, and nodes swap the old bid out of their mempools for the new one (BIP-125: the replacement must pay strictly more). The flip side is a habit, not a rule: an unconfirmed, replaceable payment is not final yet, so large settlements wait for a confirmation.",
+    quest: 7,
+  },
+  {
+    term: 'Child pays for parent (CPFP)',
+    match: ['child pays for parent', 'cpfp'],
+    category: 'Transactions & the mempool',
+    definition:
+      "The recipient's escape hatch: spend the unconfirmed coins in a new \"child\" transaction with a generous fee. Miners price a transaction together with its unconfirmed parents, so the child's fee pulls the stuck parent into a block. It works even when the sender never enabled RBF.",
+    quest: 7,
+  },
+  {
+    term: 'Dust',
+    match: ['dust'],
+    category: 'Transactions & the mempool',
+    definition:
+      "An output so small that spending it would cost more in fees than it is worth. Nodes refuse to relay new transactions that create outputs below a policy dust threshold, precisely so the ledger doesn't fill with unspendable pocket lint. Practical takeaway: consolidate your small UTXOs while fees are cheap, not during a spike.",
+    cite: 'policy.h',
+    quest: 12,
   },
 
   // --- Blocks & mining ---

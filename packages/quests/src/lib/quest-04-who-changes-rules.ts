@@ -83,7 +83,7 @@ export const quest04: Quest = {
       ],
       annotations: [
         { lines: 'L119', text: 'BIP34 (2013): block heights in coinbases, activated at block 227,931.' },
-        { lines: 'L121–22', text: 'Two 2015 upgrades hardening signatures and timelocks.' },
+        { lines: 'L121–22', text: 'Two 2015 upgrades: timelocks (BIP65) and stricter signatures (BIP66).' },
         { lines: 'L124', text: 'SegWit (2017) at block 481,824, after two years of public argument and near-unanimous adoption.' },
         { lines: 'L125', text: 'Taproot\'s marker (2021), the most recent change. Note the pace: six rule changes since 2013, and only one since 2017.' },
       ],
