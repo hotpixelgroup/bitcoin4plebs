@@ -260,8 +260,8 @@ export const glossary: GlossaryEntry[] = [
     quest: 14,
   },
   {
-    term: 'Hardware wallet',
-    match: ['hardware wallet', 'hardware signer'],
+    term: 'Hardware wallet (HWW)',
+    match: ['hardware wallet', 'hardware signer', 'HWW'],
     category: 'Keys & ownership',
     definition:
       'A small offline device whose one job is holding keys and signing transactions without the keys ever touching a networked computer. It stores keys, not coins: destroy the device, restore the seed words on any replacement, and everything reappears. The seed backup is the wallet; the gadget is a safe way to use it.',
@@ -276,6 +276,100 @@ export const glossary: GlossaryEntry[] = [
     quest: 14,
   },
 
+  {
+    term: 'Entropy',
+    match: ['entropy'],
+    category: 'Keys & ownership',
+    definition:
+      'Randomness: how unpredictable something is. High entropy means nobody can guess it, not with every computer on Earth. Your seed words are only as safe as the randomness they were born from, which is why this is the one step worth checking rather than trusting ([the security playbook](/security)).',
+    quest: 14,
+  },
+  {
+    term: 'RNG (random number generator)',
+    match: ['RNG'],
+    category: 'Keys & ownership',
+    definition:
+      'The thing that produces the randomness. A wallet asks its RNG for a number, and that number becomes your seed. If the RNG is weak, everything built on top of it is guessable no matter how strong the rest of the cryptography is.',
+    quest: 14,
+  },
+  {
+    term: 'TRNG (true random number generator)',
+    match: ['TRNG'],
+    category: 'Keys & ownership',
+    definition:
+      'A chip that harvests randomness from physics itself, such as electrical noise, rather than from arithmetic. Physics has no pattern to learn, so a working TRNG is genuinely unguessable. The catch is that you cannot see whether it is working, which is the argument for adding your own dice rolls.',
+    quest: 14,
+  },
+  {
+    term: 'CSPRNG (cryptographically secure RNG)',
+    match: ['CSPRNG', 'CRNG'],
+    category: 'Keys & ownership',
+    definition:
+      'Randomness strong enough to keep secrets: even someone watching a long run of its output cannot predict the next number. It stretches a small amount of true randomness into a lot of usable randomness, so it is only ever as good as the real entropy it was fed. Garbage in, guessable out.',
+    quest: 14,
+  },
+  {
+    term: 'Faraday cage',
+    match: ['Faraday cage'],
+    category: 'Keys & ownership',
+    definition:
+      'A metal enclosure that blocks radio waves going in or out. Storing a signing device inside one means it holds no wireless conversation with anything while it sits there. Belt-and-braces for high-value storage, never a substitute for a good backup.',
+  },
+  {
+    term: 'Ephemeral seed',
+    match: ['ephemeral seed'],
+    category: 'Keys & ownership',
+    definition:
+      "A temporary seed that lives only in a device's memory while you use it and vanishes the moment the power goes off. Useful for a throwaway wallet or a quick test. Dangerous if you forget it is temporary, because nothing was written down and there is nothing to restore.",
+  },
+  {
+    term: 'Single-sig',
+    match: ['single-sig', 'single sig'],
+    category: 'Keys & ownership',
+    definition:
+      'One key moves the money. Simple, and what nearly everyone starts with, but it makes you choose which disaster to fear: a stolen key or a lost one. Multisig is the answer to both.',
+    quest: 14,
+  },
+  {
+    term: 'Multisig',
+    match: ['multisig', 'multi-signature'],
+    category: 'Keys & ownership',
+    definition:
+      'Several keys, kept apart, where an agreed number of them must sign together. A 2-of-3 wallet needs any two of its three keys to move a satoshi, so a thief with one key gets nothing and you can lose one key and still recover everything. Laid out step by step on [the security playbook](/security).',
+    quest: 14,
+  },
+  {
+    term: 'Xpub (extended public key)',
+    match: ['xpub', 'extended public key'],
+    category: 'Keys & ownership',
+    definition:
+      'One public key that can generate every receive address in a wallet. It cannot spend anything, which makes it safe to hand to a watch-only app. It also reveals your whole history and every future address to whoever holds it, so treat it as private even though it is not a secret key (Quest #15).',
+    quest: 15,
+  },
+  {
+    term: 'Derivation path',
+    match: ['derivation path'],
+    category: 'Keys & ownership',
+    definition:
+      "The coordinates of your addresses in the wallet's family tree. The seed makes the keys; the path says where to look for them. Restored your seed and see a zero balance? That is almost always the wrong path, not lost coins. Do not panic, and do not retype your seed anywhere. Check the path first.",
+    quest: 14,
+  },
+  {
+    term: 'Bricking',
+    match: ['bricking', 'bricked'],
+    category: 'Keys & ownership',
+    definition:
+      'When a device stops working permanently: as useful as a brick. For a hardware wallet this is an inconvenience, not a disaster, because the coins live on the ledger and your seed backup rebuilds the wallet on any replacement. The device dying is survivable. The backup being bad is not.',
+    quest: 14,
+  },
+  {
+    term: 'Dusting attack',
+    match: ['dusting'],
+    category: 'Transactions & the mempool',
+    definition:
+      'An attacker sends tiny, nearly worthless amounts to thousands of addresses, then watches which ones later get spent together. It is a tracking device, not a theft: the crumbs are bait for the clustering heuristics in Quest #15. The defence is coin control, so you never spend the dust alongside real coins.',
+    quest: 15,
+  },
   {
     term: 'Change output',
     match: ['change output', 'change address'],
@@ -687,6 +781,27 @@ export const glossary: GlossaryEntry[] = [
     definition:
       'The reference implementation descended from Satoshi\'s original code: the program whose source every quest excerpt is copied from, at one pinned commit. Not the only implementation (see Bitcoin Knots), but the one most nodes run. [Core vs. Knots, side by side](/core-vs-knots).',
     quest: 9,
+  },
+  {
+    term: 'FOSS (free and open source software)',
+    match: ['FOSS', 'open source'],
+    category: 'The network & your node',
+    definition:
+      'Software whose source code anyone can read, check, and rebuild. It is the difference between a claim you believe and a claim you can verify, which is why every wallet checklist starts here. Open source does not mean somebody *has* checked it, only that somebody *can*. Don\'t trust. Verify.',
+  },
+  {
+    term: 'Library (dependency)',
+    match: ['library', 'libngu', 'dependency'],
+    category: 'The network & your node',
+    definition:
+      'Pre-written code that developers reuse instead of rebuilding from scratch. It saves enormous effort and quietly inherits enormous risk: a flaw deep in a shared library reaches every product built on it, which is how a single mistake in one randomness routine can empty wallets made by a device thousands of people trusted. (`libngu`, "library number go up", is one such Bitcoin library.)',
+  },
+  {
+    term: 'Commit',
+    match: ['commit message'],
+    category: 'The network & your node',
+    definition:
+      'One saved change to a codebase, with a note explaining what changed and why. Because every commit is timestamped and kept forever, open code carries its own audit trail: researchers can walk back through years of history to find the exact change that introduced a bug, and a lazy one-word commit message is precisely what makes that archaeology harder.',
   },
   {
     term: 'Bitcoin Knots',
