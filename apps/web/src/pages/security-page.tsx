@@ -253,6 +253,19 @@ export function SecurityPage() {
           <p>
             <RichText text="The verify-don't-trust answer is to **add your own randomness**. Good hardware wallets let you roll dice or flip a coin and feed the results in, and the device still computes the checksum so the phrase stays valid. Now the randomness is partly yours, and you never had to trust the machine's hidden dice. Twelve words is already 128 bits, which is 2^128 possible phrases: a **39-digit number**, and you can feel exactly how hopeless guessing it is in [Quest #3's finale](/quests/what-stops-someone-spending-your-coins). **24 words (256 bits)** is the belt-and-braces maximum the standard allows." />
           </p>
+          <div className="sec-incident">
+            <div className="sec-incident-date">Disclosed 30 July 2026 · a real case, not a hypothetical</div>
+            <p>
+              <RichText text="Block's security researchers found that **COLDCARD** firmware had been generating seeds with a *deterministic* fallback routine (`ngu.random` falling back to MicroPython's Yasmarang) instead of the chip's hardware random number generator. It drew on the microcontroller's ID and timing values, neither of which is unpredictable, so seeds could be rebuilt offline and matched against the chain. Around **1,367 BTC, about $88.6 million, left 4,585 addresses**, with the first wave draining 1,083 BTC in 41 minutes. Galaxy Research and Chainalysis consider the theft *likely linked* to the flaw; as of writing that link is investigative rather than proven." />
+            </p>
+            <p>
+              <RichText text="**If you hold one:** affected builds are Mk2 and Mk3 on 4.0.1 through 4.1.9, Mk4 and Mk5 before 5.6.0, and Q before 1.5.0Q (or the matching Edge releases). Updating firmware is **not enough on its own**, because a seed born from a weak generator stays guessable forever. The fix is to update, generate a **brand-new seed**, verify a receive address on the device screen, send a small test, migrate everything across, and keep the old backup until that migration confirms." />
+            </p>
+            <p>
+              <RichText text="Read the failure, because it is the whole argument of this section: every other layer held. The cryptography was sound, the words were standard, the device was purpose-built and offline. One weak source of randomness at the very first step undid all of it. That is why **you add your own dice**, and why 'the device says it is random' is a claim to check rather than believe." />
+            </p>
+          </div>
+
           <Callout>
             <strong>The generation rules, short.</strong>{' '}
             <RichText text="Generate **offline**, on a device whose job is holding keys. Prefer **24 words** for savings. If you can, **add dice or coin-flip randomness** so you trust the entropy. Let the wallet compute the checksum. Then verify a test restore before a single satoshi goes in. And never, ever type a real seed into anything with a network, this site's practice studio included." />
