@@ -262,7 +262,7 @@ export function SecurityPage() {
               <RichText text="**If you hold one:** affected builds are Mk2 and Mk3 on 4.0.1 through 4.1.9, Mk4 and Mk5 before 5.6.0, and Q before 1.5.0Q (or the matching Edge releases). Updating firmware is **not enough on its own**, because a seed born from a weak generator stays guessable forever. The fix is to update, generate a **brand-new seed**, verify a receive address on the device screen, send a small test, migrate everything across, and keep the old backup until that migration confirms." />
             </p>
             <p>
-              <RichText text="Read the failure, because it is the whole argument of this section: every other layer held. The cryptography was sound, the words were standard, the device was purpose-built and offline. One weak source of randomness at the very first step undid all of it. That is why **you add your own dice**, and why 'the device says it is random' is a claim to check rather than believe." />
+              <RichText text="Read the failure, because it is the whole argument of this section: every other layer held. The cryptography was sound, the words were standard, the device was purpose-built and offline. One weak source of randomness at the very first step undid all of it. That is why **you add your own dice**, and why 'the device says it is random' is a claim to check rather than believe. Don't take our summary for it either: [BleepingComputer's report](https://www.bleepingcomputer.com/news/security/coldcard-wallet-rng-flaw-likely-linked-to-88-million-bitcoin-theft/) has the affected versions, the timeline, and the vendor's own advisory." />
             </p>
           </div>
 
