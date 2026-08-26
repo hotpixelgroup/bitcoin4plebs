@@ -168,6 +168,8 @@ export const sites: Record<SiteId, SiteConfig> = {
         'The object you actually paste. What is inside an lnbc string, and why the hash at its centre is the best payment receipt in ordinary use.',
       Routing:
         'From a private tab to a network of strangers: how a payment crosses people who can neither steal it nor learn who you are.',
+      'The big questions':
+        'The one that decides whether any of the above is yours: who is holding the key, what it costs to hold it yourself, and an honest scorecard with the weaknesses left in.',
     },
     // Lightning's own reference pages (node software, liquidity, custody)
     // are not written yet; the nav simply does not offer them.
