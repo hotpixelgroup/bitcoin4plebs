@@ -57,8 +57,10 @@ export function OnionPeel() {
 
       <div className="viz-readout">
         <div className="stat">
-          <span className="stat-value">{PACKET_BYTES}</span>
-          <span className="stat-unit">bytes forwarded — the same after every single hop</span>
+          <div className="stat-value">
+            {PACKET_BYTES}{' '}
+            <span className="stat-unit">bytes forwarded — the same after every single hop</span>
+          </div>
         </div>
         <div className="stat-label">what {HOPS[peeled]} learns</div>
         <span className="stat-unit">

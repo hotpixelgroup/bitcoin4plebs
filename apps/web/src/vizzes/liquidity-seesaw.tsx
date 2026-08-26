@@ -47,12 +47,14 @@ export function LiquiditySeesaw() {
 
       <div className="viz-readout">
         <div className="stat">
-          <span className="stat-value">{fmt(canSend)}</span>
-          <span className="stat-unit">sats you can send</span>
+          <div className="stat-value">
+            {fmt(canSend)} <span className="stat-unit">sats you can send</span>
+          </div>
         </div>
         <div className="stat">
-          <span className="stat-value">{fmt(canReceive)}</span>
-          <span className="stat-unit">sats anyone can send you</span>
+          <div className="stat-value">
+            {fmt(canReceive)} <span className="stat-unit">sats anyone can send you</span>
+          </div>
         </div>
         <div className="stat-label">
           the two red marks are the reserve — {fmt(RESERVE)} sats each side must always leave the

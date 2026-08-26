@@ -46,8 +46,10 @@ export function ChannelFootprint() {
           <rect x="0" y="1" width={width(onChain)} height="6" rx="1" fill="var(--bad)" />
         </svg>
         <div className="stat">
-          <span className="stat-value">{onChain.toLocaleString('en-US')}</span>
-          <span className="stat-unit">vbytes of block space, bid for in the global auction</span>
+          <div className="stat-value">
+            {onChain.toLocaleString('en-US')}{' '}
+            <span className="stat-unit">vbytes of block space, bid for in the global auction</span>
+          </div>
         </div>
 
         <div className="stat-label">the same payments in a channel</div>
@@ -56,8 +58,10 @@ export function ChannelFootprint() {
           <rect x="0" y="1" width={width(inChannel)} height="6" rx="1" fill="var(--brand)" />
         </svg>
         <div className="stat">
-          <span className="stat-value">{inChannel}</span>
-          <span className="stat-unit">vbytes — one open, one close, whatever happens in between</span>
+          <div className="stat-value">
+            {inChannel}{' '}
+            <span className="stat-unit">vbytes — one open, one close, whatever happens in between</span>
+          </div>
         </div>
       </div>
 
