@@ -197,6 +197,74 @@ export const questLn06: Quest = {
         "So your wallet picks a route on price, tries it, and finds out. A failure comes back saying which hop could not continue, the wallet marks it, and tries again. What you experience as a spinner is often two or three real attempts. This is not a bug that will be fixed; it is the direct cost of not publishing everybody's balances, and most people would make the same trade.",
       ],
     },
+    {
+      id: 'your-part-in-it',
+      title: 'If you ran a node, what would you actually decide?',
+      takeaway:
+        "Three roles, and they answer differently. **Paying**: your node picks the hops, automatically, in the moment. **Forwarding**: you cannot choose to be on a route at all, only advertise terms and wait. **Being paid**: you can hint, not choose. The decisions that need your judgment are made once per channel, not once per payment.",
+      annotationsOpen: true,
+      quiz: [
+        {
+          question: 'You run a routing node. How do you get chosen for more payments?',
+          options: [
+            'Bid for routes as they come past',
+            'Advertise terms senders find attractive, then wait. You have no other move',
+            'Ask your peers to prefer you',
+          ],
+          answer: 1,
+          explain:
+            "This is the part that surprises new operators. You cannot opt into a route. You publish two fee numbers, a timelock and your limits, and senders either pick you or do not. Overcharging does not earn you more, it simply stops the traffic, and you find out slowly, by seeing nothing happen.",
+        },
+      ],
+      prose: [
+        "**When you pay**, your node chooses the route, and you do not. It costs a few candidate paths against the gossip map it already holds, picks one, and wraps the onion around that choice, all inside the second you spent looking at a spinner. Most implementations will let you specify a route by hand. Almost nobody does, outside debugging.",
+        "**When you forward**, you choose nothing. You cannot decide to be on a route, and you will not know you were on one until an HTLC arrives. Your entire influence is the `channel_update` you published earlier. That is a strange position to be in if you are used to markets where sellers can chase buyers, and it is why running a profitable routing node is mostly about liquidity and connectivity rather than pricing.",
+        "**When you are paid**, you cannot choose the route either, though you can nudge it: routing hints in an invoice tell the payer about private channels they could not otherwise see, and blinded paths conceal the last stretch while still letting it be used.",
+        "So what does need your judgment? Not hops. **Channels.** Which peers to open with, how much to commit, whether you can receive as well as send, and whether something is watching the chain while you sleep. Those are decided once and last for months. Route selection is arithmetic your software does in a moment, over and over, and never asks you about.",
+      ],
+    },
+    {
+      id: 'is-it-cheapest',
+      title: 'And it picks the cheapest path for me, automatically?',
+      takeaway:
+        "Automatically, yes. Cheapest, roughly. The specification itself says the trade-off between fee and timelock is **unclear**, and then recommends doing things that are deliberately not cheapest: padding the timelock for privacy, and spreading routes around to avoid depending on any one node.",
+      quiz: [
+        {
+          question: 'Why might your wallet pass over the lowest-fee route it can see?',
+          options: [
+            'It is a bug in the wallet',
+            'Fee is one input among several: timelock, whether that hop failed recently, privacy padding, and not leaning on the same node every time',
+            'It always takes the lowest fee available',
+          ],
+          answer: 1,
+          explain:
+            "Cheapest-by-fee would be a poor objective on its own. A route that is a satoshi cheaper but adds days of timelock, or runs through a hop that failed twice this morning, is worse by any measure you actually care about. The specification names the trade-off and declines to settle it, because the right answer depends on reliability nobody can see from the gossip map.",
+        },
+      ],
+      prose: [
+        "Automatically: yes, entirely. You will never be asked to approve a path, and most wallets do not even show you one.",
+        "Cheapest: roughly, and the specification is unusually frank about why not exactly. Read lines 1033 to 1034. Fee and `cltv_expiry_delta` both matter, because timelock is how long your money could be stuck in the worst case, and **the relationship between these two attributes is unclear, as it depends on the reliability of the nodes involved.** The spec is telling implementers there is no formula, because the missing input is how trustworthy a stranger is.",
+        "Then it recommends two things that make a route more expensive on purpose. A **shadow route**: pad the timelock as though the payment travelled further than it did, so that hops cannot infer their distance from the recipient. That is Quest #5's privacy argument, paid for in a slightly worse route. And **diversification**, to avoid single points of failure and detection, which means deliberately not always using the best path you know.",
+        "Add the things every real wallet does beyond the spec and the picture is complete. Most keep a memory of which hops failed recently and avoid them. Most model liquidity as a probability, since the map never states it. Most enforce a maximum fee you can usually configure, and will fail rather than exceed it. And most retry, so the route you eventually pay through is the first one that **worked**, which is not always the first one it costed.",
+        "The honest summary: your wallet automatically picks a cheap, reasonably short, reasonably private path it believes will actually go through, from an incomplete map, subject to a limit you set. That is a more useful promise than cheapest would have been.",
+      ],
+      annotations: [
+        { lines: 'L1031', text: 'Fee is not the only cost. Timelock is money you cannot use if things go wrong.' },
+        { lines: 'L1033–34', text: 'The specification declining to settle it: the trade-off depends on reliability, which nothing in the gossip map reports.' },
+      ],
+      excerpt: {
+        pin: BOLTS_PIN,
+        ref: { file: '07-routing-gossip.md', startLine: 1031, endLine: 1035 },
+        language: 'text',
+        lines: [
+          { n: 1031, text: 'When calculating a route for an HTLC, both the `cltv_expiry_delta` and the fee', highlight: true },
+          { n: 1032, text: 'need to be considered: the `cltv_expiry_delta` contributes to the time that' },
+          { n: 1033, text: 'funds will be unavailable in the event of a worst-case failure. The relationship', highlight: true },
+          { n: 1034, text: 'between these two attributes is unclear, as it depends on the reliability of the', highlight: true },
+          { n: 1035, text: 'nodes involved.' },
+        ],
+      },
+    },
   ],
   finale: {
     title: "Route a payment across the specification's own network",
