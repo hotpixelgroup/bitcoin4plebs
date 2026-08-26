@@ -140,7 +140,7 @@ export const questLn03: Quest = {
       prose: [
         "The specification is refreshingly plain about why: bech32 *can be simply reused for Lightning invoices*, and it admits the checksum is optimised for manual entry, which for a 400-character string is 'unlikely to happen often'. The honest reading is that reusing a well-analysed encoding beat inventing a new one, and the error detection came along for free.",
         "The practical payoff is the one you can test below. Bech32's checksum is designed to catch any small number of wrong characters, so a typo, a truncated copy-paste, or a character mangled by a chat client is caught *at decode time* rather than becoming a mystery. Paste a broken invoice into the finale and watch it refuse.",
-        "There is a nice symmetry here for anyone who came from the Bitcoin site: the decoder running below reuses the very same bech32 implementation that site's address quest teaches you to break on purpose. One encoding, two layers, one checksum protecting both.",
+        "There is a nice symmetry here for anyone who came from the Bitcoin site: the decoder running below reuses the very same bech32 implementation that [that site's address quest](https://hotpixelgroup.github.io/bitcoin4plebs/quests/what-is-an-address) teaches you to break on purpose. One encoding, two layers, one checksum protecting both.",
       ],
       annotations: [
         { lines: 'L21–22', text: 'The same encoding as segwit addresses, reused deliberately rather than reinvented.' },

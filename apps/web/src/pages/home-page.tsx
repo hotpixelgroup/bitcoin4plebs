@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { groupQuestsByTrack } from '@bitcoin4plebs/quests';
 import { RichText } from '@bitcoin4plebs/ui';
 import { Diploma } from '../app/diploma';
+import { SiblingCard } from '../app/sibling-card';
 import { TodayPanel } from '../app/today-panel';
 import { latestReadPosition, useVerifiedQuests } from '../lib/progress';
 import {
@@ -192,6 +193,8 @@ export function HomePage() {
         </section>
         );
       })}
+
+      <SiblingCard />
     </main>
   );
 }

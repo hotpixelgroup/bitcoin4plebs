@@ -14,16 +14,20 @@
   --baseline: #3a3a37;
   --hairline: rgba(255, 255, 255, 0.08);
   --hairline-strong: rgba(255, 255, 255, 0.16);
+  /* Brand colour, plus its raw channels so any rgba() below can be themed
+     too. A bare rgba(247, 147, 26, …) anywhere else would stay orange on
+     the Lightning front door — use rgba(var(--brand-rgb), …) instead. */
   --brand: #f7931a;
+  --brand-rgb: 247, 147, 26;
   --brand-bright: #ffa93d;
-  --brand-soft: rgba(247, 147, 26, 0.12);
+  --brand-soft: rgba(var(--brand-rgb), 0.12);
   --series: #cc7000;
   --good: #2fbf4f;
   --bad: #e66767;
   --radius: 14px;
   --radius-sm: 10px;
   --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.35), 0 10px 28px -14px rgba(0, 0, 0, 0.55);
-  --glow: 0 0 0 1px rgba(247, 147, 26, 0.28), 0 10px 34px -12px rgba(247, 147, 26, 0.22);
+  --glow: 0 0 0 1px rgba(var(--brand-rgb), 0.28), 0 10px 34px -12px rgba(var(--brand-rgb), 0.22);
   --ease: cubic-bezier(0.2, 0.7, 0.3, 1);
   --sans: system-ui, -apple-system, 'Segoe UI', sans-serif;
   --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
@@ -34,10 +38,9 @@
    logo mark, the diploma) picks the new accent up for free. */
 :root[data-site='lightning'] {
   --brand: #8b5cf6;
+  --brand-rgb: 139, 92, 246;
   --brand-bright: #a78bfa;
-  --brand-soft: rgba(139, 92, 246, 0.14);
   --series: #7c3aed;
-  --glow: 0 0 0 1px rgba(139, 92, 246, 0.28), 0 10px 34px -12px rgba(139, 92, 246, 0.22);
 }
 
 * {
@@ -133,7 +136,7 @@ a:hover {
   right: 0;
   bottom: 0;
   height: 1px;
-  background: linear-gradient(90deg, var(--hairline), rgba(247, 147, 26, 0.35) 30%, var(--hairline) 70%);
+  background: linear-gradient(90deg, var(--hairline), rgba(var(--brand-rgb), 0.35) 30%, var(--hairline) 70%);
 }
 .site-header .wrap {
   display: flex;
@@ -164,7 +167,7 @@ a:hover {
   flex-shrink: 0;
 }
 .logo:hover .logo-mark-hl {
-  fill: #ffa93d;
+  fill: var(--brand-bright);
 }
 .logo-text {
   display: flex;
@@ -240,11 +243,17 @@ a:hover {
 }
 .site-footer-links {
   display: flex;
-  gap: 18px;
+  /* These wrap: the sibling link names the other site AND says which layer
+     it is, which is too long to sit on one unwrappable line on a phone. */
+  flex-wrap: wrap;
+  gap: 8px 18px;
 }
 
 /* ——— hero ——— */
 
+.app {
+  overflow-x: clip;
+}
 .hero {
   position: relative;
   padding: 72px 0 40px;
@@ -257,7 +266,7 @@ a:hover {
   left: -180px;
   width: 560px;
   height: 380px;
-  background: radial-gradient(closest-side, rgba(247, 147, 26, 0.07), transparent);
+  background: radial-gradient(closest-side, rgba(var(--brand-rgb), 0.07), transparent);
   pointer-events: none;
 }
 .kicker {
@@ -346,7 +355,11 @@ h1 {
 
 .quest-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  /* min(320px, 100%) rather than a bare 320px: a fixed track minimum makes
+     the grid wider than its container on very narrow screens, which scrolls
+     the whole page sideways. Every auto-fill/auto-fit grid here is clamped
+     the same way. */
+  grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
   gap: 18px;
   padding-bottom: 24px;
 }
@@ -363,7 +376,7 @@ h1 {
 }
 .quest-card:hover {
   text-decoration: none;
-  border-color: rgba(247, 147, 26, 0.55);
+  border-color: rgba(var(--brand-rgb), 0.55);
   transform: translateY(-3px);
   box-shadow: var(--glow);
 }
@@ -577,7 +590,7 @@ details.depth .depth-body {
   padding-right: 16px;
 }
 .cl-hl {
-  background: rgba(247, 147, 26, 0.07);
+  background: rgba(var(--brand-rgb), 0.07);
   box-shadow: inset 3px 0 0 var(--brand);
 }
 .tok-comment {
@@ -1145,7 +1158,7 @@ tr:last-child td {
   transition: border-color 0.16s var(--ease), transform 0.16s var(--ease), box-shadow 0.16s var(--ease);
 }
 .quest-nav-link:hover {
-  border-color: rgba(247, 147, 26, 0.55);
+  border-color: rgba(var(--brand-rgb), 0.55);
   text-decoration: none;
   transform: translateY(-2px);
   box-shadow: var(--glow);
@@ -1284,7 +1297,7 @@ tr:last-child td {
   transform: scale(1.06);
 }
 .nav-toggle:hover .logo-mark-hl {
-  fill: #ffa93d;
+  fill: var(--brand-bright);
 }
 .nav-toggle:focus-visible {
   outline: 2px solid var(--brand);
@@ -1702,7 +1715,7 @@ tr:last-child td {
 }
 .utxo-boxes {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(150px, 100%), 1fr));
   gap: 10px;
   margin-top: 8px;
 }
@@ -1978,7 +1991,7 @@ tr:last-child td {
 }
 .merkle-sibling rect {
   stroke: var(--brand);
-  fill: rgba(247, 147, 26, 0.12);
+  fill: rgba(var(--brand-rgb), 0.12);
 }
 .merkle-onpath rect {
   stroke: var(--ink-2);
@@ -2084,7 +2097,7 @@ tr:last-child td {
 .timeline-event:hover circle,
 .timeline-selected circle {
   stroke: var(--brand);
-  fill: rgba(247, 147, 26, 0.25);
+  fill: rgba(var(--brand-rgb), 0.25);
 }
 .timeline-selected line {
   stroke: var(--brand);
@@ -2127,7 +2140,7 @@ tr:last-child td {
 }
 .recap .callout {
   background: linear-gradient(180deg, var(--brand-soft), var(--surface-2) 70%);
-  border-color: rgba(247, 147, 26, 0.3);
+  border-color: rgba(var(--brand-rgb), 0.3);
   border-left-color: var(--brand);
 }
 .recap h2 {
@@ -2180,7 +2193,7 @@ tr:last-child td {
 }
 .quest-meta-chip.is-track {
   color: var(--brand);
-  border-color: rgba(247, 147, 26, 0.35);
+  border-color: rgba(var(--brand-rgb), 0.35);
 }
 .quest-meta-chip.is-verified {
   color: var(--good);
@@ -2472,7 +2485,7 @@ tr:last-child td {
 }
 .ledger-row {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(160px, 100%), 1fr));
   gap: 10px;
   margin-top: 6px;
 }
@@ -2620,7 +2633,7 @@ tr:last-child td {
 }
 .search-kind-quest {
   color: var(--brand);
-  border-color: rgba(247, 147, 26, 0.4);
+  border-color: rgba(var(--brand-rgb), 0.4);
 }
 .search-kind-term {
   color: var(--good);
@@ -2659,7 +2672,7 @@ tr:last-child td {
   gap: 14px;
   flex-wrap: wrap;
   margin-top: 18px;
-  border: 1px solid rgba(247, 147, 26, 0.35);
+  border: 1px solid rgba(var(--brand-rgb), 0.35);
   border-radius: var(--radius-sm);
   background: var(--brand-soft);
   padding: 10px 16px;
@@ -2744,7 +2757,7 @@ tr:last-child td {
 }
 .qa-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
   gap: 16px;
   padding-bottom: 40px;
 }
@@ -2761,7 +2774,7 @@ tr:last-child td {
 }
 .qa-card:hover {
   text-decoration: none;
-  border-color: rgba(247, 147, 26, 0.55);
+  border-color: rgba(var(--brand-rgb), 0.55);
   transform: translateY(-2px);
   box-shadow: var(--glow);
 }
@@ -2793,7 +2806,7 @@ tr:last-child td {
 }
 .flashcard-row {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr));
   gap: 14px;
 }
 .flashcard {
@@ -2924,7 +2937,7 @@ tr:last-child td {
 
 .diploma {
   margin: 20px 0 6px;
-  border: 1px solid rgba(247, 147, 26, 0.4);
+  border: 1px solid rgba(var(--brand-rgb), 0.4);
   border-radius: var(--radius);
   background: linear-gradient(180deg, var(--brand-soft), var(--surface) 70%);
   padding: 18px 20px;
@@ -3139,7 +3152,7 @@ tr:last-child td {
 }
 .today-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(170px, 100%), 1fr));
   gap: 10px;
 }
 .today-tile {
@@ -3155,7 +3168,7 @@ tr:last-child td {
 }
 .today-tile:hover {
   text-decoration: none;
-  border-color: rgba(247, 147, 26, 0.5);
+  border-color: rgba(var(--brand-rgb), 0.5);
 }
 .today-label {
   font-family: var(--mono);
@@ -3640,7 +3653,7 @@ tr:last-child td {
   margin: 0 0 12px;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(150px, 100%), 1fr));
   gap: 8px;
 }
 .seed-word {
@@ -4181,7 +4194,7 @@ tr:last-child td {
   gap: 10px;
 }
 .wal-cards-3 {
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(210px, 100%), 1fr));
 }
 .wal-card {
   border: 1px solid var(--baseline);
@@ -4644,7 +4657,7 @@ tr:last-child td {
 /* multisig */
 .msig-keys {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr));
   gap: 8px;
   margin-bottom: 12px;
 }
@@ -4889,4 +4902,88 @@ tr:last-child td {
   html {
     scroll-behavior: auto;
   }
+}
+
+/* ——— the signpost to the other front door ——— */
+.sibling {
+  margin: 56px 0 8px;
+  border: 1px solid var(--hairline-strong);
+  border-radius: var(--radius);
+  background:
+    radial-gradient(120% 140% at 0% 0%, var(--brand-soft), transparent 60%),
+    var(--surface);
+  overflow: hidden;
+}
+.sibling-body {
+  padding: 26px 28px 24px;
+  border-left: 3px solid var(--brand);
+}
+.sibling-eyebrow {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--brand);
+  margin-bottom: 6px;
+}
+.sibling-title {
+  font-size: 27px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin: 0 0 10px;
+  color: var(--ink);
+}
+.sibling-blurb {
+  margin: 0 0 14px;
+  max-width: 66ch;
+  color: var(--ink-2);
+  line-height: 1.6;
+}
+.sibling-covers {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px;
+  display: grid;
+  gap: 6px;
+}
+.sibling-covers li {
+  position: relative;
+  padding-left: 20px;
+  color: var(--ink-2);
+  font-size: 15px;
+}
+.sibling-covers li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--brand);
+}
+.sibling-cta {
+  display: inline-block;
+  padding: 11px 18px;
+  border-radius: var(--radius-sm);
+  background: var(--brand);
+  color: #12100c;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 0.15s var(--ease), box-shadow 0.15s var(--ease);
+}
+.sibling-cta:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--glow);
+}
+.sibling-note {
+  margin: 14px 0 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+.drawer-link-sibling {
+  margin-top: 10px;
+  padding-top: 14px;
+  border-top: 1px solid var(--hairline);
+  color: var(--brand);
+}
+@media (max-width: 640px) {
+  .sibling-body { padding: 20px 18px; }
+  .sibling-title { font-size: 23px; }
 }

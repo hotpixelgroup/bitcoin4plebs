@@ -114,6 +114,12 @@ export function NavDrawer({ open, onClose }: NavDrawerProps) {
             <span className="drawer-link-num">⚙</span>
             <span>Sandbox · all the machines</span>
           </Link>
+          <a className="drawer-link drawer-link-sibling" href={SITE.sibling.url}>
+            <span className="drawer-link-num">↗</span>
+            <span>
+              {SITE.sibling.name} · {SITE.sibling.label}
+            </span>
+          </a>
         </nav>
       </aside>
     </>

@@ -60,7 +60,7 @@ export const questLn01: Quest = {
       ],
       prose: [
         "A block is about 4 million weight units and arrives roughly every ten minutes. A simple payment takes around 140 vbytes. Do the division and the entire world gets a handful of payments per second, permanently. Mira's cart alone would want three a minute at the morning rush.",
-        "You could raise the ceiling. That argument was had, at length, and Bitcoin chose the other answer: **write less down**. If two people are going to pay each other over and over, the world does not need to witness each payment. The world needs to witness the *opening*, the *closing*, and to stand ready as the court if either of them lies. Everything in this quest is about constructing that court case in advance.",
+        "You could raise the ceiling. That argument was had, at length, and Bitcoin chose the other answer: **write less down**. (The auction that ceiling creates is [Quest #12 on bitcoin4plebs](https://hotpixelgroup.github.io/bitcoin4plebs/quests/who-keeps-bitcoin-usable), if you want to watch it work.) If two people are going to pay each other over and over, the world does not need to witness each payment. The world needs to witness the *opening*, the *closing*, and to stand ready as the court if either of them lies. Everything in this quest is about constructing that court case in advance.",
       ],
     },
     {
@@ -71,7 +71,7 @@ export const questLn01: Quest = {
       myth: {
         belief: 'Lightning is a separate network, so my coins leave Bitcoin when I use it.',
         reality:
-          "Your coins are sitting in a perfectly ordinary Bitcoin output, on the Bitcoin blockchain, secured by the same rules as every other output. What is different is that spending it needs two signatures instead of one, and that the two of you keep re-agreeing on how to split it without telling anyone. Nothing left the chain. The chain simply hasn't been asked about it lately.",
+          "Your coins are sitting in a perfectly ordinary Bitcoin output, on the Bitcoin blockchain, secured by the same rules as every other output — [the same rules bitcoin4plebs reads from Bitcoin Core](https://hotpixelgroup.github.io/bitcoin4plebs/quests/what-stops-someone-spending-your-coins). What is different is that spending it needs two signatures instead of one, and that the two of you keep re-agreeing on how to split it without telling anyone. Nothing left the chain. The chain simply hasn't been asked about it lately.",
       },
       prose: [
         "This is BOLT #3 defining the funding output: a pay-to-witness-script-hash wrapping `2 <pubkey1> <pubkey2> 2 OP_CHECKMULTISIG`. If you have read any Bitcoin script before, `OP_CHECKMULTISIG` is the plural of the usual signature check — this many signatures, from these keys, or the coins do not move.",

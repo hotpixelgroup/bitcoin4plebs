@@ -59,7 +59,9 @@ function SiteFooter() {
             <Link to="/glossary">Glossary</Link>
             <Link to="/sandbox">Sandbox</Link>
             <Link to="/review">Review</Link>
-            <a href={SITE.sibling.url}>{SITE.sibling.name} ↗</a>
+            <a href={SITE.sibling.url}>
+              {SITE.sibling.name} · {SITE.sibling.label} ↗
+            </a>
             <a href={SITE_REPO_URL} target="_blank" rel="noopener noreferrer">
               Source ↗
             </a>
