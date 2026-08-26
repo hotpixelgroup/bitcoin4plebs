@@ -1,19 +1,35 @@
 import type { ReactNode } from 'react';
 
 /**
- * Minimal, deterministic syntax highlighting for the two languages quests
+ * Minimal, deterministic syntax highlighting for the languages quests
  * quote. Works line-by-line on VERBATIM source text — the content model
  * stores plain text, and color is applied only at render time, so what the
  * reader verifies against GitHub is exactly what we store.
  */
 
+/** Languages a quest excerpt can declare. 'text' is specification prose. */
+export type ExcerptLanguage = 'cpp' | 'ts' | 'go' | 'text';
+
 const CPP_KEYWORDS =
   /\b(typedef|static|constexpr|inline|bool|int|int64_t|const|return|if|else|while|for|struct|class|void|auto|false|true)\b/g;
 const TS_KEYWORDS =
   /\b(function|const|let|var|return|if|else|while|for|class|export|import|type|interface|true|false)\b/g;
+/**
+ * Go, for the Lightning node source. Deliberately the same small, boring
+ * list as the others: enough colour to find your place, never enough to
+ * make the reader wonder whether we changed the text.
+ */
+const GO_KEYWORDS =
+  /\b(func|package|import|var|const|type|struct|interface|return|if|else|for|range|switch|case|default|defer|go|chan|map|nil|true|false|error|byte|string|bool|int|int32|int64|uint32|uint64|make|len|append|copy)\b/g;
+
+const KEYWORDS: Record<'cpp' | 'ts' | 'go', RegExp> = {
+  cpp: CPP_KEYWORDS,
+  ts: TS_KEYWORDS,
+  go: GO_KEYWORDS,
+};
 
 const NUMBER = /\b(0x[0-9a-fA-F]+|\d[\d_]*n?)\b/g;
-const STRING = /("(?:[^"\\]|\\.)*")/g;
+const STRING = /("(?:[^"\\]|\\.)*"|`[^`]*`)/g;
 
 interface Token {
   start: number;
@@ -35,8 +51,8 @@ function isCommentLine(line: string): boolean {
   return t.startsWith('//') || t.startsWith('/*') || t.startsWith('*');
 }
 
-export function highlightLine(line: string, language: 'cpp' | 'ts' | 'text'): ReactNode {
-  // Non-code sources (BIP documents) render verbatim with no token colors.
+export function highlightLine(line: string, language: ExcerptLanguage): ReactNode {
+  // Non-code sources (BIP and BOLT documents) render verbatim, no colours.
   if (language === 'text') {
     // eslint-disable-next-line react/jsx-no-useless-fragment -- normalizes string to ReactNode
     return <>{line}</>;
@@ -55,7 +71,7 @@ export function highlightLine(line: string, language: 'cpp' | 'ts' | 'text'): Re
   if (commentStart >= 0) {
     tokens.push({ start: commentStart, end: line.length, cls: 'tok-comment' });
   }
-  collect(language === 'cpp' ? CPP_KEYWORDS : TS_KEYWORDS, 'tok-keyword', line, tokens);
+  collect(KEYWORDS[language], 'tok-keyword', line, tokens);
   collect(NUMBER, 'tok-number', line, tokens);
 
   // Keep earliest non-overlapping tokens (strings/comments win over keywords by insertion order).

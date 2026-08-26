@@ -1,11 +1,17 @@
 import { useState } from 'react';
+import { STORAGE_PREFIX } from './site';
 
 /**
  * Quest progress, kept only in the reader's browser (localStorage) —
  * fitting, for a site whose whole point is that verification is personal.
  * Maps quest slug → ISO date the reader marked it verified.
+ *
+ * Keys are namespaced per site. Both front doors are served from the same
+ * GitHub Pages origin, so an unprefixed key would let one site offer to
+ * "continue" the other's quests. Bitcoin keeps the original prefix, which
+ * means nobody's existing progress is lost to the split.
  */
-const STORAGE_KEY = 'b4p.verified.v1';
+const STORAGE_KEY = `${STORAGE_PREFIX}.verified.v1`;
 
 function read(): Record<string, string> {
   try {
@@ -28,7 +34,7 @@ function write(next: Record<string, string>): void {
 }
 
 /** Per-quest reading position: the furthest stop the reader has seen. */
-const READ_KEY = 'b4p.read.v1';
+const READ_KEY = `${STORAGE_PREFIX}.read.v1`;
 
 export interface ReadPosition {
   stop: number;

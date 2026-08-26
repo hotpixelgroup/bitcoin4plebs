@@ -1,4 +1,5 @@
 export * from './lib/types.js';
+export * from './lib/sites.js';
 export * from './lib/registry.js';
 export * from './lib/excerpts.js';
 export * from './lib/glossary.js';

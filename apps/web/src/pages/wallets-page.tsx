@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Callout, RichText } from '@bitcoin4plebs/ui';
+import { SITE } from '../lib/site';
 
-const DEFAULT_TITLE = "bitcoin4plebs · Don't trust. Verify.";
+const DEFAULT_TITLE = `${SITE.name} · ${SITE.tagline}`;
 
 interface Species {
   id: string;
@@ -238,7 +239,7 @@ function WalletChecks() {
  */
 export function WalletsPage() {
   useEffect(() => {
-    document.title = 'Wallet types · bitcoin4plebs';
+    document.title = `Wallet types · ${SITE.name}`;
     return () => {
       document.title = DEFAULT_TITLE;
     };

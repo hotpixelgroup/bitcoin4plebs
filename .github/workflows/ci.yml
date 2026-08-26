@@ -29,41 +29,54 @@ jobs:
 
       # "Don't trust, verify" applied to ourselves: fetch the real sources at
       # their pinned commits (all pins live in packages/quests excerpts.ts),
-      # then let the quests test diff every excerpt on the site against them,
-      # letter for letter. Three pins: Bitcoin Core, the BIPs, the BOLTs.
-      - name: Fetch pinned sources (Bitcoin Core + BIPs + BOLTs)
+      # then let the tests diff every excerpt on the site against them, letter
+      # for letter — and, for the Lightning specs, run the BOLTs' own test
+      # vectors against our TypeScript implementations of them.
+      - name: Fetch pinned sources
         run: |
-          PIN=$(grep -A2 "'bitcoin/bitcoin'" packages/quests/src/lib/excerpts.ts | grep -oE "[0-9a-f]{40}" | head -1)
-          BIPS=$(grep -A2 "'bitcoin/bips'" packages/quests/src/lib/excerpts.ts | grep -oE "[0-9a-f]{40}" | head -1)
-          BOLTS=$(grep -A2 "'lightning/bolts'" packages/quests/src/lib/excerpts.ts | grep -oE "[0-9a-f]{40}" | head -1)
-          echo "Pinned bitcoin: $PIN"
-          echo "Pinned bips:    $BIPS"
-          echo "Pinned bolts:   $BOLTS"
-          git init --quiet /tmp/bitcoin-pinned
-          (
-            cd /tmp/bitcoin-pinned
-            git remote add origin https://github.com/bitcoin/bitcoin.git
-            git sparse-checkout set src
-            git fetch --quiet --depth=1 --filter=blob:none origin "$PIN"
-            git checkout --quiet FETCH_HEAD
-          )
-          git init --quiet /tmp/bips-pinned
-          (
-            cd /tmp/bips-pinned
-            git remote add origin https://github.com/bitcoin/bips.git
-            git fetch --quiet --depth=1 --filter=blob:none origin "$BIPS"
-            git checkout --quiet FETCH_HEAD
-          )
-          git init --quiet /tmp/bolts-pinned
-          (
-            cd /tmp/bolts-pinned
-            git remote add origin https://github.com/lightning/bolts.git
-            git fetch --quiet --depth=1 --filter=blob:none origin "$BOLTS"
-            git checkout --quiet FETCH_HEAD
-          )
+          set -euo pipefail
+          PINS="packages/quests/src/lib/excerpts.ts"
+
+          # repo|destination|sparse-checkout dir (empty for a full checkout)
+          SOURCES="
+          bitcoin/bitcoin|/tmp/bitcoin-pinned|src
+          bitcoin/bips|/tmp/bips-pinned|
+          lightning/bolts|/tmp/bolts-pinned|
+          lightningnetwork/lnd|/tmp/lnd-pinned|
+          "
+
+          for entry in $SOURCES; do
+            repo="${entry%%|*}"; rest="${entry#*|}"
+            dest="${rest%%|*}"; sparse="${rest#*|}"
+            commit=$(grep -A3 "'$repo'" "$PINS" | grep -oE "[0-9a-f]{40}" | head -1)
+            if [ -z "$commit" ]; then
+              echo "::error::no pinned commit found for $repo in $PINS"
+              exit 1
+            fi
+            echo "Pinned $repo: $commit"
+            git init --quiet "$dest"
+            (
+              cd "$dest"
+              git remote add origin "https://github.com/$repo.git"
+              if [ -n "$sparse" ]; then
+                git sparse-checkout set "$sparse"
+              fi
+              git fetch --quiet --depth=1 --filter=blob:none origin "$commit"
+              git checkout --quiet FETCH_HEAD
+            )
+          done
 
       - run: npx nx run-many -t lint test build typecheck
         env:
           BITCOIN_SRC: /tmp/bitcoin-pinned
           BIPS_SRC: /tmp/bips-pinned
           BOLTS_SRC: /tmp/bolts-pinned
+          LND_SRC: /tmp/lnd-pinned
+
+      # Both front doors are built from this one source tree, so a change
+      # that breaks the sibling site must not reach main either.
+      - name: Build the Lightning front door
+        run: npx nx build web
+        env:
+          VITE_SITE: lightning
+          VITE_BASE: /lightning4plebs/

@@ -29,6 +29,17 @@
   --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
+/* The Lightning front door. Same design system, one family of tokens
+   swapped: everything downstream (cards, meters, code highlights, the
+   logo mark, the diploma) picks the new accent up for free. */
+:root[data-site='lightning'] {
+  --brand: #8b5cf6;
+  --brand-bright: #a78bfa;
+  --brand-soft: rgba(139, 92, 246, 0.14);
+  --series: #7c3aed;
+  --glow: 0 0 0 1px rgba(139, 92, 246, 0.28), 0 10px 34px -12px rgba(139, 92, 246, 0.22);
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -2954,7 +2965,7 @@ tr:last-child td {
   color: var(--bad);
 }
 
-/* ——— the ana-pays-bo story strip ——— */
+/* ——— the running-story strip (cast and label come from the site config) ——— */
 
 .story {
   margin-top: 22px;
@@ -3605,11 +3616,11 @@ tr:last-child td {
   font-weight: 700;
   border: 1.5px solid var(--page);
 }
-.story-avatar-ana {
+.story-avatar-a {
   background: color-mix(in srgb, var(--brand) 28%, var(--surface));
   color: var(--brand);
 }
-.story-avatar-bo {
+.story-avatar-b {
   background: color-mix(in srgb, var(--good) 24%, var(--surface));
   color: var(--good);
   margin-left: -6px;

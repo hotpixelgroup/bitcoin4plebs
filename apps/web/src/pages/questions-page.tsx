@@ -1,20 +1,20 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { questions, quests } from '@bitcoin4plebs/quests';
+import { SITE, siteQuestions, siteQuests } from '../lib/site';
 import { RichText } from '@bitcoin4plebs/ui';
 
-const DEFAULT_TITLE = "bitcoin4plebs · Don't trust. Verify.";
+const DEFAULT_TITLE = `${SITE.name} · ${SITE.tagline}`;
 
-const questBySlug = new Map(quests.map((quest) => [quest.slug, quest]));
+const questBySlug = new Map(siteQuests.map((quest) => [quest.slug, quest]));
 
 /**
- * The question-first way in: real questions newbies arrive with, each
+ * The question-first way in: real siteQuestions newbies arrive with, each
  * answered in one line and linked to the exact stop where the code
  * proves it. Nobody has to know that their question is "about UTXOs."
  */
 export function QuestionsPage() {
   useEffect(() => {
-    document.title = 'Your questions · bitcoin4plebs';
+    document.title = `Your questions · ${SITE.name}`;
     window.scrollTo(0, 0);
     return () => {
       document.title = DEFAULT_TITLE;
@@ -33,7 +33,7 @@ export function QuestionsPage() {
         </p>
       </section>
       <section className="qa-list">
-        {questions.map((item) => {
+        {siteQuestions.map((item) => {
           const quest = questBySlug.get(item.slug);
           const to = item.stop ? `/quests/${item.slug}#${item.stop}` : `/quests/${item.slug}`;
           return (

@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { GlossaryEntry, QuizItem } from '@bitcoin4plebs/quests';
-import { glossary } from '@bitcoin4plebs/quests';
+import { SITE, siteGlossary } from '../lib/site';
 import { Callout, RichText } from '@bitcoin4plebs/ui';
 
-const DEFAULT_TITLE = "bitcoin4plebs · Don't trust. Verify.";
+const DEFAULT_TITLE = `${SITE.name} · ${SITE.tagline}`;
 const MISS_KEY = 'b4p.quiz-misses.v1';
 
 type MissRecord = QuizItem & { cleared: number };
@@ -26,13 +26,13 @@ function writeMisses(all: Record<string, MissRecord>): void {
   }
 }
 
-/** Deterministic "today's five" glossary terms, same set all day. */
+/** Deterministic "today's five" siteGlossary terms, same set all day. */
 function dailyTerms(): GlossaryEntry[] {
   const day = new Date().toISOString().slice(0, 10);
   let seed = 0;
   for (const ch of day) seed = (seed * 31 + ch.charCodeAt(0)) >>> 0;
   const picked: GlossaryEntry[] = [];
-  const pool = [...glossary];
+  const pool = [...siteGlossary];
   for (let i = 0; i < 5 && pool.length; i++) {
     seed = (seed * 1103515245 + 12345) >>> 0;
     picked.push(pool.splice(seed % pool.length, 1)[0]);
@@ -108,7 +108,7 @@ function ReviewQuestion({
 
 /**
  * The daily five: five glossary flashcards chosen fresh each day, plus
- * any quiz questions you have missed, which retire after two correct
+ * any quiz siteQuestions you have missed, which retire after two correct
  * answers. All of it lives only in your browser.
  */
 export function ReviewPage() {
@@ -116,7 +116,7 @@ export function ReviewPage() {
   const terms = useMemo(dailyTerms, []);
 
   useEffect(() => {
-    document.title = 'Daily review · bitcoin4plebs';
+    document.title = `Daily review · ${SITE.name}`;
     window.scrollTo(0, 0);
     return () => {
       document.title = DEFAULT_TITLE;
@@ -149,7 +149,7 @@ export function ReviewPage() {
         <h1>Daily review</h1>
         <p>
           Understanding fades without resurfacing, so here is a tiny daily deck: five glossary
-          terms chosen fresh each day, plus any self-check questions you've missed. Answer a
+          terms chosen fresh each day, plus any self-check siteQuestions you've missed. Answer a
           missed question correctly twice and it retires. Everything stays in your browser.
         </p>
       </section>

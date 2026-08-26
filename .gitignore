@@ -2,6 +2,7 @@
 
 # compiled output
 dist
+dist-lightning
 tmp
 out-tsc
 

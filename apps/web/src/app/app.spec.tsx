@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { glossary, quest01, questions, quests } from '@bitcoin4plebs/quests';
+import { quest01, questions, quests, questsForSite } from '@bitcoin4plebs/quests';
+import { SITE, applySiteTheme, siteGlossary, siteQuestions, siteQuests } from '../lib/site';
 import { getRunner } from '../runners/registry';
 import { getViz } from '../vizzes/registry';
 import App from './app';
@@ -33,7 +34,7 @@ describe('App', () => {
   });
 
   it('renders EVERY quest in the registry from data alone', () => {
-    for (const quest of quests) {
+    for (const quest of siteQuests) {
       const { unmount } = render(
         <MemoryRouter initialEntries={[`/quests/${quest.slug}`]}>
           <App />
@@ -95,7 +96,7 @@ describe('App', () => {
     );
     expect(screen.getByRole('heading', { level: 1, name: 'The map' })).toBeInTheDocument();
     const pills = screen.getAllByRole('button', { name: /^#\d+/ });
-    expect(pills.length).toBe(quests.length);
+    expect(pills.length).toBe(siteQuests.length);
     // Selecting a quest with prerequisites must not throw.
     const withPrereq = screen.getByRole('button', { name: new RegExp(`^#7\\b`) });
     fireEvent.click(withPrereq);
@@ -119,7 +120,7 @@ describe('App', () => {
       </MemoryRouter>
     );
     // The footer nav shows the following quest's title as a link card.
-    const next = quests[quests.indexOf(quest01) + 1];
+    const next = siteQuests[siteQuests.indexOf(quest01) + 1];
     const footerNav = container.querySelector('.quest-nav');
     expect(footerNav).not.toBeNull();
     expect(within(footerNav as HTMLElement).getByText(next.title)).toBeInTheDocument();
@@ -148,15 +149,16 @@ describe('App', () => {
     const drawer = screen.getByLabelText('Site navigation');
     expect(within(drawer).getByText(/Home · all quests/i)).toBeInTheDocument();
     expect(within(drawer).getByText('Glossary')).toBeInTheDocument();
-    for (const quest of quests) {
+    for (const quest of siteQuests) {
       expect(within(drawer).getByText(quest.title)).toBeInTheDocument();
     }
   });
 
   it('routes every newbie question to a real quest and stop', () => {
     for (const q of questions) {
-      const quest = quests.find((candidate) => candidate.slug === q.slug);
-      expect(quest, `question "${q.question}" → ${q.slug}`).toBeDefined();
+      const site = q.site ?? 'bitcoin';
+      const quest = questsForSite(site).find((candidate) => candidate.slug === q.slug);
+      expect(quest, `question "${q.question}" → ${site}/${q.slug}`).toBeDefined();
       if (q.stop) {
         expect(
           quest?.stops.some((stop) => stop.id === q.stop),
@@ -164,7 +166,7 @@ describe('App', () => {
         ).toBe(true);
       }
     }
-    expect(questions.length).toBeGreaterThanOrEqual(20);
+    expect(siteQuestions.length).toBeGreaterThanOrEqual(20);
   });
 
   it('renders the question index and the review deck', () => {
@@ -184,6 +186,30 @@ describe('App', () => {
     expect(document.querySelectorAll('.flashcard').length).toBe(5);
   });
 
+  it('brands the shell from the site config and links to the sibling site', () => {
+    // The Bitcoin and Lightning front doors are the same build with a
+    // different VITE_SITE, so nothing in the chrome may be hardcoded.
+    const { container } = render(
+      <MemoryRouter initialEntries={['/']}>
+        <App />
+      </MemoryRouter>
+    );
+    // The wordmark is split so the "4" can carry the accent colour, so
+    // assert on the assembled text rather than a single node.
+    const header = container.querySelector('.site-header');
+    expect(header?.querySelector('.logo-word')?.textContent).toBe(SITE.name);
+    expect(header?.querySelector('.logo-tag')?.textContent).toBe(SITE.tagline);
+    expect(header?.querySelector('.pin')?.textContent).toContain(SITE.pinLabel);
+
+    const sibling = screen.getByRole('link', { name: new RegExp(SITE.sibling.name) });
+    expect(sibling).toHaveAttribute('href', SITE.sibling.url);
+    // The stylesheet themes off this attribute; the entry point sets it
+    // before first paint so the accent never flashes the wrong colour.
+    const root = document.createElement('html');
+    applySiteTheme(root);
+    expect(root.dataset['site']).toBe(SITE.id);
+  });
+
   it('renders the full glossary with search filtering', () => {
     const { container } = render(
       <MemoryRouter initialEntries={['/glossary']}>
@@ -191,10 +217,10 @@ describe('App', () => {
       </MemoryRouter>
     );
     expect(screen.getByRole('heading', { level: 1, name: 'Glossary' })).toBeInTheDocument();
-    expect(container.querySelectorAll('dt')).toHaveLength(glossary.length);
+    expect(container.querySelectorAll('dt')).toHaveLength(siteGlossary.length);
     fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'PolyMod' } });
     const remaining = container.querySelectorAll('dt');
     expect(remaining.length).toBeGreaterThan(0);
-    expect(remaining.length).toBeLessThan(glossary.length);
+    expect(remaining.length).toBeLessThan(siteGlossary.length);
   });
 });

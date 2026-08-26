@@ -2,7 +2,7 @@ import { Fragment, useState, type ReactNode } from 'react';
 import type { CodeExcerpt, SourcePin } from '@bitcoin4plebs/quests';
 import { verifyUrl } from '@bitcoin4plebs/quests';
 import { GlossaryTerm, findCodeTerms } from './glossary-term.js';
-import { highlightLine } from './highlight.js';
+import { highlightLine, type ExcerptLanguage } from './highlight.js';
 
 export interface CodeCardProps {
   excerpt: CodeExcerpt;
@@ -18,7 +18,7 @@ export interface CodeCardProps {
  * scriptPubKey…) wrapped in tap-to-define glossary popovers. The stored
  * text is untouched; definitions are applied only at render time.
  */
-function CodeLineContent({ text, language }: { text: string; language: 'cpp' | 'ts' | 'text' }) {
+function CodeLineContent({ text, language }: { text: string; language: ExcerptLanguage }) {
   const terms = findCodeTerms(text);
   if (!terms.length) return <>{highlightLine(text, language)}</>;
   const nodes: ReactNode[] = [];

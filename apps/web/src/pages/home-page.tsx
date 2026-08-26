@@ -1,11 +1,19 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { entryPaths, glossary, groupQuestsByTrack, quests } from '@bitcoin4plebs/quests';
+import { groupQuestsByTrack } from '@bitcoin4plebs/quests';
+import { RichText } from '@bitcoin4plebs/ui';
 import { Diploma } from '../app/diploma';
 import { TodayPanel } from '../app/today-panel';
 import { latestReadPosition, useVerifiedQuests } from '../lib/progress';
+import {
+  SITE,
+  STORAGE_PREFIX,
+  siteEntryPaths,
+  siteGlossary,
+  siteQuests,
+} from '../lib/site';
 
-const PATH_KEY = 'b4p.path.v1';
+const PATH_KEY = `${STORAGE_PREFIX}.path.v1`;
 
 /** The "why are you here?" chooser: four personas, each a three-quest on-ramp. */
 function EntryPathsSection() {
@@ -26,13 +34,13 @@ function EntryPathsSection() {
       // Private browsing.
     }
   };
-  const active = entryPaths.find((p) => p.id === pathId);
+  const active = siteEntryPaths.find((p) => p.id === pathId);
 
   return (
     <section className="paths" aria-label="Pick a starting path">
       <div className="paths-head">Why are you here?</div>
       <div className="paths-chips" role="group" aria-label="Pick the reason that sounds like you">
-        {entryPaths.map((p) => (
+        {siteEntryPaths.map((p) => (
           <button
             key={p.id}
             className={`preset ${p.id === pathId ? 'preset-active' : ''}`}
@@ -48,7 +56,7 @@ function EntryPathsSection() {
           <p className="paths-blurb">{active.blurb}</p>
           <ol className="paths-steps">
             {active.questNumbers.map((n, i) => {
-              const quest = quests.find((q) => q.number === n);
+              const quest = siteQuests.find((q) => q.number === n);
               if (!quest) return null;
               return (
                 <li key={n}>
@@ -78,68 +86,50 @@ function EntryPathsSection() {
   );
 }
 
-/** One-line subtitles for each curriculum track (view concern, so kept here). */
-const TRACK_BLURBS: Record<string, string> = {
-  'Start here': 'Five minutes of mental model. No code and no jargon: what a ledger is, and why copies plus rules changed everything.',
-  Foundations: 'The rulebook, one page at a time: where the money comes from, why yours is yours, and who enforces it all.',
-  Advanced: 'Leave the classroom: real artifacts, real byte order, and finally a node of your own.',
-  'Zoom out':
-    'From the code to the network: the incentive machine that keeps it all usable with nobody in charge, and the fight over what a ledger is for.',
-  'Take it home':
-    'The last mile: what a wallet actually stores, what the 12 words really are, the habits that keep coins safe, and who can see what on a glass ledger.',
-  'Beyond the chain':
-    'The closing move: how a thousand payments fit into two transactions, read from the Lightning specs, honest limits included.',
-  'The big questions':
-    'The two things everyone asks first and can only truly answer last: why is this money at all, and does it waste energy? Both answered from the ground up.',
-};
-
-
 export function HomePage() {
   const { verified } = useVerifiedQuests();
-  const verifiedCount = quests.filter((q) => verified[q.slug]).length;
-  const groups = groupQuestsByTrack(quests);
-  const vizCount = quests.reduce(
+  const verifiedCount = siteQuests.filter((q) => verified[q.slug]).length;
+  const groups = groupQuestsByTrack(siteQuests);
+  const vizCount = siteQuests.reduce(
     (n, q) => n + q.stops.filter((s) => s.viz).length + (q.finale ? 1 : 0),
     0
   );
+  const first = siteQuests[0];
 
   return (
     <main className="wrap">
       <section className="hero">
-        <div className="kicker">Don't trust. Verify.</div>
-        <h1>Understand Bitcoin's code. No engineering degree required.</h1>
+        <div className="kicker">{SITE.hero.kicker}</div>
+        <h1>{SITE.hero.title}</h1>
         <p>
-          Millions of people hold bitcoin on the word of engineers they've never met. You don't
-          have to. Each <strong>verification quest</strong> below walks you through the{' '}
-          <strong>real Bitcoin Core source code</strong>. The code is pinned, annotated in plain
-          English, and runnable, so you can see for yourself what's true.
+          <RichText text={SITE.hero.blurb} />
         </p>
         <div className="hero-stats">
           <span className="hero-stat">
-            <b>{quests.length}</b> quests
+            <b>{siteQuests.length}</b> quests
           </span>
           <span className="hero-stat">
             <b>{vizCount}</b> interactive figures
           </span>
           <span className="hero-stat">
-            <b>{glossary.length}</b>-term glossary
+            <b>{siteGlossary.length}</b>-term glossary
           </span>
           <span className="hero-stat">
             every excerpt <b>CI-verified</b>
           </span>
         </div>
-        {verifiedCount > 0 && verifiedCount < quests.length && (
+        {verifiedCount > 0 && verifiedCount < siteQuests.length && (
           <p className="hero-progress">
-            ✓ You've verified {verifiedCount} of {quests.length} quests with your own eyes.
+            ✓ You've verified {verifiedCount} of {siteQuests.length} quests with your own eyes.
           </p>
         )}
-        {verifiedCount === quests.length && <Diploma />}
+        {siteQuests.length > 0 && verifiedCount === siteQuests.length && <Diploma />}
         <p className="hero-question-link">
           Arriving with a question? <Link to="/questions">Find your way in →</Link>
         </p>
         {(() => {
           const resume = latestReadPosition(verified);
-          const resumeQuest = resume ? quests.find((q) => q.slug === resume.slug) : undefined;
+          const resumeQuest = resume ? siteQuests.find((q) => q.slug === resume.slug) : undefined;
           if (resume && resumeQuest) {
             return (
               <Link className="hero-cta" to={`/quests/${resume.slug}`}>
@@ -147,10 +137,10 @@ export function HomePage() {
               </Link>
             );
           }
-          if (verifiedCount === 0) {
+          if (verifiedCount === 0 && first) {
             return (
-              <Link className="hero-cta" to={`/quests/${quests[0].slug}`}>
-                Start at the beginning: what even is a ledger? →
+              <Link className="hero-cta" to={`/quests/${first.slug}`}>
+                Start at the beginning: {first.title} →
               </Link>
             );
           }
@@ -160,7 +150,7 @@ export function HomePage() {
 
       <EntryPathsSection />
 
-      <TodayPanel />
+      {SITE.id === 'bitcoin' && <TodayPanel />}
 
       {groups.map((group) => {
         const done = group.quests.filter((q) => verified[q.slug]).length;
@@ -169,7 +159,9 @@ export function HomePage() {
           <div className="track-head">
             <div className="track-head-main">
               <h2>{group.track}</h2>
-              {TRACK_BLURBS[group.track] && <p className="track-blurb">{TRACK_BLURBS[group.track]}</p>}
+              {SITE.trackBlurbs[group.track] && (
+                <p className="track-blurb">{SITE.trackBlurbs[group.track]}</p>
+              )}
             </div>
             <div className="track-meter">
               <span className="track-meter-bar">

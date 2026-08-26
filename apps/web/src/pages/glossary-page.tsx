@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { GLOSSARY_CATEGORIES, glossary, quests } from '@bitcoin4plebs/quests';
+import { GLOSSARY_CATEGORIES } from '@bitcoin4plebs/quests';
+import { SITE, siblingQuestUrl, siteGlossary, siteQuests } from '../lib/site';
 import { Callout, RichText } from '@bitcoin4plebs/ui';
 
-const DEFAULT_TITLE = "bitcoin4plebs · Don't trust. Verify.";
+const DEFAULT_TITLE = `${SITE.name} · ${SITE.tagline}`;
 
-const slugByNumber = new Map(quests.map((quest) => [quest.number, quest.slug]));
+const slugByNumber = new Map(siteQuests.map((quest) => [quest.number, quest.slug]));
 
 /**
  * The glossary: Bitcoin terms, the important variable names, and layman's
@@ -16,7 +17,7 @@ export function GlossaryPage() {
   const [query, setQuery] = useState('');
 
   useEffect(() => {
-    document.title = 'Glossary · bitcoin4plebs';
+    document.title = `Glossary · ${SITE.name}`;
     window.scrollTo(0, 0);
     return () => {
       document.title = DEFAULT_TITLE;
@@ -25,10 +26,10 @@ export function GlossaryPage() {
 
   const needle = query.trim().toLowerCase();
   const filtered = needle
-    ? glossary.filter((entry) =>
+    ? siteGlossary.filter((entry) =>
         `${entry.term} ${entry.definition} ${entry.cite ?? ''}`.toLowerCase().includes(needle)
       )
-    : glossary;
+    : siteGlossary;
 
   return (
     <main className="wrap">
@@ -42,7 +43,7 @@ export function GlossaryPage() {
           <strong>proves</strong> it.
         </p>
         <label className="height-input-label glossary-search-label">
-          Search {glossary.length} terms:
+          Search {siteGlossary.length} terms:
           <input
             className="height-input glossary-search"
             type="search"
@@ -53,7 +54,7 @@ export function GlossaryPage() {
         </label>
         {needle && (
           <p className="glossary-count">
-            {filtered.length} of {glossary.length} terms match.
+            {filtered.length} of {siteGlossary.length} terms match.
           </p>
         )}
       </section>
@@ -73,11 +74,24 @@ export function GlossaryPage() {
                   </dt>
                   <dd>
                     <RichText text={entry.definition} />
-                    {entry.quest !== undefined && slugByNumber.has(entry.quest) && (
-                      <Link className="glossary-quest" to={`/quests/${slugByNumber.get(entry.quest)}`}>
-                        Verify it in Quest #{entry.quest} →
-                      </Link>
-                    )}
+                    {entry.quest !== undefined &&
+                      ((entry.questSite ?? 'bitcoin') === SITE.id ? (
+                        slugByNumber.has(entry.quest) && (
+                          <Link
+                            className="glossary-quest"
+                            to={`/quests/${slugByNumber.get(entry.quest)}`}
+                          >
+                            Verify it in Quest #{entry.quest} →
+                          </Link>
+                        )
+                      ) : (
+                        // Shared vocabulary, proven on the other front door.
+                        siblingQuestUrl(entry.quest) && (
+                          <a className="glossary-quest" href={siblingQuestUrl(entry.quest)}>
+                            Verify it in {SITE.sibling.name} Quest #{entry.quest} ↗
+                          </a>
+                        )
+                      ))}
                   </dd>
                 </div>
               ))}

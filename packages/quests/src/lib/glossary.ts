@@ -8,9 +8,17 @@
  * term proven rather than merely defined.
  */
 
+import type { SiteId } from './sites.js';
+
 export interface GlossaryEntry {
   /** Display name, e.g. "Satoshi" or "CAmount". */
   term: string;
+  /**
+   * Restrict this entry to one front door. Absent means it appears on
+   * BOTH — most vocabulary (satoshi, hash, UTXO) is shared, and a reader
+   * on either site benefits from the same definition.
+   */
+  site?: SiteId;
   /** Render the term in code style (variable / function / RPC names). */
   code?: boolean;
   /** One of GLOSSARY_CATEGORIES. */
@@ -21,6 +29,12 @@ export interface GlossaryEntry {
   cite?: string;
   /** Quest number where the reader can verify this for themselves. */
   quest?: number;
+  /**
+   * Which site that quest number refers to. Absent means 'bitcoin', so
+   * every definition written before the split keeps pointing where it did.
+   * On the other site the link renders as a cross-site link instead.
+   */
+  questSite?: SiteId;
   /**
    * Patterns that auto-link this term in quest prose and code excerpts
    * (tap-to-define popovers). Lowercase patterns match case-insensitively
@@ -40,6 +54,7 @@ export const GLOSSARY_CATEGORIES = [
   'Addresses & encoding',
   'The network & your node',
   'Rules, forks & history',
+  'Lightning & channels',
 ] as const;
 
 export const glossary: GlossaryEntry[] = [
@@ -1045,8 +1060,9 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'Payment channel',
+    site: 'bitcoin',
     match: ['payment channel', 'payment channels'],
-    category: 'The network & your node',
+    category: 'Lightning & channels',
     definition:
       "Two parties lock coins in a 2-of-2 multisig on-chain, then pay each other by re-signing the split off-chain, each update revoking the last. Either side can exit to the chain unilaterally with the latest state; broadcasting an old one forfeits everything to the counterparty's penalty key (BOLT #3, quoted verbatim in Quest #16).",
     cite: '03-transactions.md:79',
@@ -1054,8 +1070,9 @@ export const glossary: GlossaryEntry[] = [
   },
   {
     term: 'Revocation key',
+    site: 'bitcoin',
     match: ['revocation key', 'revocation'],
-    category: 'The network & your node',
+    category: 'Lightning & channels',
     definition:
       "The secret each channel party surrenders for its *previous* state whenever the balance updates: the price of the new split. Holding it makes the counterparty's old commitment instantly spendable via the OP_IF penalty branch, which is what makes stale states radioactive and channels honest.",
     quest: 16,
@@ -1068,4 +1085,96 @@ export const glossary: GlossaryEntry[] = [
       'A rule change enforced by economic nodes on a schedule regardless of miner support: the 2017 escalation that pressured miners into activating SegWit and sank the SegWit2x hard fork. The proof, run live, that hashpower follows the economy and not the reverse.',
     quest: 12,
   },
+  // --- Lightning & channels ---
+  {
+    term: 'Payment channel',
+    site: 'lightning',
+    match: ['payment channel', 'payment channels'],
+    category: 'Lightning & channels',
+    definition:
+      'Coins locked in a **2-of-2 output** on the Bitcoin blockchain, plus a running balance between the two owners that they update privately and the chain never sees. Opening and closing are ordinary on-chain transactions; everything in between is free, instant, and invisible. The coins never leave Bitcoin — the chain simply is not asked about them in the meantime.',
+    cite: '03-transactions.md:79',
+    quest: 1,
+    questSite: 'lightning',
+  },
+  {
+    term: 'BOLT',
+    match: ['BOLT', 'BOLTs'],
+    category: 'Lightning & channels',
+    definition:
+      "Basis of Lightning Technology: the numbered specification documents that define the Lightning protocol, the way BIPs define Bitcoin proposals. There is no reference implementation blessed above the others — the BOLTs are the authority, and several independent nodes implement them. Unusually, they also ship machine-readable test vectors, so an implementation can be checked against the spec rather than against another implementation.",
+  },
+  {
+    term: 'Commitment transaction',
+    match: ['commitment transaction'],
+    category: 'Lightning & channels',
+    definition:
+      'A signed Bitcoin transaction that spends a channel\'s funding output back to its two owners at the balance they currently agree on. Each side holds its own copy and can broadcast it unilaterally at any time, which is what makes a channel trustless — but broadcasting an outdated one is punished (see [[Revocation key]]).',
+    quest: 1,
+    questSite: 'lightning',
+  },
+  {
+    term: 'Revocation key',
+    site: 'lightning',
+    match: ['revocation key', 'revocationpubkey'],
+    category: 'Lightning & channels',
+    definition:
+      "The key that guards the penalty branch of every channel balance. It is built from two halves — one from each party — so that **neither can compute the private key alone**. Moving to a new balance requires handing your counterparty the secret that completes their half, which is precisely what makes the balance you just left behind dangerous to publish.",
+    cite: '03-transactions.md:817',
+    quest: 2,
+    questSite: 'lightning',
+  },
+  {
+    term: 'per_commitment_secret',
+    code: true,
+    match: ['per_commitment_secret', 'per-commitment secret'],
+    category: 'Lightning & channels',
+    definition:
+      'A fresh secret for each channel balance. Its public counterpart (`per_commitment_point`, the secret times G) goes into deriving that state\'s keys; the secret itself is surrendered when the state is revoked. Handing it over is what lets your counterparty compute the [[Revocation key]] for the state you are leaving.',
+    cite: '03-transactions.md:812',
+    quest: 2,
+    questSite: 'lightning',
+  },
+  {
+    term: 'to_self_delay',
+    code: true,
+    match: ['to_self_delay'],
+    category: 'Lightning & channels',
+    definition:
+      'The number of blocks you must wait before you can spend your own funds after force-closing a channel, enforced by `OP_CHECKSEQUENCEVERIFY`. It exists to give your counterparty a window in which to punish you if the balance you published was an old one. This is why a force close feels slow: the delay is the security.',
+    cite: '03-transactions.md:121',
+    quest: 2,
+    questSite: 'lightning',
+  },
+  {
+    term: 'Force close',
+    match: ['force close', 'force-close'],
+    category: 'Lightning & channels',
+    definition:
+      'Closing a channel by broadcasting your latest commitment transaction unilaterally, without your counterparty\'s cooperation. Always available — that is the point — but it costs on-chain fees and puts your own funds behind `to_self_delay`. A cooperative close, where both sides sign one tidy transaction, is cheaper and immediate.',
+    quest: 2,
+    questSite: 'lightning',
+  },
+  {
+    term: 'Penalty transaction',
+    match: ['penalty transaction'],
+    category: 'Lightning & channels',
+    definition:
+      "The transaction that takes a cheater's entire channel balance after they publish a revoked state. The specification names it in the script itself, as a comment. It needs no delay and no permission — only the [[Revocation key]], which the cheater handed over themselves when they moved on from that balance.",
+    cite: '03-transactions.md:118',
+    quest: 2,
+    questSite: 'lightning',
+  },
+  {
+    term: 'Millisatoshi',
+    match: ['millisatoshi', 'millisat', 'msat'],
+    category: 'Lightning & channels',
+    definition:
+      'One thousandth of a satoshi: the unit Lightning accounts in. It exists only above the chain — Bitcoin itself has no denomination smaller than a satoshi — and is there so routing fees, which are often a tiny fraction of a satoshi, can be expressed without rounding to zero. Amounts are rounded down to whole satoshis when a channel actually settles on-chain.',
+  },
 ];
+
+/** Glossary entries visible on one front door (shared terms appear on both). */
+export function glossaryForSite(site: SiteId): GlossaryEntry[] {
+  return glossary.filter((entry) => entry.site === undefined || entry.site === site);
+}
