@@ -377,6 +377,27 @@ export const questions: NewbieQuestion[] = [
     slug: 'finding-a-route',
     stop: 'setting-fees',
   },
+  {
+    site: 'lightning',
+    question: 'If I ran a node, would I choose my own hops?',
+    short: 'Only for payments you send, and your software does it, not you. As a routing node you cannot choose to be on a route at all: you advertise terms and wait.',
+    slug: 'finding-a-route',
+    stop: 'your-part-in-it',
+  },
+  {
+    site: 'lightning',
+    question: 'Does my wallet pick the cheapest path automatically?',
+    short: 'Automatically yes, cheapest roughly. The spec says the fee-versus-timelock trade-off is unclear, and recommends padding routes for privacy and spreading them for reliability.',
+    slug: 'finding-a-route',
+    stop: 'is-it-cheapest',
+  },
+  {
+    site: 'lightning',
+    question: 'What does running a Lightning node actually involve deciding?',
+    short: 'Channels, not routes. Which peers to open with, how much to commit, whether you can receive as well as send, and what you charge to forward.',
+    slug: 'finding-a-route',
+    stop: 'your-part-in-it',
+  },
 ];
 
 /** The question-first index for one front door. */
