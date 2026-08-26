@@ -76,14 +76,14 @@ export function HtlcChain() {
       <p className="utxo-box-note">
         {settledFrom === null ? (
           <>
-            Two promises, one hash, and deadlines that <strong>descend</strong> — 40 blocks of
+            Two promises, one hash, and deadlines that <strong>descend</strong>, 40 blocks of
             margin so the hub can always claim its incoming HTLC after paying out. Right now
             nobody has been paid and nobody can be cheated.
           </>
         ) : (
           <>
             Ines claimed by revealing the secret, which necessarily gave it to the hub, which
-            immediately claimed from Mira. <strong>Both hops or neither</strong> — and the hub
+            immediately claimed from Mira. <strong>Both hops or neither</strong> and the hub
             never had a moment where keeping the money was an option.
           </>
         )}

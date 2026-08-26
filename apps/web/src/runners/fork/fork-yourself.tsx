@@ -94,7 +94,7 @@ export function ForkYourself({ finale }: RunnerProps) {
             <div className="stat">
               <div className="stat-label">your chain's total supply</div>
               <div className="stat-value">
-                {ran ? satsToBtc(yourTotal, 4) : '—'} <span className="stat-unit">coins</span>
+                {ran ? satsToBtc(yourTotal, 4) : ', '} <span className="stat-unit">coins</span>
               </div>
             </div>
             <div className="stat">

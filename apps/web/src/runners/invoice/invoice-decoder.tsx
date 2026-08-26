@@ -14,7 +14,7 @@ const short = (hex: string, keep = 18) =>
 /**
  * The invoice decoder: take BOLT #11's own published examples apart field
  * by field, break one on purpose to watch the checksum catch it, or paste
- * a real invoice — everything runs locally, nothing is sent anywhere.
+ * a real invoice, everything runs locally, nothing is sent anywhere.
  */
 export function InvoiceDecoder({ finale }: RunnerProps) {
   const [input, setInput] = useState(BOLT11_EXAMPLES[1].invoice);
@@ -31,8 +31,7 @@ export function InvoiceDecoder({ finale }: RunnerProps) {
     <div className="cols">
       <div className="prose">
         <p>
-          Pick one of the specification's own published examples, or paste any real invoice —
-          it is decoded in this tab and never leaves your browser.
+          Pick one of the specification's own published examples, or paste any real invoice: it is decoded in this tab and never leaves your browser.
         </p>
         <div className="paths-chips" role="group" aria-label="Example invoices">
           {BOLT11_EXAMPLES.map((example) => (
@@ -62,8 +61,8 @@ export function InvoiceDecoder({ finale }: RunnerProps) {
         {!result.ok && (
           <Callout>
             <strong>Rejected: {result.error}</strong> This is the checksum earning its keep. A
-            single wrong character — a bad copy-paste, a chat client mangling a link, a typo —
-            is caught here, before any money moves, rather than becoming a mystery later.
+            single wrong character (a bad copy-paste, a chat client mangling a link, a typo) is
+            caught here, before any money moves, rather than becoming a mystery later.
           </Callout>
         )}
         {decoded && (
@@ -118,7 +117,7 @@ export function InvoiceDecoder({ finale }: RunnerProps) {
 
               <div className="guess-feed">
                 <div className="stat-label">
-                  tagged fields — each one announces its own length, so unknown fields are
+                  tagged fields, each one announces its own length, so unknown fields are
                   skipped rather than fatal
                 </div>
                 <div className="field-rows">
@@ -140,7 +139,7 @@ export function InvoiceDecoder({ finale }: RunnerProps) {
                 <div className="stat-label">signature (512 bits) + recovery id</div>
                 <code className="guess-hex mine-target">{short(decoded.signature, 40)}</code>
                 <div className="guess-verdict">
-                  recovery id {decoded.recoveryId} — enough to recover the payee's public key
+                  recovery id {decoded.recoveryId}, enough to recover the payee's public key
                   from the signature, which is why most invoices omit it
                 </div>
               </div>

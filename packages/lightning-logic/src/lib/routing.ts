@@ -3,8 +3,8 @@
  *
  * Two ideas, and both are simpler than they sound.
  *
- * A node ANNOUNCES its terms — what it charges to forward, and how much
- * timelock it insists on — in a `channel_update`. Nobody sets these
+ * A node ANNOUNCES its terms, what it charges to forward, and how much
+ * timelock it insists on, in a `channel_update`. Nobody sets these
  * centrally; every node picks its own and gossips them, which makes the
  * fee "market" the sum of thousands of independent decisions rather than
  * a schedule anyone publishes.
@@ -16,7 +16,7 @@
 
 /** One direction of one channel, as its owner advertises it. */
 export interface ChannelPolicy {
-  /** Who charges this — the node forwarding out of this channel. */
+  /** Who charges this, the node forwarding out of this channel. */
   from: string;
   to: string;
   /** Flat charge per forward, in millisatoshis. */
@@ -27,7 +27,7 @@ export interface ChannelPolicy {
   cltvExpiryDelta: number;
   /** Smallest HTLC this hop will accept, in millisatoshis. */
   htlcMinimumMsat?: number;
-  /** Largest HTLC this hop will accept — its liquidity ceiling. */
+  /** Largest HTLC this hop will accept, its liquidity ceiling. */
   htlcMaximumMsat?: number;
 }
 
@@ -37,7 +37,7 @@ export interface ChannelPolicy {
  *
  *   fee_base_msat + ( amount_to_forward * fee_proportional_millionths / 1000000 )
  *
- * Integer arithmetic throughout — the division truncates, which is why
+ * Integer arithmetic throughout: the division truncates, which is why
  * the specification's own worked example lands on 10,199 and not 10,200.
  */
 export function hopFeeMsat(policy: ChannelPolicy, amountToForwardMsat: number): number {
@@ -77,7 +77,7 @@ export interface Route {
  *
  * Backwards is forced, not stylistic: a hop charges on the amount it
  * forwards, and that depends on what every later hop needs. The only
- * fixed number is the one at the end — what the payee must receive.
+ * fixed number is the one at the end, what the payee must receive.
  *
  * The subtle part, and the thing most explanations get wrong: a node
  * charges using the policy of the channel it forwards OUT of, not the one
@@ -85,7 +85,7 @@ export interface Route {
  * advertised on B->C. BOLT #7 spells this out in its worked example, and
  * routing.spec.ts checks our arithmetic against the number it prints.
  *
- * The consequence is that the FIRST channel is free — the sender is the
+ * The consequence is that the FIRST channel is free: the sender is the
  * one forwarding out of it, and it does not charge itself.
  */
 export function buildRoute(
@@ -134,7 +134,7 @@ export function hopCanCarry(policy: ChannelPolicy, amountMsat: number): boolean 
  * Deliberately an exhaustive search over simple paths rather than a
  * Dijkstra: real pathfinding is Dijkstra-ish but the cost of an edge
  * depends on the amount flowing through it, which depends on the hops
- * after it — so the tidy textbook version does not quite apply, and
+ * after it, so the tidy textbook version does not quite apply, and
  * implementations all approximate. On the handful of nodes a reader
  * will explore, exhaustive is exact and easy to check by hand.
  */

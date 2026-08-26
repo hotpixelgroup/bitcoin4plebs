@@ -16,7 +16,7 @@ export async function sha256(bytes: Uint8Array): Promise<Uint8Array<ArrayBuffer>
 
 /**
  * HMAC-SHA256: a hash keyed by a secret, so only someone holding the key
- * can produce or check the tag. Lightning uses it twice over — once to
+ * can produce or check the tag. Lightning uses it twice over, once to
  * derive per-hop keys, once to seal each layer of the onion.
  */
 export async function hmacSha256(
@@ -46,7 +46,7 @@ export function concatBytes(...parts: Uint8Array[]): Uint8Array<ArrayBuffer> {
   return out;
 }
 
-/** ASCII string to bytes — BOLT #4's key types are literally "rho", "mu", "um", "pad". */
+/** ASCII string to bytes, BOLT #4's key types are literally "rho", "mu", "um", "pad". */
 export function asciiBytes(text: string): Uint8Array<ArrayBuffer> {
   return Uint8Array.from(text, (c) => c.charCodeAt(0));
 }

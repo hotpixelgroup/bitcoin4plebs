@@ -3,7 +3,7 @@ import type { CodeExcerpt, SourcePin } from './types.js';
 /**
  * The single source pin every quest shares, plus excerpts that appear in
  * more than one quest. Excerpts are VERBATIM from Bitcoin Core at the
- * pinned commit — if you touch one, re-diff it against the source.
+ * pinned commit, if you touch one, re-diff it against the source.
  */
 
 export const BITCOIN_PIN: SourcePin = {
@@ -34,11 +34,11 @@ export const BOLTS_PIN: SourcePin = {
 /**
  * Fourth pin, for excerpts quoted from a Lightning node implementation.
  * The BOLTs are the authority, but a specification is only worth what its
- * implementations actually do — so Lightning quests read the spec beside
+ * implementations actually do, so Lightning quests read the spec beside
  * the Go that ships it. Pinned to a tagged release, not a moving branch.
  *
  * This is the COMMIT the v0.21.2-beta tag points at, not the annotated tag
- * object's own hash — `git ls-remote` returns the latter, which would give
+ * object's own hash, `git ls-remote` returns the latter, which would give
  * every "verify on GitHub" link a sha that resolves to no tree.
  */
 export const LND_PIN: SourcePin = {
@@ -49,7 +49,7 @@ export const LND_PIN: SourcePin = {
 /** Every pin an excerpt may override to, keyed by repo name. */
 export const OVERRIDE_PINS: readonly SourcePin[] = [BIPS_PIN, BOLTS_PIN, LND_PIN];
 
-/** GetBlockSubsidy — the entire emission policy. */
+/** GetBlockSubsidy, the entire emission policy. */
 export const EXCERPT_GET_BLOCK_SUBSIDY: CodeExcerpt = {
   ref: { file: 'src/validation.cpp', startLine: 1846, endLine: 1857 },
   language: 'cpp',
@@ -82,7 +82,7 @@ export const EXCERPT_COINBASE_ENFORCEMENT: CodeExcerpt = {
   ],
 };
 
-/** MAX_MONEY — the sanity cap, with the developers' own honesty comment. */
+/** MAX_MONEY, the sanity cap, with the developers' own honesty comment. */
 export const EXCERPT_MAX_MONEY: CodeExcerpt = {
   ref: { file: 'src/consensus/amount.h', startLine: 17, endLine: 27 },
   language: 'cpp',
@@ -101,7 +101,7 @@ export const EXCERPT_MAX_MONEY: CodeExcerpt = {
   ],
 };
 
-/** The datacarrier relay-policy defaults — the most argued-about lines in Bitcoin right now. */
+/** The datacarrier relay-policy defaults, the most argued-about lines in Bitcoin right now. */
 export const EXCERPT_DATACARRIER_DEFAULTS: CodeExcerpt = {
   ref: { file: 'src/policy/policy.h', startLine: 79, endLine: 84 },
   language: 'cpp',
@@ -115,7 +115,7 @@ export const EXCERPT_DATACARRIER_DEFAULTS: CodeExcerpt = {
   ],
 };
 
-/** CAmount + COIN — money is whole numbers of satoshis. */
+/** CAmount + COIN, money is whole numbers of satoshis. */
 export const EXCERPT_COIN_DEFINITION: CodeExcerpt = {
   ref: { file: 'src/consensus/amount.h', startLine: 11, endLine: 15 },
   language: 'cpp',

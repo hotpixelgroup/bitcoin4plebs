@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 
 /**
  * Minimal, deterministic syntax highlighting for the languages quests
- * quote. Works line-by-line on VERBATIM source text — the content model
+ * quote. Works line-by-line on VERBATIM source text, the content model
  * stores plain text, and color is applied only at render time, so what the
  * reader verifies against GitHub is exactly what we store.
  */

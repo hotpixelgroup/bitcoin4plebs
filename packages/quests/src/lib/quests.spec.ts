@@ -11,7 +11,7 @@ import { SITE_IDS, sites } from './sites.js';
  * Integrity tests for quest content. The second block is the important
  * one: point BITCOIN_SRC at any Bitcoin Core checkout at the pinned
  * commit, and every excerpt on the site is diffed VERBATIM against the
- * real source — "don't trust, verify" applied to ourselves.
+ * real source, "don't trust, verify" applied to ourselves.
  *
  *   BITCOIN_SRC=~/bitcoin npx nx test @bitcoin4plebs/quests
  */
@@ -114,7 +114,7 @@ describe('story thread integrity', () => {
 
   it('runs one story per site, with no repeated stage inside it', () => {
     // Each front door follows its own running payment, so a stage label
-    // only has to be unique within its own story — the journey rail is
+    // only has to be unique within its own story: the journey rail is
     // built from one site's quests, never from both.
     for (const site of SITE_IDS) {
       const stages = questsForSite(site).map((q) => q.story?.stage);
@@ -242,7 +242,7 @@ describe('glossary integrity', () => {
   });
 
   it('defines each term exactly once on each site', () => {
-    // A term may appear twice in the source — once per front door — so that
+    // A term may appear twice in the source, once per front door, so that
     // each reader is sent to the proof on their own site. What must never
     // happen is the same reader seeing a term defined twice.
     for (const site of SITE_IDS) {

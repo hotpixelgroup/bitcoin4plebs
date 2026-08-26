@@ -2,8 +2,7 @@ import { useState } from 'react';
 import { STORAGE_PREFIX } from './site';
 
 /**
- * Quest progress, kept only in the reader's browser (localStorage) —
- * fitting, for a site whose whole point is that verification is personal.
+ * Quest progress, kept only in the reader's browser (localStorage), * fitting, for a site whose whole point is that verification is personal.
  * Maps quest slug → ISO date the reader marked it verified.
  *
  * Keys are namespaced per site. Both front doors are served from the same
@@ -29,7 +28,7 @@ function write(next: Record<string, string>): void {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
   } catch {
-    // Private browsing or a full quota — progress just won't persist.
+    // Private browsing or a full quota, progress just won't persist.
   }
 }
 

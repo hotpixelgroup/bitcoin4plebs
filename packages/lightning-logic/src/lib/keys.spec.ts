@@ -48,7 +48,7 @@ describe('BOLT #3 revocation, without the spec', () => {
     const privkey = await deriveRevocationPrivkey(basepointSecret, commitmentSecret);
 
     // The public key built from two points equals the private key's own
-    // public key — the two halves really do meet.
+    // public key: the two halves really do meet.
     expect(compress(publicKey(BigInt('0x' + privkey)))).toBe(derived.revocationPubkey);
     // And it is genuinely a blend: neither input alone produces it.
     expect(derived.revocationPubkey).not.toBe(basepoint);

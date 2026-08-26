@@ -7,7 +7,7 @@ const RESERVE = 5_000; // 1% each side, a common default
 /**
  * The seesaw: a channel's coins are always somewhere, and what you can
  * send is your end while what you can receive is theirs. Drag it and the
- * two numbers move in opposite directions — which is the whole of why a
+ * two numbers move in opposite directions, which is the whole of why a
  * freshly funded channel cannot receive a satoshi.
  */
 export function LiquiditySeesaw() {
@@ -57,7 +57,7 @@ export function LiquiditySeesaw() {
           </div>
         </div>
         <div className="stat-label">
-          the two red marks are the reserve — {fmt(RESERVE)} sats each side must always leave the
+          the two red marks are the reserve, {fmt(RESERVE)} sats each side must always leave the
           other, so nobody ever has nothing left to lose
         </div>
       </div>
@@ -66,7 +66,7 @@ export function LiquiditySeesaw() {
         {mine === CAPACITY ? (
           <>
             <strong>This is a channel you just funded yourself.</strong> Every satoshi is on your
-            side, so you can send freely and receive <strong>nothing</strong> — the most common
+            side, so you can send freely and receive <strong>nothing</strong>, the most common
             surprise in Lightning, and it is not a bug. There is simply no room on their end yet.
           </>
         ) : mine === 0 ? (
@@ -77,7 +77,7 @@ export function LiquiditySeesaw() {
         ) : (
           <>
             A balanced channel is the useful one: {fmt(canSend)} out, {fmt(canReceive)} in. Nothing
-            was created or destroyed — the coins simply moved along the seesaw.
+            was created or destroyed, the coins simply moved along the seesaw.
           </>
         )}
       </p>

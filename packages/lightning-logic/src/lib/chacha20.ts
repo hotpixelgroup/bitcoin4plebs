@@ -7,7 +7,7 @@
  * A stream cipher is simpler than it sounds. It turns a key into an endless
  * deterministic river of bytes; you XOR your data with the river to hide it,
  * and XOR again with the same river to get it back. BOLT #4 uses it purely
- * as that river — "generate N pseudo-random bytes from this key".
+ * as that river, "generate N pseudo-random bytes from this key".
  */
 
 const ROUNDS = 20;
@@ -50,7 +50,7 @@ export function chacha20Stream(
   const out = new Uint8Array(length);
 
   for (let counter = 0, offset = 0; offset < length; counter++, offset += 64) {
-    // "expand 32-byte k" — the four constant words every ChaCha state starts with.
+    // "expand 32-byte k": the four constant words every ChaCha state starts with.
     const initial = new Uint32Array(16);
     initial[0] = 0x61707865;
     initial[1] = 0x3320646e;
@@ -73,7 +73,7 @@ export function chacha20Stream(
       quarterRound(working, 3, 4, 9, 14);
     }
 
-    // Add the original state back in — this is what makes it irreversible.
+    // Add the original state back in: this is what makes it irreversible.
     const block = new Uint8Array(64);
     const blockView = new DataView(block.buffer);
     for (let i = 0; i < 16; i++) {

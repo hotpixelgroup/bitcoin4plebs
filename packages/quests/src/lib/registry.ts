@@ -28,7 +28,7 @@ import { questLn06 } from './quest-ln-06-routing.js';
 import { questLn07 } from './quest-ln-07-whose-lightning.js';
 
 /**
- * The quest registry, in curriculum order — each quest builds on the
+ * The quest registry, in curriculum order, each quest builds on the
  * previous one. Today this is a static list bundled with the app; because
  * quests are plain data, swapping this for a fetch from our own API later
  * changes nothing else in the codebase.

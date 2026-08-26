@@ -201,7 +201,7 @@ describe('App', () => {
     expect(header?.querySelector('.logo-tag')?.textContent).toBe(SITE.tagline);
     expect(header?.querySelector('.pin')?.textContent).toContain(SITE.pinLabel);
 
-    // The other front door is signposted in several places — the home-page
+    // The other front door is signposted in several places, the home-page
     // card, the navigation and the footer. Every one of them must point at
     // the sibling, and none may be a bare unexplained link.
     const siblingLinks = screen.getAllByRole('link', { name: new RegExp(SITE.sibling.name) });

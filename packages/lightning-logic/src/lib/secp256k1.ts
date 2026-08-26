@@ -18,7 +18,7 @@
 /** The prime the field is built on: 2^256 - 2^32 - 977. */
 export const P = 2n ** 256n - 2n ** 32n - 977n;
 
-/** The order of the group — how many distinct private keys exist. */
+/** The order of the group, how many distinct private keys exist. */
 export const N = 0xfffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141n;
 
 /** A point on the curve. `null` elsewhere means the point at infinity. */
@@ -33,7 +33,7 @@ export const G: Point = {
   y: 0x483ada7726a3c4655da4fbfc0e1108a8fd17b448a68554199c47d08ffb10d4b8n,
 };
 
-/** Always-positive remainder — JavaScript's % keeps the sign, which breaks the math. */
+/** Always-positive remainder, JavaScript's % keeps the sign, which breaks the math. */
 export function mod(a: bigint, m: bigint = P): bigint {
   return ((a % m) + m) % m;
 }
@@ -80,8 +80,7 @@ export function add(p: Point | null, q: Point | null): Point | null {
 
 /**
  * Multiply a point by a scalar: double-and-add, the same trick as long
- * multiplication. This is the one-way street all of Bitcoin rests on —
- * easy forwards, hopeless backwards (that is Quest #3's guess-the-key).
+ * multiplication. This is the one-way street all of Bitcoin rests on, * easy forwards, hopeless backwards (that is Quest #3's guess-the-key).
  */
 export function multiply(p: Point, k: bigint): Point | null {
   let result: Point | null = null;

@@ -6,12 +6,11 @@
 /** The compact difficulty bits of the genesis block (and Bitcoin's easiest-ever target). */
 export const GENESIS_BITS = 0x1d00ffff;
 
-/** The genesis block's hash — note the leading zeros. */
+/** The genesis block's hash, note the leading zeros. */
 export const GENESIS_HASH = '000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f';
 
 /**
- * Decode Bitcoin's "compact bits" encoding into the full 256-bit target —
- * the same expansion `arith_uint256::SetCompact` performs inside
+ * Decode Bitcoin's "compact bits" encoding into the full 256-bit target, * the same expansion `arith_uint256::SetCompact` performs inside
  * DeriveTarget (src/pow.cpp:146).
  */
 export function bitsToTarget(bits: number): bigint {

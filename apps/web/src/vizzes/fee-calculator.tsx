@@ -17,7 +17,7 @@ const fmt = (msat: number) =>
 /**
  * The fee calculator: two numbers a node picks for itself, put through
  * the one formula the specification fixes. Change either and watch what
- * a forward costs — including the truncation that makes the spec's own
+ * a forward costs, including the truncation that makes the spec's own
  * example land on 10,199 rather than 10,200.
  */
 export function FeeCalculator() {
@@ -59,7 +59,7 @@ export function FeeCalculator() {
       </div>
 
       <label className="height-input-label" htmlFor="fee-base">
-        <code>fee_base_msat</code>: <strong>{base.toLocaleString('en-US')}</strong> — flat, every
+        <code>fee_base_msat</code>: <strong>{base.toLocaleString('en-US')}</strong>, flat, every
         forward
       </label>
       <input
@@ -74,7 +74,7 @@ export function FeeCalculator() {
       />
 
       <label className="height-input-label" htmlFor="fee-ppm">
-        <code>fee_proportional_millionths</code>: <strong>{ppm.toLocaleString('en-US')}</strong> —{' '}
+        <code>fee_proportional_millionths</code>: <strong>{ppm.toLocaleString('en-US')}</strong>, {' '}
         {(ppm / 10_000).toFixed(4)}% of the amount
       </label>
       <input
@@ -121,7 +121,7 @@ export function FeeCalculator() {
         {truncated ? (
           <>
             The exact product is {exact.toLocaleString('en-US')} msat and the fee is{' '}
-            <strong>{fee.toLocaleString('en-US')}</strong> — the division{' '}
+            <strong>{fee.toLocaleString('en-US')}</strong>, the division{' '}
             <strong>truncates</strong>. This is not pedantry: it is why the specification's own
             worked example comes to 10,199 and not 10,200, and an implementation that rounded up
             would offer a fee the next hop rejects.

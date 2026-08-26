@@ -18,7 +18,7 @@ export interface NavDrawerProps {
 
 /**
  * The left flyout navigation: every quest, grouped by track, with the
- * reader's ✓ verified marks — plus Home and the Glossary. Closes on
+ * reader's ✓ verified marks, plus Home and the Glossary. Closes on
  * Escape, on the overlay, and whenever navigation happens.
  */
 export function NavDrawer({ open, onClose }: NavDrawerProps) {

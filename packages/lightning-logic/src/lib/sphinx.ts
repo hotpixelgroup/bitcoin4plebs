@@ -7,8 +7,7 @@ import { compress, decompress, mod, multiply, publicKey, G, N } from './secp256k
  * Sphinx: the onion BOLT #4 wraps every Lightning payment in.
  *
  * The idea in one sentence: the sender builds a fixed-size packet with one
- * encrypted layer per hop, where each hop's key unwraps exactly one layer —
- * revealing where to send it next and nothing else. No hop learns the
+ * encrypted layer per hop, where each hop's key unwraps exactly one layer, * revealing where to send it next and nothing else. No hop learns the
  * sender, the recipient, or its own position in the route.
  *
  * The packet is ALWAYS 1366 bytes, whether the route is two hops or twenty.
@@ -51,7 +50,7 @@ export interface HopKeys {
   nodeId: string;
   /** The ephemeral public key THIS hop will see in the packet. */
   ephemeralPubkey: string;
-  /** ECDH output, hashed — the secret only sender and this hop share. */
+  /** ECDH output, hashed, the secret only sender and this hop share. */
   sharedSecret: string;
   /** What multiplies the ephemeral key on the way to the next hop. */
   blindingFactor: string;
@@ -61,8 +60,8 @@ export interface HopKeys {
  * Walk the route forward, deriving a shared secret with each hop.
  *
  * The sender has one ephemeral key. For each hop it does ECDH with that
- * hop's node id, then *blinds* the ephemeral key — multiplies it by a
- * factor derived from what it just computed — before moving on. So every
+ * hop's node id, then *blinds* the ephemeral key, multiplies it by a
+ * factor derived from what it just computed, before moving on. So every
  * hop sees a different ephemeral key and none of them can be linked, yet
  * each hop can re-derive its own shared secret from its own private key.
  */
@@ -110,7 +109,7 @@ function shiftSize(payload: Uint8Array): number {
  * When a hop processes the packet it pads the routing info with 1300 zero
  * bytes and XORs a 2600-byte keystream across the whole thing, then shifts
  * its own payload off the front. The tail it forwards is therefore
- * keystream, not zeros — and since the HMACs commit to the whole packet,
+ * keystream, not zeros and since the HMACs commit to the whole packet,
  * the sender must reproduce that exact tail in advance or every HMAC after
  * the first will fail. The last hop forwards nothing, so it contributes none.
  */
@@ -142,7 +141,7 @@ export interface OnionRequest {
   sessionKey: string;
   /** The route: each hop's node id and the payload only that hop can read. */
   hops: readonly { nodeId: string; payload: string }[];
-  /** Data the packet commits to without carrying — usually the payment hash. */
+  /** Data the packet commits to without carrying, usually the payment hash. */
   associatedData: string;
 }
 
@@ -154,7 +153,7 @@ export interface OnionResult {
 }
 
 /**
- * Build the onion. Layers are applied in REVERSE route order — the final
+ * Build the onion. Layers are applied in REVERSE route order, the final
  * recipient's layer goes on first and ends up innermost, exactly like
  * wrapping a parcel from the inside out.
  */
@@ -225,7 +224,7 @@ export interface PeeledOnion {
   payload: string;
   /** The shared secret this hop derived on its own. */
   sharedSecret: string;
-  /** True when the next HMAC is all zeros — the spec's "you are the recipient" flag. */
+  /** True when the next HMAC is all zeros: the spec's "you are the recipient" flag. */
   isFinal: boolean;
   /** The 1366-byte packet to forward. Meaningless when isFinal. */
   nextOnion: string;
@@ -235,8 +234,7 @@ export interface PeeledOnion {
  * Unwrap exactly one layer, as a routing node does.
  *
  * The HMAC check comes first and is not optional: it proves the packet
- * reached this hop unmodified. Only then does the hop learn its payload —
- * and all it can see beyond that is 1300 bytes of noise it must pass on.
+ * reached this hop unmodified. Only then does the hop learn its payload, * and all it can see beyond that is 1300 bytes of noise it must pass on.
  */
 export async function peelOnion(
   onion: string,

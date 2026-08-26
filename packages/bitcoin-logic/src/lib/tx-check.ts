@@ -27,7 +27,7 @@ export interface SimpleTx {
 
 export type TxCheckResult = { ok: true } | { ok: false; error: string };
 
-/** `MoneyRange` — src/consensus/amount.h:27. */
+/** `MoneyRange`, src/consensus/amount.h:27. */
 export function moneyRange(value: bigint): boolean {
   return value >= 0n && value <= MAX_MONEY;
 }

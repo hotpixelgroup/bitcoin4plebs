@@ -8,8 +8,8 @@ import { convertBits, decodeBech32 } from '@bitcoin4plebs/bitcoin-logic';
  * find me, and here is my signature over all of it. Everything a payer
  * needs, in one string you can read out loud over a phone.
  *
- * The encoding is bech32 — the same checksummed alphabet Bitcoin addresses
- * use — with the 90-character address limit lifted. So the decoder below
+ * The encoding is bech32, the same checksummed alphabet Bitcoin addresses
+ * use, with the 90-character address limit lifted. So the decoder below
  * reuses this project's own bech32 implementation, the one the Bitcoin
  * site's address quest already taught you to break on purpose.
  */
@@ -76,7 +76,7 @@ const FIELD_META: Record<string, { name: string; note: string }> = {
   s: { name: 'payment_secret', note: "Proves the payer reached the real invoice, not a probe by a node on the route." },
   d: { name: 'description', note: 'What the payment is for, in plain text. Committed to by the signature.' },
   h: { name: 'description_hash', note: 'A hash of a longer description, when the text is too big to carry inline.' },
-  n: { name: 'payee_node_id', note: "The payee's node id. Usually omitted — it is recoverable from the signature." },
+  n: { name: 'payee_node_id', note: "The payee's node id. Usually omitted: it is recoverable from the signature." },
   x: { name: 'expiry', note: 'Seconds after the timestamp until this invoice stops being payable.' },
   c: { name: 'min_final_cltv_expiry_delta', note: 'How much timelock the final hop demands before it will accept the payment.' },
   f: { name: 'fallback_address', note: 'An on-chain address to use if the Lightning payment cannot be made.' },
@@ -141,7 +141,7 @@ export function decodeInvoice(input: string): Bolt11Invoice | Bolt11Error {
   const trimmed = input.trim();
   if (!trimmed) return { ok: false, error: 'Nothing to decode.' };
   if (!/^ln/i.test(trimmed)) {
-    return { ok: false, error: 'A Lightning invoice starts with "ln" — this does not.' };
+    return { ok: false, error: 'A Lightning invoice starts with "ln": this does not.' };
   }
 
   // Invoices are bech32 with no length ceiling (BOLT #11 §Encoding Overview).
@@ -174,7 +174,7 @@ export function decodeInvoice(input: string): Bolt11Invoice | Bolt11Error {
       return { ok: false, error: `Field "${tag}" claims ${groups} groups, past the end of the invoice.` };
     }
     const data = payload.slice(dataStart, dataEnd);
-    const meta = FIELD_META[tag] ?? { name: `unknown (${tag})`, note: 'A field this decoder does not know — invoices are extensible by design.' };
+    const meta = FIELD_META[tag] ?? { name: `unknown (${tag})`, note: 'A field this decoder does not know, invoices are extensible by design.' };
 
     let value: string;
     if (tag === 'd') value = groupsToText(data);
@@ -233,7 +233,7 @@ export const BOLT11_EXAMPLES: readonly { label: string; note: string; invoice: s
   },
   {
     label: 'A non-ASCII description',
-    note: 'The same amount with a non-ASCII description — UTF-8, straight through.',
+    note: 'The same amount with a non-ASCII description, UTF-8, straight through.',
     invoice:
       'lnbc2500u1pvjluezsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqdpquwpc4curk03c9wlrswe78q4eyqc7d8d0xqzpu9qrsgqhtjpauu9ur7fw2thcl4y9vfvh4m9wlfyz2gem29g5ghe2aak2pm3ps8fdhtceqsaagty2vph7utlgj48u0ged6a337aewvraedendscp573dxr',
   },

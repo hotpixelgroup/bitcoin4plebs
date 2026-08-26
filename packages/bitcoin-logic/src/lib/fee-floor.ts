@@ -15,22 +15,22 @@
  * JS numbers, which are the same 64-bit IEEE 754 doubles.
  */
 
-/** Floor halving period in seconds — src/txmempool.h:212 (`ROLLING_FEE_HALFLIFE = 60 * 60 * 12`). */
+/** Floor halving period in seconds, src/txmempool.h:212 (`ROLLING_FEE_HALFLIFE = 60 * 60 * 12`). */
 export const ROLLING_FEE_HALFLIFE = 60 * 60 * 12;
 
-/** Default incremental relay fee, sat/kvB — src/policy/policy.h:48 (`DEFAULT_INCREMENTAL_RELAY_FEE{100}`). */
+/** Default incremental relay fee, sat/kvB, src/policy/policy.h:48 (`DEFAULT_INCREMENTAL_RELAY_FEE{100}`). */
 export const DEFAULT_INCREMENTAL_RELAY_FEE_PER_KVB = 100;
 
-/** Default mempool size cap in bytes — src/kernel/mempool_options.h:19,40 (300 MB). */
+/** Default mempool size cap in bytes, src/kernel/mempool_options.h:19,40 (300 MB). */
 export const DEFAULT_MAX_MEMPOOL_BYTES = 300 * 1_000_000;
 
 /** The mutable floor state Core keeps on CTxMemPool, as a plain value. */
 export interface FeeFloor {
-  /** `rollingMinimumFeeRate` — sat/kvB, a double in Core too. */
+  /** `rollingMinimumFeeRate`, sat/kvB, a double in Core too. */
   rollingMinimumFeeRate: number;
-  /** `lastRollingFeeUpdate` — unix seconds of the last decay step. */
+  /** `lastRollingFeeUpdate`, unix seconds of the last decay step. */
   lastRollingFeeUpdate: number;
-  /** `blockSinceLastRollingFeeBump` — decay waits for the next block. */
+  /** `blockSinceLastRollingFeeBump`, decay waits for the next block. */
   blockSinceLastRollingFeeBump: boolean;
 }
 

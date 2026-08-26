@@ -3,7 +3,7 @@ import { concatBytes, sha256 } from './crypto.js';
 import { add, compress, decompress, mod, multiply, publicKey, G, N } from './secp256k1.js';
 
 /**
- * BOLT #3 key derivation — the machinery that makes cheating unprofitable.
+ * BOLT #3 key derivation: the machinery that makes cheating unprofitable.
  *
  * Every commitment gets fresh keys, derived from a per-commitment point.
  * The interesting one is the REVOCATION key, and it is worth reading the
@@ -13,7 +13,7 @@ import { add, compress, decompress, mod, multiply, publicKey, G, N } from './sec
  *                    + per_commitment_point * SHA256(per_commitment_point || revocation_basepoint)
  *
  * Two people contribute one half each. Neither can compute the private key
- * alone — the spec says so in as many words — but the moment one of them
+ * alone, the spec says so in as many words, but the moment one of them
  * hands over their per-commitment secret (which is exactly what accepting a
  * new balance costs), the other can. That is why an old channel state is
  * radioactive: publishing one is handing your counterparty your money.
@@ -63,9 +63,9 @@ export interface RevocationDerivation {
   basepointTweak: string;
   /** SHA256(per_commitment_point || revocation_basepoint) */
   commitmentTweak: string;
-  /** revocation_basepoint · basepointTweak — the half only your counterparty can build. */
+  /** revocation_basepoint · basepointTweak: the half only your counterparty can build. */
   basepointTerm: string;
-  /** per_commitment_point · commitmentTweak — the half only you can build. */
+  /** per_commitment_point · commitmentTweak: the half only you can build. */
   commitmentTerm: string;
   /** The sum: the key that guards the penalty branch. */
   revocationPubkey: string;
@@ -104,7 +104,7 @@ export async function deriveRevocationPubkey(
 /**
  * The private key, which exists only once BOTH secrets are in one pair of
  * hands. Until your counterparty revokes a state by handing over its
- * per-commitment secret, this is uncomputable — by either of you.
+ * per-commitment secret, this is uncomputable, by either of you.
  */
 export async function deriveRevocationPrivkey(
   revocationBasepointSecret: string,

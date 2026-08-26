@@ -7,7 +7,7 @@ const VBYTES_CLOSE = 170;
 
 /**
  * The footprint figure: drag the number of coffees and watch the on-chain
- * cost of doing it the two ways diverge. The channel line is flat — that
+ * cost of doing it the two ways diverge. The channel line is flat, that
  * flatness is the entire argument for a second layer.
  */
 export function ChannelFootprint() {
@@ -60,7 +60,7 @@ export function ChannelFootprint() {
         <div className="stat">
           <div className="stat-value">
             {inChannel}{' '}
-            <span className="stat-unit">vbytes — one open, one close, whatever happens in between</span>
+            <span className="stat-unit">vbytes: one open, one close, whatever happens in between</span>
           </div>
         </div>
       </div>
@@ -68,12 +68,12 @@ export function ChannelFootprint() {
       <p className="utxo-box-note">
         {payments === 1 ? (
           <>
-            At one payment the channel is <strong>worse</strong> — two transactions instead of
+            At one payment the channel is <strong>worse</strong>, two transactions instead of
             one. Channels are not free; they are amortised. Drag right.
           </>
         ) : (
           <>
-            {saved.toLocaleString('en-US')} vbytes never written down —{' '}
+            {saved.toLocaleString('en-US')} vbytes never written down, {' '}
             <strong>{ratio.toFixed(1)}×</strong> less block space, and the chain is still the
             thing enforcing every one of those {payments.toLocaleString('en-US')} payments.
           </>

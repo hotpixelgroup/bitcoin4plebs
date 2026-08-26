@@ -24,7 +24,7 @@ import { UtxoFlow } from './utxo-flow';
 
 /**
  * The inline-figure registry: quest stops reference visualizations by id
- * (Stop.viz), keeping quest content pure serializable data — the exact
+ * (Stop.viz), keeping quest content pure serializable data, the exact
  * pattern the finale runner registry uses.
  */
 const vizzes: Record<string, ComponentType> = {
