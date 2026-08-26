@@ -143,6 +143,48 @@ export const questLn06: Quest = {
       },
     },
     {
+      id: 'who-gets-paid',
+      title: 'Who actually receives a fee, and how many of them are there?',
+      takeaway:
+        "Every **forwarding** node takes one, and nobody else: not the sender, who is forwarding for no one, and not the payee, who is being paid. So a route through two intermediates has exactly two fees — and the sender knows that number before sending, because the sender chose the route.",
+      annotationsOpen: true,
+      quiz: [
+        {
+          question: 'How does the hub actually receive its fee?',
+          options: [
+            'The sender makes a second, separate payment to it',
+            'It keeps the difference: more arrives on its incoming channel than it sends on its outgoing one',
+            'It deducts the fee from the amount the payee receives',
+          ],
+          answer: 1,
+          explain:
+            "There is no second payment and nothing is deducted from the payee. The hub is offered 1,002.2 sats on one channel and offers 1,000 sats on the other; when the preimage settles both, the 2.2 sat difference is simply left on the hub's side of its channels. The fee is a gap between two numbers, not a transfer — which is why routing income arrives as channel balance and never as an on-chain payment.",
+        },
+      ],
+      prose: [
+        "**Who receives them.** Each forwarding node keeps the fee for its own forward, and here is the part that surprises people: it is never paid as a separate transaction. The hub is offered slightly more on the channel the payment arrives on than it offers on the channel it sends out of, and when the preimage comes back and settles both HTLCs, that difference simply stays on its side. A routing node's income is a gap between two numbers. Nothing is ever sent to it.",
+        "**Does each hop add a fee.** Every hop that *forwards* does. Two hops do not: the sender, who is not forwarding on anyone's behalf, and the recipient, who is being paid rather than passing anything on. So a route across N channels carries N−1 fees. In the A→B→C example that is exactly one — B's — which is why the total came to 10,199 rather than something doubled.",
+        "**How do you know how many hops there will be.** *You* know exactly, because you chose them. Route selection happens entirely in the sender's wallet: it picks the path, adds up the fees, and builds the onion around that decision (Quest #5). The number is settled before a single satoshi moves, and your wallet shows you the total in advance — which is why Lightning has no equivalent of a surprise charge.",
+        "Everyone else is in the dark, and deliberately so. Quest #5's guarantee was that a hop cannot learn the route's length or its own position in it. Both facts are true at once: the sender knows the hop count precisely, and nobody on the route does. The fee total is public to exactly one person — the one paying it.",
+        "**Does it matter.** Less than you would guess. More hops means more fees and more timelock, but a four-hop route of nodes charging nothing routinely beats a two-hop route through someone expensive, and your wallet will take it. What matters is the total, not the count, and you see the total first. There is a hard ceiling — the onion is a fixed 1,300 bytes, so a route tops out at **20 hops** — but real routes are rarely more than four or five, because each extra hop is another chance for something to be offline.",
+      ],
+      annotations: [
+        { lines: 'L1088–89', text: 'The ceiling, stated in passing: 20 hops, forced by the onion being a fixed size. Real routes are far shorter.' },
+      ],
+      excerpt: {
+        pin: BOLTS_PIN,
+        ref: { file: '04-onion-routing.md', startLine: 1086, endLine: 1090 },
+        language: 'text',
+        lines: [
+          { n: 1086, text: 'of 3 represents 300 ms. Nodes along the path that lack accurate timing information may report a value of zero.' },
+          { n: 1087, text: '' },
+          { n: 1088, text: 'The erring node puts its hold time at the start of this array and zeroes out the rest. The size of the field is based on' },
+          { n: 1089, text: 'the maximum supported number of hops in a route (20).', highlight: true },
+          { n: 1090, text: '' },
+        ],
+      },
+    },
+    {
       id: 'choosing',
       title: 'Choosing a path, and why it sometimes fails',
       takeaway:

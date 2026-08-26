@@ -163,7 +163,7 @@ export function RouteFinder({ finale }: RunnerProps) {
 
           {chosen && (
             <div className="guess-feed">
-              <div className="stat-label">what each hop carries and charges</div>
+              <div className="stat-label">what each hop carries, and who keeps the difference</div>
               <div className="field-rows">
                 {chosen.hops.map((hop) => (
                   <div className="field-row" key={`${hop.from}${hop.to}`}>
@@ -174,11 +174,21 @@ export function RouteFinder({ finale }: RunnerProps) {
                       carries {fmt(hop.amountMsat)}
                       <span className="field-src">
                         {' '}
-                        ← {hop.feeMsat === 0 ? 'no fee (the sender forwards out of it)' : `${hop.feeMsat.toLocaleString('en-US')} msat fee`}
+                        ←{' '}
+                        {hop.feeMsat === 0
+                          ? `${hop.from} charges nothing — it is the sender, forwarding for no one`
+                          : `${hop.from} keeps ${hop.feeMsat.toLocaleString('en-US')} msat`}
                       </span>
                     </span>
                   </div>
                 ))}
+              </div>
+              <div className="guess-verdict">
+                {chosen.hops.filter((h) => h.feeMsat > 0).length} fee
+                {chosen.hops.filter((h) => h.feeMsat > 0).length === 1 ? '' : 's'} across{' '}
+                {chosen.hops.length} channels — every forwarding node takes one, the sender and
+                the payee take none. Nothing is sent to them: each simply keeps the gap between
+                what arrives and what it passes on.
               </div>
               <div className="guess-verdict">
                 A sends {fmt(chosen.totalSendMsat)} so that C receives{' '}
