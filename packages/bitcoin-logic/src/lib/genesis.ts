@@ -4,19 +4,19 @@ import { GENESIS_BITS, doubleSha256Hex } from './pow.js';
  * The genesis block, mirrored 1:1 from src/kernel/chainparams.cpp at the
  * pinned commit. These four numbers plus two well-known hashes are ALL it
  * takes to reconstruct block zero's 80-byte header and recompute the most
- * famous hash in Bitcoin, which genesis.spec.ts does on every CI run.
+ * famous hash in Bitcoin — which genesis.spec.ts does on every CI run.
  */
 
-/** Genesis timestamp, chainparams.cpp:158 (1231006505 = 2009-01-03 18:15:05 UTC). */
+/** Genesis timestamp — chainparams.cpp:158 (1231006505 = 2009-01-03 18:15:05 UTC). */
 export const GENESIS_TIME = 1231006505;
 
-/** The winning nonce Satoshi found, chainparams.cpp:158. */
+/** The winning nonce Satoshi found — chainparams.cpp:158. */
 export const GENESIS_NONCE = 2083236893;
 
-/** Genesis block version, chainparams.cpp:158. */
+/** Genesis block version — chainparams.cpp:158. */
 export const GENESIS_VERSION = 1;
 
-/** Merkle root of the single genesis transaction, display order, chainparams.cpp:161. */
+/** Merkle root of the single genesis transaction, display order — chainparams.cpp:161. */
 export const GENESIS_MERKLE_ROOT = '4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b';
 
 /**
@@ -38,7 +38,7 @@ export function uint32ToLeHex(value: number): string {
 
 /**
  * Flip a hex string's byte order. Bitcoin serializes hashes little-endian
- * but displays them big-endian: this one flip is why the famous genesis
+ * but displays them big-endian — this one flip is why the famous genesis
  * hash "starts" with zeros on explorers while the raw digest ends with them.
  */
 export function reverseHexBytes(hex: string): string {
@@ -57,7 +57,8 @@ export function hexToBytes(hex: string): Uint8Array {
 
 /**
  * Assemble the genesis block's 80-byte header exactly as CreateGenesisBlock
- * does (chainparams.cpp:47-54): version, previous-block hash (all zeros, * there is nothing before this), merkle root, time, bits, nonce.
+ * does (chainparams.cpp:47-54): version, previous-block hash (all zeros —
+ * there is nothing before this), merkle root, time, bits, nonce.
  */
 export function buildGenesisHeaderHex(): string {
   return (
@@ -71,7 +72,7 @@ export function buildGenesisHeaderHex(): string {
 }
 
 /**
- * Double SHA-256 the assembled header and flip to display order, the
+ * Double SHA-256 the assembled header and flip to display order — the
  * same computation `genesis.GetHash()` performs before the startup assert
  * at chainparams.cpp:160. Must equal {@link import('./pow.js').GENESIS_HASH}.
  */

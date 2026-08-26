@@ -2,7 +2,7 @@
  * A deliberately simple, deterministic model of the fee auction that
  * BlockAssembler runs for real (src/node/miner.cpp:301): sort waiting
  * transactions by feerate, fill ~1,000,000 vbytes per block from the top.
- * A model, not a market oracle, but the *mechanism* is the real one.
+ * A model, not a market oracle — but the *mechanism* is the real one.
  */
 
 export interface MempoolTx {
