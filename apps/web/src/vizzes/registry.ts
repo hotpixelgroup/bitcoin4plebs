@@ -4,6 +4,8 @@ import { AddressPipeline } from './address-pipeline';
 import { AvalancheGrid } from './avalanche-grid';
 import { ChannelFootprint } from './channel-footprint';
 import { HtlcChain } from './htlc-chain';
+import { InvoiceAnatomy } from './invoice-anatomy';
+import { LiquiditySeesaw } from './liquidity-seesaw';
 import { OnionPeel } from './onion-peel';
 import { RevocationLadder } from './revocation-ladder';
 import { BitshiftHalving } from './bitshift-halving';
@@ -28,6 +30,8 @@ const vizzes: Record<string, ComponentType> = {
   'channel-footprint': ChannelFootprint,
   'revocation-ladder': RevocationLadder,
   'htlc-chain': HtlcChain,
+  'invoice-anatomy': InvoiceAnatomy,
+  'liquidity-seesaw': LiquiditySeesaw,
   'onion-peel': OnionPeel,
   'bitshift-halving': BitshiftHalving,
   'utxo-flow': UtxoFlow,

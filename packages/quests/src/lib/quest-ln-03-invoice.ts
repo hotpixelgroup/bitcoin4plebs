@@ -54,6 +54,7 @@ export const questLn03: Quest = {
     {
       id: 'the-shape',
       title: 'A tagged, self-describing document',
+      viz: 'invoice-anatomy',
       takeaway:
         "The data part is a stream of **tagged fields**: a 5-bit type, a 10-bit length, then that many 5-bit groups of data. Because every field announces its own length, a decoder can skip fields it has never heard of — which is how the format grows without breaking old wallets.",
       quiz: [

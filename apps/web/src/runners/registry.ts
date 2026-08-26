@@ -3,6 +3,7 @@ import type { Finale } from '@bitcoin4plebs/quests';
 import { AddressXray } from './address/address-xray';
 import { ChannelSimulator } from './lightning/channel-simulator';
 import { ClusterDetective } from './privacy/cluster-detective';
+import { CustodyCheck } from './custody/custody-check';
 import { DoubleSpend } from './doublespend/double-spend';
 import { RevocationForge } from './revocation/revocation-forge';
 import { RewriteCost } from './rewrite/rewrite-cost';
@@ -53,6 +54,7 @@ const runners: Record<string, ComponentType<RunnerProps>> = {
   'invoice-decoder': InvoiceDecoder,
   'htlc-relay': HtlcRelay,
   'onion-lab': OnionLab,
+  'custody-check': CustodyCheck,
   'double-spend': DoubleSpend,
   'rewrite-cost': RewriteCost,
 };

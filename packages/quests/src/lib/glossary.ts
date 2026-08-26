@@ -1172,6 +1172,201 @@ export const glossary: GlossaryEntry[] = [
     definition:
       'One thousandth of a satoshi: the unit Lightning accounts in. It exists only above the chain — Bitcoin itself has no denomination smaller than a satoshi — and is there so routing fees, which are often a tiny fraction of a satoshi, can be expressed without rounding to zero. Amounts are rounded down to whole satoshis when a channel actually settles on-chain.',
   },
+  // --- Lightning vocabulary and the script it is built from ---
+  {
+    term: 'HTLC',
+    match: ['HTLC', 'HTLCs', 'Hashed Timelock Contract'],
+    category: 'Lightning & channels',
+    definition:
+      "Hashed Timelock Contract: a promise of money with two exits and no third. Either someone produces the [[Preimage]] of a given hash and takes it immediately, or a deadline passes and it refunds to whoever offered it. Chain those promises along a route, all locked to the same hash, and a payment either completes at every hop or at none of them — which is why a stranger in the middle can never keep it.",
+    cite: '03-transactions.md:214',
+    quest: 4,
+    questSite: 'lightning',
+  },
+  {
+    term: 'Preimage',
+    match: ['preimage'],
+    category: 'Lightning & channels',
+    definition:
+      'The secret that hashes to a given value. The payee invents one, publishes only its hash in the invoice, and releases it when paid — so holding it afterwards, next to their signed invoice, is a receipt nobody can forge or revoke. The specification puts it plainly: the preimage of the payment hash *provides proof of payment*.',
+    cite: '11-payment-encoding.md:145',
+    quest: 3,
+    questSite: 'lightning',
+  },
+  {
+    term: 'Onion routing',
+    match: ['onion routing', 'sphinx'],
+    category: 'Lightning & channels',
+    definition:
+      'Wrapping a payment in one encrypted layer per hop, so each node can open exactly one — learning who to forward to and nothing else. The packet is always **1,366 bytes**, because a packet that shrank as it travelled would tell every node how far along the route it was.',
+    cite: '04-onion-routing.md:144',
+    quest: 5,
+    questSite: 'lightning',
+  },
+  {
+    term: 'Watchtower',
+    match: ['watchtower', 'watchtowers'],
+    category: 'Lightning & channels',
+    definition:
+      "A third party you pay (or ask nicely) to watch the chain for revoked channel states on your behalf, and to broadcast the [[Penalty transaction]] if one appears. It exists because the penalty only works if somebody notices during the `to_self_delay` window — and your phone is not always online. A watchtower is given enough to punish a cheat and not enough to learn your balances.",
+  },
+  {
+    term: 'Inbound liquidity',
+    match: ['inbound liquidity', 'inbound capacity'],
+    category: 'Lightning & channels',
+    definition:
+      "How much someone can currently send *to* you: the money sitting on the far side of your channels. This is the single most common practical confusion in Lightning — a channel can only push what is on your side of it, so a brand-new channel you funded yourself can send but cannot receive a satoshi until some of it moves.",
+    quest: 4,
+    questSite: 'lightning',
+  },
+  {
+    term: 'Routing node',
+    match: ['routing node', 'routing nodes', 'forwarding node'],
+    category: 'Lightning & channels',
+    definition:
+      'A node that forwards other people’s payments between its channels and keeps a small fee. It is never handed anything spendable — only an [[HTLC]] it cannot open — so its honesty is irrelevant rather than assumed. The worst it can do to you is fail, and failing earns it nothing.',
+    quest: 4,
+    questSite: 'lightning',
+  },
+  {
+    term: 'Timelock',
+    match: ['timelock', 'timelocks', 'timelocked'],
+    category: 'Keys & ownership',
+    definition:
+      'A condition in a script that makes coins unspendable until a given time or block height. Bitcoin enforces it at the consensus layer, which is what lets Lightning build refunds and penalties on top: a promise that expires on its own needs no referee.',
+  },
+  {
+    term: 'P2WSH',
+    code: true,
+    match: ['P2WSH', 'pay-to-witness-script-hash'],
+    category: 'Addresses & encoding',
+    definition:
+      'Pay-to-witness-script-hash: an output that commits to the *hash* of a script rather than the script itself. The script stays private until the money moves, and only then is it revealed and run. Both of a Lightning channel’s important outputs — the funding lock and the delay-or-punish output — are this shape.',
+    cite: '03-transactions.md:77',
+    quest: 1,
+    questSite: 'lightning',
+  },
+  {
+    term: 'OP_CHECKMULTISIG',
+    code: true,
+    match: ['OP_CHECKMULTISIG'],
+    category: 'Keys & ownership',
+    definition:
+      '[[OP_CHECKSIG]] in the plural: this many signatures, from these keys, or the coins do not move. A Lightning channel opens by locking coins with `2 <pubkey1> <pubkey2> 2 OP_CHECKMULTISIG` — two of two, so neither party can touch the money alone. The keys are sorted lexicographically so two strangers’ software builds byte-identical scripts.',
+    cite: '03-transactions.md:79',
+    quest: 1,
+    questSite: 'lightning',
+  },
+  {
+    term: 'OP_CHECKSEQUENCEVERIFY',
+    code: true,
+    match: ['OP_CHECKSEQUENCEVERIFY', 'CSV'],
+    category: 'Keys & ownership',
+    definition:
+      'The relative [[Timelock]] opcode: this output cannot be spent until so many blocks have passed since it confirmed. It is what puts a force-closing party’s own money behind a delay — and that delay is precisely the window in which a cheated counterparty can take everything instead.',
+    cite: '03-transactions.md:122',
+    quest: 2,
+    questSite: 'lightning',
+  },
+  {
+    term: 'OP_IF',
+    code: true,
+    match: ['OP_IF', 'OP_ELSE', 'OP_ENDIF', 'OP_NOTIF'],
+    category: 'Keys & ownership',
+    definition:
+      'Branching inside a Bitcoin script. The spender chooses which branch to take by what they put on the stack, so one output can offer several different ways to be spent. Lightning leans on this hard: the channel balance output has an honest branch behind a delay and a penalty branch with none.',
+    cite: '03-transactions.md:117',
+    quest: 2,
+    questSite: 'lightning',
+  },
+  {
+    term: 'update_add_htlc',
+    code: true,
+    match: ['update_add_htlc'],
+    category: 'Lightning & channels',
+    definition:
+      'The message that offers a payment into a channel. Five fields: which channel, an id, `amount_msat`, the `payment_hash`, a `cltv_expiry` deadline, and a sealed 1,366-byte onion the sender cannot read. Notice what is absent — no payer, no payee, no route.',
+    cite: '02-peer-protocol.md:2783',
+    quest: 4,
+    questSite: 'lightning',
+  },
+  {
+    term: 'payment_hash',
+    code: true,
+    match: ['payment_hash'],
+    category: 'Lightning & channels',
+    definition:
+      'The SHA-256 hash at the centre of a payment, copied unchanged from the invoice into every hop along the route. That sameness is what makes the hops one atomic payment: reveal the [[Preimage]] to claim at the far end, and every hop behind you can claim too.',
+    cite: '11-payment-encoding.md:145',
+    quest: 3,
+    questSite: 'lightning',
+  },
+  {
+    term: 'cltv_expiry',
+    code: true,
+    match: ['cltv_expiry', 'cltv_expiry_delta'],
+    category: 'Lightning & channels',
+    definition:
+      'The block height after which an [[HTLC]] expires and refunds. Deadlines *descend* along a route so every hop has time to claim its incoming promise after paying out — which is why long routes need long timelocks, and why a stuck payment can lock funds for hours.',
+    cite: '02-peer-protocol.md:2789',
+    quest: 4,
+    questSite: 'lightning',
+  },
+  {
+    term: 'amount_msat',
+    code: true,
+    match: ['amount_msat'],
+    category: 'Lightning & channels',
+    definition:
+      'A payment amount in [[Millisatoshi]] — thousandths of a satoshi. The extra precision exists only above the chain, so that routing fees, which are often a tiny fraction of a satoshi, do not round to nothing.',
+    cite: '02-peer-protocol.md:2787',
+    quest: 4,
+    questSite: 'lightning',
+  },
+  {
+    term: 'onion_routing_packet',
+    code: true,
+    match: ['onion_routing_packet', 'hop_payloads'],
+    category: 'Lightning & channels',
+    definition:
+      'The sealed 1,366-byte envelope carried by every `update_add_htlc`: a version byte, an ephemeral public key, 1,300 bytes of layered routing instructions, and an HMAC. Each hop peels exactly one layer and re-pads what it forwards, so the size never changes. See [[Onion routing]].',
+    cite: '04-onion-routing.md:144',
+    quest: 5,
+    questSite: 'lightning',
+  },
+  {
+    term: 'per_commitment_point',
+    code: true,
+    match: ['per_commitment_point'],
+    category: 'Lightning & channels',
+    definition:
+      'A fresh public key for each channel balance, derived as `per_commitment_secret * G`. It is one of the two halves the [[Revocation key]] is built from — the half you contribute — and surrendering its secret is what revokes a state.',
+    cite: '03-transactions.md:812',
+    quest: 2,
+    questSite: 'lightning',
+  },
+  {
+    term: 'revocation_basepoint',
+    code: true,
+    match: ['revocation_basepoint', 'revocation basepoint'],
+    category: 'Lightning & channels',
+    definition:
+      'Your counterparty’s long-lived contribution to every [[Revocation key]] in the channel — the other half from your [[per_commitment_point]]. Because each side holds only one half’s secret, neither can compute the private key alone, which the specification states outright.',
+    cite: '03-transactions.md:817',
+    quest: 2,
+    questSite: 'lightning',
+  },
+  {
+    term: 'local_delayedpubkey',
+    code: true,
+    match: ['local_delayedpubkey', 'delayed payment key'],
+    category: 'Lightning & channels',
+    definition:
+      'The key that can finally spend your own balance after a force close — but only once `to_self_delay` blocks have passed. It is kept separate from your other keys so a [[Watchtower]] can be given what it needs to punish a cheat without learning anything else about the channel.',
+    cite: '03-transactions.md:124',
+    quest: 2,
+    questSite: 'lightning',
+  },
 ];
 
 /** Glossary entries visible on one front door (shared terms appear on both). */
