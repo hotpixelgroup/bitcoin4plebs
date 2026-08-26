@@ -87,7 +87,7 @@ export const entryPaths: EntryPath[] = [
     site: 'lightning',
     prompt: 'What can go wrong with my money?',
     blurb:
-      'What a force close costs, why your funds sit behind a delay, what a stuck payment locks up, and the one choice — custodial or not — that matters more than all of it.',
+      'What a force close costs, why your funds sit behind a delay, what a stuck payment locks up, and the one choice, custodial or not, that matters more than all of it.',
     questNumbers: [7, 2, 4],
   },
 ];

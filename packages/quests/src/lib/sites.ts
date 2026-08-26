@@ -6,7 +6,7 @@
  * flag (VITE_SITE) picks which curriculum, brand and home page to render.
  *
  * Everything site-specific that isn't a quest lives here, as plain
- * serializable data — same rule as quests themselves, so a component never
+ * serializable data, same rule as quests themselves, so a component never
  * has to know which site it is running inside.
  */
 
@@ -18,7 +18,7 @@ export const SITE_IDS: readonly SiteId[] = ['bitcoin', 'lightning'];
 
 export interface SiteConfig {
   id: SiteId;
-  /** GitHub repo the site is published from — also its Pages base path. */
+  /** GitHub repo the site is published from, also its Pages base path. */
   repo: string;
   /** Wordmark, split so the "4" can carry the accent colour. */
   brand: { pre: string; accent: string; post: string };
@@ -44,7 +44,7 @@ export interface SiteConfig {
   referencePages: readonly string[];
   /**
    * The other front door. Cross-linked from the home page, the navigation
-   * and the footer — a reader who lands on the wrong one of the two should
+   * and the footer, a reader who lands on the wrong one of the two should
    * never have to guess that the other exists.
    */
   sibling: {
@@ -112,7 +112,7 @@ export const sites: Record<SiteId, SiteConfig> = {
       'Take it home':
         'The last mile: what a wallet actually stores, what the 12 words really are, the habits that keep coins safe, and who can see what on a glass ledger.',
       'Beyond the chain':
-        'The doorway: how a thousand payments fit into two transactions, read from the Lightning specs — and where to go next if you want the whole system.',
+        'The doorway: how a thousand payments fit into two transactions, read from the Lightning specs and where to go next if you want the whole system.',
       'The big questions':
         'The two things everyone asks first and can only truly answer last: why is this money at all, and does it waste energy? Both answered from the ground up.',
     },
@@ -152,7 +152,7 @@ export const sites: Record<SiteId, SiteConfig> = {
       kicker: "Don't trust. Verify.",
       title: 'Understand Lightning. From the specification, not the marketing.',
       blurb:
-        "Lightning is explained to newcomers almost entirely in metaphors, and the metaphors are where the misunderstandings live. Each **verification quest** below reads the **actual Lightning specifications** — the BOLTs — alongside the code of a node that implements them. Better still: the specs ship their own test vectors, so the tools on this site aren't asking for your trust. They're graded by the spec itself, in public, on every change.",
+        "Lightning is explained to newcomers almost entirely in metaphors, and the metaphors are where the misunderstandings live. Each **verification quest** below reads the **actual Lightning specifications**, the BOLTs, alongside the code of a node that implements them. Better still: the specs ship their own test vectors, so the tools on this site aren't asking for your trust. They're graded by the spec itself, in public, on every change.",
     },
     url: LIGHTNING_URL,
     ogImageAlt:
@@ -180,7 +180,7 @@ export const sites: Record<SiteId, SiteConfig> = {
       url: BITCOIN_URL,
       label: 'the layer underneath',
       blurb:
-        'Everything here rests on the chain underneath: the 2-of-2 output is an ordinary Bitcoin output, and the penalty branch is ordinary Bitcoin script. If the base layer is still a mystery, start there — same approach, real source code.',
+        'Everything here rests on the chain underneath: the 2-of-2 output is an ordinary Bitcoin output, and the penalty branch is ordinary Bitcoin script. If the base layer is still a mystery, start there, same approach, real source code.',
       covers: [
         'why the 21 million cap is arithmetic, not a promise',
         'what a private key actually locks',
