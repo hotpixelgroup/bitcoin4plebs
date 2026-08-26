@@ -14,6 +14,7 @@ import { WalletsPage } from '../pages/wallets-page';
 import { NavDrawer } from './nav-drawer';
 import { LogoMark } from './site-logo';
 import { SiteSearch } from './site-search';
+import { UpdatePrompt } from './update-prompt';
 
 function SiteHeader({ onMenu, onSearch }: { onMenu: () => void; onSearch: () => void }) {
   return (
@@ -123,6 +124,7 @@ export function App() {
         </Routes>
       </div>
       <SiteFooter />
+      <UpdatePrompt />
     </div>
   );
 }

@@ -81,7 +81,19 @@ export default defineConfig(() => ({
      * stay network-only and already degrade gracefully.
      */
     VitePWA({
-      registerType: 'autoUpdate',
+      /**
+       * 'prompt', not 'autoUpdate'. With autoUpdate a new build installs
+       * itself silently and the reader gets it on their NEXT visit, which
+       * means the page in front of them can be a version behind without
+       * saying so. On a site whose whole claim is that you can check what
+       * you are running, the honest behaviour is to say a new version
+       * exists and let the reader decide when to take it.
+       *
+       * injectRegister is null because UpdatePrompt registers the worker
+       * itself — otherwise the plugin's own script would register it too.
+       */
+      registerType: 'prompt',
+      injectRegister: null,
       includeAssets: ['favicon.svg', 'social-card.png'],
       manifest: {
         name: site.name,
