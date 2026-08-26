@@ -10,6 +10,7 @@
       "vite/client",
       "node",
       "vitest",
+      "vite-plugin-pwa/react",
       "@testing-library/jest-dom"
     ],
     "forceConsistentCasingInFileNames": true
