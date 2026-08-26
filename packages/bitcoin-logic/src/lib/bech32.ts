@@ -86,7 +86,7 @@ export function decodeBech32(input: string, options: Bech32Options = {}): Bech32
   const hasLower = /[a-z]/.test(input);
   const hasUpper = /[A-Z]/.test(input);
   if (hasLower && hasUpper) {
-    return { ok: false, error: 'Mixed case — a bech32 string must be all-lower or all-upper, never both.' };
+    return { ok: false, error: 'Mixed case: a bech32 string must be all-lower or all-upper, never both.' };
   }
   const str = input.toLowerCase();
   const sep = str.lastIndexOf('1');
@@ -109,7 +109,7 @@ export function decodeBech32(input: string, options: Bech32Options = {}): Bech32
   }
   const encoding = verifyChecksum(hrp, values);
   if (!encoding) {
-    return { ok: false, error: 'Checksum failed — at least one character here is wrong.' };
+    return { ok: false, error: 'Checksum failed: at least one character here is wrong.' };
   }
   return { ok: true, hrp, payload: values.slice(0, -6), encoding };
 }
@@ -158,7 +158,7 @@ export function decodeSegwitAddress(input: string): SegwitAddress | Bech32Error 
   if (!dec.ok) return dec;
   if (dec.payload.length === 0) return { ok: false, error: 'Empty data section after the checksum.' };
   const version = dec.payload[0];
-  if (version > 16) return { ok: false, error: `Invalid witness version ${version} — only 0 through 16 exist.` };
+  if (version > 16) return { ok: false, error: `Invalid witness version ${version}: only 0 through 16 exist.` };
   if (version === 0 && dec.encoding !== 'bech32') {
     return { ok: false, error: 'Version 0 witness address must use Bech32 checksum (key_io.cpp:145).' };
   }
