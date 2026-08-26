@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link, Route, Routes } from 'react-router-dom';
-import { PINNED_COMMIT_SHORT } from '@bitcoin4plebs/bitcoin-logic';
+import { SITE, SITE_PIN_SHORT, SITE_REPO_URL } from '../lib/site';
 import { CoreVsKnotsPage } from '../pages/core-vs-knots-page';
 import { GlossaryPage } from '../pages/glossary-page';
 import { HomePage } from '../pages/home-page';
@@ -26,9 +26,11 @@ function SiteHeader({ onMenu, onSearch }: { onMenu: () => void; onSearch: () => 
           <Link to="/" className="logo-text-link">
             <span className="logo-text">
               <span className="logo-word">
-                bitcoin<span className="logo-4">4</span>plebs
+                {SITE.brand.pre}
+                <span className="logo-4">{SITE.brand.accent}</span>
+                {SITE.brand.post}
               </span>
-              <span className="logo-tag">don't trust. verify.</span>
+              <span className="logo-tag">{SITE.tagline}</span>
             </span>
           </Link>
         </div>
@@ -36,7 +38,7 @@ function SiteHeader({ onMenu, onSearch }: { onMenu: () => void; onSearch: () => 
           <span aria-hidden="true">⌕</span> search <kbd>/</kbd>
         </button>
         <div className="pin">
-          source pinned: bitcoin/bitcoin @ <b>{PINNED_COMMIT_SHORT}</b>
+          source pinned: {SITE.pinLabel} @ <b>{SITE_PIN_SHORT}</b>
         </div>
       </div>
     </header>
@@ -49,8 +51,7 @@ function SiteFooter() {
       <div className="wrap">
         <div className="site-footer-row">
           <span>
-            <span className="logo-accent">bitcoin4plebs</span> · understand Bitcoin's code without
-            taking anyone's word for it
+            <span className="logo-accent">{SITE.name}</span> · {SITE.footerLine}
           </span>
           <span className="site-footer-links">
             <Link to="/">Quests</Link>
@@ -58,16 +59,13 @@ function SiteFooter() {
             <Link to="/glossary">Glossary</Link>
             <Link to="/sandbox">Sandbox</Link>
             <Link to="/review">Review</Link>
-            <a
-              href="https://github.com/hotpixelgroup/bitcoin4plebs"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a href={SITE.sibling.url}>{SITE.sibling.name} ↗</a>
+            <a href={SITE_REPO_URL} target="_blank" rel="noopener noreferrer">
               Source ↗
             </a>
           </span>
         </div>
-        <div>Source excerpts © Bitcoin Core developers, MIT License. Don't trust. Verify.</div>
+        <div>{SITE.footerCredit} Don't trust. Verify.</div>
       </div>
     </footer>
   );
@@ -107,9 +105,17 @@ export function App() {
           <Route path="/questions" element={<QuestionsPage />} />
           <Route path="/review" element={<ReviewPage />} />
           <Route path="/sandbox" element={<SandboxPage />} />
-          <Route path="/core-vs-knots" element={<CoreVsKnotsPage />} />
-          <Route path="/wallets" element={<WalletsPage />} />
-          <Route path="/security" element={<SecurityPage />} />
+          {/* Reference pages are per-site: a Bitcoin-only page must not
+              appear, half-relevant, inside the Lightning brand. */}
+          {SITE.referencePages.includes('/core-vs-knots') && (
+            <Route path="/core-vs-knots" element={<CoreVsKnotsPage />} />
+          )}
+          {SITE.referencePages.includes('/wallets') && (
+            <Route path="/wallets" element={<WalletsPage />} />
+          )}
+          {SITE.referencePages.includes('/security') && (
+            <Route path="/security" element={<SecurityPage />} />
+          )}
           <Route path="/map" element={<MapPage />} />
           <Route path="/quests/:slug" element={<QuestPage />} />
         </Routes>

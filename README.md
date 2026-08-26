@@ -42,6 +42,29 @@ There are also reference pages, all brandless: a [security playbook](https://hot
 | `packages/quests` | Quest content model (types) + quest data, pure and serializable |
 | `packages/ui` | Presentational components: CodeCard, StopSection, RichText |
 | `packages/bitcoin-logic` | Faithful TS translations of consensus math + the verification tests |
+| `packages/lightning-logic` | Dependency-free secp256k1, ChaCha20 and the BOLT #4 sphinx onion, checked against the Lightning spec's own test vectors |
+
+## Two front doors, one codebase
+
+This repository publishes **two** sites from the same source. `VITE_SITE` picks
+the curriculum, the brand and the home page; the quest engine, the search, the
+glossary and the design system are shared by being literally the same build, so
+they cannot drift apart.
+
+| | `bitcoin4plebs` | `lightning4plebs` |
+| --- | --- | --- |
+| Build | `npx nx build web` | `VITE_SITE=lightning npx nx build web` |
+| Dev | `npx nx dev web` (:4200) | `VITE_SITE=lightning npx vite -c apps/web/vite.config.ts` (:4201) |
+| Output | `apps/web/dist` | `apps/web/dist-lightning` |
+| Primary source | `bitcoin/bitcoin` | `lightning/bolts` + `lightningnetwork/lnd` |
+
+Quests declare which front door they belong to (`site`), and numbering runs
+sequentially *within* a site. Slugs stay globally unique, and glossary terms are
+shared by default — a definition proven on the other site links across to it.
+Everything site-specific that isn't a quest lives in one place,
+[`packages/quests/src/lib/sites.ts`](packages/quests/src/lib/sites.ts), and the
+integrity tests fail if a track loses its blurb or a site stops pointing at its
+sibling.
 
 ## Develop
 
@@ -51,18 +74,30 @@ npx nx dev web        # dev server on http://localhost:4200
 npx nx run-many -t lint test build typecheck
 ```
 
-To also run the verbatim-excerpt check locally, point `BITCOIN_SRC`,
-`BIPS_SRC`, and `BOLTS_SRC` at checkouts of Bitcoin Core, the BIPs, and
-the Lightning BOLTs at the pinned commits (all pins live in
+To also run the verbatim-excerpt check locally, point `BITCOIN_SRC`, `BIPS_SRC`,
+`BOLTS_SRC`, and `LND_SRC` at checkouts of Bitcoin Core, the BIPs, the Lightning
+BOLTs, and LND at the pinned commits (all four pins live in
 `packages/quests/src/lib/excerpts.ts`):
 
 ```sh
-BITCOIN_SRC=~/bitcoin BIPS_SRC=~/bips BOLTS_SRC=~/bolts npx nx test @bitcoin4plebs/quests
+BITCOIN_SRC=~/bitcoin BIPS_SRC=~/bips BOLTS_SRC=~/bolts LND_SRC=~/lnd npx nx run-many -t test
 ```
+
+The BOLTs checkout does double duty. Beyond the letter-for-letter excerpt diff,
+`packages/lightning-logic` runs **the specification's own machine-readable test
+vectors** against our TypeScript: `BOLTS_SRC=~/bolts npx nx test
+@bitcoin4plebs/lightning-logic` rebuilds `bolt04/onion-test.json`'s 1,366-byte
+onion and requires a byte-for-byte match. That packet only comes out right if
+the hand-rolled secp256k1, the hand-rolled ChaCha20, the key derivation, the
+blinding chain and the filler accumulation are *all* exactly correct. There is
+no partial credit, which is rather the point.
+
+Both checks are mandatory in CI: if a pinned checkout is missing there, the
+suite fails rather than quietly skipping.
 
 ## Deploy
 
-Pushing to `main` runs `.github/workflows/deploy.yml`, which builds `apps/web` with `VITE_BASE=/<repo-name>/` and publishes to GitHub Pages (enable **Settings → Pages → Source: GitHub Actions** once). Deep links work via the `public/404.html` SPA fallback. The site is an installable PWA: after one visit, the entire curriculum works offline (live-data panels degrade gracefully).
+Pushing to `main` runs `.github/workflows/deploy.yml`, which builds `apps/web` with `VITE_BASE=/<repo-name>/` and publishes to GitHub Pages (enable **Settings → Pages → Source: GitHub Actions** once). The Lightning front door is published from its own repository, [hotpixelgroup/lightning4plebs](https://github.com/hotpixelgroup/lightning4plebs), which holds no source: its workflow checks *this* repository out and builds it with `VITE_SITE=lightning`. GitHub Pages serves one site per repository, which is the only reason that repo exists — and because it pulls a public repo, that deploy needs no tokens or deploy keys of any kind. It rebuilds on a schedule and on manual dispatch; this repository's own workflows build the Lightning site on every push as a check, so breakage is caught here first. Deep links work via an SPA fallback generated per site from `apps/web/404.template.html` (it carries each site's own og: tags, because that page is exactly what a crawler gets when someone shares a quest link). The site is an installable PWA: after one visit, the entire curriculum works offline (live-data panels degrade gracefully).
 
 ## Don't trust our server either
 

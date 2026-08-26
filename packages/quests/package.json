@@ -12,10 +12,19 @@
       "import": "./src/index.ts",
       "default": "./src/index.ts"
     },
+    "./sites": {
+      "@bitcoin4plebs/source": "./src/lib/sites.ts",
+      "types": "./dist/lib/sites.d.ts",
+      "import": "./src/lib/sites.ts",
+      "default": "./src/lib/sites.ts"
+    },
     "./package.json": "./package.json"
   },
   "nx": {
-    "tags": ["scope:shared", "type:data"]
+    "tags": [
+      "scope:shared",
+      "type:data"
+    ]
   },
   "dependencies": {}
 }

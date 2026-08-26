@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import type { Finale } from '@bitcoin4plebs/quests';
-import { quests } from '@bitcoin4plebs/quests';
+import { SITE, siteQuests } from '../lib/site';
 import { getRunner } from '../runners/registry';
 
-const DEFAULT_TITLE = "bitcoin4plebs · Don't trust. Verify.";
+const DEFAULT_TITLE = `${SITE.name} · ${SITE.tagline}`;
 
 /**
  * The sandbox: every quest finale's interactive machine on one page, free
@@ -122,14 +122,14 @@ const MACHINES: SandboxEntry[] = [
 
 export function SandboxPage() {
   useEffect(() => {
-    document.title = 'Sandbox · bitcoin4plebs';
+    document.title = `Sandbox · ${SITE.name}`;
     window.scrollTo(0, 0);
     return () => {
       document.title = DEFAULT_TITLE;
     };
   }, []);
 
-  const slugByNumber = new Map(quests.map((quest) => [quest.number, quest.slug]));
+  const slugByNumber = new Map(siteQuests.map((quest) => [quest.number, quest.slug]));
 
   return (
     <main className="wrap">
@@ -137,7 +137,7 @@ export function SandboxPage() {
         <div className="kicker">Poke at it. That's allowed.</div>
         <h1>The sandbox</h1>
         <p>
-          Every interactive machine from the quests, gathered on one page with no homework
+          Every interactive machine from the siteQuests, gathered on one page with no homework
           attached. Each one runs the <strong>real algorithm</strong> in your browser; each one
           links to the quest that shows you the source code behind it.
         </p>

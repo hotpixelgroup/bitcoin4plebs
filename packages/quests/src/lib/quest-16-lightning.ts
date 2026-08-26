@@ -2,12 +2,13 @@ import type { Quest } from './types.js';
 import { BITCOIN_PIN, BOLTS_PIN } from './excerpts.js';
 
 /**
- * Quest #16: Lightning. The curriculum's closing move: after fifteen
- * quests about what the chain writes down, one about what it doesn't
- * have to. Channels as tabs the chain enforces, the revocation script
- * quoted verbatim from the BOLT specifications (the site's THIRD
- * pinned repository), and a channel simulator that shows a thousand
- * coffees fitting into two on-chain transactions.
+ * Quest #16: Lightning — the doorway.
+ *
+ * After fifteen quests about what the chain writes down, one about what
+ * it doesn't have to. This quest is deliberately a complete, standalone
+ * answer AND a handoff: everything here is taken much further on the
+ * sibling site, lightning4plebs, which gives Lightning the same treatment
+ * this site gives Bitcoin Core. Keep the ending pointing there.
  */
 export const quest16: Quest = {
   id: 'quest-16',
@@ -17,7 +18,7 @@ export const quest16: Quest = {
   track: 'Beyond the chain',
   title: 'Where do a thousand coffees fit?',
   summary:
-    "Not on the chain, and that's the trick: open a tab secured by Bitcoin, pay a thousand times for free, settle twice. Lightning from primary sources, honest limits included.",
+    "Not on the chain, and that's the trick: open a tab secured by Bitcoin, pay a thousand times for free, settle twice. Lightning from primary sources, honest limits included — and the doorway to a whole site about it.",
   duration: '11 min',
   pin: BITCOIN_PIN,
   story: {
@@ -27,6 +28,7 @@ export const quest16: Quest = {
   intro: [
     "Quest #12 taught the hard truth: block space is ~4 million weight units every ten minutes, forever, and everyone on Earth bids for it. That auction is what keeps the base layer honest, and it's also why buying coffee on it will always be like settling a $3 debt by international wire: possible, secure, and absurd.",
     "The scaling wars (Quest #13's ancestors) offered one answer: bigger blocks, cheaper seats, heavier nodes, fewer verifiers. Bitcoin chose the other: **write less**. If two people will pay each other many times, they don't need the whole world to audit every round; they need the world to audit the *opening*, the *closing*, and to stand ready as the courtroom if either cheats. That idea is the Lightning Network, and this quest reads it from its actual specifications, the BOLTs, a **third pinned repository** verified letter for letter like everything else here.",
+    "One quest is enough to see the mechanism and judge the trade-offs honestly. It is not enough to see the whole system — the routing, the onions, the invoices, the failure modes. Those have a site of their own: [lightning4plebs](https://hotpixelgroup.github.io/lightning4plebs/), built the same way, from the same rules. This quest is the doorway; go through it whenever you're ready.",
   ],
   promise:
     "Every snippet below is copied verbatim from the pinned sources: Bitcoin Core at commit [18c05d9](https://github.com/bitcoin/bitcoin/commit/18c05d93016b28a9afd4c716dfe00b6e0accb30b) and the Lightning specifications (BOLTs) at commit [94eb038](https://github.com/lightning/bolts/commit/94eb038c42e664dd7862faeec6508ccd25f63ff8). Don't trust this page either: every stop links to the same lines on GitHub so you can check we didn't edit a word.",
@@ -187,7 +189,7 @@ export const quest16: Quest = {
   },
   recap: {
     tryIt:
-      "Next payment QR you meet in the wild, read its first letters before anything else: bc1 means an address, a seat in the on-chain auction; lnbc means a Lightning invoice, a tab. You now know exactly which ledger each one writes to, and what that costs.",
+      "Next payment QR you meet in the wild, read its first letters before anything else: bc1 means an address, a seat in the on-chain auction; lnbc means a Lightning invoice, a tab. You now know exactly which ledger each one writes to, and what that costs. (Curious what the rest of that lnbc string actually says? That is [lightning4plebs](https://hotpixelgroup.github.io/lightning4plebs/) Quest #3, and you can decode a real one there.)",
     items: [
       {
         text: '**Block space is deliberately scarce**, so scaling means writing less, not printing bigger pages: agreements above the chain, enforcement on it.',
@@ -205,7 +207,7 @@ export const quest16: Quest = {
       },
     ],
     closing:
-      "**Keep verifying:** this quest quoted a third pinned repository, and the promise never changed: letter for letter, link after link. Sixteen quests ago the ledger was a mystery someone else understood. Now you can read its constitution, audit its supply, hold its keys, and follow its money above the chain. There is nobody left you have to believe.",
+      "**Keep verifying:** this quest quoted a third pinned repository, and the promise never changed: letter for letter, link after link. Sixteen quests ago the ledger was a mystery someone else understood. Now you can read its constitution, audit its supply, hold its keys, and follow its money above the chain. There is nobody left you have to believe. **And this is a doorway, not a wall:** everything above is the first chapter of a much longer story: how a payment crosses strangers who never learn who you are, what is actually inside an `lnbc` invoice, where inbound liquidity comes from, and what happens when your channel partner vanishes. That story has its own site, built exactly like this one — the specifications quoted letter for letter, a real node's source beside them, and tools graded by the spec's own published test vectors. Walk through: **[lightning4plebs](https://hotpixelgroup.github.io/lightning4plebs/)**.",
   },
   feynman: {
     prompt: 'Explain to a friend how two people can pay each other a thousand times while the blockchain only sees two transactions, in three sentences.',

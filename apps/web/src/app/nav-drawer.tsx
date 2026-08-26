@@ -1,7 +1,15 @@
 import { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { groupQuestsByTrack, quests } from '@bitcoin4plebs/quests';
+import { groupQuestsByTrack } from '@bitcoin4plebs/quests';
+import { SITE, siteQuests } from '../lib/site';
 import { useVerifiedQuests } from '../lib/progress';
+
+/** The brandless reference pages, rendered only where the site offers them. */
+const REFERENCE_LINKS = [
+  { to: '/core-vs-knots', icon: '⑂', label: 'Core vs. Knots · which node?' },
+  { to: '/wallets', icon: '⚷', label: 'Wallets · who holds your keys?' },
+  { to: '/security', icon: '🛡', label: 'Keep it safe · security playbook' },
+] as const;
 
 export interface NavDrawerProps {
   open: boolean;
@@ -31,7 +39,7 @@ export function NavDrawer({ open, onClose }: NavDrawerProps) {
     return () => window.removeEventListener('keydown', onKey);
   }, [open, onClose]);
 
-  const groups = groupQuestsByTrack(quests);
+  const groups = groupQuestsByTrack(siteQuests);
   const linkClass = (to: string) =>
     `drawer-link ${location.pathname === to ? 'drawer-link-active' : ''}`;
   const current = (to: string) => (location.pathname === to ? ('page' as const) : undefined);
@@ -42,7 +50,9 @@ export function NavDrawer({ open, onClose }: NavDrawerProps) {
       <aside className={`drawer ${open ? 'drawer-open' : ''}`} aria-label="Site navigation" aria-hidden={!open}>
         <div className="drawer-head">
           <span className="drawer-title">
-            bitcoin<span className="logo-4">4</span>plebs
+            {SITE.brand.pre}
+            <span className="logo-4">{SITE.brand.accent}</span>
+            {SITE.brand.post}
           </span>
           <button className="drawer-close" onClick={onClose} aria-label="Close navigation">
             ✕
@@ -85,22 +95,17 @@ export function NavDrawer({ open, onClose }: NavDrawerProps) {
             <span className="drawer-link-num">↻</span>
             <span>Daily review · five minutes</span>
           </Link>
-          <Link
-            to="/core-vs-knots"
-            className={linkClass('/core-vs-knots')}
-            aria-current={current('/core-vs-knots')}
-          >
-            <span className="drawer-link-num">⑂</span>
-            <span>Core vs. Knots · which node?</span>
-          </Link>
-          <Link to="/wallets" className={linkClass('/wallets')} aria-current={current('/wallets')}>
-            <span className="drawer-link-num">⚷</span>
-            <span>Wallets · who holds your keys?</span>
-          </Link>
-          <Link to="/security" className={linkClass('/security')} aria-current={current('/security')}>
-            <span className="drawer-link-num">🛡</span>
-            <span>Keep it safe · security playbook</span>
-          </Link>
+          {REFERENCE_LINKS.filter((link) => SITE.referencePages.includes(link.to)).map((link) => (
+            <Link
+              key={link.to}
+              to={link.to}
+              className={linkClass(link.to)}
+              aria-current={current(link.to)}
+            >
+              <span className="drawer-link-num">{link.icon}</span>
+              <span>{link.label}</span>
+            </Link>
+          ))}
           <Link to="/glossary" className={linkClass('/glossary')} aria-current={current('/glossary')}>
             <span className="drawer-link-num">§</span>
             <span>Glossary</span>

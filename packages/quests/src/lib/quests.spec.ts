@@ -1,10 +1,11 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { OVERRIDE_PINS } from './excerpts.js';
-import { GLOSSARY_CATEGORIES, glossary } from './glossary.js';
+import { BITCOIN_PIN, OVERRIDE_PINS } from './excerpts.js';
+import { GLOSSARY_CATEGORIES, glossary, glossaryForSite } from './glossary.js';
 import { entryPaths, prerequisites } from './paths.js';
-import { quests } from './registry.js';
+import { quests, questsForSite, siteOf } from './registry.js';
+import { SITE_IDS, sites } from './sites.js';
 
 /**
  * Integrity tests for quest content. The second block is the important
@@ -16,10 +17,26 @@ import { quests } from './registry.js';
  */
 
 describe('quest content integrity', () => {
-  it('has unique ids, slugs, and sequential numbers', () => {
+  it('has globally unique ids and slugs', () => {
+    // Slugs must be unique across BOTH front doors: one router serves both.
     expect(new Set(quests.map((q) => q.id)).size).toBe(quests.length);
     expect(new Set(quests.map((q) => q.slug)).size).toBe(quests.length);
-    quests.forEach((q, i) => expect(q.number).toBe(quests[0].number + i));
+  });
+
+  it('numbers each site\'s curriculum sequentially, from its own start', () => {
+    for (const site of SITE_IDS) {
+      const curriculum = questsForSite(site);
+      if (!curriculum.length) continue;
+      curriculum.forEach((q, i) =>
+        expect(q.number, `${site} ${q.id}`).toBe(curriculum[0].number + i)
+      );
+    }
+  });
+
+  it('declares every quest against a site that exists', () => {
+    for (const quest of quests) {
+      expect(SITE_IDS, quest.id).toContain(siteOf(quest));
+    }
   });
 
   it('every excerpt’s lines match its declared line range, in order', () => {
@@ -37,10 +54,17 @@ describe('quest content integrity', () => {
     }
   });
 
-  it('every quest shares the same pinned commit', () => {
-    for (const quest of quests) {
-      expect(quest.pin.commit).toMatch(/^[0-9a-f]{40}$/);
-      expect(quest.pin.commit).toBe(quests[0].pin.commit);
+  it('pins every quest on a site to that site\'s one primary commit', () => {
+    const declared = [BITCOIN_PIN, ...OVERRIDE_PINS].map((p) => p.commit);
+    for (const site of SITE_IDS) {
+      const curriculum = questsForSite(site);
+      for (const quest of curriculum) {
+        expect(quest.pin.commit, quest.id).toMatch(/^[0-9a-f]{40}$/);
+        // A site speaks with one primary voice; other repos come in as
+        // per-excerpt pin overrides, checked just as strictly.
+        expect(quest.pin.commit, quest.id).toBe(curriculum[0].pin.commit);
+        expect(declared, `${quest.id} pins an undeclared commit`).toContain(quest.pin.commit);
+      }
     }
   });
 
@@ -80,15 +104,21 @@ describe('quiz and myth integrity', () => {
 });
 
 describe('story thread integrity', () => {
-  it('every quest carries a chapter with a unique stage label', () => {
-    const stages = quests.map((q) => q.story?.stage);
-    for (const [i, stage] of stages.entries()) {
-      expect(stage, quests[i].id).toBeTruthy();
-      expect((stage as string).length, quests[i].id).toBeLessThanOrEqual(20);
-    }
-    expect(new Set(stages).size).toBe(quests.length);
+  it('every quest carries a chapter with a stage label', () => {
     for (const quest of quests) {
+      expect(quest.story?.stage, quest.id).toBeTruthy();
+      expect((quest.story?.stage as string).length, quest.id).toBeLessThanOrEqual(20);
       expect(quest.story?.text.length, quest.id).toBeGreaterThan(80);
+    }
+  });
+
+  it('runs one story per site, with no repeated stage inside it', () => {
+    // Each front door follows its own running payment, so a stage label
+    // only has to be unique within its own story — the journey rail is
+    // built from one site's quests, never from both.
+    for (const site of SITE_IDS) {
+      const stages = questsForSite(site).map((q) => q.story?.stage);
+      expect(new Set(stages).size, `${site} repeats a story stage`).toBe(stages.length);
     }
   });
 });
@@ -103,36 +133,85 @@ describe('try-it-in-the-wild integrity', () => {
 });
 
 describe('entry paths and prerequisites integrity', () => {
-  const numbers = new Set(quests.map((q) => q.number));
+  const numbersFor = (site: (typeof SITE_IDS)[number]) =>
+    new Set(questsForSite(site).map((q) => q.number));
 
-  it('every entry path names three real quests and a unique id', () => {
+  it('every entry path names three real quests on its own site', () => {
     expect(new Set(entryPaths.map((p) => p.id)).size).toBe(entryPaths.length);
     for (const path of entryPaths) {
+      const site = path.site ?? 'bitcoin';
+      const numbers = numbersFor(site);
       expect(path.questNumbers.length, path.id).toBe(3);
       for (const n of path.questNumbers) {
-        expect(numbers.has(n), `${path.id} → Quest #${n}`).toBe(true);
+        expect(numbers.has(n), `${path.id} → ${site} Quest #${n}`).toBe(true);
       }
       expect(path.blurb.length, path.id).toBeGreaterThan(40);
     }
   });
 
-  it('prerequisites reference only real quests, never themselves', () => {
-    for (const [quest, deps] of Object.entries(prerequisites)) {
-      const n = Number(quest);
-      expect(numbers.has(n), `Quest #${quest}`).toBe(true);
-      for (const dep of deps) {
-        expect(numbers.has(dep), `Quest #${quest} → #${dep}`).toBe(true);
-        expect(dep, `Quest #${quest} depends on itself`).not.toBe(n);
+  it('prerequisites reference only real quests on the same site, never themselves', () => {
+    for (const site of SITE_IDS) {
+      const numbers = numbersFor(site);
+      for (const [quest, deps] of Object.entries(prerequisites[site])) {
+        const n = Number(quest);
+        expect(numbers.has(n), `${site} Quest #${quest}`).toBe(true);
+        for (const dep of deps) {
+          expect(numbers.has(dep), `${site} Quest #${quest} → #${dep}`).toBe(true);
+          expect(dep, `${site} Quest #${quest} depends on itself`).not.toBe(n);
+        }
       }
     }
   });
 });
 
+describe('site configuration integrity', () => {
+  it('declares a config for every site, keyed by its own id', () => {
+    for (const site of SITE_IDS) {
+      expect(sites[site].id, site).toBe(site);
+      expect(sites[site].repo.length, site).toBeGreaterThan(0);
+      expect(sites[site].hero.blurb.length, site).toBeGreaterThan(80);
+    }
+  });
+
+  it('gives every track a home-page blurb, and every blurb a track', () => {
+    for (const site of SITE_IDS) {
+      const used = new Set(questsForSite(site).map((q) => q.track ?? 'Foundations'));
+      for (const track of used) {
+        expect(sites[site].trackBlurbs[track], `${site} track "${track}" has no blurb`).toBeTruthy();
+      }
+      // The reverse: a blurb for a track no quest uses is dead copy.
+      for (const track of Object.keys(sites[site].trackBlurbs)) {
+        if (!questsForSite(site).length) continue;
+        expect(used.has(track), `${site} blurb for unused track "${track}"`).toBe(true);
+      }
+    }
+  });
+
+  it('points each site at the other one', () => {
+    for (const site of SITE_IDS) {
+      const sibling = sites[site].sibling;
+      expect(sibling.id, site).not.toBe(site);
+      expect(sites[sibling.id].name, site).toBe(sibling.name);
+      expect(sibling.url, site).toMatch(/^https:\/\//);
+    }
+  });
+});
+
 describe('glossary integrity', () => {
-  it('has unique terms with non-empty definitions', () => {
-    expect(new Set(glossary.map((e) => e.term)).size).toBe(glossary.length);
+  it('has non-empty definitions', () => {
     for (const entry of glossary) {
       expect(entry.definition.length, entry.term).toBeGreaterThan(40);
+    }
+  });
+
+  it('defines each term exactly once on each site', () => {
+    // A term may appear twice in the source — once per front door — so that
+    // each reader is sent to the proof on their own site. What must never
+    // happen is the same reader seeing a term defined twice.
+    for (const site of SITE_IDS) {
+      const terms = glossaryForSite(site).map((e) => e.term);
+      const seen = new Set(terms);
+      expect([...seen].length, `${site} defines a term more than once`).toBe(terms.length);
     }
   });
 
@@ -149,11 +228,19 @@ describe('glossary integrity', () => {
     }
   });
 
-  it('cross-links only to quests that exist', () => {
-    const numbers = new Set(quests.map((q) => q.number));
+  it('cross-links only to quests that exist, on the site it names', () => {
     for (const entry of glossary) {
-      if (entry.quest !== undefined) {
-        expect(numbers.has(entry.quest), `${entry.term} → Quest #${entry.quest}`).toBe(true);
+      if (entry.quest === undefined) continue;
+      const site = entry.questSite ?? 'bitcoin';
+      const numbers = new Set(questsForSite(site).map((q) => q.number));
+      expect(numbers.has(entry.quest), `${entry.term} → ${site} Quest #${entry.quest}`).toBe(true);
+    }
+  });
+
+  it('never restricts an entry to one site while citing the other', () => {
+    for (const entry of glossary) {
+      if (entry.site && entry.questSite && entry.site !== entry.questSite) {
+        throw new Error(`${entry.term} is ${entry.site}-only but cites a ${entry.questSite} quest`);
       }
     }
   });
@@ -164,6 +251,7 @@ const SRC_ENV: Record<string, string | undefined> = {
   'bitcoin/bitcoin': process.env['BITCOIN_SRC'],
   'bitcoin/bips': process.env['BIPS_SRC'],
   'lightning/bolts': process.env['BOLTS_SRC'],
+  'lightningnetwork/lnd': process.env['LND_SRC'],
 };
 const available = (repo: string) => {
   const dir = SRC_ENV[repo];
@@ -191,10 +279,10 @@ describe.skipIf(!srcAvailable)('excerpts are VERBATIM from their pinned sources'
       for (const stop of quest.stops) {
         if (!stop.excerpt) continue;
         const { ref, lines, pin } = stop.excerpt;
-        const repo = pin?.repo ?? 'bitcoin/bitcoin';
-        // Locally the non-Core checkouts are optional; the CI guard above
-        // makes them mandatory where it matters.
-        if (repo !== 'bitcoin/bitcoin' && !available(repo)) continue;
+        const repo = pin?.repo ?? quest.pin.repo;
+        // Locally any checkout may be absent; the CI guard above makes them
+        // all mandatory where it matters.
+        if (!available(repo)) continue;
         const filePath = join(SRC_ENV[repo] as string, ref.file);
         const source = readFileSync(filePath, 'utf8').split('\n');
         for (const line of lines) {

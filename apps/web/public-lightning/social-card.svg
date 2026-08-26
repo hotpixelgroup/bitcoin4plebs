@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <radialGradient id="glow" cx="0.18" cy="0.12" r="0.9">
+      <stop offset="0" stop-color="#8b5cf6" stop-opacity="0.13"/>
+      <stop offset="0.5" stop-color="#8b5cf6" stop-opacity="0.03"/>
+      <stop offset="1" stop-color="#8b5cf6" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="cardline" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#8b5cf6" stop-opacity="0.0"/>
+      <stop offset="0.35" stop-color="#8b5cf6" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#8b5cf6" stop-opacity="0.0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- background -->
+  <rect width="1200" height="630" fill="#0b0b0a"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <rect x="0" y="626" width="1200" height="4" fill="#8b5cf6"/>
+  <rect x="0" y="0" width="1200" height="2" fill="url(#cardline)"/>
+
+  <!-- logo mark: the bolt on the brand tile (matches the favicon exactly, scaled 2.375x from its 32px source) -->
+  <g transform="translate(64,58) scale(2.375)">
+    <rect width="32" height="32" rx="7" fill="#8b5cf6"/>
+    <path fill="#fff" d="M18.6 3.5 L7.4 17.4 h5.9 l-1.9 11.1 L24.6 14.2 h-6.2 z"/>
+  </g>
+
+  <!-- wordmark -->
+  <text x="164" y="102" font-family="Helvetica Neue, Arial, sans-serif" font-size="42" font-weight="800" letter-spacing="-1" fill="#f6f5f1">lightning<tspan fill="#8b5cf6" font-family="Menlo, monospace" font-weight="700">4</tspan>plebs</text>
+  <text x="166" y="130" font-family="Menlo, monospace" font-size="15" letter-spacing="4.5" fill="#908e86">DON'T TRUST. VERIFY.</text>
+
+  <!-- headline -->
+  <text x="64" y="266" font-family="Helvetica Neue, Arial, sans-serif" font-size="52" font-weight="800" letter-spacing="-1.5" fill="#f6f5f1">Understand Lightning.</text>
+  <text x="64" y="336" font-family="Helvetica Neue, Arial, sans-serif" font-size="52" font-weight="800" letter-spacing="-1.5" fill="#f6f5f1">From the specification, <tspan fill="#8b5cf6">not the marketing.</tspan></text>
+
+  <!-- subline -->
+  <text x="64" y="398" font-family="Helvetica Neue, Arial, sans-serif" font-size="24" fill="#c6c4b9">Read the real specs. Run their own test vectors. Take nobody's word for it.</text>
+
+  <!-- mini code card -->
+  <g transform="translate(64,442)">
+    <rect x="0" y="0" width="1072" height="118" rx="16" fill="#111110" stroke="rgba(255,255,255,0.14)" stroke-width="1.5"/>
+    <rect x="0" y="0" width="1072" height="38" rx="16" fill="#161615"/>
+    <rect x="0" y="22" width="1072" height="16" fill="#161615"/>
+    <line x1="0" y1="38" x2="1072" y2="38" stroke="rgba(255,255,255,0.1)"/>
+    <text x="20" y="25" font-family="Menlo, monospace" font-size="14" fill="#c6c4b9">03-transactions.md · lines 113–126 · pinned @ 94eb038</text>
+    <text x="978" y="25" font-family="Menlo, monospace" font-size="12" font-weight="bold" letter-spacing="1" fill="#2fbf4f">REAL SPEC</text>
+
+    <text x="20" y="64" font-family="Menlo, monospace" font-size="16" fill="#55534e">117</text>
+    <text x="76" y="64" font-family="Menlo, monospace" font-size="16" fill="#e8e6df">OP_IF</text>
+
+    <rect x="6" y="74" width="1060" height="26" fill="rgba(139,92,246,0.10)"/>
+    <rect x="6" y="74" width="4" height="26" fill="#8b5cf6"/>
+    <text x="20" y="92" font-family="Menlo, monospace" font-size="16" fill="#55534e">118</text>
+    <text x="76" y="92" font-family="Menlo, monospace" font-size="16" fill="#e8e6df">    # Penalty transaction  <tspan fill="#908e86">// cheating costs everything</tspan></text>
+  </g>
+
+  <!-- stats row -->
+  <text x="64" y="600" font-family="Menlo, monospace" font-size="17" fill="#908e86">5 quests · the BOLTs quoted verbatim · <tspan fill="#8b5cf6">our cryptography graded by the spec&apos;s own test vectors</tspan></text>
+</svg>

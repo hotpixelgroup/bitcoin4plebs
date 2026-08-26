@@ -4,11 +4,15 @@ import { AddressXray } from './address/address-xray';
 import { ChannelSimulator } from './lightning/channel-simulator';
 import { ClusterDetective } from './privacy/cluster-detective';
 import { DoubleSpend } from './doublespend/double-spend';
+import { RevocationForge } from './revocation/revocation-forge';
 import { RewriteCost } from './rewrite/rewrite-cost';
 import { EmissionRunner } from './emission/emission-runner';
 import { FeeAuction } from './feemarket/fee-auction';
 import { ForkYourself } from './fork/fork-yourself';
 import { GenesisHash } from './genesis/genesis-hash';
+import { HtlcRelay } from './htlc/htlc-relay';
+import { InvoiceDecoder } from './invoice/invoice-decoder';
+import { OnionLab } from './onion/onion-lab';
 import { HalvingClock } from './halving/halving-clock';
 import { GuessTheKey } from './keyspace/guess-the-key';
 import { MineABlock } from './mining/mine-a-block';
@@ -45,6 +49,10 @@ const runners: Record<string, ComponentType<RunnerProps>> = {
   'seed-studio': SeedStudio,
   'cluster-detective': ClusterDetective,
   'channel-simulator': ChannelSimulator,
+  'revocation-forge': RevocationForge,
+  'invoice-decoder': InvoiceDecoder,
+  'htlc-relay': HtlcRelay,
+  'onion-lab': OnionLab,
   'double-spend': DoubleSpend,
   'rewrite-cost': RewriteCost,
 };

@@ -1,4 +1,5 @@
 import type { Quest } from './types.js';
+import type { SiteId } from './sites.js';
 import { quest00 } from './quest-00-ledger.js';
 import { quest01 } from './quest-01-21m-cap.js';
 import { quest02 } from './quest-02-halving.js';
@@ -18,6 +19,11 @@ import { quest15 } from './quest-15-privacy.js';
 import { quest16 } from './quest-16-lightning.js';
 import { quest17 } from './quest-17-why-money.js';
 import { quest18 } from './quest-18-energy.js';
+import { questLn01 } from './quest-ln-01-the-channel.js';
+import { questLn02 } from './quest-ln-02-revocation.js';
+import { questLn03 } from './quest-ln-03-invoice.js';
+import { questLn04 } from './quest-ln-04-htlc.js';
+import { questLn05 } from './quest-ln-05-onion.js';
 
 /**
  * The quest registry, in curriculum order — each quest builds on the
@@ -45,8 +51,27 @@ export const quests: Quest[] = [
   quest16,
   quest17,
   quest18,
+  // lightning4plebs. Numbering restarts here: these are Lightning #1, #2…
+  questLn01,
+  questLn02,
+  questLn03,
+  questLn04,
+  questLn05,
 ];
 
 export function getQuestBySlug(slug: string): Quest | undefined {
   return quests.find((q) => q.slug === slug);
+}
+
+/** Which site a quest belongs to; quests written before the split are Bitcoin's. */
+export function siteOf(quest: Quest): SiteId {
+  return quest.site ?? 'bitcoin';
+}
+
+/**
+ * The curriculum for one front door, in order. Slugs stay globally unique
+ * so the router never has to care which site it is serving.
+ */
+export function questsForSite(site: SiteId): Quest[] {
+  return quests.filter((quest) => siteOf(quest) === site);
 }

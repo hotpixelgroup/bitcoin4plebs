@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Callout, RichText } from '@bitcoin4plebs/ui';
+import { SITE } from '../lib/site';
 
-const DEFAULT_TITLE = "bitcoin4plebs · Don't trust. Verify.";
+const DEFAULT_TITLE = `${SITE.name} · ${SITE.tagline}`;
 
 interface CompareRow {
   aspect: string;
@@ -55,7 +56,7 @@ const ROWS: CompareRow[] = [
  */
 export function CoreVsKnotsPage() {
   useEffect(() => {
-    document.title = 'Core vs. Knots · bitcoin4plebs';
+    document.title = `Core vs. Knots · ${SITE.name}`;
     return () => {
       document.title = DEFAULT_TITLE;
     };

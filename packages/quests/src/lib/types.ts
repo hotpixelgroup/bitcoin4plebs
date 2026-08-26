@@ -1,3 +1,5 @@
+import type { SiteId } from './sites.js';
+
 /**
  * The quest content model.
  *
@@ -38,8 +40,12 @@ export interface CodeLine {
 /** A verbatim code excerpt with provenance. */
 export interface CodeExcerpt {
   ref: SourceRef;
-  /** 'text' is for non-code sources (e.g. a BIP document) — no highlighting. */
-  language: 'cpp' | 'ts' | 'text';
+  /**
+   * 'text' is for non-code sources (specification documents) — no
+   * highlighting. 'go' arrived with Lightning: the BOLTs are the authority,
+   * but a real node implementing them is what makes them concrete.
+   */
+  language: 'cpp' | 'ts' | 'go' | 'text';
   lines: CodeLine[];
   /**
    * Pin override for excerpts quoted from a repo other than the quest's own
@@ -141,6 +147,12 @@ export interface RecapItem {
 export interface Quest {
   /** Stable id, e.g. "quest-01". */
   id: string;
+  /**
+   * Which front door this quest appears on. Absent means 'bitcoin', so
+   * every pre-existing quest keeps its meaning untouched. Numbering runs
+   * sequentially WITHIN a site, not across the whole registry.
+   */
+  site?: SiteId;
   /** URL slug, e.g. "verify-the-21-million-cap". */
   slug: string;
   number: number;

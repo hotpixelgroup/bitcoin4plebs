@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { glossary, questions, quests } from '@bitcoin4plebs/quests';
+import { siteGlossary, siteQuestions, siteQuests } from '../lib/site';
 
 /**
  * Site-wide search: one client-side index over quest titles, stops, and
- * the whole glossary, opened with the header button, "/" or Cmd/Ctrl-K.
+ * the whole siteGlossary, opened with the header button, "/" or Cmd/Ctrl-K.
  * A newbie who only knows the words "private key" gets a way in without
  * reading everything.
  */
@@ -18,14 +18,14 @@ interface Hit {
 }
 
 const INDEX: Hit[] = [
-  ...quests.map((quest): Hit => ({
+  ...siteQuests.map((quest): Hit => ({
     kind: 'quest',
     title: `Quest #${quest.number}: ${quest.title}`,
     detail: quest.summary,
     to: `/quests/${quest.slug}`,
     haystack: `${quest.title} ${quest.summary}`.toLowerCase(),
   })),
-  ...quests.flatMap((quest) =>
+  ...siteQuests.flatMap((quest) =>
     quest.stops.map((stop): Hit => ({
       kind: 'stop',
       title: stop.title,
@@ -34,14 +34,14 @@ const INDEX: Hit[] = [
       haystack: `${stop.title} ${stop.takeaway}`.toLowerCase(),
     }))
   ),
-  ...questions.map((q): Hit => ({
+  ...siteQuestions.map((q): Hit => ({
     kind: 'question',
     title: q.question,
     detail: q.short.replace(/\*\*|\*|`/g, '').slice(0, 110),
     to: q.stop ? `/quests/${q.slug}#${q.stop}` : `/quests/${q.slug}`,
     haystack: `${q.question} ${q.short}`.toLowerCase(),
   })),
-  ...glossary.map((entry): Hit => ({
+  ...siteGlossary.map((entry): Hit => ({
     kind: 'term',
     title: entry.term,
     detail: entry.definition.replace(/\*\*|\*|`/g, '').slice(0, 110),
@@ -102,7 +102,7 @@ export function SiteSearch({ open, onClose }: { open: boolean; onClose: () => vo
           ref={inputRef}
           className="search-input"
           type="search"
-          placeholder="Search quests, stops, and the glossary…"
+          placeholder="Search siteQuests, stops, and the siteGlossary…"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />

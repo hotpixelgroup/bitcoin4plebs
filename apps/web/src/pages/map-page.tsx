@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { groupQuestsByTrack, prerequisites, quests } from '@bitcoin4plebs/quests';
+import { groupQuestsByTrack } from '@bitcoin4plebs/quests';
+import { SITE, sitePrerequisites, siteQuests } from '../lib/site';
 import { useVerifiedQuests } from '../lib/progress';
 
-const DEFAULT_TITLE = "bitcoin4plebs · Don't trust. Verify.";
+const DEFAULT_TITLE = `${SITE.name} · ${SITE.tagline}`;
 
 interface Edge {
   x1: number;
@@ -21,7 +22,7 @@ interface Edge {
  */
 export function MapPage() {
   useEffect(() => {
-    document.title = 'The map · bitcoin4plebs';
+    document.title = `The map · ${SITE.name}`;
     return () => {
       document.title = DEFAULT_TITLE;
     };
@@ -29,16 +30,16 @@ export function MapPage() {
 
   const { verified } = useVerifiedQuests();
   const [sel, setSel] = useState<number | null>(null);
-  const groups = groupQuestsByTrack(quests);
-  const selected = sel !== null ? quests.find((q) => q.number === sel) : undefined;
-  const deps = sel !== null ? (prerequisites[sel] ?? []) : [];
+  const groups = groupQuestsByTrack(siteQuests);
+  const selected = sel !== null ? siteQuests.find((q) => q.number === sel) : undefined;
+  const deps = sel !== null ? (sitePrerequisites[sel] ?? []) : [];
   const unlocks =
     sel !== null
-      ? Object.entries(prerequisites)
+      ? Object.entries(sitePrerequisites)
           .filter(([, d]) => d.includes(sel))
           .map(([n]) => Number(n))
       : [];
-  const doneCount = quests.filter((q) => verified[q.slug]).length;
+  const doneCount = siteQuests.filter((q) => verified[q.slug]).length;
 
   const pillClass = (n: number, isVerified: boolean) =>
     [
@@ -51,9 +52,9 @@ export function MapPage() {
       .filter(Boolean)
       .join(' ');
 
-  const questRef = (n: number) => quests.find((q) => q.number === n);
+  const questRef = (n: number) => siteQuests.find((q) => q.number === n);
 
-  // Draw dependency edges from the selected node to its prerequisites and
+  // Draw dependency edges from the selected node to its sitePrerequisites and
   // successors, computed from live pill positions so it survives wrapping
   // and resize. jsdom returns zeroed rects, which harmlessly yields no edges.
   const gridRef = useRef<HTMLDivElement>(null);
@@ -67,7 +68,7 @@ export function MapPage() {
   }, []);
 
   // Depends only on `sel`: deps/unlocks are recomputed inside from the
-  // stable `prerequisites` import so this callback is stable across
+  // stable `sitePrerequisites` import so this callback is stable across
   // renders, and the layout effect below fires only when selection
   // changes (not every render, which would loop on setState).
   const computeEdges = useCallback(() => {
@@ -76,8 +77,8 @@ export function MapPage() {
       setEdges([]);
       return;
     }
-    const depNums = prerequisites[sel] ?? [];
-    const unlockNums = Object.entries(prerequisites)
+    const depNums = sitePrerequisites[sel] ?? [];
+    const unlockNums = Object.entries(sitePrerequisites)
       .filter(([, d]) => d.includes(sel))
       .map(([n]) => Number(n));
     const base = grid.getBoundingClientRect();
@@ -123,7 +124,7 @@ export function MapPage() {
           Every quest opens from the menu at any time; nothing is locked. This map shows the{' '}
           <strong>structure</strong>: tap any quest to see what it builds on and what it leads
           into. Your ✓ marks are the ones you've verified with your own eyes
-          {doneCount > 0 ? ` (${doneCount} of ${quests.length} so far)` : ''}.
+          {doneCount > 0 ? ` (${doneCount} of ${siteQuests.length} so far)` : ''}.
         </p>
         <p className="map-legend" aria-hidden="true">
           <span className="map-key map-key-done">verified</span>
@@ -190,7 +191,7 @@ export function MapPage() {
                   .
                 </>
               ) : (
-                'Starts from zero: no prerequisites, no jargon.'
+                'Starts from zero: no sitePrerequisites, no jargon.'
               )}{' '}
               {unlocks.length > 0 && (
                 <>

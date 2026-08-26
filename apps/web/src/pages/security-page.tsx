@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Callout, RichText } from '@bitcoin4plebs/ui';
+import { SITE } from '../lib/site';
 
-const DEFAULT_TITLE = "bitcoin4plebs · Don't trust. Verify.";
+const DEFAULT_TITLE = `${SITE.name} · ${SITE.tagline}`;
 
 interface Tier {
   level: number;
@@ -213,7 +214,7 @@ function MultisigDiagram() {
  */
 export function SecurityPage() {
   useEffect(() => {
-    document.title = 'Wallet security · bitcoin4plebs';
+    document.title = `Wallet security · ${SITE.name}`;
     return () => {
       document.title = DEFAULT_TITLE;
     };

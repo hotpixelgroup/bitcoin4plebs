@@ -7,6 +7,8 @@ export default [
   {
     ignores: [
       '**/dist',
+      // The second front door's build output (VITE_SITE=lightning).
+      '**/dist-*',
       '**/vite.config.*.timestamp*',
       '**/vitest.config.*.timestamp*',
       '**/test-output',

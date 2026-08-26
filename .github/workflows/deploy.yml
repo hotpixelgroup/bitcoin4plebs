@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Deploy
 
 on:
   push:
@@ -17,6 +17,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # bitcoin4plebs: this repository's own GitHub Pages site.
   build:
     runs-on: ubuntu-latest
     steps:
@@ -47,3 +48,25 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+
+  # lightning4plebs is published from its own repository, which builds THIS
+  # source with VITE_SITE=lightning. GitHub Pages serves one site per repo,
+  # so the sibling repo exists purely to host the second front door — and
+  # because it pulls a public repo, that deploy needs no credentials at all.
+  # This job only proves the Lightning build still works before we ship.
+  lightning-build-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: 'npm'
+
+      - run: npm ci
+
+      - run: npx nx build web
+        env:
+          VITE_SITE: lightning
+          VITE_BASE: /lightning4plebs/

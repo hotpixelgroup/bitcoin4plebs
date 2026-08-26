@@ -1,17 +1,18 @@
 import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import type { Quest } from '@bitcoin4plebs/quests';
-import { quests } from '@bitcoin4plebs/quests';
+import { SITE, siteQuests } from '../lib/site';
 import { RichText } from '@bitcoin4plebs/ui';
 
-/** All quests carrying a story chapter, in curriculum order. */
-const CHAPTERS = quests.filter(
+/** All siteQuests carrying a story chapter, in curriculum order. */
+const CHAPTERS = siteQuests.filter(
   (quest): quest is Quest & { story: NonNullable<Quest['story']> } => quest.story !== undefined
 );
 
 /**
- * The running story: one payment (Ana buys Bo's bike for 0.6 BTC)
- * followed through the entire curriculum. Each quest page shows where
+ * The running story: one payment followed through the entire curriculum
+ * (Ana buys Bo's bike on bitcoin4plebs; Tomas runs a tab at Mira's coffee
+ * cart on lightning4plebs). The cast and label come from the site config. Each quest page shows where
  * the payment is now, on a journey rail whose stages double as
  * navigation. One continuous story through every quest.
  */
@@ -31,14 +32,14 @@ export function StoryStrip({ quest }: { quest: Quest }) {
   if (!quest.story || index === -1) return null;
 
   return (
-    <aside className="story" aria-label="Ana pays Bo: the running story">
+    <aside className="story" aria-label={`${SITE.story.label}: the running story`}>
       <div className="story-head">
         <span className="story-badge">
           <span className="story-cast" aria-hidden="true">
-            <span className="story-avatar story-avatar-ana">A</span>
-            <span className="story-avatar story-avatar-bo">B</span>
+            <span className="story-avatar story-avatar-a">{SITE.story.cast[0]}</span>
+            <span className="story-avatar story-avatar-b">{SITE.story.cast[1]}</span>
           </span>
-          ana pays bo
+          {SITE.story.label}
         </span>
         <span className="story-chapter">
           chapter {index + 1} of {CHAPTERS.length}

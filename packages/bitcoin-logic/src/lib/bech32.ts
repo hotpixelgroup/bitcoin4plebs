@@ -66,17 +66,31 @@ export interface Bech32Error {
   errorAt?: number;
 }
 
+export interface Bech32Options {
+  /**
+   * The 90-character ceiling is a BIP-173 rule for ADDRESSES, chosen so a
+   * QR code stays small and the checksum's error-detection guarantees
+   * hold. Other users of the same encoding lift it — BOLT #11 invoices
+   * are bech32 with no length limit at all — so it is a parameter, not a
+   * law of the encoding.
+   */
+  maxLength?: number;
+}
+
 /** Split, charset-map, and checksum-verify a bech32/bech32m string. */
-export function decodeBech32(input: string): Bech32Decoded | Bech32Error {
-  if (input.length > 90) return { ok: false, error: 'Too long: bech32 strings max out at 90 characters.' };
+export function decodeBech32(input: string, options: Bech32Options = {}): Bech32Decoded | Bech32Error {
+  const maxLength = options.maxLength ?? 90;
+  if (input.length > maxLength) {
+    return { ok: false, error: `Too long: bech32 strings max out at ${maxLength} characters.` };
+  }
   const hasLower = /[a-z]/.test(input);
   const hasUpper = /[A-Z]/.test(input);
   if (hasLower && hasUpper) {
-    return { ok: false, error: 'Mixed case — an address must be all-lower or all-upper, never both.' };
+    return { ok: false, error: 'Mixed case — a bech32 string must be all-lower or all-upper, never both.' };
   }
   const str = input.toLowerCase();
   const sep = str.lastIndexOf('1');
-  if (sep === -1) return { ok: false, error: 'No separator: every bech32 address contains a "1" between prefix and data.' };
+  if (sep === -1) return { ok: false, error: 'No separator: every bech32 string contains a "1" between prefix and data.' };
   if (sep === 0) return { ok: false, error: 'Empty human-readable part before the "1" separator.' };
   const hrp = str.slice(0, sep);
   const dataPart = str.slice(sep + 1);
@@ -95,7 +109,7 @@ export function decodeBech32(input: string): Bech32Decoded | Bech32Error {
   }
   const encoding = verifyChecksum(hrp, values);
   if (!encoding) {
-    return { ok: false, error: 'Checksum failed — at least one character of this address is wrong.' };
+    return { ok: false, error: 'Checksum failed — at least one character here is wrong.' };
   }
   return { ok: true, hrp, payload: values.slice(0, -6), encoding };
 }

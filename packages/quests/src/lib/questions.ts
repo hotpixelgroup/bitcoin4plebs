@@ -4,7 +4,11 @@
  * with code rather than assurances. Serializable data, like everything.
  */
 
+import type { SiteId } from './sites.js';
+
 export interface NewbieQuestion {
+  /** Which front door this question belongs to. Absent means 'bitcoin'. */
+  site?: SiteId;
   question: string;
   /** One-line answer, RichText (the link is where the proof lives). */
   short: string;
@@ -253,4 +257,94 @@ export const questions: NewbieQuestion[] = [
     slug: 'does-bitcoin-waste-energy',
     stop: 'the-objection',
   },
+  // --- lightning4plebs ---
+  {
+    site: 'lightning',
+    question: 'Do my coins leave Bitcoin when I use Lightning?',
+    short: 'No. They sit in an ordinary Bitcoin output locked to two keys — the chain simply is not asked about them while the channel is open.',
+    slug: 'what-is-a-channel',
+    stop: 'the-lock',
+  },
+  {
+    site: 'lightning',
+    question: 'What stops my channel partner stealing from me?',
+    short: 'A key built from two halves that neither of you can complete alone — and moving to a new balance is what hands them their half.',
+    slug: 'why-cheating-fails',
+    stop: 'the-two-halves',
+  },
+  {
+    site: 'lightning',
+    question: 'What actually is that long lnbc string?',
+    short: 'A signed request: an amount, a description, a deadline, and the hash of a secret only the payee knows. You can decode one in your browser.',
+    slug: 'what-is-an-invoice',
+    stop: 'the-shape',
+  },
+  {
+    site: 'lightning',
+    question: 'Why can I only pay a Lightning invoice once?',
+    short: 'The hash at its centre commits to a secret that is spent on first payment. Anyone who saw that payment already knows the secret.',
+    slug: 'what-is-an-invoice',
+    stop: 'not-an-address',
+  },
+  {
+    site: 'lightning',
+    question: 'Can the nodes in the middle steal my payment?',
+    short: 'They are never given anything spendable — only a promise that opens with a secret they do not have. Failing to forward earns them nothing.',
+    slug: 'crossing-strangers',
+    stop: 'the-lock',
+  },
+  {
+    site: 'lightning',
+    question: 'Why did my payment fail with "no route"?',
+    short: 'Usually liquidity pointing the wrong way: a channel can only push what is on your side of it, and the payer often cannot tell in advance.',
+    slug: 'crossing-strangers',
+    stop: 'the-ladder',
+  },
+  {
+    site: 'lightning',
+    question: 'My payment is stuck. Is my money gone?',
+    short: 'No — it is locked in an HTLC until its deadline, then it comes back. Long routes mean long deadlines, sometimes hours.',
+    slug: 'crossing-strangers',
+    stop: 'the-ladder',
+  },
+  {
+    site: 'lightning',
+    question: 'Can routing nodes see who I am paying?',
+    short: 'No. The specification is precise: a hop learns its neighbours and nothing else — not the route, not its length, not its own position.',
+    slug: 'who-paid-whom',
+    stop: 'the-claim',
+  },
+  {
+    site: 'lightning',
+    question: 'So Lightning is completely private?',
+    short: 'No, and the spec says so itself. Your first hop knows you, a custodial wallet sees everything, and traffic analysis is out of scope.',
+    slug: 'who-paid-whom',
+    stop: 'honest-limits',
+  },
+  {
+    site: 'lightning',
+    question: 'Why does closing a channel take so long?',
+    short: 'A force close puts your own funds behind a timelock — the window in which your counterparty could prove you cheated. Cooperative closes are immediate.',
+    slug: 'why-cheating-fails',
+    stop: 'delay-or-punish',
+  },
+  {
+    site: 'lightning',
+    question: 'What is a millisatoshi and why does it exist?',
+    short: 'A thousandth of a satoshi, and it exists only above the chain — routing fees are often a tiny fraction of a sat and would otherwise round to zero.',
+    slug: 'crossing-strangers',
+    stop: 'the-message',
+  },
+  {
+    site: 'lightning',
+    question: 'How do I prove I paid someone?',
+    short: 'You hold a secret that hashes to the number in their signed invoice. Only they could produce it, and only in exchange for payment.',
+    slug: 'what-is-an-invoice',
+    stop: 'the-hash',
+  },
 ];
+
+/** The question-first index for one front door. */
+export function questionsForSite(site: SiteId): NewbieQuestion[] {
+  return questions.filter((q) => (q.site ?? 'bitcoin') === site);
+}

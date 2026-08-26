@@ -31,8 +31,23 @@ export const BOLTS_PIN: SourcePin = {
   commit: '94eb038c42e664dd7862faeec6508ccd25f63ff8',
 };
 
+/**
+ * Fourth pin, for excerpts quoted from a Lightning node implementation.
+ * The BOLTs are the authority, but a specification is only worth what its
+ * implementations actually do — so Lightning quests read the spec beside
+ * the Go that ships it. Pinned to a tagged release, not a moving branch.
+ *
+ * This is the COMMIT the v0.21.2-beta tag points at, not the annotated tag
+ * object's own hash — `git ls-remote` returns the latter, which would give
+ * every "verify on GitHub" link a sha that resolves to no tree.
+ */
+export const LND_PIN: SourcePin = {
+  repo: 'lightningnetwork/lnd',
+  commit: '29257ecc8892af0c882fa627b66a556190c84fd9',
+};
+
 /** Every pin an excerpt may override to, keyed by repo name. */
-export const OVERRIDE_PINS: readonly SourcePin[] = [BIPS_PIN, BOLTS_PIN];
+export const OVERRIDE_PINS: readonly SourcePin[] = [BIPS_PIN, BOLTS_PIN, LND_PIN];
 
 /** GetBlockSubsidy — the entire emission policy. */
 export const EXCERPT_GET_BLOCK_SUBSIDY: CodeExcerpt = {

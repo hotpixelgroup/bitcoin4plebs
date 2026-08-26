@@ -4,14 +4,36 @@
     {
       "name": "web",
       "runtimeExecutable": "npx",
-      "runtimeArgs": ["nx", "dev", "web"],
+      "runtimeArgs": [
+        "nx",
+        "dev",
+        "web"
+      ],
       "port": 4200
     },
     {
       "name": "preview",
       "runtimeExecutable": "npx",
-      "runtimeArgs": ["vite", "preview", "-c", "apps/web/vite.config.ts", "--port", "4300"],
-      "port": 4300
+      "runtimeArgs": [
+        "vite",
+        "preview",
+        "-c",
+        "apps/web/vite.config.ts"
+      ],
+      "port": 4200
+    },
+    {
+      "name": "web-lightning",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "vite",
+        "-c",
+        "apps/web/vite.config.ts"
+      ],
+      "env": {
+        "VITE_SITE": "lightning"
+      },
+      "port": 4201
     }
   ]
 }

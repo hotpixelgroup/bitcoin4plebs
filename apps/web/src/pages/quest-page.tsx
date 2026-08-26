@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { getQuestBySlug, quests } from '@bitcoin4plebs/quests';
+import { SITE, getSiteQuest, siteQuests } from '../lib/site';
 import { Callout, FeynmanBox, RichText, StopSection } from '@bitcoin4plebs/ui';
 import { ReadProgress } from '../app/read-progress';
 import { StoryStrip } from '../app/story-strip';
@@ -8,7 +8,7 @@ import { isFreshVisitor, recordReadPosition, useVerifiedQuests } from '../lib/pr
 import { getRunner } from '../runners/registry';
 import { getViz } from '../vizzes/registry';
 
-const DEFAULT_TITLE = "bitcoin4plebs · Don't trust. Verify.";
+const DEFAULT_TITLE = `${SITE.name} · ${SITE.tagline}`;
 
 /**
  * The generic quest engine: renders ANY quest from its data alone.
@@ -16,12 +16,14 @@ const DEFAULT_TITLE = "bitcoin4plebs · Don't trust. Verify.";
  */
 export function QuestPage() {
   const { slug } = useParams<{ slug: string }>();
-  const quest = slug ? getQuestBySlug(slug) : undefined;
+  const quest = slug ? getSiteQuest(slug) : undefined;
   const { verified, toggle } = useVerifiedQuests();
   const [bannerDismissed, setBannerDismissed] = useState(false);
 
   useEffect(() => {
-    document.title = quest ? `Quest #${quest.number}: ${quest.title} · bitcoin4plebs` : DEFAULT_TITLE;
+    document.title = quest
+      ? `Quest #${quest.number}: ${quest.title} · ${SITE.name}`
+      : DEFAULT_TITLE;
     return () => {
       document.title = DEFAULT_TITLE;
     };
@@ -72,8 +74,8 @@ export function QuestPage() {
   }
 
   const Runner = quest.finale ? getRunner(quest.finale.runnerId) : undefined;
-  const prev = quests.find((q) => q.number === quest.number - 1);
-  const next = quests.find((q) => q.number === quest.number + 1);
+  const prev = siteQuests.find((q) => q.number === quest.number - 1);
+  const next = siteQuests.find((q) => q.number === quest.number + 1);
   const isVerified = Boolean(verified[quest.slug]);
   const showPrereq =
     !bannerDismissed && quest.number > 1 && isFreshVisitor(verified);
@@ -87,7 +89,7 @@ export function QuestPage() {
             This quest builds on earlier ones. New here? The curriculum starts gently:
           </span>
           <span className="prereq-actions">
-            <Link to={`/quests/${quests[0].slug}`}>Start at Quest #{quests[0].number} →</Link>
+            <Link to={`/quests/${siteQuests[0].slug}`}>Start at Quest #{siteQuests[0].number} →</Link>
             <button onClick={() => setBannerDismissed(true)} aria-label="Dismiss">
               ✕
             </button>
@@ -99,7 +101,7 @@ export function QuestPage() {
         <h1>{quest.title}</h1>
         <div className="quest-meta">
           <span className="quest-meta-chip is-track">{quest.track ?? 'Foundations'}</span>
-          <span className="quest-meta-chip">quest {quest.number} of {quests.length}</span>
+          <span className="quest-meta-chip">quest {quest.number} of {siteQuests.length}</span>
           <span className="quest-meta-chip">{quest.duration} read</span>
           <span className="quest-meta-chip">
             {quest.stops.length} stops{quest.finale ? ' + finale' : ''}
