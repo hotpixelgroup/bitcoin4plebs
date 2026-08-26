@@ -72,7 +72,7 @@ export const questLn04: Quest = {
       ],
       prose: [
         "HTLC stands for Hashed Timelock Contract, and the name is a fair description: a promise locked by a hash, with a deadline. This message is how one is offered.",
-        "Look at what travels. `amount_msat` — how much, in thousandths of a satoshi. `payment_hash` — copied straight out of Ines's invoice, unchanged at every hop, which is exactly what makes the hops atomic. `cltv_expiry` — the block height after which this promise dies. And `onion_routing_packet`, always exactly 1,366 bytes, which tells the hub where to send it next and nothing else.",
+        "Look at what travels. `amount_msat` — how much, in thousandths of a satoshi (the satoshi itself being the chain's smallest unit, which [bitcoin4plebs Quest #1](https://hotpixelgroup.github.io/bitcoin4plebs/quests/verify-the-21-million-cap) counts all 2,099,999,997,690,000 of). `payment_hash` — copied straight out of Ines's invoice, unchanged at every hop, which is exactly what makes the hops atomic. `cltv_expiry` — the block height after which this promise dies. And `onion_routing_packet`, always exactly 1,366 bytes, which tells the hub where to send it next and nothing else.",
         "Notice what is *absent*: no recipient, no sender, no route, no description. A routing node handles a number, a hash, a deadline and a sealed envelope. That is the whole job.",
       ],
       annotations: [

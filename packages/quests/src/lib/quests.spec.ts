@@ -164,6 +164,37 @@ describe('entry paths and prerequisites integrity', () => {
   });
 });
 
+describe('cross-site signposting', () => {
+  it("every site's curriculum links to the other one somewhere in its prose", () => {
+    // The two sites are one project. A reader deep in either curriculum
+    // should meet the other without having to go looking for it.
+    for (const site of SITE_IDS) {
+      const curriculum = questsForSite(site);
+      if (!curriculum.length) continue;
+      const siblingUrl = sites[site].sibling.url;
+      const prose = JSON.stringify(curriculum);
+      expect(
+        prose.includes(siblingUrl),
+        `no ${site} quest links to ${siblingUrl}`
+      ).toBe(true);
+    }
+  });
+
+  it('links to the sibling only at its real URL', () => {
+    for (const site of SITE_IDS) {
+      const other = sites[site].sibling;
+      const prose = JSON.stringify(questsForSite(site));
+      // Catch a link to the sibling's bare name or a wrong host.
+      const links = prose.match(/https:\/\/[^)"\\ ]+/g) ?? [];
+      for (const link of links) {
+        if (link.includes(other.name)) {
+          expect(link.startsWith(other.url), `${site}: bad sibling link ${link}`).toBe(true);
+        }
+      }
+    }
+  });
+});
+
 describe('site configuration integrity', () => {
   it('declares a config for every site, keyed by its own id', () => {
     for (const site of SITE_IDS) {
@@ -187,12 +218,18 @@ describe('site configuration integrity', () => {
     }
   });
 
-  it('points each site at the other one', () => {
+  it('points each site at the other one, with something to say about it', () => {
     for (const site of SITE_IDS) {
       const sibling = sites[site].sibling;
       expect(sibling.id, site).not.toBe(site);
       expect(sites[sibling.id].name, site).toBe(sibling.name);
-      expect(sibling.url, site).toMatch(/^https:\/\//);
+      expect(sibling.url, site).toBe(sites[sibling.id].url);
+      expect(sibling.url, site).toMatch(/^https:\/\/.*\/$/);
+      // A bare link is not a signpost: each site owes the reader a reason.
+      expect(sibling.label.length, site).toBeGreaterThan(5);
+      expect(sibling.blurb.length, site).toBeGreaterThan(80);
+      expect(sibling.covers.length, site).toBe(3);
+      for (const item of sibling.covers) expect(item.length, site).toBeGreaterThan(15);
     }
   });
 });

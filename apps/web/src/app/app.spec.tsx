@@ -201,8 +201,22 @@ describe('App', () => {
     expect(header?.querySelector('.logo-tag')?.textContent).toBe(SITE.tagline);
     expect(header?.querySelector('.pin')?.textContent).toContain(SITE.pinLabel);
 
-    const sibling = screen.getByRole('link', { name: new RegExp(SITE.sibling.name) });
-    expect(sibling).toHaveAttribute('href', SITE.sibling.url);
+    // The other front door is signposted in several places — the home-page
+    // card, the navigation and the footer. Every one of them must point at
+    // the sibling, and none may be a bare unexplained link.
+    const siblingLinks = screen.getAllByRole('link', { name: new RegExp(SITE.sibling.name) });
+    expect(siblingLinks.length).toBeGreaterThanOrEqual(2);
+    for (const link of siblingLinks) {
+      expect(link).toHaveAttribute('href', SITE.sibling.url);
+    }
+    // The card explains what is over there rather than just naming it.
+    const card = container.querySelector('.sibling');
+    expect(card).not.toBeNull();
+    expect(card?.textContent).toContain(SITE.sibling.label);
+    expect(card?.textContent).toContain(SITE.sibling.blurb);
+    for (const item of SITE.sibling.covers) {
+      expect(card?.textContent).toContain(item);
+    }
     // The stylesheet themes off this attribute; the entry point sets it
     // before first paint so the accent never flashes the wrong colour.
     const root = document.createElement('html');

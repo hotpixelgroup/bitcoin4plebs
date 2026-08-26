@@ -42,8 +42,22 @@ export interface SiteConfig {
    * appears, half-relevant, on the other.
    */
   referencePages: readonly string[];
-  /** The other front door, cross-linked from the footer and the bridge quest. */
-  sibling: { id: SiteId; name: string; url: string; blurb: string };
+  /**
+   * The other front door. Cross-linked from the home page, the navigation
+   * and the footer — a reader who lands on the wrong one of the two should
+   * never have to guess that the other exists.
+   */
+  sibling: {
+    id: SiteId;
+    name: string;
+    url: string;
+    /** Short positional label, e.g. "the layer above". */
+    label: string;
+    /** The invitation shown on the home page. */
+    blurb: string;
+    /** What the sibling covers, as three short phrases. */
+    covers: readonly string[];
+  };
   /** Canonical URL where this front door is published. */
   url: string;
   /** Alt text for the social card, describing what the image shows. */
@@ -107,8 +121,14 @@ export const sites: Record<SiteId, SiteConfig> = {
       id: 'lightning',
       name: 'lightning4plebs',
       url: LIGHTNING_URL,
+      label: 'the layer above',
       blurb:
-        'Ready for the layer above? The same treatment, applied to Lightning: the specs, the cryptography, and payments that never touch the chain.',
+        "Ready for the layer above? Lightning gets the same treatment there: its own specifications quoted verbatim, a real node's source beside them, and cryptography you can check against the spec's own published test vectors.",
+      covers: [
+        'channels, and why cheating costs everything',
+        'what is really inside an lnbc invoice',
+        'payments that cross strangers who never learn who you are',
+      ],
     },
     story: { label: 'ana pays bo', cast: ['A', 'B'] },
     accent: '#f7931a',
@@ -156,8 +176,14 @@ export const sites: Record<SiteId, SiteConfig> = {
       id: 'bitcoin',
       name: 'bitcoin4plebs',
       url: BITCOIN_URL,
+      label: 'the layer underneath',
       blurb:
-        'Lightning inherits its security from the chain underneath. If the base layer is still a mystery, start there: same approach, real source code.',
+        'Everything here rests on the chain underneath: the 2-of-2 output is an ordinary Bitcoin output, and the penalty branch is ordinary Bitcoin script. If the base layer is still a mystery, start there — same approach, real source code.',
+      covers: [
+        'why the 21 million cap is arithmetic, not a promise',
+        'what a private key actually locks',
+        'the block space auction Lightning exists to avoid',
+      ],
     },
     story: { label: 'tomas buys coffee', cast: ['T', 'M'] },
     accent: '#8b5cf6',

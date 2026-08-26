@@ -65,7 +65,7 @@ export const questLn02: Quest = {
         },
       ],
       prose: [
-        "Read the two branches like a Bitcoin script, because that is exactly what they are. **The `OP_ELSE` branch** is the honest exit: push `to_self_delay`, run `OP_CHECKSEQUENCEVERIFY` — a genuine consensus-enforced relative timelock — and only then may `local_delayedpubkey` sign for the money. Broadcast your latest state honestly and you still wait.",
+        "Read the two branches like a Bitcoin script, because that is exactly what they are. (New to script? [bitcoin4plebs Quest #3](https://hotpixelgroup.github.io/bitcoin4plebs/quests/what-stops-someone-spending-your-coins) builds the toll booth these branches are made of.) **The `OP_ELSE` branch** is the honest exit: push `to_self_delay`, run `OP_CHECKSEQUENCEVERIFY` — a genuine consensus-enforced relative timelock — and only then may `local_delayedpubkey` sign for the money. Broadcast your latest state honestly and you still wait.",
         "**The `OP_IF` branch** carries the spec's own comment, `# Penalty transaction`. Whoever holds the private key for `<revocationpubkey>` can spend this output the instant it appears on-chain. No delay, no conditions.",
         "Put those together and the incentive is complete. Publishing the *latest* commitment is safe, because nobody holds the revocation key for it yet. Publishing *any older* one parks your entire balance in public, behind a timelock, guarded by a key you have already handed to the person you are trying to rob. The delay isn't there to inconvenience you. It's there to give your victim time to notice.",
         "Which raises the only question that matters: who holds that revocation key, and how did they get it?",

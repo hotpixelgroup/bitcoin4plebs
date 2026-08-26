@@ -4890,3 +4890,87 @@ tr:last-child td {
     scroll-behavior: auto;
   }
 }
+
+/* ——— the signpost to the other front door ——— */
+.sibling {
+  margin: 56px 0 8px;
+  border: 1px solid var(--hairline-strong);
+  border-radius: var(--radius);
+  background:
+    radial-gradient(120% 140% at 0% 0%, var(--brand-soft), transparent 60%),
+    var(--surface);
+  overflow: hidden;
+}
+.sibling-body {
+  padding: 26px 28px 24px;
+  border-left: 3px solid var(--brand);
+}
+.sibling-eyebrow {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--brand);
+  margin-bottom: 6px;
+}
+.sibling-title {
+  font-size: 27px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin: 0 0 10px;
+  color: var(--ink);
+}
+.sibling-blurb {
+  margin: 0 0 14px;
+  max-width: 66ch;
+  color: var(--ink-2);
+  line-height: 1.6;
+}
+.sibling-covers {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px;
+  display: grid;
+  gap: 6px;
+}
+.sibling-covers li {
+  position: relative;
+  padding-left: 20px;
+  color: var(--ink-2);
+  font-size: 15px;
+}
+.sibling-covers li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--brand);
+}
+.sibling-cta {
+  display: inline-block;
+  padding: 11px 18px;
+  border-radius: var(--radius-sm);
+  background: var(--brand);
+  color: #12100c;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 0.15s var(--ease), box-shadow 0.15s var(--ease);
+}
+.sibling-cta:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--glow);
+}
+.sibling-note {
+  margin: 14px 0 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+.drawer-link-sibling {
+  margin-top: 10px;
+  padding-top: 14px;
+  border-top: 1px solid var(--hairline);
+  color: var(--brand);
+}
+@media (max-width: 640px) {
+  .sibling-body { padding: 20px 18px; }
+  .sibling-title { font-size: 23px; }
+}
