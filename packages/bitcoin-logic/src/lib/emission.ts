@@ -20,7 +20,7 @@ import { COIN, INITIAL_SUBSIDY, SUBSIDY_HALVING_INTERVAL } from './constants.js'
  * ```
  *
  * BigInt is used so the arithmetic is exact 64-bit-style integer math,
- * the same kind Bitcoin itself uses, no floating point anywhere.
+ * the same kind Bitcoin itself uses — no floating point anywhere.
  */
 export function getBlockSubsidy(
   nHeight: number,
@@ -82,7 +82,8 @@ export function computeEras(params: EmissionParams = {}): Era[] {
   const eras: Era[] = [];
   let cumulative = 0n;
   for (let k = 0; ; k++) {
-    // Same shape as getBlockSubsidy: halve by right shift, stop at 64, // unless the guard is removed, in which case the shift wraps mod 64
+    // Same shape as getBlockSubsidy: halve by right shift, stop at 64 —
+    // unless the guard is removed, in which case the shift wraps mod 64
     // the way x86 hardware treats the undefined C++ shift.
     const subsidy = guarded
       ? k >= 64
@@ -113,7 +114,8 @@ export function totalSupply(params: EmissionParams = {}): bigint {
 }
 
 /**
- * Exact cumulative supply (in satoshis) at the START of block `height`, * i.e. everything minted by blocks 0..height-1... plus nothing else, ever.
+ * Exact cumulative supply (in satoshis) at the START of block `height` —
+ * i.e. everything minted by blocks 0..height-1... plus nothing else, ever.
  */
 export function supplyAtHeight(height: number, eras: Era[] = computeEras()): bigint {
   let cumulative = 0n;
@@ -130,9 +132,11 @@ export function supplyAtHeight(height: number, eras: Era[] = computeEras()): big
 }
 
 /**
- * Exact supply (in satoshis) once block `height` has been connected, * everything minted by blocks 0..height inclusive. This is what
+ * Exact supply (in satoshis) once block `height` has been connected —
+ * everything minted by blocks 0..height inclusive. This is what
  * `gettxoutsetinfo` at that height would report if no coins had ever been
- * destroyed or left unclaimed (the real number runs slightly lower, * starting with the genesis block's famously unspendable 50 BTC).
+ * destroyed or left unclaimed (the real number runs slightly lower —
+ * starting with the genesis block's famously unspendable 50 BTC).
  */
 export function supplyThroughBlock(height: number): bigint {
   return supplyAtHeight(height + 1);

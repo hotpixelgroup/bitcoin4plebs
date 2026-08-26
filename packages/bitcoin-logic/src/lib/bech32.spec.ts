@@ -86,7 +86,7 @@ describe('official BIP-173 / BIP-350 valid vectors', () => {
 
 describe('official invalid vectors', () => {
   it('rejects the BIP-173 invalid examples', () => {
-    // Flipped final character, the canonical typo.
+    // Flipped final character — the canonical typo.
     expect(decodeSegwitAddress('bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t5').ok).toBe(false);
     // Witness version 17 does not exist.
     expect(decodeSegwitAddress('BC13W508D6QEJXTDG4Y5R3ZARVARY0C5XW7KN40WF2').ok).toBe(false);

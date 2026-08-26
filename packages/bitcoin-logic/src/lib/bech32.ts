@@ -5,19 +5,19 @@
  * vectors in bech32.spec.ts.
  */
 
-/** The Bech32 and Bech32m character set for encoding, bech32.cpp:23. */
+/** The Bech32 and Bech32m character set for encoding — bech32.cpp:23. */
 export const BECH32_CHARSET = 'qpzry9x8gf2tvdw0s3jn54khce6mua7l';
 
 export type Bech32Encoding = 'bech32' | 'bech32m';
 
-/** Final checksum constant per encoding, bech32.cpp:122 (EncodingConstant). */
+/** Final checksum constant per encoding — bech32.cpp:122 (EncodingConstant). */
 const ENCODING_CONSTANT: Record<Bech32Encoding, number> = {
   bech32: 1,
   bech32m: 0x2bc830a3,
 };
 
 /**
- * The BCH-code checksum at the heart of every bc1 address, a line-for-line
+ * The BCH-code checksum at the heart of every bc1 address — a line-for-line
  * translation of PolyMod (bech32.cpp:130), including its five magic
  * constants. The developers' comment there proves the resulting code
  * detects up to 4 character errors in any address-sized string.
@@ -70,9 +70,9 @@ export interface Bech32Options {
   /**
    * The 90-character ceiling is a BIP-173 rule for ADDRESSES, chosen so a
    * QR code stays small and the checksum's error-detection guarantees
-   * hold. Other users of the same encoding lift it, BOLT #11 invoices
-   * are bech32 with no length limit at all, so it is a parameter, not a
-   * law of the encoding.
+   * hold. Other users of the same encoding lift it (BOLT #11 invoices are
+   * bech32 with no length limit at all), so it is a parameter rather than
+   * a law of the encoding.
    */
   maxLength?: number;
 }
@@ -86,7 +86,7 @@ export function decodeBech32(input: string, options: Bech32Options = {}): Bech32
   const hasLower = /[a-z]/.test(input);
   const hasUpper = /[A-Z]/.test(input);
   if (hasLower && hasUpper) {
-    return { ok: false, error: 'Mixed case: a bech32 string must be all-lower or all-upper, never both.' };
+    return { ok: false, error: 'Mixed case — a bech32 string must be all-lower or all-upper, never both.' };
   }
   const str = input.toLowerCase();
   const sep = str.lastIndexOf('1');
@@ -109,7 +109,7 @@ export function decodeBech32(input: string, options: Bech32Options = {}): Bech32
   }
   const encoding = verifyChecksum(hrp, values);
   if (!encoding) {
-    return { ok: false, error: 'Checksum failed, at least one character here is wrong.' };
+    return { ok: false, error: 'Checksum failed — at least one character here is wrong.' };
   }
   return { ok: true, hrp, payload: values.slice(0, -6), encoding };
 }
@@ -140,7 +140,7 @@ export function convertBits(data: number[], from: number, to: number, pad: boole
 export interface SegwitAddress {
   ok: true;
   hrp: string;
-  /** Witness version, 0-16, the first 5-bit symbol (key_io.cpp:143). */
+  /** Witness version, 0-16 — the first 5-bit symbol (key_io.cpp:143). */
   version: number;
   /** Witness program bytes as hex. */
   programHex: string;
@@ -158,7 +158,7 @@ export function decodeSegwitAddress(input: string): SegwitAddress | Bech32Error 
   if (!dec.ok) return dec;
   if (dec.payload.length === 0) return { ok: false, error: 'Empty data section after the checksum.' };
   const version = dec.payload[0];
-  if (version > 16) return { ok: false, error: `Invalid witness version ${version}, only 0 through 16 exist.` };
+  if (version > 16) return { ok: false, error: `Invalid witness version ${version} — only 0 through 16 exist.` };
   if (version === 0 && dec.encoding !== 'bech32') {
     return { ok: false, error: 'Version 0 witness address must use Bech32 checksum (key_io.cpp:145).' };
   }
@@ -200,7 +200,7 @@ export function encodeSegwitAddress(hrp: string, version: number, program: numbe
 }
 
 /**
- * The scriptPubKey this address spells, Quest #3's lock: an OP_n version
+ * The scriptPubKey this address spells — Quest #3's lock: an OP_n version
  * opcode, a push length, and the program bytes. Matches the expected
  * outputs of the BIP-173/350 test-vector tables.
  */
