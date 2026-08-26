@@ -24,7 +24,8 @@ import { questLn02 } from './quest-ln-02-revocation.js';
 import { questLn03 } from './quest-ln-03-invoice.js';
 import { questLn04 } from './quest-ln-04-htlc.js';
 import { questLn05 } from './quest-ln-05-onion.js';
-import { questLn06 } from './quest-ln-06-whose-lightning.js';
+import { questLn06 } from './quest-ln-06-routing.js';
+import { questLn07 } from './quest-ln-07-whose-lightning.js';
 
 /**
  * The quest registry, in curriculum order — each quest builds on the
@@ -59,6 +60,7 @@ export const quests: Quest[] = [
   questLn04,
   questLn05,
   questLn06,
+  questLn07,
 ];
 
 export function getQuestBySlug(slug: string): Quest | undefined {

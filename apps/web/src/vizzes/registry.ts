@@ -3,9 +3,11 @@ import { ActivationTimeline } from './activation-timeline';
 import { AddressPipeline } from './address-pipeline';
 import { AvalancheGrid } from './avalanche-grid';
 import { ChannelFootprint } from './channel-footprint';
+import { FeeCalculator } from './fee-calculator';
 import { HtlcChain } from './htlc-chain';
 import { InvoiceAnatomy } from './invoice-anatomy';
 import { LiquiditySeesaw } from './liquidity-seesaw';
+import { RouteRace } from './route-race';
 import { OnionPeel } from './onion-peel';
 import { RevocationLadder } from './revocation-ladder';
 import { BitshiftHalving } from './bitshift-halving';
@@ -32,6 +34,8 @@ const vizzes: Record<string, ComponentType> = {
   'htlc-chain': HtlcChain,
   'invoice-anatomy': InvoiceAnatomy,
   'liquidity-seesaw': LiquiditySeesaw,
+  'fee-calculator': FeeCalculator,
+  'route-race': RouteRace,
   'onion-peel': OnionPeel,
   'bitshift-halving': BitshiftHalving,
   'utxo-flow': UtxoFlow,

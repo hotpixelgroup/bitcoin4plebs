@@ -6,6 +6,7 @@ import { ClusterDetective } from './privacy/cluster-detective';
 import { CustodyCheck } from './custody/custody-check';
 import { DoubleSpend } from './doublespend/double-spend';
 import { RevocationForge } from './revocation/revocation-forge';
+import { RouteFinder } from './routing/route-finder';
 import { RewriteCost } from './rewrite/rewrite-cost';
 import { EmissionRunner } from './emission/emission-runner';
 import { FeeAuction } from './feemarket/fee-auction';
@@ -55,6 +56,7 @@ const runners: Record<string, ComponentType<RunnerProps>> = {
   'htlc-relay': HtlcRelay,
   'onion-lab': OnionLab,
   'custody-check': CustodyCheck,
+  'route-finder': RouteFinder,
   'double-spend': DoubleSpend,
   'rewrite-cost': RewriteCost,
 };
