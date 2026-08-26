@@ -17,7 +17,7 @@ import {
  *
  * bitcoin4plebs and lightning4plebs are the same source, built twice.
  * VITE_SITE picks the curriculum, the brand and the home page; everything
- * else — the quest engine, the search, the design system — is shared by
+ * else (the quest engine, the search, the design system) is shared by
  * being literally the same code, so it cannot drift between them.
  *
  * Absent or unrecognised means Bitcoin, so a plain `nx dev web` and every

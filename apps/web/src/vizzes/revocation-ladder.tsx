@@ -7,8 +7,7 @@ const COFFEE = 4_000;
 /**
  * The ladder figure: buy coffees and watch each previous balance turn
  * radioactive as its revocation secret is handed over. The point is that
- * poisoning old states is not a separate step anyone has to remember —
- * it is a side effect of ordinary use.
+ * poisoning old states is not a separate step anyone has to remember, * it is a side effect of ordinary use.
  */
 export function RevocationLadder() {
   const [count, setCount] = useState(0);
@@ -54,7 +53,7 @@ export function RevocationLadder() {
             <span className="stat-unit">
               Tomas {state.tomas.toLocaleString('en-US')} · Mira{' '}
               {state.mira.toLocaleString('en-US')}
-              {state.revoked && ' — publishing this hands Mira the lot'}
+              {state.revoked && ', publishing this hands Mira the lot'}
             </span>
           </div>
         ))}
@@ -65,7 +64,7 @@ export function RevocationLadder() {
 
       <p className="utxo-box-note">
         {count === 0 ? (
-          <>One state, nothing revoked yet. Nobody can punish anybody — there is no past to lie about.</>
+          <>One state, nothing revoked yet. Nobody can punish anybody: there is no past to lie about.</>
         ) : (
           <>
             Tomas holds <strong>{count + 1}</strong> perfectly valid signed transactions and can

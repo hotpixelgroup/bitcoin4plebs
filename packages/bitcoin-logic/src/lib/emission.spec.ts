@@ -44,7 +44,7 @@ describe('the 21 million cap', () => {
     expect(eras[eras.length - 1].endHeight).toBe(6_929_999);
   });
 
-  it('sums to exactly 2,099,999,997,690,000 satoshis — under 21M BTC, forever', () => {
+  it('sums to exactly 2,099,999,997,690,000 satoshis, under 21M BTC, forever', () => {
     const total = totalSupply();
     expect(total).toBe(2_099_999_997_690_000n);
     expect(total < MAX_MONEY).toBe(true);

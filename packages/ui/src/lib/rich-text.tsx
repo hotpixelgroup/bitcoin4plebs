@@ -6,7 +6,7 @@ import { GlossaryTerm, entryForCodeToken, linkFirstTerm } from './glossary-term.
  * Renders the tiny inline markup quest content is written in:
  * **bold**, *emphasis*, `code`, and [label](https://url).
  *
- * Deliberately NOT a markdown engine — quest content is data, and a
+ * Deliberately NOT a markdown engine, quest content is data, and a
  * constrained grammar keeps it predictable and safe (no raw HTML ever).
  *
  * With `link` on (the default), glossary terms get tap-to-define

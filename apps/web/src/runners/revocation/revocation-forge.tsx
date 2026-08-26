@@ -109,7 +109,7 @@ export function RevocationForge({ finale }: RunnerProps) {
         <p>
           Act one: <strong>build the lock</strong>. Mira contributes a revocation basepoint;
           Tomas contributes the per-commitment point for the state he is currently on. Each
-          half is scaled by a hash of both values — in opposite orders — and the two halves
+          half is scaled by a hash of both values, in opposite orders and the two halves
           are added.
         </p>
         <button className="runbtn" onClick={build}>
@@ -135,7 +135,7 @@ export function RevocationForge({ finale }: RunnerProps) {
             <strong>✓ Mira now holds the private key.</strong> She combined her basepoint
             secret with the secret Tomas just handed her, and the result is the key to the
             penalty branch of every copy of that state Tomas still has. He did not sign
-            anything away and he did not send her money — he simply completed her half of a
+            anything away and he did not send her money, he simply completed her half of a
             key. From this moment, publishing that old balance would hand Mira the entire
             channel.
           </Callout>
@@ -152,7 +152,7 @@ export function RevocationForge({ finale }: RunnerProps) {
           <Callout>
             <strong>✓ Every value matches, including the intermediates.</strong> The elliptic
             curve arithmetic and SHA-256 above are this site's own code, written from scratch
-            with no cryptography library — so this is not a library agreeing with itself. It
+            with no cryptography library, so this is not a library agreeing with itself. It
             is the Lightning specification grading our homework, in your browser. The same
             check runs in CI on every change.
           </Callout>
@@ -171,23 +171,23 @@ export function RevocationForge({ finale }: RunnerProps) {
             <div className="field-row">
               <span className="field-label">Mira's basepoint</span>
               <span className="field-hex">
-                {d ? short(d.revocationBasepoint) : '—'}{' '}
+                {d ? short(d.revocationBasepoint) : ', '}{' '}
                 <span className="field-src">← her secret × G</span>
               </span>
             </div>
             <div className="field-row">
               <span className="field-label">Tomas's point</span>
               <span className="field-hex">
-                {d ? short(d.commitmentPoint) : '—'}{' '}
+                {d ? short(d.commitmentPoint) : ', '}{' '}
                 <span className="field-src">← this state's secret × G</span>
               </span>
             </div>
           </div>
 
           <div className="guess-feed">
-            <div className="stat-label">SHA256(basepoint ‖ point) — scales Mira's half</div>
+            <div className="stat-label">SHA256(basepoint ‖ point), scales Mira's half</div>
             <code className="guess-hex mine-target">{d ? short(d.basepointTweak) : '…'}</code>
-            <div className="stat-label">SHA256(point ‖ basepoint) — scales Tomas's half</div>
+            <div className="stat-label">SHA256(point ‖ basepoint), scales Tomas's half</div>
             <code className="guess-hex mine-target">{d ? short(d.commitmentTweak) : '…'}</code>
             <div className="stat-label">basepoint × first hash</div>
             <code className="guess-hex mine-target">{d ? short(d.basepointTerm) : '…'}</code>
@@ -200,13 +200,13 @@ export function RevocationForge({ finale }: RunnerProps) {
           </div>
 
           <div className="guess-feed">
-            <div className="stat-label">revocationprivkey — needs BOTH secrets</div>
+            <div className="stat-label">revocationprivkey, needs BOTH secrets</div>
             <code className={`guess-hex ${forged?.privkey ? 'mine-winner' : ''}`}>
               {forged?.privkey ? short(forged.privkey) : 'uncomputable by either party'}
             </code>
             {keysMatch && (
               <div className="guess-verdict mine-won">
-                ✓ privkey × G equals the revocationpubkey above — it really is the key to
+                ✓ privkey × G equals the revocationpubkey above: it really is the key to
                 that lock
               </div>
             )}

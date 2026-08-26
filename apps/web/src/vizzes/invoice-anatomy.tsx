@@ -15,7 +15,7 @@ const PARTS = [
     label: '2500u',
     kind: 'amount',
     what: 'How much',
-    detail: '2500 micro-bitcoin — 0.0025 BTC, or 250,000 sats. Leave it out entirely and the payer chooses.',
+    detail: '2500 micro-bitcoin, 0.0025 BTC, or 250,000 sats. Leave it out entirely and the payer chooses.',
   },
   {
     id: 'sep',
@@ -36,7 +36,7 @@ const PARTS = [
     label: 'pp5…',
     kind: 'hash',
     what: 'The payment hash',
-    detail: 'The hash of a secret only the payee knows. Paying is what makes them reveal it — and that secret is your receipt.',
+    detail: 'The hash of a secret only the payee knows. Paying is what makes them reveal it, and that secret is your receipt.',
   },
   {
     id: 'desc',
@@ -57,7 +57,7 @@ const PARTS = [
     label: '9qrsgq…',
     kind: 'sig',
     what: 'The signature',
-    detail: '512 bits over everything above, plus a recovery byte — which is how the payer learns the payee’s node id without it being written out.',
+    detail: '512 bits over everything above, plus a recovery byte, which is how the payer learns the payee’s node id without it being written out.',
   },
 ];
 
@@ -102,7 +102,7 @@ export function InvoiceAnatomy() {
       <p className="utxo-box-note">
         Read left to right and an invoice tells a small story: on this network, for this much,
         made at this moment, for this purpose, redeemable by whoever learns this secret, until
-        this deadline — signed. The finale below decodes the whole thing for real.
+        this deadline, signed. The finale below decodes the whole thing for real.
       </p>
     </VizFigure>
   );

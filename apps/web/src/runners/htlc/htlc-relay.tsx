@@ -19,7 +19,7 @@ type Stage = 'idle' | 'offered' | 'settled';
 /**
  * The HTLC relay: run a two-hop payment, watch the same hash lock both
  * hops with a descending timelock ladder, then settle it backwards from
- * the recipient — and try, as the hub, to keep the money.
+ * the recipient and try, as the hub, to keep the money.
  */
 export function HtlcRelay({ finale }: RunnerProps) {
   const [stage, setStage] = useState<Stage>('idle');
@@ -69,7 +69,7 @@ export function HtlcRelay({ finale }: RunnerProps) {
                 <strong>✗ Rejected.</strong> The hub's guess hashes to something else entirely,
                 so the script's <code>OP_EQUALVERIFY</code> fails and the money stays locked.
                 There is no third branch to try: the only other exit is the timeout, which
-                refunds Mira. Cheating here is not risky — it is arithmetically unavailable.
+                refunds Mira. Cheating here is not risky: it is arithmetically unavailable.
               </Callout>
             )}
             <p>
@@ -84,7 +84,7 @@ export function HtlcRelay({ finale }: RunnerProps) {
         {stage === 'settled' && (
           <Callout>
             <strong>✓ Settled, from the far end backwards.</strong> Revealing the secret is how
-            Ines takes her money — and it necessarily hands that secret to the hub, which
+            Ines takes her money and it necessarily hands that secret to the hub, which
             immediately uses it to claim from Mira, because Mira locked to the same hash. Either
             both hops paid or neither did. The hub earned its 180 sats for the service and never
             had the option of keeping the 180,000.
@@ -102,7 +102,7 @@ export function HtlcRelay({ finale }: RunnerProps) {
           <div className="viz-sub">HTLCs per BOLT #2 §update_add_htlc, deadlines descending</div>
 
           <div className="guess-feed">
-            <div className="stat-label">payment_hash — identical at every hop, from the invoice</div>
+            <div className="stat-label">payment_hash, identical at every hop, from the invoice</div>
             <code className={`guess-hex ${paymentHash ? 'mine-target' : ''}`}>
               {paymentHash ? short(paymentHash) : 'press ▶ to begin'}
             </code>
@@ -115,7 +115,7 @@ export function HtlcRelay({ finale }: RunnerProps) {
                   {hop.from} → {hop.to}
                 </span>
                 <span className="field-hex">
-                  {stage === 'idle' ? '—' : sats(hop.amountMsat)}
+                  {stage === 'idle' ? ', ' : sats(hop.amountMsat)}
                   <span className="field-src">
                     {' '}
                     ← expires at block {hop.cltv.toLocaleString('en-US')}
@@ -144,7 +144,7 @@ export function HtlcRelay({ finale }: RunnerProps) {
               <div className="stat-label">the hub's attempt: SHA-256(guess)</div>
               <code className="guess-hex">{short(bytesToHex(hexToBytes(theft.guess)))}</code>
               <div className="guess-verdict">
-                {theft.matches ? '✓ matched' : '✗ does not equal the payment hash — claim fails'}
+                {theft.matches ? '✓ matched' : '✗ does not equal the payment hash, claim fails'}
               </div>
             </div>
           )}
@@ -154,7 +154,7 @@ export function HtlcRelay({ finale }: RunnerProps) {
               <div className="stat-label">preimage, revealed by Ines and travelling backwards</div>
               <code className="guess-hex mine-winner">{short(PREIMAGE)}</code>
               <div className="guess-verdict mine-won">
-                ✓ SHA-256 of this equals the payment hash above — both hops now settle
+                ✓ SHA-256 of this equals the payment hash above, both hops now settle
               </div>
             </div>
           )}

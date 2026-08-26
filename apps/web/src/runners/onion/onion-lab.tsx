@@ -27,7 +27,7 @@ interface Layer {
  * The onion lab: rebuild BOLT #4's own published test packet from this
  * site's dependency-free cryptography and require a byte-for-byte match,
  * then peel it hop by hop and watch each node recover its own payload and
- * nothing else — with the forwarded packet never changing size.
+ * nothing else, with the forwarded packet never changing size.
  */
 export function OnionLab({ finale }: RunnerProps) {
   const [built, setBuilt] = useState<Built | null>(null);
@@ -71,7 +71,7 @@ export function OnionLab({ finale }: RunnerProps) {
         <p>
           Act one: <strong>rebuild the specification's own packet</strong>. Five hops, the
           session key and payloads BOLT #4 publishes, and this site's own elliptic-curve math
-          and ChaCha20 — no cryptography library anywhere.
+          and ChaCha20, no cryptography library anywhere.
         </p>
         <button className="runbtn" onClick={build} disabled={busy}>
           {built ? '▶ Build it again' : "▶ Build BOLT #4's test onion"}
@@ -82,7 +82,7 @@ export function OnionLab({ finale }: RunnerProps) {
             pausing on: the packet only comes out identical if the curve arithmetic, the stream
             cipher, all four key derivations, the blinding chain <em>and</em> the filler
             accumulation are every one of them exactly right. A single wrong bit anywhere and
-            the whole thing diverges. There is no partial credit — which is why this is a real
+            the whole thing diverges. There is no partial credit, which is why this is a real
             check and not a reassuring animation.
           </Callout>
         )}
@@ -113,7 +113,7 @@ export function OnionLab({ finale }: RunnerProps) {
             <strong>✓ Every hop recovered its own payload, and nothing else.</strong> Look at the
             size column: 1,366 bytes in, 1,366 bytes out, every single time. A hop cannot measure
             the packet to work out how far along it is, because there is nothing to measure. Only
-            the last hop learns anything about its position — its onward HMAC is all zeros, which
+            the last hop learns anything about its position: its onward HMAC is all zeros, which
             is the specification's way of saying “this one is for you”.
           </Callout>
         )}
@@ -137,7 +137,7 @@ export function OnionLab({ finale }: RunnerProps) {
             <code className="guess-hex mine-target">{short(ONION_VECTOR.onion)}</code>
             {built?.matches && (
               <div className="guess-verdict mine-won">
-                ✓ identical, all {ONION_PACKET_SIZE} bytes — the spec grading our arithmetic
+                ✓ identical, all {ONION_PACKET_SIZE} bytes, the spec grading our arithmetic
               </div>
             )}
           </div>

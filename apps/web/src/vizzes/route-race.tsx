@@ -7,7 +7,7 @@ const fmtMsat = (m: number) => `${(m / 1000).toFixed(3)} sats`;
 /**
  * The route race: every path from A to C in the specification's own
  * four-node network, costed and ranked. The point is that the cheapest
- * route is chosen by price, not by hop count — and here the two-hop
+ * route is chosen by price, not by hop count and here the two-hop
  * options differ by more than double.
  */
 export function RouteRace() {
@@ -66,7 +66,7 @@ export function RouteRace() {
           <>
             Both routes are two hops, yet the dearest costs{' '}
             <strong>{(dearest.totalFeeMsat / Math.max(1, cheapest.totalFeeMsat)).toFixed(1)}×</strong>{' '}
-            the cheapest — because D advertised higher numbers than B. Distance decides nothing
+            the cheapest, because D advertised higher numbers than B. Distance decides nothing
             here; the advertised price decides everything. Note too that the cheaper route also
             asks for less timelock, which is a second reason wallets favour it.
           </>

@@ -108,7 +108,7 @@ export function RouteFinder({ finale }: RunnerProps) {
               {fmt(chosen.totalFeeMsat)}.
             </strong>{' '}
             {bBase > 3_000 || bPpm > 4_000
-              ? 'B has priced itself out — the payment now prefers D, who charges more per unit but asked for less overall. A node that overcharges does not earn more; it simply stops seeing traffic.'
+              ? 'B has priced itself out: the payment now prefers D, who charges more per unit but asked for less overall. A node that overcharges does not earn more; it simply stops seeing traffic.'
               : 'B is the cheaper way through, so that is where the payment goes. Push B’s numbers up and watch the route abandon it.'}
           </Callout>
         )}
@@ -123,7 +123,7 @@ export function RouteFinder({ finale }: RunnerProps) {
         </button>
         {checked?.ok && (
           <Callout>
-            <strong>✓ {checked.got.toLocaleString('en-US')} msat — exactly what the spec prints.</strong>{' '}
+            <strong>✓ {checked.got.toLocaleString('en-US')} msat, exactly what the spec prints.</strong>{' '}
             Note it is 10,199 and not 10,200: the division truncates, and getting that wrong would
             mean offering a fee the next hop rejects. The same check runs in CI, and CI also
             confirms this line is still in the pinned specification.
@@ -176,7 +176,7 @@ export function RouteFinder({ finale }: RunnerProps) {
                         {' '}
                         ←{' '}
                         {hop.feeMsat === 0
-                          ? `${hop.from} charges nothing — it is the sender, forwarding for no one`
+                          ? `${hop.from} charges nothing: it is the sender, forwarding for no one`
                           : `${hop.from} keeps ${hop.feeMsat.toLocaleString('en-US')} msat`}
                       </span>
                     </span>
@@ -186,13 +186,13 @@ export function RouteFinder({ finale }: RunnerProps) {
               <div className="guess-verdict">
                 {chosen.hops.filter((h) => h.feeMsat > 0).length} fee
                 {chosen.hops.filter((h) => h.feeMsat > 0).length === 1 ? '' : 's'} across{' '}
-                {chosen.hops.length} channels — every forwarding node takes one, the sender and
+                {chosen.hops.length} channels: every forwarding node takes one, the sender and
                 the payee take none. Nothing is sent to them: each simply keeps the gap between
                 what arrives and what it passes on.
               </div>
               <div className="guess-verdict">
                 A sends {fmt(chosen.totalSendMsat)} so that C receives{' '}
-                {amountSats.toLocaleString('en-US')} sats — fees never come out of the invoice
+                {amountSats.toLocaleString('en-US')} sats, fees never come out of the invoice
               </div>
             </div>
           )}

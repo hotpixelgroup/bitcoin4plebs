@@ -3,7 +3,7 @@ import type { SiteId } from './sites.js';
 /**
  * The quest content model.
  *
- * Design rule: a Quest is PLAIN, SERIALIZABLE DATA — no components, no
+ * Design rule: a Quest is PLAIN, SERIALIZABLE DATA, no components, no
  * functions. That keeps quests renderable by one generic engine today and
  * loadable from our own API tomorrow without changing a single component.
  *
@@ -41,7 +41,7 @@ export interface CodeLine {
 export interface CodeExcerpt {
   ref: SourceRef;
   /**
-   * 'text' is for non-code sources (specification documents) — no
+   * 'text' is for non-code sources (specification documents), no
    * highlighting. 'go' arrived with Lightning: the BOLTs are the authority,
    * but a real node implementing them is what makes them concrete.
    */
@@ -85,7 +85,7 @@ export interface Myth {
 export interface Stop {
   id: string;
   title: string;
-  /** The one-line takeaway (always visible — depth level 1). */
+  /** The one-line takeaway (always visible, depth level 1). */
   takeaway: string;
   /** Paragraphs for the curious (depth level 2). */
   prose: string[];
@@ -124,7 +124,7 @@ export interface Feynman {
 
 /**
  * The interactive "run it yourself" ending of a quest. `runnerId` is looked
- * up in the app's runner registry — quest data itself stays serializable.
+ * up in the app's runner registry, quest data itself stays serializable.
  */
 export interface Finale {
   title: string;

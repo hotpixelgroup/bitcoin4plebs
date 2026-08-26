@@ -1,7 +1,7 @@
 import { SUBSIDY_HALVING_INTERVAL } from './constants.js';
 
 /**
- * Target block spacing — src/kernel/chainparams.cpp:128
+ * Target block spacing, src/kernel/chainparams.cpp:128
  * (`consensus.nPowTargetSpacing = 10 * 60;`).
  */
 export const TARGET_BLOCK_SPACING_SECONDS = 10 * 60;
@@ -9,7 +9,7 @@ export const TARGET_BLOCK_SPACING_SECONDS = 10 * 60;
 /**
  * A well-known real-world anchor: the fourth halving occurred at block
  * 840,000, mined 2024-04-20 (UTC). We estimate other block times from this
- * anchor at the 10-minute target. Estimates only — real block times drift.
+ * anchor at the 10-minute target. Estimates only, real block times drift.
  */
 export const HALVING_ANCHOR = {
   height: 840_000,

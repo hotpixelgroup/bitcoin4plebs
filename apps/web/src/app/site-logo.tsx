@@ -1,5 +1,5 @@
 /**
- * The mark: a miniature of the site's own signature element — a code card
+ * The mark: a miniature of the site's own signature element, a code card
  * with one highlighted line (the .cl-hl motif every quest reader knows).
  * Drawn inline so it scales crisply everywhere, and painted from the
  * --brand token so each front door gets its own accent. In the header it

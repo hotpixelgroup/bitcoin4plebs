@@ -17,7 +17,7 @@ const QUESTIONS: Question[] = [
     ask: 'Did the wallet show you a recovery phrase and tell you to write it down?',
     yesMeansSelf: true,
     yesNote: 'A recovery phrase exists because there is a key only you hold.',
-    noNote: 'No phrase means there is nothing of yours to recover — the keys are not yours.',
+    noNote: 'No phrase means there is nothing of yours to recover: the keys are not yours.',
   },
   {
     id: 'signup',
@@ -74,7 +74,7 @@ export function CustodyCheck({ finale }: RunnerProps) {
       <div className="prose">
         <p>
           Four questions about the wallet you actually use. They are about{' '}
-          <strong>behaviour</strong>, not brand names — how a wallet behaves is what distinguishes
+          <strong>behaviour</strong>, not brand names, how a wallet behaves is what distinguishes
           the models in practice, and it does not go stale the way a list of products would.
         </p>
         {QUESTIONS.map((q) => (
@@ -105,7 +105,7 @@ export function CustodyCheck({ finale }: RunnerProps) {
             <strong>You are holding your own keys.</strong> Everything in this curriculum
             describes <em>your</em> protection: the 2-of-2 lock is half yours, the penalty branch
             is enforceable by you, and nobody can freeze or reverse your payments. The duties come
-            with it — being able to receive, and something watching the chain while you sleep.
+            with it, being able to receive, and something watching the chain while you sleep.
           </Callout>
         )}
         {verdict === 'custodial' && (
@@ -120,7 +120,7 @@ export function CustodyCheck({ finale }: RunnerProps) {
         )}
         {verdict === 'mixed' && (
           <Callout>
-            <strong>Mixed signals — worth checking properly.</strong> Some wallets are genuinely
+            <strong>Mixed signals, worth checking properly.</strong> Some wallets are genuinely
             hybrid: your keys, but channels managed by a service that can still see a great deal.
             Others are custodial with a recovery phrase for an on-chain balance only. The
             deciding question is the one from the first stop:{' '}
@@ -150,7 +150,7 @@ export function CustodyCheck({ finale }: RunnerProps) {
               <div className="field-row" key={claim}>
                 <span className="field-label">{claim}</span>
                 <span className="field-hex">
-                  {!done ? '—' : verdict === 'self' ? '✓ yours' : verdict === 'mixed' ? '? check' : '✗ theirs'}
+                  {!done ? ', ' : verdict === 'self' ? '✓ yours' : verdict === 'mixed' ? '? check' : '✗ theirs'}
                 </span>
               </div>
             ))}
@@ -160,7 +160,7 @@ export function CustodyCheck({ finale }: RunnerProps) {
               <div className="stat-label">the deciding question</div>
               <div className="guess-verdict">
                 If the provider disappeared tonight, could you still get your money?
-                {verdict === 'self' ? ' — yes, by force closing.' : verdict === 'custodial' ? ' — no.' : ' — worth finding out.'}
+                {verdict === 'self' ? ', yes, by force closing.' : verdict === 'custodial' ? ', no.' : ', worth finding out.'}
               </div>
             </div>
           )}

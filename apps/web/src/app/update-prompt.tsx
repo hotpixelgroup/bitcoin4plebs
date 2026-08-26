@@ -7,7 +7,7 @@ import { useRegisterSW } from 'virtual:pwa-register/react';
  * This site is an installable PWA, so a visitor is served from a cached
  * copy of a specific build. Silently swapping that copy underneath them
  * would sit badly with a site whose whole claim is that you can check
- * what you are running — so when a new build is ready we say so, name the
+ * what you are running, so when a new build is ready we say so, name the
  * consequence, and let the reader choose the moment.
  *
  * Two independent notices, deliberately quiet: one when a new version is
@@ -23,7 +23,7 @@ export function UpdatePrompt() {
 
   /**
    * Take the update. updateServiceWorker normally reloads for us once the
-   * new worker takes control — but if this page is not controlled by a
+   * new worker takes control, but if this page is not controlled by a
    * worker (which happens on the very first registration) there is nothing
    * to take control, no controllerchange fires, and it would quietly do
    * nothing. A button that says Reload must always reload, so fall back.
@@ -44,7 +44,7 @@ export function UpdatePrompt() {
             <strong>A new version of this site is ready.</strong>
             <span>
               You are currently reading a cached copy of an earlier build. Reloading swaps in
-              the new one — nothing you have marked verified is lost.
+              the new one, nothing you have marked verified is lost.
             </span>
           </div>
           <div className="sw-toast-actions">
