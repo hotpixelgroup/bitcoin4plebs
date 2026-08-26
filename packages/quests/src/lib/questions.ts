@@ -342,6 +342,41 @@ export const questions: NewbieQuestion[] = [
     slug: 'what-is-an-invoice',
     stop: 'the-hash',
   },
+  {
+    site: 'lightning',
+    question: 'Who actually receives the routing fees?',
+    short: 'Each forwarding node keeps its own — and never as a separate payment. It is simply offered more on one channel than it sends on the other, and keeps the difference.',
+    slug: 'finding-a-route',
+    stop: 'who-gets-paid',
+  },
+  {
+    site: 'lightning',
+    question: 'Does every hop add a fee?',
+    short: 'Every hop that forwards does. The sender does not (it forwards for nobody) and the payee does not (it is being paid), so N channels means N−1 fees.',
+    slug: 'finding-a-route',
+    stop: 'who-gets-paid',
+  },
+  {
+    site: 'lightning',
+    question: 'How do I know how many hops my payment will take?',
+    short: 'You choose them — route selection happens in your own wallet, so the count and the total cost are settled before anything moves. Nobody on the route knows the length.',
+    slug: 'finding-a-route',
+    stop: 'who-gets-paid',
+  },
+  {
+    site: 'lightning',
+    question: 'Does the number of hops matter?',
+    short: 'Less than you would think. A long cheap route beats a short expensive one, and you see the total in advance. The onion caps a route at 20 hops; real ones are far shorter.',
+    slug: 'finding-a-route',
+    stop: 'who-gets-paid',
+  },
+  {
+    site: 'lightning',
+    question: 'Who decides what a Lightning payment costs?',
+    short: 'Nobody centrally. Each node picks two numbers, advertises them, and your wallet adds up the cheapest path. The specification fixes the formula, never the numbers.',
+    slug: 'finding-a-route',
+    stop: 'setting-fees',
+  },
 ];
 
 /** The question-first index for one front door. */
