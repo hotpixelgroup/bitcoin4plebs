@@ -261,14 +261,14 @@ export const questions: NewbieQuestion[] = [
   {
     site: 'lightning',
     question: 'Do my coins leave Bitcoin when I use Lightning?',
-    short: 'No. They sit in an ordinary Bitcoin output locked to two keys — the chain simply is not asked about them while the channel is open.',
+    short: 'No. They sit in an ordinary Bitcoin output locked to two keys: the chain simply is not asked about them while the channel is open.',
     slug: 'what-is-a-channel',
     stop: 'the-lock',
   },
   {
     site: 'lightning',
     question: 'What stops my channel partner stealing from me?',
-    short: 'A key built from two halves that neither of you can complete alone — and moving to a new balance is what hands them their half.',
+    short: 'A key built from two halves that neither of you can complete alone and moving to a new balance is what hands them their half.',
     slug: 'why-cheating-fails',
     stop: 'the-two-halves',
   },
@@ -289,7 +289,7 @@ export const questions: NewbieQuestion[] = [
   {
     site: 'lightning',
     question: 'Can the nodes in the middle steal my payment?',
-    short: 'They are never given anything spendable — only a promise that opens with a secret they do not have. Failing to forward earns them nothing.',
+    short: 'They are never given anything spendable, only a promise that opens with a secret they do not have. Failing to forward earns them nothing.',
     slug: 'crossing-strangers',
     stop: 'the-lock',
   },
@@ -303,14 +303,14 @@ export const questions: NewbieQuestion[] = [
   {
     site: 'lightning',
     question: 'My payment is stuck. Is my money gone?',
-    short: 'No — it is locked in an HTLC until its deadline, then it comes back. Long routes mean long deadlines, sometimes hours.',
+    short: 'No: it is locked in an HTLC until its deadline, then it comes back. Long routes mean long deadlines, sometimes hours.',
     slug: 'crossing-strangers',
     stop: 'the-ladder',
   },
   {
     site: 'lightning',
     question: 'Can routing nodes see who I am paying?',
-    short: 'No. The specification is precise: a hop learns its neighbours and nothing else — not the route, not its length, not its own position.',
+    short: 'No. The specification is precise: a hop learns its neighbours and nothing else, not the route, not its length, not its own position.',
     slug: 'who-paid-whom',
     stop: 'the-claim',
   },
@@ -324,14 +324,14 @@ export const questions: NewbieQuestion[] = [
   {
     site: 'lightning',
     question: 'Why does closing a channel take so long?',
-    short: 'A force close puts your own funds behind a timelock — the window in which your counterparty could prove you cheated. Cooperative closes are immediate.',
+    short: 'A force close puts your own funds behind a timelock: the window in which your counterparty could prove you cheated. Cooperative closes are immediate.',
     slug: 'why-cheating-fails',
     stop: 'delay-or-punish',
   },
   {
     site: 'lightning',
     question: 'What is a millisatoshi and why does it exist?',
-    short: 'A thousandth of a satoshi, and it exists only above the chain — routing fees are often a tiny fraction of a sat and would otherwise round to zero.',
+    short: 'A thousandth of a satoshi, and it exists only above the chain, routing fees are often a tiny fraction of a sat and would otherwise round to zero.',
     slug: 'crossing-strangers',
     stop: 'the-message',
   },
@@ -345,7 +345,7 @@ export const questions: NewbieQuestion[] = [
   {
     site: 'lightning',
     question: 'Who actually receives the routing fees?',
-    short: 'Each forwarding node keeps its own — and never as a separate payment. It is simply offered more on one channel than it sends on the other, and keeps the difference.',
+    short: 'Each forwarding node keeps its own and never as a separate payment. It is simply offered more on one channel than it sends on the other and keeps the difference.',
     slug: 'finding-a-route',
     stop: 'who-gets-paid',
   },
@@ -359,7 +359,7 @@ export const questions: NewbieQuestion[] = [
   {
     site: 'lightning',
     question: 'How do I know how many hops my payment will take?',
-    short: 'You choose them — route selection happens in your own wallet, so the count and the total cost are settled before anything moves. Nobody on the route knows the length.',
+    short: 'You choose them, route selection happens in your own wallet, so the count and the total cost are settled before anything moves. Nobody on the route knows the length.',
     slug: 'finding-a-route',
     stop: 'who-gets-paid',
   },

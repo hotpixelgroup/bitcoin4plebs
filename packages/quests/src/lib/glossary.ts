@@ -15,7 +15,7 @@ export interface GlossaryEntry {
   term: string;
   /**
    * Restrict this entry to one front door. Absent means it appears on
-   * BOTH — most vocabulary (satoshi, hash, UTXO) is shared, and a reader
+   * BOTH: most vocabulary (satoshi, hash, UTXO) is shared, and a reader
    * on either site benefits from the same definition.
    */
   site?: SiteId;
@@ -1092,7 +1092,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['payment channel', 'payment channels'],
     category: 'Lightning & channels',
     definition:
-      'Coins locked in a **2-of-2 output** on the Bitcoin blockchain, plus a running balance between the two owners that they update privately and the chain never sees. Opening and closing are ordinary on-chain transactions; everything in between is free, instant, and invisible. The coins never leave Bitcoin — the chain simply is not asked about them in the meantime.',
+      'Coins locked in a **2-of-2 output** on the Bitcoin blockchain, plus a running balance between the two owners that they update privately and the chain never sees. Opening and closing are ordinary on-chain transactions; everything in between is free, instant, and invisible. The coins never leave Bitcoin: the chain simply is not asked about them in the meantime.',
     cite: '03-transactions.md:79',
     quest: 1,
     questSite: 'lightning',
@@ -1102,14 +1102,14 @@ export const glossary: GlossaryEntry[] = [
     match: ['BOLT', 'BOLTs'],
     category: 'Lightning & channels',
     definition:
-      "Basis of Lightning Technology: the numbered specification documents that define the Lightning protocol, the way BIPs define Bitcoin proposals. There is no reference implementation blessed above the others — the BOLTs are the authority, and several independent nodes implement them. Unusually, they also ship machine-readable test vectors, so an implementation can be checked against the spec rather than against another implementation.",
+      "Basis of Lightning Technology: the numbered specification documents that define the Lightning protocol, the way BIPs define Bitcoin proposals. There is no reference implementation blessed above the others: the BOLTs are the authority, and several independent nodes implement them. Unusually, they also ship machine-readable test vectors, so an implementation can be checked against the spec rather than against another implementation.",
   },
   {
     term: 'Commitment transaction',
     match: ['commitment transaction'],
     category: 'Lightning & channels',
     definition:
-      'A signed Bitcoin transaction that spends a channel\'s funding output back to its two owners at the balance they currently agree on. Each side holds its own copy and can broadcast it unilaterally at any time, which is what makes a channel trustless — but broadcasting an outdated one is punished (see [[Revocation key]]).',
+      'A signed Bitcoin transaction that spends a channel\'s funding output back to its two owners at the balance they currently agree on. Each side holds its own copy and can broadcast it unilaterally at any time, which is what makes a channel trustless, but broadcasting an outdated one is punished (see [[Revocation key]]).',
     quest: 1,
     questSite: 'lightning',
   },
@@ -1119,7 +1119,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['revocation key', 'revocationpubkey'],
     category: 'Lightning & channels',
     definition:
-      "The key that guards the penalty branch of every channel balance. It is built from two halves — one from each party — so that **neither can compute the private key alone**. Moving to a new balance requires handing your counterparty the secret that completes their half, which is precisely what makes the balance you just left behind dangerous to publish.",
+      "The key that guards the penalty branch of every channel balance. It is built from two halves: one from each party, so that **neither can compute the private key alone**. Moving to a new balance requires handing your counterparty the secret that completes their half, which is precisely what makes the balance you just left behind dangerous to publish.",
     cite: '03-transactions.md:817',
     quest: 2,
     questSite: 'lightning',
@@ -1151,7 +1151,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['force close', 'force-close'],
     category: 'Lightning & channels',
     definition:
-      'Closing a channel by broadcasting your latest commitment transaction unilaterally, without your counterparty\'s cooperation. Always available — that is the point — but it costs on-chain fees and puts your own funds behind `to_self_delay`. A cooperative close, where both sides sign one tidy transaction, is cheaper and immediate.',
+      'Closing a channel by broadcasting your latest commitment transaction unilaterally, without your counterparty\'s cooperation. Always available: that is the point, but it costs on-chain fees and puts your own funds behind `to_self_delay`. A cooperative close, where both sides sign one tidy transaction, is cheaper and immediate.',
     quest: 2,
     questSite: 'lightning',
   },
@@ -1160,7 +1160,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['penalty transaction'],
     category: 'Lightning & channels',
     definition:
-      "The transaction that takes a cheater's entire channel balance after they publish a revoked state. The specification names it in the script itself, as a comment. It needs no delay and no permission — only the [[Revocation key]], which the cheater handed over themselves when they moved on from that balance.",
+      "The transaction that takes a cheater's entire channel balance after they publish a revoked state. The specification names it in the script itself, as a comment. It needs no delay and no permission, only the [[Revocation key]], which the cheater handed over themselves when they moved on from that balance.",
     cite: '03-transactions.md:118',
     quest: 2,
     questSite: 'lightning',
@@ -1170,7 +1170,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['millisatoshi', 'millisat', 'msat'],
     category: 'Lightning & channels',
     definition:
-      'One thousandth of a satoshi: the unit Lightning accounts in. It exists only above the chain — Bitcoin itself has no denomination smaller than a satoshi — and is there so routing fees, which are often a tiny fraction of a satoshi, can be expressed without rounding to zero. Amounts are rounded down to whole satoshis when a channel actually settles on-chain.',
+      'One thousandth of a satoshi: the unit Lightning accounts in. It exists only above the chain, Bitcoin itself has no denomination smaller than a satoshi and is there so routing fees, which are often a tiny fraction of a satoshi, can be expressed without rounding to zero. Amounts are rounded down to whole satoshis when a channel actually settles on-chain.',
   },
   // --- Lightning vocabulary and the script it is built from ---
   {
@@ -1178,7 +1178,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['HTLC', 'HTLCs', 'Hashed Timelock Contract'],
     category: 'Lightning & channels',
     definition:
-      "Hashed Timelock Contract: a promise of money with two exits and no third. Either someone produces the [[Preimage]] of a given hash and takes it immediately, or a deadline passes and it refunds to whoever offered it. Chain those promises along a route, all locked to the same hash, and a payment either completes at every hop or at none of them — which is why a stranger in the middle can never keep it.",
+      "Hashed Timelock Contract: a promise of money with two exits and no third. Either someone produces the [[Preimage]] of a given hash and takes it immediately, or a deadline passes and it refunds to whoever offered it. Chain those promises along a route, all locked to the same hash, and a payment either completes at every hop or at none of them, which is why a stranger in the middle can never keep it.",
     cite: '03-transactions.md:214',
     quest: 4,
     questSite: 'lightning',
@@ -1188,7 +1188,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['preimage'],
     category: 'Lightning & channels',
     definition:
-      'The secret that hashes to a given value. The payee invents one, publishes only its hash in the invoice, and releases it when paid — so holding it afterwards, next to their signed invoice, is a receipt nobody can forge or revoke. The specification puts it plainly: the preimage of the payment hash *provides proof of payment*.',
+      'The secret that hashes to a given value. The payee invents one, publishes only its hash in the invoice, and releases it when paid, so holding it afterwards, next to their signed invoice, is a receipt nobody can forge or revoke. The specification puts it plainly: the preimage of the payment hash *provides proof of payment*.',
     cite: '11-payment-encoding.md:145',
     quest: 3,
     questSite: 'lightning',
@@ -1198,7 +1198,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['onion routing', 'sphinx'],
     category: 'Lightning & channels',
     definition:
-      'Wrapping a payment in one encrypted layer per hop, so each node can open exactly one — learning who to forward to and nothing else. The packet is always **1,366 bytes**, because a packet that shrank as it travelled would tell every node how far along the route it was.',
+      'Wrapping a payment in one encrypted layer per hop, so each node can open exactly one, learning who to forward to and nothing else. The packet is always **1,366 bytes**, because a packet that shrank as it travelled would tell every node how far along the route it was.',
     cite: '04-onion-routing.md:144',
     quest: 5,
     questSite: 'lightning',
@@ -1208,14 +1208,14 @@ export const glossary: GlossaryEntry[] = [
     match: ['watchtower', 'watchtowers'],
     category: 'Lightning & channels',
     definition:
-      "A third party you pay (or ask nicely) to watch the chain for revoked channel states on your behalf, and to broadcast the [[Penalty transaction]] if one appears. It exists because the penalty only works if somebody notices during the `to_self_delay` window — and your phone is not always online. A watchtower is given enough to punish a cheat and not enough to learn your balances.",
+      "A third party you pay (or ask nicely) to watch the chain for revoked channel states on your behalf, and to broadcast the [[Penalty transaction]] if one appears. It exists because the penalty only works if somebody notices during the `to_self_delay` window, and your phone is not always online. A watchtower is given enough to punish a cheat and not enough to learn your balances.",
   },
   {
     term: 'Inbound liquidity',
     match: ['inbound liquidity', 'inbound capacity'],
     category: 'Lightning & channels',
     definition:
-      "How much someone can currently send *to* you: the money sitting on the far side of your channels. This is the single most common practical confusion in Lightning — a channel can only push what is on your side of it, so a brand-new channel you funded yourself can send but cannot receive a satoshi until some of it moves.",
+      "How much someone can currently send *to* you: the money sitting on the far side of your channels. This is the single most common practical confusion in Lightning: a channel can only push what is on your side of it, so a brand-new channel you funded yourself can send but cannot receive a satoshi until some of it moves.",
     quest: 4,
     questSite: 'lightning',
   },
@@ -1224,7 +1224,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['routing node', 'routing nodes', 'forwarding node'],
     category: 'Lightning & channels',
     definition:
-      'A node that forwards other people’s payments between its channels and keeps a small fee. It is never handed anything spendable — only an [[HTLC]] it cannot open — so its honesty is irrelevant rather than assumed. The worst it can do to you is fail, and failing earns it nothing.',
+      'A node that forwards other people’s payments between its channels and keeps a small fee. It is never handed anything spendable, only an [[HTLC]] it cannot open, so its honesty is irrelevant rather than assumed. The worst it can do to you is fail, and failing earns it nothing.',
     quest: 4,
     questSite: 'lightning',
   },
@@ -1241,7 +1241,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['P2WSH', 'pay-to-witness-script-hash'],
     category: 'Addresses & encoding',
     definition:
-      'Pay-to-witness-script-hash: an output that commits to the *hash* of a script rather than the script itself. The script stays private until the money moves, and only then is it revealed and run. Both of a Lightning channel’s important outputs — the funding lock and the delay-or-punish output — are this shape.',
+      'Pay-to-witness-script-hash: an output that commits to the *hash* of a script rather than the script itself. The script stays private until the money moves, and only then is it revealed and run. Both of a Lightning channel’s important outputs, the funding lock and the delay-or-punish output, are this shape.',
     cite: '03-transactions.md:77',
     quest: 1,
     questSite: 'lightning',
@@ -1252,7 +1252,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['OP_CHECKMULTISIG'],
     category: 'Keys & ownership',
     definition:
-      '[[OP_CHECKSIG]] in the plural: this many signatures, from these keys, or the coins do not move. A Lightning channel opens by locking coins with `2 <pubkey1> <pubkey2> 2 OP_CHECKMULTISIG` — two of two, so neither party can touch the money alone. The keys are sorted lexicographically so two strangers’ software builds byte-identical scripts.',
+      '[[OP_CHECKSIG]] in the plural: this many signatures, from these keys, or the coins do not move. A Lightning channel opens by locking coins with `2 <pubkey1> <pubkey2> 2 OP_CHECKMULTISIG`: two of two, so neither party can touch the money alone. The keys are sorted lexicographically so two strangers’ software builds byte-identical scripts.',
     cite: '03-transactions.md:79',
     quest: 1,
     questSite: 'lightning',
@@ -1263,7 +1263,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['OP_CHECKSEQUENCEVERIFY', 'CSV'],
     category: 'Keys & ownership',
     definition:
-      'The relative [[Timelock]] opcode: this output cannot be spent until so many blocks have passed since it confirmed. It is what puts a force-closing party’s own money behind a delay — and that delay is precisely the window in which a cheated counterparty can take everything instead.',
+      'The relative [[Timelock]] opcode: this output cannot be spent until so many blocks have passed since it confirmed. It is what puts a force-closing party’s own money behind a delay, and that delay is precisely the window in which a cheated counterparty can take everything instead.',
     cite: '03-transactions.md:122',
     quest: 2,
     questSite: 'lightning',
@@ -1285,7 +1285,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['update_add_htlc'],
     category: 'Lightning & channels',
     definition:
-      'The message that offers a payment into a channel. Five fields: which channel, an id, `amount_msat`, the `payment_hash`, a `cltv_expiry` deadline, and a sealed 1,366-byte onion the sender cannot read. Notice what is absent — no payer, no payee, no route.',
+      'The message that offers a payment into a channel. Five fields: which channel, an id, `amount_msat`, the `payment_hash`, a `cltv_expiry` deadline, and a sealed 1,366-byte onion the sender cannot read. Notice what is absent, no payer, no payee, no route.',
     cite: '02-peer-protocol.md:2783',
     quest: 4,
     questSite: 'lightning',
@@ -1307,7 +1307,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['cltv_expiry', 'cltv_expiry_delta'],
     category: 'Lightning & channels',
     definition:
-      'The block height after which an [[HTLC]] expires and refunds. Deadlines *descend* along a route so every hop has time to claim its incoming promise after paying out — which is why long routes need long timelocks, and why a stuck payment can lock funds for hours.',
+      'The block height after which an [[HTLC]] expires and refunds. Deadlines *descend* along a route so every hop has time to claim its incoming promise after paying out, which is why long routes need long timelocks, and why a stuck payment can lock funds for hours.',
     cite: '02-peer-protocol.md:2789',
     quest: 4,
     questSite: 'lightning',
@@ -1318,7 +1318,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['amount_msat'],
     category: 'Lightning & channels',
     definition:
-      'A payment amount in [[Millisatoshi]] — thousandths of a satoshi. The extra precision exists only above the chain, so that routing fees, which are often a tiny fraction of a satoshi, do not round to nothing.',
+      'A payment amount in [[Millisatoshi]], thousandths of a satoshi. The extra precision exists only above the chain, so that routing fees, which are often a tiny fraction of a satoshi, do not round to nothing.',
     cite: '02-peer-protocol.md:2787',
     quest: 4,
     questSite: 'lightning',
@@ -1340,7 +1340,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['per_commitment_point'],
     category: 'Lightning & channels',
     definition:
-      'A fresh public key for each channel balance, derived as `per_commitment_secret * G`. It is one of the two halves the [[Revocation key]] is built from — the half you contribute — and surrendering its secret is what revokes a state.',
+      'A fresh public key for each channel balance, derived as `per_commitment_secret * G`. It is one of the two halves the [[Revocation key]] is built from, the half you contribute and surrendering its secret is what revokes a state.',
     cite: '03-transactions.md:812',
     quest: 2,
     questSite: 'lightning',
@@ -1351,7 +1351,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['revocation_basepoint', 'revocation basepoint'],
     category: 'Lightning & channels',
     definition:
-      'Your counterparty’s long-lived contribution to every [[Revocation key]] in the channel — the other half from your [[per_commitment_point]]. Because each side holds only one half’s secret, neither can compute the private key alone, which the specification states outright.',
+      'Your counterparty’s long-lived contribution to every [[Revocation key]] in the channel, the other half from your [[per_commitment_point]]. Because each side holds only one half’s secret, neither can compute the private key alone, which the specification states outright.',
     cite: '03-transactions.md:817',
     quest: 2,
     questSite: 'lightning',
@@ -1362,7 +1362,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['local_delayedpubkey', 'delayed payment key'],
     category: 'Lightning & channels',
     definition:
-      'The key that can finally spend your own balance after a force close — but only once `to_self_delay` blocks have passed. It is kept separate from your other keys so a [[Watchtower]] can be given what it needs to punish a cheat without learning anything else about the channel.',
+      'The key that can finally spend your own balance after a force close, but only once `to_self_delay` blocks have passed. It is kept separate from your other keys so a [[Watchtower]] can be given what it needs to punish a cheat without learning anything else about the channel.',
     cite: '03-transactions.md:124',
     quest: 2,
     questSite: 'lightning',
@@ -1372,7 +1372,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['routing fee', 'routing fees'],
     category: 'Lightning & channels',
     definition:
-      'What a node charges to forward someone else’s payment. There is no schedule and no authority: each node picks two numbers per direction — [[fee_base_msat]] and [[fee_proportional_millionths]] — and advertises them. The **sender pays every fee on the route in advance**, so the payee always receives exactly the invoice amount.',
+      'What a node charges to forward someone else’s payment. There is no schedule and no authority: each node picks two numbers per direction, [[fee_base_msat]] and [[fee_proportional_millionths]] and advertises them. The **sender pays every fee on the route in advance**, so the payee always receives exactly the invoice amount.',
     cite: '07-routing-gossip.md:981',
     quest: 6,
     questSite: 'lightning',
@@ -1394,7 +1394,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['fee_proportional_millionths', 'ppm', 'proportional fee'],
     category: 'Lightning & channels',
     definition:
-      'The proportional part of a [[Routing fee]], in millionths of the amount forwarded — so 1,000 is 0.1%. Multiplied by the amount and divided by a million, with the division **truncating**, which is why the specification’s worked example comes to 10,199 and not 10,200.',
+      'The proportional part of a [[Routing fee]], in millionths of the amount forwarded, so 1,000 is 0.1%. Multiplied by the amount and divided by a million, with the division **truncating**, which is why the specification’s worked example comes to 10,199 and not 10,200.',
     cite: '07-routing-gossip.md:457',
     quest: 6,
     questSite: 'lightning',
@@ -1405,7 +1405,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['channel_update'],
     category: 'Lightning & channels',
     definition:
-      'The gossip message in which a node announces its current terms for one direction of one channel: its two fee numbers, the timelock it insists on, and the smallest and largest payment it will carry. Replaceable at any time — a node changes its prices by broadcasting a new one.',
+      'The gossip message in which a node announces its current terms for one direction of one channel: its two fee numbers, the timelock it insists on, and the smallest and largest payment it will carry. Replaceable at any time, a node changes its prices by broadcasting a new one.',
     cite: '07-routing-gossip.md:446',
     quest: 6,
     questSite: 'lightning',
@@ -1425,7 +1425,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['short_channel_id'],
     category: 'Lightning & channels',
     definition:
-      'A channel’s on-chain birth certificate: the block height, transaction index and output index of its funding transaction. Because it points at a real output, anyone can check a channel announcement against the blockchain — which is what stops invented capacity spreading through [[Gossip]].',
+      'A channel’s on-chain birth certificate: the block height, transaction index and output index of its funding transaction. Because it points at a real output, anyone can check a channel announcement against the blockchain, which is what stops invented capacity spreading through [[Gossip]].',
     cite: '07-routing-gossip.md:450',
     quest: 6,
     questSite: 'lightning',
