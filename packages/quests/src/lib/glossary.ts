@@ -1367,6 +1367,69 @@ export const glossary: GlossaryEntry[] = [
     quest: 2,
     questSite: 'lightning',
   },
+  {
+    term: 'Routing fee',
+    match: ['routing fee', 'routing fees'],
+    category: 'Lightning & channels',
+    definition:
+      'What a node charges to forward someone else’s payment. There is no schedule and no authority: each node picks two numbers per direction — [[fee_base_msat]] and [[fee_proportional_millionths]] — and advertises them. The **sender pays every fee on the route in advance**, so the payee always receives exactly the invoice amount.',
+    cite: '07-routing-gossip.md:981',
+    quest: 6,
+    questSite: 'lightning',
+  },
+  {
+    term: 'fee_base_msat',
+    code: true,
+    match: ['fee_base_msat', 'base fee'],
+    category: 'Lightning & channels',
+    definition:
+      'The flat part of a [[Routing fee]]: charged on every forward regardless of size, in millisatoshis. Set by the node itself and broadcast in a [[channel_update]]. Plenty of nodes advertise zero because they want the traffic.',
+    cite: '07-routing-gossip.md:456',
+    quest: 6,
+    questSite: 'lightning',
+  },
+  {
+    term: 'fee_proportional_millionths',
+    code: true,
+    match: ['fee_proportional_millionths', 'ppm', 'proportional fee'],
+    category: 'Lightning & channels',
+    definition:
+      'The proportional part of a [[Routing fee]], in millionths of the amount forwarded — so 1,000 is 0.1%. Multiplied by the amount and divided by a million, with the division **truncating**, which is why the specification’s worked example comes to 10,199 and not 10,200.',
+    cite: '07-routing-gossip.md:457',
+    quest: 6,
+    questSite: 'lightning',
+  },
+  {
+    term: 'channel_update',
+    code: true,
+    match: ['channel_update'],
+    category: 'Lightning & channels',
+    definition:
+      'The gossip message in which a node announces its current terms for one direction of one channel: its two fee numbers, the timelock it insists on, and the smallest and largest payment it will carry. Replaceable at any time — a node changes its prices by broadcasting a new one.',
+    cite: '07-routing-gossip.md:446',
+    quest: 6,
+    questSite: 'lightning',
+  },
+  {
+    term: 'Gossip',
+    match: ['gossip', 'gossip protocol'],
+    category: 'Lightning & channels',
+    definition:
+      'How the network map spreads: nodes announce their own channels and terms, neighbours pass the announcements on, and every wallet builds its own copy. Nobody publishes a directory. Two wallets can briefly hold different maps and both be right, which is one reason a payment can fail for a reason yours could not have known.',
+    quest: 6,
+    questSite: 'lightning',
+  },
+  {
+    term: 'short_channel_id',
+    code: true,
+    match: ['short_channel_id'],
+    category: 'Lightning & channels',
+    definition:
+      'A channel’s on-chain birth certificate: the block height, transaction index and output index of its funding transaction. Because it points at a real output, anyone can check a channel announcement against the blockchain — which is what stops invented capacity spreading through [[Gossip]].',
+    cite: '07-routing-gossip.md:450',
+    quest: 6,
+    questSite: 'lightning',
+  },
 ];
 
 /** Glossary entries visible on one front door (shared terms appear on both). */

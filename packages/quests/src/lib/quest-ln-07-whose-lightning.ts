@@ -2,16 +2,16 @@ import type { Quest } from './types.js';
 import { BOLTS_PIN } from './excerpts.js';
 
 /**
- * Lightning Quest #6: the practical capstone. Five quests of mechanism
+ * Lightning Quest #7: the practical capstone. Five quests of mechanism
  * are worth nothing to a reader whose wallet holds none of the keys, so
  * this one is about the choices that decide whether any of it applies to
  * them — and the honest costs nobody mentions in the marketing.
  */
-export const questLn06: Quest = {
-  id: 'quest-ln-06',
+export const questLn07: Quest = {
+  id: 'quest-ln-07',
   site: 'lightning',
   slug: 'whose-lightning',
-  number: 6,
+  number: 7,
   kicker: "Don't trust. Verify.",
   track: 'The big questions',
   title: 'Whose Lightning are you using?',

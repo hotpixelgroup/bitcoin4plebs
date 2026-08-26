@@ -88,7 +88,7 @@ export const entryPaths: EntryPath[] = [
     prompt: 'What can go wrong with my money?',
     blurb:
       'What a force close costs, why your funds sit behind a delay, what a stuck payment locks up, and the one choice — custodial or not — that matters more than all of it.',
-    questNumbers: [6, 2, 4],
+    questNumbers: [7, 2, 4],
   },
 ];
 
@@ -126,7 +126,8 @@ const lightningPrerequisites: Record<number, number[]> = {
   3: [1],
   4: [1, 3],
   5: [4],
-  6: [1, 2],
+  6: [4],
+  7: [1, 2],
 };
 
 export const prerequisites: Record<SiteId, Record<number, number[]>> = {
