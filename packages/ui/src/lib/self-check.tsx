@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { QuizItem } from '@bitcoin4plebs/quests';
+import type { QuizItem } from '@bitcoin4plebs/quests/content';
 import { RichText } from './rich-text.js';
 
 /**

@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "type": "module",
+  "sideEffects": false,
   "main": "./src/index.ts",
   "types": "./src/index.ts",
   "exports": {
@@ -17,6 +18,12 @@
       "types": "./dist/lib/sites.d.ts",
       "import": "./src/lib/sites.ts",
       "default": "./src/lib/sites.ts"
+    },
+    "./content": {
+      "@bitcoin4plebs/source": "./src/content.ts",
+      "types": "./dist/content.d.ts",
+      "import": "./src/content.ts",
+      "default": "./src/content.ts"
     },
     "./package.json": "./package.json"
   },

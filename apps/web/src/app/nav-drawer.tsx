@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { groupQuestsByTrack } from '@bitcoin4plebs/quests';
+import { groupQuestsByTrack } from '@bitcoin4plebs/quests/content';
 import { SITE, siteQuests } from '../lib/site';
 import { useVerifiedQuests } from '../lib/progress';
 

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import type { Quest } from '@bitcoin4plebs/quests';
+import type { Quest } from '@bitcoin4plebs/quests/content';
 import { SITE, siteQuests } from '../lib/site';
 import { RichText } from '@bitcoin4plebs/ui';
 

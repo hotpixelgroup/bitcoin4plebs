@@ -1,16 +1,17 @@
 import {
   BITCOIN_PIN,
   OVERRIDE_PINS,
+  QUEST_SLUGS,
   entryPathsForSite,
   glossaryForSite,
   prerequisitesForSite,
   questionsForSite,
-  questsForSite,
   resolveSite,
   sites,
   type Quest,
   type SourcePin,
-} from '@bitcoin4plebs/quests';
+} from '@bitcoin4plebs/quests/content';
+import { quests as curriculum } from '@site-quests';
 
 /**
  * Which front door this build is.
@@ -25,8 +26,11 @@ import {
  */
 export const SITE = sites[resolveSite(import.meta.env.VITE_SITE as string | undefined)];
 
-/** This site's curriculum, in order. */
-export const siteQuests: Quest[] = questsForSite(SITE.id);
+/**
+ * This site's curriculum, in order. Comes from the per-site registry the
+ * Vite alias resolved, so the other front door's quests are never bundled.
+ */
+export const siteQuests: Quest[] = curriculum;
 
 /** This site's glossary (terms shared by both sites appear in each). */
 export const siteGlossary = glossaryForSite(SITE.id);
@@ -71,8 +75,8 @@ export const SITE_REPO_URL = `https://github.com/hotpixelgroup/${SITE.repo}`;
  * still send the reader to the proof rather than to a dead end.
  */
 export function siblingQuestUrl(number: number): string | undefined {
-  const quest = questsForSite(SITE.sibling.id).find((q) => q.number === number);
-  return quest ? `${SITE.sibling.url}quests/${quest.slug}` : undefined;
+  const slug = QUEST_SLUGS[SITE.sibling.id][number];
+  return slug ? `${SITE.sibling.url}quests/${slug}` : undefined;
 }
 
 /**

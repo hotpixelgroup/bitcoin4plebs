@@ -1,67 +1,18 @@
 import type { Quest } from './types.js';
 import type { SiteId } from './sites.js';
-import { quest00 } from './quest-00-ledger.js';
-import { quest01 } from './quest-01-21m-cap.js';
-import { quest02 } from './quest-02-halving.js';
-import { quest03 } from './quest-03-your-coins.js';
-import { quest04 } from './quest-04-who-changes-rules.js';
-import { quest05 } from './quest-05-inflation-bug.js';
-import { quest06 } from './quest-06-mining.js';
-import { quest07 } from './quest-07-press-send.js';
-import { quest08 } from './quest-08-genesis-block.js';
-import { quest09 } from './quest-09-run-a-node.js';
-import { quest10 } from './quest-10-addresses.js';
-import { quest11 } from './quest-11-first-send.js';
-import { quest12 } from './quest-12-invisible-hand.js';
-import { quest13 } from './quest-13-data-wars.js';
-import { quest14 } from './quest-14-custody.js';
-import { quest15 } from './quest-15-privacy.js';
-import { quest16 } from './quest-16-lightning.js';
-import { quest17 } from './quest-17-why-money.js';
-import { quest18 } from './quest-18-energy.js';
-import { questLn01 } from './quest-ln-01-the-channel.js';
-import { questLn02 } from './quest-ln-02-revocation.js';
-import { questLn03 } from './quest-ln-03-invoice.js';
-import { questLn04 } from './quest-ln-04-htlc.js';
-import { questLn05 } from './quest-ln-05-onion.js';
-import { questLn06 } from './quest-ln-06-routing.js';
-import { questLn07 } from './quest-ln-07-whose-lightning.js';
+import { quests as bitcoinQuests } from './registry-bitcoin.js';
+import { quests as lightningQuests } from './registry-lightning.js';
 
 /**
- * The quest registry, in curriculum order, each quest builds on the
- * previous one. Today this is a static list bundled with the app; because
- * quests are plain data, swapping this for a fetch from our own API later
- * changes nothing else in the codebase.
+ * Every quest across both front doors.
+ *
+ * The integrity tests need the whole set, so this file composes it. The
+ * APP does not import from here: it imports one of the two per-site
+ * registries directly, so a build of either site carries only its own
+ * curriculum. Adding an import of `quests` to app code would silently
+ * pull the other site's prose back into the bundle.
  */
-export const quests: Quest[] = [
-  quest00,
-  quest01,
-  quest02,
-  quest03,
-  quest04,
-  quest05,
-  quest06,
-  quest07,
-  quest08,
-  quest09,
-  quest10,
-  quest11,
-  quest12,
-  quest13,
-  quest14,
-  quest15,
-  quest16,
-  quest17,
-  quest18,
-  // lightning4plebs. Numbering restarts here: these are Lightning #1, #2…
-  questLn01,
-  questLn02,
-  questLn03,
-  questLn04,
-  questLn05,
-  questLn06,
-  questLn07,
-];
+export const quests: Quest[] = [...bitcoinQuests, ...lightningQuests];
 
 export function getQuestBySlug(slug: string): Quest | undefined {
   return quests.find((q) => q.slug === slug);

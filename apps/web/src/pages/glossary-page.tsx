@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { GLOSSARY_CATEGORIES } from '@bitcoin4plebs/quests';
+import { GLOSSARY_CATEGORIES } from '@bitcoin4plebs/quests/content';
 import { SITE, siblingQuestUrl, siteGlossary, siteQuests } from '../lib/site';
 import { Callout, RichText } from '@bitcoin4plebs/ui';
 

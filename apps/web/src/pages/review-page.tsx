@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import type { GlossaryEntry, QuizItem } from '@bitcoin4plebs/quests';
+import type { GlossaryEntry, QuizItem } from '@bitcoin4plebs/quests/content';
 import { SITE, siteGlossary } from '../lib/site';
 import { Callout, RichText } from '@bitcoin4plebs/ui';
 

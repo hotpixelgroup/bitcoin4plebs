@@ -1,6 +1,6 @@
 import { Fragment, useState, type ReactNode } from 'react';
-import type { CodeExcerpt, SourcePin } from '@bitcoin4plebs/quests';
-import { verifyUrl } from '@bitcoin4plebs/quests';
+import type { CodeExcerpt, SourcePin } from '@bitcoin4plebs/quests/content';
+import { verifyUrl } from '@bitcoin4plebs/quests/content';
 import { GlossaryTerm, findCodeTerms } from './glossary-term.js';
 import { highlightLine, type ExcerptLanguage } from './highlight.js';
 

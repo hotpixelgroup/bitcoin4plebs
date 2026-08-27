@@ -1,6 +1,12 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-import { glossary, quests, type GlossaryEntry } from '@bitcoin4plebs/quests';
+import {
+  QUEST_SLUGS,
+  glossary,
+  sites,
+  type GlossaryEntry,
+  type SiteId,
+} from '@bitcoin4plebs/quests/content';
 import { RichText } from './rich-text.js';
 
 /**
@@ -12,7 +18,16 @@ import { RichText } from './rich-text.js';
  * stay readable rather than becoming a sea of underlines.
  */
 
-const slugByNumber = new Map(quests.map((quest) => [quest.number, quest.slug]));
+/**
+ * Which front door this build is, read from the attribute the entry point
+ * stamps on <html>. The ui package has no other way to know, and it needs
+ * to: quest numbers restart per site, so "Quest #3" means two different
+ * pages depending on where you are standing.
+ */
+function currentSite(): SiteId {
+  const stamped = typeof document === 'undefined' ? undefined : document.documentElement.dataset['site'];
+  return stamped === 'lightning' ? 'lightning' : 'bitcoin';
+}
 
 const escapeRe = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const isIdentifier = (p: string) => /[A-Z_]/.test(p);
@@ -108,7 +123,19 @@ export function GlossaryTerm({ entry, children, codeStyle }: GlossaryTermProps) 
     };
   }, [open]);
 
-  const slug = entry.quest !== undefined ? slugByNumber.get(entry.quest) : undefined;
+  // Quest numbers restart per site, so a citation is only meaningful with
+  // the site it belongs to. Same site: an internal route. Other site: a
+  // link across, rather than a dead internal one.
+  const questLink = (() => {
+    if (entry.quest === undefined) return undefined;
+    const target: SiteId = entry.questSite ?? 'bitcoin';
+    const slug = QUEST_SLUGS[target][entry.quest];
+    if (!slug) return undefined;
+    const here = currentSite();
+    return target === here
+      ? { internal: true as const, href: `/quests/${slug}`, siteName: sites[target].name }
+      : { internal: false as const, href: `${sites[target].url}quests/${slug}`, siteName: sites[target].name };
+  })();
 
   return (
     <>
@@ -137,10 +164,15 @@ export function GlossaryTerm({ entry, children, codeStyle }: GlossaryTermProps) 
             <RichText text={entry.definition} link={false} />
           </div>
           <div className="term-pop-foot">
-            {slug && (
-              <Link to={`/quests/${slug}`} onClick={() => setOpen(false)}>
+            {questLink?.internal && (
+              <Link to={questLink.href} onClick={() => setOpen(false)}>
                 Verify it in Quest #{entry.quest} →
               </Link>
+            )}
+            {questLink && !questLink.internal && (
+              <a href={questLink.href}>
+                Verify it in {questLink.siteName} Quest #{entry.quest} ↗
+              </a>
             )}
             <Link to="/glossary" onClick={() => setOpen(false)}>
               Glossary

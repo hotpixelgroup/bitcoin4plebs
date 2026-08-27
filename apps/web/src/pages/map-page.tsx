@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { groupQuestsByTrack } from '@bitcoin4plebs/quests';
+import { groupQuestsByTrack } from '@bitcoin4plebs/quests/content';
 import { SITE, sitePrerequisites, siteQuests } from '../lib/site';
 import { useVerifiedQuests } from '../lib/progress';
 
