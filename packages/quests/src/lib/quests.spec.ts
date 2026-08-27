@@ -5,6 +5,7 @@ import { BITCOIN_PIN, OVERRIDE_PINS } from './excerpts.js';
 import { GLOSSARY_CATEGORIES, glossary, glossaryForSite } from './glossary.js';
 import { entryPaths, prerequisites } from './paths.js';
 import { quests, questsForSite, siteOf } from './registry.js';
+import { QUEST_SLUGS } from './quest-slugs.js';
 import { SITE_IDS, sites } from './sites.js';
 
 /**
@@ -160,6 +161,17 @@ describe('entry paths and prerequisites integrity', () => {
           expect(dep, `${site} Quest #${quest} depends on itself`).not.toBe(n);
         }
       }
+    }
+  });
+});
+
+describe('the quest slug index', () => {
+  it('matches the real registries exactly, in both directions', () => {
+    // It exists so a site can deep-link into its sibling without importing
+    // the sibling's quest data. That only works if it stays true.
+    for (const site of SITE_IDS) {
+      const real = Object.fromEntries(questsForSite(site).map((q) => [q.number, q.slug]));
+      expect(QUEST_SLUGS[site], `${site} slug index has drifted`).toEqual(real);
     }
   });
 });

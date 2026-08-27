@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import type { SourcePin, Stop } from '@bitcoin4plebs/quests';
+import type { SourcePin, Stop } from '@bitcoin4plebs/quests/content';
 import { CodeCard } from './code-card.js';
 import { RichText } from './rich-text.js';
 import { SelfCheck } from './self-check.js';

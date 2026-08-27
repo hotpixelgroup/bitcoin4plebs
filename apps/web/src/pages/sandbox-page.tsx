@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import type { Finale } from '@bitcoin4plebs/quests';
+import type { Finale } from '@bitcoin4plebs/quests/content';
 import { SITE, siteQuests } from '../lib/site';
 import { getRunner } from '../runners/registry';
 
@@ -158,7 +158,9 @@ export function SandboxPage() {
               )}
             </div>
             <p className="takeaway sandbox-blurb">{machine.blurb}</p>
-            <Runner finale={machine.finale} />
+            <Suspense fallback={<div className="lazy-pending">loading the machine…</div>}>
+              <Runner finale={machine.finale} />
+            </Suspense>
           </section>
         );
       })}

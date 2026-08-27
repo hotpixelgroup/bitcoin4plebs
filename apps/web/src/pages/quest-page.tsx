@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { SITE, getSiteQuest, siteQuests } from '../lib/site';
 import { Callout, FeynmanBox, RichText, StopSection } from '@bitcoin4plebs/ui';
@@ -128,7 +128,13 @@ export function QuestPage() {
             index={i + 1}
             total={quest.stops.length}
             pin={quest.pin}
-            viz={Viz ? <Viz /> : undefined}
+            viz={
+              Viz ? (
+                <Suspense fallback={<div className="lazy-pending">loading the figure…</div>}>
+                  <Viz />
+                </Suspense>
+              ) : undefined
+            }
           />
         );
       })}
@@ -143,7 +149,9 @@ export function QuestPage() {
             <RichText text={quest.finale.takeaway} />
           </p>
           {Runner ? (
-            <Runner finale={quest.finale} />
+            <Suspense fallback={<div className="lazy-pending">loading the machine…</div>}>
+              <Runner finale={quest.finale} />
+            </Suspense>
           ) : (
             <Callout>
               Interactive runner “{quest.finale.runnerId}” is not available in this build.

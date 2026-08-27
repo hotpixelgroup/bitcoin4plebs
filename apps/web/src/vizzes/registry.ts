@@ -1,56 +1,77 @@
-import type { ComponentType } from 'react';
-import { ActivationTimeline } from './activation-timeline';
-import { AddressPipeline } from './address-pipeline';
-import { AvalancheGrid } from './avalanche-grid';
-import { ChannelFootprint } from './channel-footprint';
-import { FeeCalculator } from './fee-calculator';
-import { HtlcChain } from './htlc-chain';
-import { InvoiceAnatomy } from './invoice-anatomy';
-import { LiquiditySeesaw } from './liquidity-seesaw';
-import { RouteRace } from './route-race';
-import { OnionPeel } from './onion-peel';
-import { RevocationLadder } from './revocation-ladder';
-import { BitshiftHalving } from './bitshift-halving';
-import { DifficultyThermostat } from './difficulty-thermostat';
-import { EnergyToSecurity } from './energy-to-security';
-import { FiftyoneRace } from './fiftyone-race';
-import { GossipNetwork } from './gossip-network';
-import { IncentiveMachine } from './incentive-machine';
-import { MerkleLightning } from './merkle-lightning';
-import { MoneyScorecard } from './money-scorecard';
-import { SharedLedger } from './shared-ledger';
-import { TamperCascade } from './tamper-cascade';
-import { UtxoFlow } from './utxo-flow';
+import { lazy, type ComponentType } from 'react';
 
 /**
- * The inline-figure registry: quest stops reference visualizations by id
- * (Stop.viz), keeping quest content pure serializable data, the exact
- * pattern the finale runner registry uses.
+ * The inline-figure registry, on demand for the same reason as the
+ * runners: a quest page needs its own figures and none of the others.
  */
+
 const vizzes: Record<string, ComponentType> = {
-  // lightning4plebs
-  'channel-footprint': ChannelFootprint,
-  'revocation-ladder': RevocationLadder,
-  'htlc-chain': HtlcChain,
-  'invoice-anatomy': InvoiceAnatomy,
-  'liquidity-seesaw': LiquiditySeesaw,
-  'fee-calculator': FeeCalculator,
-  'route-race': RouteRace,
-  'onion-peel': OnionPeel,
-  'bitshift-halving': BitshiftHalving,
-  'utxo-flow': UtxoFlow,
-  'fiftyone-race': FiftyoneRace,
-  'activation-timeline': ActivationTimeline,
-  'avalanche-grid': AvalancheGrid,
-  'difficulty-thermostat': DifficultyThermostat,
-  'gossip-network': GossipNetwork,
-  'tamper-cascade': TamperCascade,
-  'merkle-lightning': MerkleLightning,
-  'address-pipeline': AddressPipeline,
-  'shared-ledger': SharedLedger,
-  'incentive-machine': IncentiveMachine,
-  'money-scorecard': MoneyScorecard,
-  'energy-to-security': EnergyToSecurity,
+  'channel-footprint': lazy(() =>
+    import('./channel-footprint').then((m) => ({ default: m.ChannelFootprint }))
+  ),
+  'revocation-ladder': lazy(() =>
+    import('./revocation-ladder').then((m) => ({ default: m.RevocationLadder }))
+  ),
+  'htlc-chain': lazy(() =>
+    import('./htlc-chain').then((m) => ({ default: m.HtlcChain }))
+  ),
+  'invoice-anatomy': lazy(() =>
+    import('./invoice-anatomy').then((m) => ({ default: m.InvoiceAnatomy }))
+  ),
+  'liquidity-seesaw': lazy(() =>
+    import('./liquidity-seesaw').then((m) => ({ default: m.LiquiditySeesaw }))
+  ),
+  'fee-calculator': lazy(() =>
+    import('./fee-calculator').then((m) => ({ default: m.FeeCalculator }))
+  ),
+  'route-race': lazy(() =>
+    import('./route-race').then((m) => ({ default: m.RouteRace }))
+  ),
+  'onion-peel': lazy(() =>
+    import('./onion-peel').then((m) => ({ default: m.OnionPeel }))
+  ),
+  'bitshift-halving': lazy(() =>
+    import('./bitshift-halving').then((m) => ({ default: m.BitshiftHalving }))
+  ),
+  'utxo-flow': lazy(() =>
+    import('./utxo-flow').then((m) => ({ default: m.UtxoFlow }))
+  ),
+  'fiftyone-race': lazy(() =>
+    import('./fiftyone-race').then((m) => ({ default: m.FiftyoneRace }))
+  ),
+  'activation-timeline': lazy(() =>
+    import('./activation-timeline').then((m) => ({ default: m.ActivationTimeline }))
+  ),
+  'avalanche-grid': lazy(() =>
+    import('./avalanche-grid').then((m) => ({ default: m.AvalancheGrid }))
+  ),
+  'difficulty-thermostat': lazy(() =>
+    import('./difficulty-thermostat').then((m) => ({ default: m.DifficultyThermostat }))
+  ),
+  'gossip-network': lazy(() =>
+    import('./gossip-network').then((m) => ({ default: m.GossipNetwork }))
+  ),
+  'tamper-cascade': lazy(() =>
+    import('./tamper-cascade').then((m) => ({ default: m.TamperCascade }))
+  ),
+  'merkle-lightning': lazy(() =>
+    import('./merkle-lightning').then((m) => ({ default: m.MerkleLightning }))
+  ),
+  'address-pipeline': lazy(() =>
+    import('./address-pipeline').then((m) => ({ default: m.AddressPipeline }))
+  ),
+  'shared-ledger': lazy(() =>
+    import('./shared-ledger').then((m) => ({ default: m.SharedLedger }))
+  ),
+  'incentive-machine': lazy(() =>
+    import('./incentive-machine').then((m) => ({ default: m.IncentiveMachine }))
+  ),
+  'money-scorecard': lazy(() =>
+    import('./money-scorecard').then((m) => ({ default: m.MoneyScorecard }))
+  ),
+  'energy-to-security': lazy(() =>
+    import('./energy-to-security').then((m) => ({ default: m.EnergyToSecurity }))
+  ),
 };
 
 export function getViz(id: string): ComponentType | undefined {

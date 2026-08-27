@@ -5058,3 +5058,12 @@ tr:last-child td {
   .sw-toast-actions { width: 100%; }
   .sw-toast-primary, .sw-toast-dismiss { flex: 1; }
 }
+
+/* Placeholder while a runner or figure is fetched. Deliberately quiet:
+   these arrive in well under a second on any normal connection. */
+.lazy-pending {
+  padding: 22px 0;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 13px;
+}

@@ -39,6 +39,16 @@ export default defineConfig(() => ({
    */
   base: process.env.VITE_BASE ?? '/',
   cacheDir: '../../node_modules/.vite/apps/web',
+  resolve: {
+    alias: {
+      // Resolved at build time to one site's curriculum, so a build never
+      // carries the other's quests. See packages/quests registry.ts.
+      '@site-quests': resolve(
+        __dirname,
+        `../../packages/quests/src/lib/registry-${site.id}.ts`
+      ),
+    },
+  },
   // Each front door ships its own brand assets: favicon, PWA icons and the
   // social card that gets unfurled when someone shares a link.
   publicDir: site.id === 'bitcoin' ? 'public' : `public-${site.id}`,

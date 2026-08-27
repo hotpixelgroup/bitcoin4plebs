@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { groupQuestsByTrack } from '@bitcoin4plebs/quests';
+import { groupQuestsByTrack } from '@bitcoin4plebs/quests/content';
 import { RichText } from '@bitcoin4plebs/ui';
 import { Diploma } from '../app/diploma';
 import { SiblingCard } from '../app/sibling-card';
