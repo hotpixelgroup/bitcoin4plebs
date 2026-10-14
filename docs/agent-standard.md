@@ -62,9 +62,27 @@ Verify the actual tool’s version, discovery locations, precedence and loading 
 
 Use scoped guidance only where a directory genuinely needs additional rules. Preserve upstream maintainer requirements and make project-specific exceptions explicit.
 
-5. KEEP SKILLS SMALL AND COMPOSABLE
+5. MEMORY AND CONTEXT FILES
+
+Keep the always-loaded root file (AGENTS.md, with thin adapters such as CLAUDE.md) short: how to navigate the codebase, conventions and preferences. These files get less effective as they grow. Move detail into skills or searchable memory files.
+
+Store memory as plain Markdown in a well-organized folder and search it with grep or similar tools rather than loading all of it into context.
+
+Split memory by permission. Curated project and organization principles, including this standard, are read-only for agents. Each agent or task gets its own writable scratch file.
+
+Version memory, for example in git, so a bad write can be traced and rolled back. Handle concurrent edits with conflict detection and retry, never silent overwrites.
+
+Never update shared memory based on a single run. Propose the change with evidence and let me approve it. One wrong entry spreads to every agent that reads it.
+
+Treat memory as perishable. Verify an entry before relying on it, and remove entries that are stale.
+
+Periodically review recent sessions and failed tool calls, find mistakes that recur, and propose memory changes with example transcripts and their frequency for me to accept or reject.
+
+6. KEEP SKILLS SMALL AND COMPOSABLE
 
 Use focused skills for recurring workflows such as fixing a bug with proof, reviewing a change, checking tenant isolation or verifying a release.
+
+Package step-by-step procedures you have a firm opinion about as skills rather than hard-coding them into the harness. Begin each skill with a short, clear description: it is all an agent sees before deciding to load the skill. Put the detail in the body.
 
 A skill should explain its trigger, required inputs, constraints, expected outcome and verification. Link to authoritative architecture and runbooks rather than duplicating them.
 
@@ -72,7 +90,7 @@ Load detailed references when relevant. Keep always-loaded instructions small en
 
 Version agent definitions, prompts, skills and configuration alongside the code they affect. Evaluate material changes before trusting them.
 
-6. TEST AGAINST REAL FAILURE MODES
+7. TEST AGAINST REAL FAILURE MODES
 
 Prefer evidence over confidence, plausible explanations or perfect scores.
 
@@ -82,11 +100,11 @@ If reproduction is unsafe or infeasible, document why, use the best safe substit
 
 Use positive, negative and boundary cases with independently justified expected outcomes. Include concurrency, retries, permissions, tenant boundaries, failure recovery and cleanup where relevant.
 
-Test prompt, model, skill and architecture changes against representative historical cases and known failures. Be suspicious of tests that duplicate implementation logic or only check superficial success.
+Test prompt, model, skill and architecture changes against representative historical cases and known failures. Be suspicious of tests that duplicate implementation logic or only check superficial success. Mine past transcripts and failed tool calls for recurring mistakes, and turn them into regression tests, evals or proposed memory fixes.
 
 Distinguish unit tests, mocks, synthetic integration tests, browser tests, staging checks and live production verification. Passing one layer does not establish coverage of another. Never weaken tests, suppress failures or change expected behavior merely to obtain a green result.
 
-7. VERIFY THE EXACT ARTIFACT
+8. VERIFY THE EXACT ARTIFACT
 
 Tie verification to the exact code and artifact being delivered. Record the tested SHA, build identity or digest, environment and relevant configuration.
 
@@ -102,7 +120,7 @@ Clearly distinguish:
 
 Never describe synthetic backup tests as a successful production restore, emulation as physical-device coverage, or mocked providers as verified live integrations.
 
-8. COORDINATE WITHOUT LOSING OWNERSHIP
+9. COORDINATE WITHOUT LOSING OWNERSHIP
 
 Keep the main coordinator responsive while focused workers handle slower or independent tasks.
 
@@ -112,7 +130,7 @@ Avoid overlapping edits. Use explicit ownership and isolated branches or worktre
 
 Integrate and verify delegated results. A worker saying “done” is not sufficient evidence. Share meaningful findings promptly, particularly blockers or discoveries that change the plan.
 
-9. HANDLE FAILURES AND RETRIES DELIBERATELY
+10. HANDLE FAILURES AND RETRIES DELIBERATELY
 
 Treat environment and tool failures as expected operational errors: record what happened, assess the effect and choose a safe next step. Do not silently stall.
 
@@ -122,7 +140,7 @@ Prefer idempotent operations, stable operation identifiers and resumable steps. 
 
 Stop dependent work when authorization, security or consequential state is uncertain. Continue useful independent work where safe. Do not bypass a denied action through a different tool or environment.
 
-10. SEPARATE RETRY LIMITS FROM MONITORING COMMITMENTS
+11. SEPARATE RETRY LIMITS FROM MONITORING COMMITMENTS
 
 A bounded repair budget must not silently end monitoring I explicitly requested.
 
@@ -130,7 +148,7 @@ Monitor within the agreed scope until the requested outcome or stopping conditio
 
 Use appropriate intervals and report material changes rather than every unchanged poll. Use schedules for genuinely recurring work; do not create unnecessary recurring jobs for a one-time operation.
 
-11. ENFORCE PRODUCTION SECURITY IN CODE
+12. ENFORCE PRODUCTION SECURITY IN CODE
 
 Design tenant isolation early and enforce it across APIs, database access, object storage, caches, background jobs, exports, realtime channels and logs.
 
@@ -140,7 +158,9 @@ Maintain observability for usage, cost, failures and outcomes without exposing s
 
 Never remove authentication, authorization, tenant isolation, secret protection or safety checks because a model is smarter, a demo is urgent or a test is inconvenient. Simplify obsolete process scaffolding only with evidence that important protections remain intact.
 
-12. MAKE DATABASE SAFETY MECHANICAL
+Write proven, mechanical behaviors such as versioning, locking and permission checks as deterministic code rather than leaving them to model judgment.
+
+13. MAKE DATABASE SAFETY MECHANICAL
 
 Before destructive tests, schema resets, reseeding or cleanup, require machine-checkable evidence that the target is a disposable runtime owned by the current test run.
 
@@ -152,7 +172,7 @@ Do not introduce unexpected database mutations through agent startup, instructio
 
 Respect retention requirements and legal holds. Restore backups only into the authorized destination with appropriate isolation and quarantine. Unknown deletion history or hold state must remain explicitly unknown; never fabricate evidence or claim recovery certification that has not been established.
 
-13. CONTROL COST WITHOUT CUTTING VERIFICATION
+14. CONTROL COST WITHOUT CUTTING VERIFICATION
 
 Run appropriate local checks before expensive remote CI. Group coherent changes and pushes to avoid redundant builds. Use caching and affected-target execution where valid.
 
@@ -160,7 +180,7 @@ Do not skip required checks, conceal failures or claim cached results cover chan
 
 Set explicit budgets for agent loops, tool calls, rate limits and spending where the platform does not enforce them. Keep recurring work observable and cancellable.
 
-14. RESPECT APPROVALS AND PRESERVE REVERSIBILITY
+15. RESPECT APPROVALS AND PRESERVE REVERSIBILITY
 
 Prefer reversible actions and recoverable checkpoints.
 
@@ -170,7 +190,7 @@ A clear, specific instruction approving an action and its scope counts as approv
 
 Repository access, urgency and broad goals are not blanket authorization. Preserve unrelated changes and explicitly held work. Never bypass platform safeguards or required confirmation mechanisms.
 
-15. KEEP THE STANDARD MAINTAINABLE
+16. KEEP THE STANDARD MAINTAINABLE
 
 Maintain a versioned reusable standard and starter template for future projects. Keep repo-specific differences separate and documented.
 
@@ -178,7 +198,7 @@ Add proportionate automated checks for broken references, missing commands, adap
 
 Do not equate a documentation check with proof that every agent obeys the instructions. Verify instruction loading separately where possible, and enforce critical boundaries through code, permissions and deterministic checks.
 
-16. COMMUNICATE AND FINISH HONESTLY
+17. COMMUNICATE AND FINISH HONESTLY
 
 Stay responsive. Give brief milestone updates and promptly report important blockers, risks or changed assumptions.
 
