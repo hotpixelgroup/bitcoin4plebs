@@ -90,6 +90,10 @@ Load detailed references when relevant. Keep always-loaded instructions small en
 
 Version agent definitions, prompts, skills and configuration alongside the code they affect. Evaluate material changes before trusting them.
 
+- Exact work (arithmetic, date math, schema or format validation) goes through tools or code, never mental math.
+- Record why each defensive instruction exists (inline note or commit message), and remove it only after evals show it is no longer needed. Prefer naming the source of truth over "never say X" rules, which can make a model withhold correct information.
+- Keep role, policy, guidelines, and data visibly separate in prompts and agent files (headings or XML tags). State the reasons and both sides of every trade-off: the cost of acting and the cost of not acting.
+
 7. TEST AGAINST REAL FAILURE MODES
 
 Prefer evidence over confidence, plausible explanations or perfect scores.
@@ -103,6 +107,9 @@ Use positive, negative and boundary cases with independently justified expected 
 Test prompt, model, skill and architecture changes against representative historical cases and known failures. Be suspicious of tests that duplicate implementation logic or only check superficial success. Mine past transcripts and failed tool calls for recurring mistakes, and turn them into regression tests, evals or proposed memory fixes.
 
 Distinguish unit tests, mocks, synthetic integration tests, browser tests, staging checks and live production verification. Passing one layer does not establish coverage of another. Never weaken tests, suppress failures or change expected behavior merely to obtain a green result.
+
+- Every eval set includes control cases (must always pass), regression cases from past failures, and boundary cases (when to hand off, ask, or refuse). Run several trials per case and compare results across runs, not one pass. Use deterministic graders for hard rules and an LLM judge only for subjective qualities.
+- When a change regresses, decide whether it is a behavior gap (fix with instructions) or a capability gap (fix with tools, a stronger model, more reasoning, or smaller steps). Emphasis like "CRITICAL" adds no capability.
 
 8. VERIFY THE EXACT ARTIFACT
 
