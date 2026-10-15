@@ -15,12 +15,13 @@ import { convertBits, decodeBech32 } from '@bitcoin4plebs/bitcoin-logic';
  */
 
 /** Multipliers on the amount in the human-readable part, in BTC. */
-const MULTIPLIERS: Record<string, { num: bigint; den: bigint; name: string }> = {
-  m: { num: 1n, den: 1_000n, name: 'milli (10⁻³)' },
-  u: { num: 1n, den: 1_000_000n, name: 'micro (10⁻⁶)' },
-  n: { num: 1n, den: 1_000_000_000n, name: 'nano (10⁻⁹)' },
-  p: { num: 1n, den: 1_000_000_000_000n, name: 'pico (10⁻¹²)' },
-};
+const MULTIPLIERS: Record<string, { num: bigint; den: bigint; name: string }> =
+  {
+    m: { num: 1n, den: 1_000n, name: 'milli (10⁻³)' },
+    u: { num: 1n, den: 1_000_000n, name: 'micro (10⁻⁶)' },
+    n: { num: 1n, den: 1_000_000_000n, name: 'nano (10⁻⁹)' },
+    p: { num: 1n, den: 1_000_000_000_000n, name: 'pico (10⁻¹²)' },
+  };
 
 /** Known network prefixes, after the leading `ln`. */
 const NETWORKS: Record<string, string> = {
@@ -72,17 +73,50 @@ export interface Bolt11Error {
 }
 
 const FIELD_META: Record<string, { name: string; note: string }> = {
-  p: { name: 'payment_hash', note: 'The hash of a secret only the payee knows. Paying it means learning the secret.' },
-  s: { name: 'payment_secret', note: "Proves the payer reached the real invoice, not a probe by a node on the route." },
-  d: { name: 'description', note: 'What the payment is for, in plain text. Committed to by the signature.' },
-  h: { name: 'description_hash', note: 'A hash of a longer description, when the text is too big to carry inline.' },
-  n: { name: 'payee_node_id', note: "The payee's node id. Usually omitted: it is recoverable from the signature." },
-  x: { name: 'expiry', note: 'Seconds after the timestamp until this invoice stops being payable.' },
-  c: { name: 'min_final_cltv_expiry_delta', note: 'How much timelock the final hop demands before it will accept the payment.' },
-  f: { name: 'fallback_address', note: 'An on-chain address to use if the Lightning payment cannot be made.' },
-  r: { name: 'routing_hints', note: 'Private channels the payer would otherwise never learn about from gossip.' },
-  '9': { name: 'features', note: 'Which optional protocol features the payee requires or supports.' },
-  m: { name: 'metadata', note: 'Opaque bytes the payer must echo back to the payee in the final hop.' },
+  p: {
+    name: 'payment_hash',
+    note: 'The hash of a secret only the payee knows. Paying it means learning the secret.',
+  },
+  s: {
+    name: 'payment_secret',
+    note: 'Proves the payer reached the real invoice, not a probe by a node on the route.',
+  },
+  d: {
+    name: 'description',
+    note: 'What the payment is for, in plain text. Committed to by the signature.',
+  },
+  h: {
+    name: 'description_hash',
+    note: 'A hash of a longer description, when the text is too big to carry inline.',
+  },
+  n: {
+    name: 'payee_node_id',
+    note: "The payee's node id. Usually omitted: it is recoverable from the signature.",
+  },
+  x: {
+    name: 'expiry',
+    note: 'Seconds after the timestamp until this invoice stops being payable.',
+  },
+  c: {
+    name: 'min_final_cltv_expiry_delta',
+    note: 'How much timelock the final hop demands before it will accept the payment.',
+  },
+  f: {
+    name: 'fallback_address',
+    note: 'An on-chain address to use if the Lightning payment cannot be made.',
+  },
+  r: {
+    name: 'routing_hints',
+    note: 'Private channels the payer would otherwise never learn about from gossip.',
+  },
+  '9': {
+    name: 'features',
+    note: 'Which optional protocol features the payee requires or supports.',
+  },
+  m: {
+    name: 'metadata',
+    note: 'Opaque bytes the payer must echo back to the payee in the final hop.',
+  },
 };
 
 const CHARSET = 'qpzry9x8gf2tvdw0s3jn54khce6mua7l';
@@ -108,7 +142,12 @@ function groupsToText(groups: number[]): string {
 }
 
 /** Split `lnbc2500u` into its network prefix and its amount. */
-function parseHrp(hrp: string): { network: string; prefix: string; amountMsat: bigint | null; amountSource: string | null } | null {
+function parseHrp(hrp: string): {
+  network: string;
+  prefix: string;
+  amountMsat: bigint | null;
+  amountSource: string | null;
+} | null {
   if (!hrp.startsWith('ln')) return null;
   const rest = hrp.slice(2);
   // The prefix is the longest known network that this HRP starts with.
@@ -119,16 +158,23 @@ function parseHrp(hrp: string): { network: string; prefix: string; amountMsat: b
 
   const amountSource = rest.slice(prefix.length);
   if (!amountSource) {
-    return { network: NETWORKS[prefix], prefix, amountMsat: null, amountSource: null };
+    return {
+      network: NETWORKS[prefix],
+      prefix,
+      amountMsat: null,
+      amountSource: null,
+    };
   }
   const match = /^(\d+)([munp]?)$/.exec(amountSource);
   if (!match) return null;
   const digits = BigInt(match[1]);
   const multiplier = match[2];
+  if (digits <= 0n || (multiplier === 'p' && digits % 10n !== 0n)) return null;
   // 1 BTC = 100_000_000_000 msat.
   const MSAT_PER_BTC = 100_000_000_000n;
   const amountMsat = multiplier
-    ? (digits * MSAT_PER_BTC * MULTIPLIERS[multiplier].num) / MULTIPLIERS[multiplier].den
+    ? (digits * MSAT_PER_BTC * MULTIPLIERS[multiplier].num) /
+      MULTIPLIERS[multiplier].den
     : digits * MSAT_PER_BTC;
   return { network: NETWORKS[prefix], prefix, amountMsat, amountSource };
 }
@@ -141,22 +187,33 @@ export function decodeInvoice(input: string): Bolt11Invoice | Bolt11Error {
   const trimmed = input.trim();
   if (!trimmed) return { ok: false, error: 'Nothing to decode.' };
   if (!/^ln/i.test(trimmed)) {
-    return { ok: false, error: 'A Lightning invoice starts with "ln": this does not.' };
+    return {
+      ok: false,
+      error: 'A Lightning invoice starts with "ln": this does not.',
+    };
   }
 
   // Invoices are bech32 with no length ceiling (BOLT #11 §Encoding Overview).
   const decoded = decodeBech32(trimmed, { maxLength: Number.MAX_SAFE_INTEGER });
   if (!decoded.ok) return { ok: false, error: decoded.error };
 
+  if (decoded.encoding !== 'bech32')
+    return { ok: false, error: 'BOLT11 requires Bech32, not Bech32m.' };
   const hrpParts = parseHrp(decoded.hrp);
   if (!hrpParts) {
-    return { ok: false, error: `Unrecognised human-readable part: "${decoded.hrp}".` };
+    return {
+      ok: false,
+      error: `Unrecognised human-readable part: "${decoded.hrp}".`,
+    };
   }
 
   const payload = decoded.payload;
   // 7 groups of timestamp, then fields, then 104 groups of signature.
   if (payload.length < 7 + 104) {
-    return { ok: false, error: 'Too short to contain a timestamp and a signature.' };
+    return {
+      ok: false,
+      error: 'Too short to contain a timestamp and a signature.',
+    };
   }
   const timestamp = readInt(payload.slice(0, 7));
   const signatureGroups = payload.slice(payload.length - 104);
@@ -165,21 +222,43 @@ export function decodeInvoice(input: string): Bolt11Invoice | Bolt11Error {
 
   const fields: TaggedField[] = [];
   while (cursor < end) {
-    if (cursor + 3 > end) break;
+    if (cursor + 3 > end)
+      return { ok: false, error: 'Truncated tagged-field header.' };
     const tag = CHARSET[payload[cursor]];
     const groups = readInt(payload.slice(cursor + 1, cursor + 3));
     const dataStart = cursor + 3;
     const dataEnd = dataStart + groups;
     if (dataEnd > end) {
-      return { ok: false, error: `Field "${tag}" claims ${groups} groups, past the end of the invoice.` };
+      return {
+        ok: false,
+        error: `Field "${tag}" claims ${groups} groups, past the end of the invoice.`,
+      };
     }
     const data = payload.slice(dataStart, dataEnd);
-    const meta = FIELD_META[tag] ?? { name: `unknown (${tag})`, note: 'A field this decoder does not know, invoices are extensible by design.' };
+    const fixedLength =
+      tag === 'p' || tag === 's' || tag === 'h'
+        ? 52
+        : tag === 'n'
+          ? 53
+          : undefined;
+    if (
+      fixedLength !== undefined &&
+      (groups !== fixedLength || !convertBits(data, 5, 8, false))
+    ) {
+      // BOLT11 readers ignore fixed-size fields with wrong lengths.
+      cursor = dataEnd;
+      continue;
+    }
+    const meta = FIELD_META[tag] ?? {
+      name: `unknown (${tag})`,
+      note: 'A field this decoder does not know, invoices are extensible by design.',
+    };
 
     let value: string;
     if (tag === 'd') value = groupsToText(data);
     else if (tag === 'x' || tag === 'c') value = String(readInt(data));
-    else if (tag === 'p' || tag === 's' || tag === 'h') value = groupsToHex(data, 256);
+    else if (tag === 'p' || tag === 's' || tag === 'h')
+      value = groupsToHex(data, 256);
     else if (tag === 'n') value = groupsToHex(data, 264);
     else value = groupsToHex(data, groups * 5);
 
@@ -187,7 +266,12 @@ export function decodeInvoice(input: string): Bolt11Invoice | Bolt11Error {
     cursor = dataEnd;
   }
 
+  if (!fields.some((field) => field.tag === 'p'))
+    return { ok: false, error: 'Missing valid payment_hash field.' };
   const signatureHex = groupsToHex(signatureGroups, 520);
+  const recoveryId = parseInt(signatureHex.slice(128, 130), 16);
+  if (recoveryId > 3)
+    return { ok: false, error: 'Invalid signature recovery id.' };
   return {
     ok: true,
     hrp: decoded.hrp,
@@ -196,10 +280,12 @@ export function decodeInvoice(input: string): Bolt11Invoice | Bolt11Error {
     amountMsat: hrpParts.amountMsat,
     amountSource: hrpParts.amountSource,
     timestamp,
-    timestampIso: new Date(timestamp * 1000).toISOString().replace('.000Z', 'Z'),
+    timestampIso: new Date(timestamp * 1000)
+      .toISOString()
+      .replace('.000Z', 'Z'),
     fields,
     signature: signatureHex.slice(0, 128),
-    recoveryId: parseInt(signatureHex.slice(128, 130), 16),
+    recoveryId,
     length: trimmed.length,
   };
 }
@@ -207,7 +293,8 @@ export function decodeInvoice(input: string): Bolt11Invoice | Bolt11Error {
 /** Format millisatoshis the way a wallet would, without floating point. */
 export function formatMsat(msat: bigint | null): string {
   if (msat === null) return 'any amount (the payer chooses)';
-  if (msat % 1000n === 0n) return `${(msat / 1000n).toLocaleString('en-US')} sats`;
+  if (msat % 1000n === 0n)
+    return `${(msat / 1000n).toLocaleString('en-US')} sats`;
   return `${(msat / 1000n).toLocaleString('en-US')}.${String(msat % 1000n).padStart(3, '0')} sats`;
 }
 /**
@@ -218,7 +305,11 @@ export function formatMsat(msat: bigint | null): string {
  * specification and fails if any character here has drifted, so what a
  * reader decodes on the page is provably the specification's own.
  */
-export const BOLT11_EXAMPLES: readonly { label: string; note: string; invoice: string }[] = [
+export const BOLT11_EXAMPLES: readonly {
+  label: string;
+  note: string;
+  invoice: string;
+}[] = [
   {
     label: 'Any amount',
     note: 'An open-ended donation: no amount, so the payer decides.',

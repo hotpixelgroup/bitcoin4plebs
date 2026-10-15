@@ -56,8 +56,8 @@ export function trackPackageRemoved(floor: FeeFloor, ratePerKvB: number): FeeFlo
 }
 
 /** Core sets the flag in removeForBlock: decay begins after the next block. */
-export function blockConnected(floor: FeeFloor): FeeFloor {
-  return { ...floor, blockSinceLastRollingFeeBump: true };
+export function blockConnected(floor: FeeFloor, nowSeconds: number): FeeFloor {
+  return { ...floor, blockSinceLastRollingFeeBump: true, lastRollingFeeUpdate: nowSeconds };
 }
 
 export interface MinFeeParams {

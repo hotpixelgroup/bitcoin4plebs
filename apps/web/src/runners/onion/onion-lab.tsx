@@ -39,7 +39,10 @@ export function OnionLab({ finale }: RunnerProps) {
     setLayers([]);
     const { onion } = await constructOnion({
       sessionKey: ONION_VECTOR.sessionKey,
-      hops: ONION_VECTOR.hops.map((h) => ({ nodeId: h.nodeId, payload: h.payload })),
+      hops: ONION_VECTOR.hops.map((h) => ({
+        nodeId: h.nodeId,
+        payload: h.payload,
+      })),
       associatedData: ONION_VECTOR.associatedData,
     });
     setBuilt({ onion, matches: onion === ONION_VECTOR.onion });
@@ -47,11 +50,16 @@ export function OnionLab({ finale }: RunnerProps) {
   };
 
   const peel = async () => {
+    if (!built) return;
     setBusy(true);
-    let packet = ONION_VECTOR.onion as string;
+    let packet = built.onion;
     const found: Layer[] = [];
     for (const [i, nodeKey] of ONION_VECTOR.nodeKeys.entries()) {
-      const result = await peelOnion(packet, nodeKey, ONION_VECTOR.associatedData);
+      const result = await peelOnion(
+        packet,
+        nodeKey,
+        ONION_VECTOR.associatedData,
+      );
       found.push({
         hop: i,
         payload: result.payload,
@@ -69,27 +77,28 @@ export function OnionLab({ finale }: RunnerProps) {
     <div className="cols">
       <div className="prose">
         <p>
-          Act one: <strong>rebuild the specification's own packet</strong>. Five hops, the
-          session key and payloads BOLT #4 publishes, and this site's own elliptic-curve math
-          and ChaCha20, no cryptography library anywhere.
+          Act one: <strong>rebuild the specification's own packet</strong>. Five
+          hops, the session key and payloads BOLT #4 publishes, and this site's
+          own elliptic-curve math and ChaCha20, no cryptography library
+          anywhere.
         </p>
         <button className="runbtn" onClick={build} disabled={busy}>
           {built ? '▶ Build it again' : "▶ Build BOLT #4's test onion"}
         </button>
         {built?.matches && (
           <Callout>
-            <strong>✓ Byte for byte, all {ONION_PACKET_SIZE} of them.</strong> This is worth
-            pausing on: the packet only comes out identical if the curve arithmetic, the stream
-            cipher, all four key derivations, the blinding chain <em>and</em> the filler
-            accumulation are every one of them exactly right. A single wrong bit anywhere and
-            the whole thing diverges. There is no partial credit, which is why this is a real
-            check and not a reassuring animation.
+            <strong>✓ Byte for byte, all {ONION_PACKET_SIZE} of them.</strong>{' '}
+            This fixture matches the published packet. That checks this case,
+            not every possible input or every line of code. This educational
+            implementation deliberately omits complete malformed-packet
+            validation. Never use it for payments.
           </Callout>
         )}
         {built && !built.matches && (
           <Callout>
-            <strong>✗ Mismatch.</strong> If you are seeing this, something in this site's
-            cryptography is wrong and the CI check that guards it has failed too. Please{' '}
+            <strong>✗ Mismatch.</strong> If you are seeing this, something in
+            this site's cryptography is wrong and the CI check that guards it
+            has failed too. Please{' '}
             <a
               href="https://github.com/hotpixelgroup/bitcoin4plebs/issues/new/choose"
               target="_blank"
@@ -101,20 +110,26 @@ export function OnionLab({ finale }: RunnerProps) {
           </Callout>
         )}
         <p>
-          Act two: <strong>peel it, hop by hop</strong>. Each node uses only its own private key.
-          Watch two things: each recovers exactly its own payload, and the packet it forwards is
-          the same size as the one it received.
+          Act two: <strong>peel it, hop by hop</strong>. Each node uses only its
+          own private key. Watch two things: each recovers exactly its own
+          payload, and the packet it forwards is the same size as the one it
+          received.
         </p>
-        <button className="runbtn" onClick={peel} disabled={busy}>
+        <button className="runbtn" onClick={peel} disabled={busy || !built}>
           {layers.length ? '▶ Peel again' : '▶ Walk the route'}
         </button>
         {layers.length > 0 && (
           <Callout>
-            <strong>✓ Every hop recovered its own payload, and nothing else.</strong> Look at the
-            size column: 1,366 bytes in, 1,366 bytes out, every single time. A hop cannot measure
-            the packet to work out how far along it is, because there is nothing to measure. Only
-            the last hop learns anything about its position: its onward HMAC is all zeros, which
-            is the specification's way of saying “this one is for you”.
+            <strong>
+              ✓ Every hop recovered its own payload, and nothing else.
+            </strong>{' '}
+            Look at the size column: 1,366 bytes in, 1,366 bytes out, every
+            single time. A hop cannot measure the packet to work out how far
+            along it is, because there is nothing to measure. The sender already
+            knows the route it constructed, and adjacent peers are known to each
+            hop. The last hop also recognizes its destination role: its onward
+            HMAC is all zeros, which is the specification's way of saying “this
+            one is for you”.
           </Callout>
         )}
         {finale.note && (
@@ -126,18 +141,29 @@ export function OnionLab({ finale }: RunnerProps) {
       <div>
         <div className="viz-root">
           <div className="viz-title">One packet, five layers</div>
-          <div className="viz-sub">construction per BOLT #4 §Packet Construction</div>
+          <div className="viz-sub">
+            construction per BOLT #4 §Packet Construction
+          </div>
 
           <div className="guess-feed">
-            <div className="stat-label">the packet we built ({ONION_PACKET_SIZE} bytes)</div>
-            <code className={`guess-hex ${built?.matches ? 'mine-winner' : 'mine-target'}`}>
+            <div className="stat-label">
+              the packet we built ({ONION_PACKET_SIZE} bytes)
+            </div>
+            <code
+              className={`guess-hex ${built?.matches ? 'mine-winner' : 'mine-target'}`}
+            >
               {built ? short(built.onion) : 'press ▶ to build'}
             </code>
-            <div className="stat-label">the packet the specification publishes</div>
-            <code className="guess-hex mine-target">{short(ONION_VECTOR.onion)}</code>
+            <div className="stat-label">
+              the packet the specification publishes
+            </div>
+            <code className="guess-hex mine-target">
+              {short(ONION_VECTOR.onion)}
+            </code>
             {built?.matches && (
               <div className="guess-verdict mine-won">
-                ✓ identical, all {ONION_PACKET_SIZE} bytes, the spec grading our arithmetic
+                ✓ identical, all {ONION_PACKET_SIZE} bytes, the spec grading our
+                arithmetic
               </div>
             )}
           </div>
@@ -150,19 +176,22 @@ export function OnionLab({ finale }: RunnerProps) {
                   <div className="field-row" key={layer.hop}>
                     <span className="field-label">hop {layer.hop}</span>
                     <span className="field-hex">
-                      {layer.payloadOk ? '✓' : '✗'} {layer.payload.length / 2}-byte payload
+                      {layer.payloadOk ? '✓' : '✗'} {layer.payload.length / 2}
+                      -byte payload
                       <span className="field-src">
                         {' '}
                         ← forwards {layer.sizeAfter} bytes
-                        {layer.isFinal && ' · final recipient, onward HMAC is all zeros'}
+                        {layer.isFinal &&
+                          ' · final recipient, onward HMAC is all zeros'}
                       </span>
                     </span>
                   </div>
                 ))}
               </div>
               <div className="guess-verdict mine-won">
-                ✓ {layers.filter((l) => l.payloadOk).length} of {layers.length} payloads recovered
-                exactly, every forwarded packet {ONION_PACKET_SIZE} bytes
+                ✓ {layers.filter((l) => l.payloadOk).length} of {layers.length}{' '}
+                payloads recovered exactly, every forwarded packet{' '}
+                {ONION_PACKET_SIZE} bytes
               </div>
             </div>
           )}

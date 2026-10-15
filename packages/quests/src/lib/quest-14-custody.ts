@@ -39,7 +39,7 @@ export const quest14: Quest = {
       myth: {
         belief: 'My bitcoin is in my wallet, so if I lose my phone I lose my coins.',
         reality:
-          "Your coins are entries on the ledger replicated across tens of thousands of nodes; the phone only held keys. Restore the same seed words on any other device and the wallet re-derives the same keys, asks any node about the same ledger entries, and everything is there. Lose the phone *and* the words, though, and the coins stay on the ledger forever: visible, yours, and permanently frozen.",
+          'The ledger is separate from the phone. Recovery depends on the wallet design: a seed may need its passphrase, derivation and script information, descriptors and cosigners; imported keys may need separate backup. Test recovery safely and match known addresses rather than assuming any replacement device will restore everything.',
       },
       prose: [
         "In Quest #3 you watched `OP_CHECKSIG` demand a signature that matches the lock on a coin. A **wallet** is just the machine that holds the signing keys and does the bookkeeping: it derives your addresses, scans the ledger for coins locked to them, and signs when you spend. It holds no coins, the way your house keys hold no house.",
@@ -73,23 +73,23 @@ export const quest14: Quest = {
       id: 'twelve-words',
       title: 'The 12 words are one number wearing a costume',
       takeaway:
-        'A seed phrase is not a password someone chose. It is **random entropy dressed up as words**: 128 to 256 coin-flip bits, plus a built-in checksum so a mistyped word announces itself. Read the recipe from the BIP itself.',
+        'A BIP39 phrase represents random entropy plus a short checksum. It catches many mistakes, but a wrong word can still produce a valid different phrase. A checksum pass cannot prove your backup is correct.',
       quiz: [
         {
           question: 'You copy a seed phrase but swap one word for a lookalike. What happens when you restore it?',
           options: [
             'The wallet opens with slightly different addresses and you may not notice',
-            'The checksum fails and honest software warns you before any damage',
+            'The checksum may fail, or the wrong phrase may pass and open a different wallet',
             'Nothing can detect the mistake',
           ],
           answer: 1,
           explain:
-            'The last word carries checksum bits computed from the SHA-256 of the entropy, so a single wrong word makes the whole phrase invalid, and the BIP instructs software to warn you. You will break this on purpose in the finale. (A valid-but-different phrase, like writing down the wrong words entirely, is still unrecoverable: the checksum guards against typos, not against bad backups.)',
+            'The checksum is 4 bits for 12 words and 8 for 24 words. Some single-word substitutions pass it. Software warns on invalid checksums, but a valid checksum does not establish that the phrase matches your backup. Verify a backup by a safe test restore and matching known addresses. See [BIP39](https://bips.dev/39/).',
         },
       ],
       prose: [
         "Here is the entire recipe, quoted from the BIP-39 specification at our pinned bips commit. Flip 128 coins (ENT bits of entropy). Take the SHA-256 of the result, the same hash function you ran over the genesis block in Quest #8, and append its first 4 bits as a checksum. Chop the 132 bits into twelve 11-bit numbers, each between 0 and 2,047. Look each number up in a fixed list of 2,048 words. Read the words aloud: that's your phrase.",
-        'Two things follow. First, the words are not chosen, meaningful, or guessable: they are a **uniform random number** in a space of 2¹²⁸ (Quest #3 showed you how untouchable that is). Second, the checksum means the phrase carries its own tamper-evidence, exactly like the addresses in Quest #10: get one word wrong and the arithmetic refuses to add up.',
+        'Random entropy supplies the security. The checksum supplies limited error detection: 12 words have 4 checksum bits, 24 have 8. Many wrong phrases fail, but some pass and derive a different wallet. Neither phrase length nor a checksum substitutes for checking the backup.',
         "One honesty note the site owes you: seed phrases are a **wallet convention, not a Bitcoin rule**. Nothing in consensus knows about words; Bitcoin Core itself doesn't use them. This page quotes a BIP, not Core, because that's where this standard actually lives, and nearly every wallet you'll meet speaks it.",
       ],
       annotations: [
@@ -220,7 +220,7 @@ export const quest14: Quest = {
   finale: {
     title: 'The seed studio: mint practice phrases, then break one',
     takeaway:
-      "Generate real BIP-39 phrases from your browser's own entropy, watch the checksum arithmetic pass, then swap a single word and watch it fail. Practice only: fresh phrases, never yours, nothing sent anywhere.",
+      'Generate practice BIP39 phrases, derive their seeds, then compare an invalid substitution with a valid-but-different one. Both are backup mistakes, only one fails the checksum. Fresh practice data only, never enter your own phrase.',
     runnerId: 'seed-studio',
     note: 'Runs the algorithm from the pinned BIP text 1:1 (entropy → SHA-256 checksum → 11-bit words → PBKDF2 seed) via your browser\'s WebCrypto, cross-checked in our tests against an independent implementation and the pinned wordlist. Practice phrases only: for real funds, generate on a dedicated offline device, never in a browser.',
   },
@@ -232,7 +232,7 @@ export const quest14: Quest = {
         text: '**Wallets hold keys, ledgers hold coins, exchanges hold promises.** Restore-from-words works on any device because the coins never moved.',
       },
       {
-        text: '**A seed phrase is entropy in costume**: 128–256 random bits plus a SHA-256 checksum, spelled with 2,048 words, so typos announce themselves.',
+        text: '**A seed phrase is entropy in words plus a short checksum.** The checksum detects many mistakes, not every wrong word and not an incorrect backup.',
         cite: 'bip-0039.mediawiki:46',
       },
       {
@@ -249,6 +249,6 @@ export const quest14: Quest = {
   feynman: {
     prompt: 'Explain to a friend what a seed phrase is and why typing it into a website loses everything, in three sentences.',
     model:
-      'A seed phrase is a giant random number written as words, and every key your wallet will ever use is re-derived from it by public arithmetic. That means the words ARE the wallet: any person or program that reads them can rebuild all your keys and spend everything, no password or permission needed. So they get written on paper or steel, restored only into wallet devices, and never typed into anything connected to the internet, because no honest service will ever ask.',
+      'A BIP39 phrase encodes wallet entropy. With the right passphrase and derivation information it can recreate derived keys, but imported keys, descriptors, cosigners and channel state may require separate backups. Keep recovery material private and verify a backup safely without entering it into this site.',
   },
 };

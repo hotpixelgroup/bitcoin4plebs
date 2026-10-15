@@ -463,8 +463,11 @@ h1 {
 }
 @media (max-width: 900px) {
   .cols {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
+}
+.cols > * {
+  min-width: 0;
 }
 
 .prose p {
@@ -5067,3 +5070,31 @@ tr:last-child td {
   font-family: var(--mono);
   font-size: 13px;
 }
+
+/* Lab controls and explanations must remain readable on narrow screens. */
+.cols select { max-width: 100%; }
+@media (max-width: 620px) {
+  .field-row { grid-template-columns: minmax(0, 1fr); }
+  .field-src { white-space: normal; overflow-wrap: anywhere; }
+  .runbtn, .preset { white-space: normal; max-width: 100%; }
+}
+
+.lab-extension {
+  border-top: 1px solid var(--hairline-strong);
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.lab-extension label, section[aria-label="Package fee laboratory"] label {
+  display: block;
+  margin-block: .75rem;
+}
+.lab-extension input:not([type="checkbox"]), .lab-extension select, .lab-extension textarea,
+section[aria-label="Package fee laboratory"] input, section[aria-label="Package fee laboratory"] select {
+  max-width: 100%;
+  box-sizing: border-box;
+  font: inherit;
+}
+.lab-extension textarea { width: 100%; font-family: var(--mono); }
+.lab-extension code { overflow-wrap: anywhere; }

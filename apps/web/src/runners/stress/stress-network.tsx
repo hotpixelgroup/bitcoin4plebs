@@ -72,11 +72,11 @@ function fadSteps(): Step[] {
     ],
   });
 
-  floor = blockConnected(floor);
+  floor = blockConnected(floor, 0);
   const at12h = read(12 * HOUR, FULL);
   steps.push({
     title: 'Wednesday morning · the half-life bites',
-    body: 'Twelve simulated hours pass with the queue still full. `GetMinFee` has been decaying the floor the entire time, halving it every `ROLLING_FEE_HALFLIFE`. To keep the floor up, the fad must keep outbidding itself; calm is the default the code returns to.',
+    body: 'Twelve simulated hours pass with the queue still full. `GetMinFee` has been decaying the floor the entire time, halving it every `ROLLING_FEE_HALFLIFE`. To keep the floor up, the fad must keep outbidding itself; this scenario assumes no new evictions; sustained demand could keep the floor high.',
     stats: [{ label: 'mempool floor', value: `${perVb(at12h)} sat/vB` }],
   });
 
@@ -110,7 +110,10 @@ function greedySteps(): Step[] {
       title: `Height ${SIM_HEIGHT.toLocaleString('en-US')} · the claim`,
       body: `A large pool decides the halvings were optional and writes itself a coinbase of **${satsToBtc(claimed)} BTC** instead of ${satsToBtc(honest)} plus fees.`,
       stats: [
-        { label: 'allowed (subsidy)', value: `${satsToBtc(honest)} BTC + fees` },
+        {
+          label: 'allowed (subsidy)',
+          value: `${satsToBtc(honest)} BTC + fees`,
+        },
         { label: 'claimed', value: `${satsToBtc(claimed)} BTC` },
       ],
     },
@@ -127,7 +130,12 @@ function greedySteps(): Step[] {
       title: 'Stubbornness tax',
       body: `Try it four blocks in a row: that is 4 × ${satsToBtc(honest)} = **${satsToBtc(honest * 4n)} BTC** of honest revenue forfeited, plus four blocks of very real power, while an honest competitor mined those heights and kept everything.`,
       tone: 'bad',
-      stats: [{ label: 'honest revenue forfeited', value: `${satsToBtc(honest * 4n)} BTC + fees` }],
+      stats: [
+        {
+          label: 'honest revenue forfeited',
+          value: `${satsToBtc(honest * 4n)} BTC + fees`,
+        },
+      ],
     },
     {
       title: 'Why this never makes the news',
@@ -161,7 +169,10 @@ function majoritySteps(): Step[] {
       body: 'Their chain mints coins the economy will not recognize as bitcoin. Suppose the fork token trades at a tenth of the price (an assumption, and a generous one). A 3.125-coin reward in tenth-price tokens pays like **0.3 BTC**; mining the minority-but-real chain pays 3.125. Hashpower follows revenue home.',
       stats: [
         { label: 'reward, real chain', value: '3.125 BTC' },
-        { label: 'reward, fork (at 1/10 price)', value: '≈ 0.31 BTC-equivalent' },
+        {
+          label: 'reward, fork (at 1/10 price)',
+          value: '≈ 0.31 BTC-equivalent',
+        },
       ],
     },
     {
@@ -215,7 +226,8 @@ const SCENARIOS: Array<Omit<Scenario, 'steps'> & { build: () => Step[] }> = [
     chip: 'a miner prints extra coins',
     heading: 'Shock #2 · the halving is declared optional',
     build: greedySteps,
-    lesson: 'The veto absorbed it: a block nobody accepts is a power bill with no product.',
+    lesson:
+      'The veto absorbed it: a block nobody accepts is a power bill with no product.',
   },
   {
     id: 'majority',
@@ -245,14 +257,18 @@ export function StressNetwork({ finale }: RunnerProps) {
   const [revealed, setRevealed] = useState(1);
   const scenarios = useMemo(
     () => SCENARIOS.map((s) => ({ ...s, steps: s.build() })),
-    []
+    [],
   );
   const scenario = scenarios.find((s) => s.id === scenarioId) as Scenario;
   const done = revealed >= scenario.steps.length;
 
   return (
     <div className="stress">
-      <div className="stress-chips" role="group" aria-label="Pick a shock to throw at the network">
+      <div
+        className="stress-chips"
+        role="group"
+        aria-label="Pick a shock to throw at the network"
+      >
         {scenarios.map((s) => (
           <button
             key={s.id}
@@ -271,7 +287,10 @@ export function StressNetwork({ finale }: RunnerProps) {
       <div className="viz-title">{scenario.heading}</div>
       <ol className="stress-steps">
         {scenario.steps.slice(0, revealed).map((step, i) => (
-          <li key={i} className={`stress-step ${step.tone ? `stress-${step.tone}` : ''}`}>
+          <li
+            key={i}
+            className={`stress-step ${step.tone ? `stress-${step.tone}` : ''}`}
+          >
             <div className="stress-step-title">{step.title}</div>
             <p className="stress-step-body">
               <RichText text={step.body} />
@@ -296,7 +315,8 @@ export function StressNetwork({ finale }: RunnerProps) {
         </button>
       ) : (
         <Callout>
-          <strong>What absorbed the shock?</strong> <RichText text={scenario.lesson} />
+          <strong>What absorbed the shock?</strong>{' '}
+          <RichText text={scenario.lesson} />
         </Callout>
       )}
 

@@ -37,7 +37,7 @@ export const questLn03: Quest = {
       myth: {
         belief: "A Lightning invoice is just my Lightning address, like a bitcoin address.",
         reality:
-          "Invoices are single-use by construction. The hash at the centre of one commits to a secret; once that secret is revealed by the first payment, a second payment against the same invoice is either rejected or, worse, given away for free, anyone who saw the first one already knows the secret. This is why wallets generate a fresh invoice every time you tap 'receive', and it is also why the reusable thing people actually want came later, as a separate object (BOLT #12 offers).",
+          '**Treat each invoice as single-use.** Reusing a payment hash or accepting duplicate settlement can break safe payment handling; the string does not physically prevent reuse.',
       },
       contrastLabels: { left: 'A Bitcoin address', right: 'A Lightning invoice' },
       contrast: [
@@ -48,7 +48,7 @@ export const questLn03: Quest = {
       ],
       prose: [
         "Read the two columns and the design falls out. An address is a place. An invoice is a *contract offer*: this much, for this, before then, and here is my signature over all of it so you know it wasn't tampered with in transit.",
-        "That last part matters more than it sounds. Nothing about Lightning stops someone intercepting an invoice as it travels from Ines to Mira over email or chat. What stops them editing it is that every field is covered by a signature, and, more prosaically, that every character is covered by a checksum. Change one letter and the whole thing stops decoding, which the finale will let you prove.",
+        'A signature detects modification under the signing key, and the checksum detects many transcription errors. Neither proves the invoice came from your intended recipient: an attacker could replace it with their own correctly signed invoice. Verify the payment destination through a trusted channel. The educational decoder below does not verify signatures.',
       ],
     },
     {
@@ -96,7 +96,7 @@ export const questLn03: Quest = {
       id: 'the-hash',
       title: 'The hash at the centre',
       takeaway:
-        "One line of the specification carries the whole idea: *Preimage of this provides proof of payment.* The payee invents a secret, publishes only its hash, and hands the secret over exactly when paid. Holding it afterwards is a receipt nobody can forge or revoke.",
+        'The payment hash binds an invoice to a preimage. Learning that preimage is useful evidence of fulfillment, but it does not uniquely identify the payer: forwarding nodes also learn it and anyone can share it. A payee could disclose it without payment.',
       annotationsOpen: true,
       quiz: [
         {
@@ -108,12 +108,12 @@ export const questLn03: Quest = {
           ],
           answer: 1,
           explain:
-            "That combination is the receipt. Ines signed an invoice saying 'pay 180,000 sats for one sack of beans, hash = X'. Mira can show the secret that hashes to X. Only Ines could have produced it, and she only produces it on payment. No third party, no dispute process, no chain lookup, just arithmetic anyone can check.",
+            'The signed invoice binds Ines to a hash and terms. The matching preimage is evidence of fulfillment, but possession alone cannot prove who paid: intermediate hops also learn it and can share it.',
         },
       ],
       prose: [
         "`p` is the payment hash: 256 bits of SHA-256 output. The sentence after it is doing enormous work. **Preimage of this provides proof of payment**, a preimage being the input that produces a given hash.",
-        "Think about what that buys. Mira pays and comes away holding a number. That number, plus the invoice Ines signed, is a proof: *the person who signed this invoice released this secret, and they only release it when paid.* It needs no block explorer, no receipt email, no trusted third party. It is the strongest payment receipt in ordinary use anywhere, and it falls out of one hash.",
+        "Mira obtains the preimage on successful fulfillment. Combined with the signed invoice it is useful evidence, but it is not exclusive proof of the payer's identity or of why the payee disclosed it. Do not treat possession alone as a complete dispute-resolution system.",
         "Then look at `s`, the payment secret, whose stated purpose is to prevent *forwarding nodes from probing the payment recipient*. A hop in the middle could otherwise try paying a guessed hash to see what happens. The payment secret means a hop cannot construct a valid final payload without having seen the invoice, so probing fails. Small field, and it closes a real attack.",
         "And `d`, the description, is UTF-8 text, which is why the specification's own examples include 'ナンセンス 1杯'. The finale decodes that one, unmangled.",
       ],
@@ -174,7 +174,7 @@ export const questLn03: Quest = {
       "Open your own wallet, tap receive, and ask for a specific amount with a description. Then copy the invoice into the decoder above and read your own request back: the amount you typed, the description you typed, the expiry your wallet chose without asking, and a payment hash your wallet invented seconds ago. It is your invoice: you may as well be able to read it.",
     items: [
       {
-        text: '**An invoice is a request, not an address**: one amount, one purpose, one deadline, and single-use by construction.',
+        text: '**Treat each invoice as single-use.** Reusing a payment hash or accepting duplicate settlement can break safe payment handling; the string does not physically prevent reuse.',
       },
       {
         text: '**Tagged fields carry their own lengths**, so a decoder can skip what it does not recognise and the format can grow without breaking old wallets.',
@@ -193,8 +193,8 @@ export const questLn03: Quest = {
       "**Keep verifying.** You can now read the object every Lightning payment starts from, and you read it with a decoder whose homework the specification marks on every change. One question is still open, and it is the big one: Mira has no channel with Ines. How does a payment cross people who have never met, without any of them being able to steal it? The hash you just met is the answer.",
   },
   feynman: {
-    prompt: 'Explain to a friend what the long lnbc string actually contains, and why paying it gives you a receipt nobody can forge.',
+    prompt: 'Explain what a BOLT11 invoice contains and what a matching preimage does, and does not, prove.',
     model:
-      "It is a signed request: how much, what for, when it expires, how to reach the payee, and, at the centre, the hash of a random secret the payee just invented. Because the payee signed the whole thing, nobody can alter it in transit, and because it is bech32-encoded, a single mistyped character fails the checksum instead of quietly sending money somewhere wrong. Paying it is what makes the payee release the secret, so afterwards you hold a number that hashes to the one in their signed invoice, which only they could have produced, and only in exchange for being paid.",
+      'A BOLT11 invoice is a signed payment request containing an amount or amount convention, expiry, description and payment hash. On fulfillment, the preimage travels back through the route. It matches the signed hash but can be shared, so possession does not uniquely prove who paid.',
   },
 };

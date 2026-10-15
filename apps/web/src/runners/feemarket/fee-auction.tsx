@@ -1,179 +1,189 @@
-import { useEffect, useMemo, useState } from 'react';
-import {
-  estimateConfirmation,
-  feerateBands,
-  generateMempool,
-} from '@bitcoin4plebs/bitcoin-logic';
-import { Callout, RichText } from '@bitcoin4plebs/ui';
-import { usePrefersReducedMotion } from '../../lib/use-reduced-motion';
+import { useState } from 'react';
 import type { RunnerProps } from '../registry';
+import {
+  feeTrace,
+  initialPool,
+  replacePayment,
+  type FeeTx,
+} from '../labs/models';
 
-const SEED = 42;
-const MY_VSIZE = 140;
-const BLOCK_VBYTES = 1_000_000;
-const MAX_REPLAY = 8;
-
-/**
- * The fee-auction runner: a deterministic model mempool, one slider, and
- * the real mechanism from miner.cpp: highest feerate first, ~1M vbytes
- * per block, one block every ten minutes. The replay mines those blocks
- * before your eyes so "waiting for confirmation" becomes "waiting for the
- * waterline to reach your bid."
- */
 export function FeeAuction({ finale }: RunnerProps) {
-  const [feerate, setFeerate] = useState(5);
-  const [cleared, setCleared] = useState(0);
-  const [playing, setPlaying] = useState(false);
-  const pool = useMemo(() => generateMempool(SEED), []);
-  const bands = useMemo(() => feerateBands(pool), [pool]);
-  const estimate = estimateConfirmation(feerate, MY_VSIZE, SEED);
-  const fee = feerate * MY_VSIZE;
-  const maxBand = Math.max(...bands.map((b) => b.vbytes));
-  const targetBlocks = estimate.timedOut ? MAX_REPLAY : Math.min(estimate.blocks, MAX_REPLAY);
-
-  useEffect(() => {
-    setCleared(0);
-    setPlaying(false);
-  }, [feerate]);
-
-  const reducedMotion = usePrefersReducedMotion();
-
-  useEffect(() => {
-    if (!playing) return;
-    if (reducedMotion) {
-      setCleared(targetBlocks);
-      setPlaying(false);
-      return;
-    }
-    const timer = setInterval(() => {
-      setCleared((c) => {
-        if (c + 1 >= targetBlocks) setPlaying(false);
-        return Math.min(c + 1, targetBlocks);
-      });
-    }, 800);
-    return () => clearInterval(timer);
-  }, [playing, targetBlocks, reducedMotion]);
-
-  // How much of each band survives after `cleared` blocks skim the top.
-  const remaining = useMemo(() => {
-    let budget = cleared * BLOCK_VBYTES;
-    const out = new Map<number, number>();
-    for (const band of [...bands].reverse()) {
-      const take = Math.min(band.vbytes, budget);
-      out.set(band.from, band.vbytes - take);
-      budget -= take;
-    }
-    return out;
-  }, [bands, cleared]);
-
-  const confirmed = !estimate.timedOut && cleared >= estimate.blocks;
-
+  const [pool, setPool] = useState<FeeTx[]>(initialPool);
+  const [step, setStep] = useState(0);
+  const [bump, setBump] = useState(1000);
+  const [newInput, setNewInput] = useState(false);
+  const [message, setMessage] = useState(
+    'Predict which package enters the first 500-vB block.',
+  );
+  const [prediction, setPrediction] = useState('competitor');
+  const trace = feeTrace(pool);
+  const view = step ? trace[step - 1].after : pool;
+  const confirmation =
+    trace.findIndex((b) => b.mined.some((t) => t.id === 'payment')) + 1;
+  const reset = () => {
+    setPool(initialPool);
+    setStep(0);
+    setMessage('Replay reset. Same arrivals and policies.');
+  };
   return (
-    <div className="cols">
-      <div className="prose">
-        <label className="height-input-label">
-          Your bid: <strong>{feerate} sat/vB</strong> (a typical {MY_VSIZE}-vbyte payment ={' '}
-          {fee.toLocaleString('en-US')} sats total fee)
-          <input
-            className="fee-slider"
-            type="range"
-            min={1}
-            max={100}
-            value={feerate}
-            onChange={(e) => setFeerate(Number(e.target.value))}
-          />
-        </label>
+    <section className="prose" aria-label="Package fee laboratory">
+      <h3>One queue, one arrival trace</h3>
+      <p>
+        Deterministic 500-vB teaching blocks, not Bitcoin block capacity. Before
+        each block, fixed arrivals enter; ancestor packages compete by combined
+        fee / combined vsize. This greedy subset omits sigops, weight details,
+        miner discretion and other policy. The starting queue is assumed
+        available; relay fee floors are omitted. Neither a fee quote nor a
+        guarantee.
+      </p>
+      <label>
+        Replacement / child fee (sats){' '}
+        <input
+          type="number"
+          min="0"
+          max="100000"
+          value={bump}
+          onChange={(e) => setBump(Number(e.target.value))}
+        />
+      </label>
+      <label>
+        <input
+          type="checkbox"
+          checked={newInput}
+          onChange={(e) => setNewInput(e.target.checked)}
+        />{' '}
+        Replacement adds a new unconfirmed input
+      </label>
+      <div className="stress-chips">
+        <button
+          className="preset"
+          disabled={step > 0}
+          onClick={() => {
+            const r = replacePayment(pool, bump, newInput);
+            setPool(r.pool);
+            setMessage(r.reason);
+          }}
+        >
+          Try RBF replacement
+        </button>
+        <button
+          className="preset"
+          disabled={
+            step > 0 ||
+            pool.some((t) => t.id === 'child') ||
+            !Number.isSafeInteger(bump) ||
+            bump < 0
+          }
+          onClick={() => {
+            setPool([
+              ...pool,
+              { id: 'child', parent: 'parent', fee: bump, size: 100 },
+            ]);
+            setMessage(
+              'CPFP child spends the parent’s output. Both must fit and be selected together unless the parent is already confirmed. Child fee is additional expense.',
+            );
+          }}
+        >
+          Attach CPFP child to parent
+        </button>
+      </div>
+      <p>
+        Historical Core 28-era full-RBF policy fixture (selected constraints):
+        greater absolute fees including evicted descendants, higher
+        direct-conflict feerate, incremental relay fee assumed 1 sat/vB, no new
+        unconfirmed inputs, at most 100 evictions. Signalling is not required in
+        this fixture. This is not complete Core admission policy. The newer
+        pinned Core source uses conflicting-cluster limits and feerate-diagram
+        improvement; these historical limits are not current universal rules.
+      </p>
+      <label>
+        Predict the first selected package{' '}
+        <select
+          value={prediction}
+          disabled={step > 0}
+          onChange={(e) => setPrediction(e.target.value)}
+        >
+          <option value="competitor">competitor</option>
+          <option value="payment">payment</option>
+          <option value="parent">parent + child</option>
+          <option value="arrival-1">arrival-1</option>
+        </select>
+      </label>
+      <div className="stress-chips">
         <button
           className="runbtn"
+          disabled={step === trace.length}
           onClick={() => {
-            setCleared(0);
-            setPlaying(true);
-          }}
-          disabled={playing}
-        >
-          {playing ? '⛏ mining…' : cleared > 0 ? '▶ replay the auction' : '▶ Watch the blocks clear the room'}
-        </button>
-        {finale.note && (
-          <p className="finale-note">
-            <RichText text={finale.note} />
-          </p>
-        )}
-        <Callout>
-          <strong>The auction's verdict:</strong>{' '}
-          {estimate.timedOut ? (
-            <>
-              at {feerate} sat/vB your payment is <strong>still waiting after 20 blocks</strong>{' '}
-              (~3+ hours), because everything above your bid keeps filling the blocks. In the real
-              network you'd wait for a quiet moment, or bump your fee.
-            </>
-          ) : estimate.blocks === 1 ? (
-            <>
-              your bid beats the crowd: <strong>next block</strong>, roughly{' '}
-              <strong>~{estimate.minutes} minutes</strong>. You outbid every full block's worth of
-              waiting payments.
-            </>
-          ) : (
-            <>
-              your payment confirms in about <strong>block {estimate.blocks}</strong>, roughly{' '}
-              <strong>~{estimate.minutes} minutes</strong>. Everything in the bands above your bid
-              goes first; each block clears ~1M vbytes off the top.
-            </>
-          )}
-        </Callout>
-      </div>
-      <div>
-        <div className="viz-root">
-          <div className="viz-title">The waiting room, sorted by bid</div>
-          <div className="viz-sub">
-            vbytes waiting at each feerate · ▲ marks your bid · each mined block skims ~1 MvB off
-            the top
-          </div>
-          <div className="band-chart">
-            {[...bands].reverse().map((band) => {
-              const mine = feerate >= band.from && feerate < band.to;
-              const left = remaining.get(band.from) ?? band.vbytes;
-              return (
-                <div key={band.from} className={`band-row ${left === 0 ? 'band-cleared' : ''}`}>
-                  <span className="band-label">
-                    {band.from}–{band.to === 151 ? '150+' : band.to} sat/vB
-                  </span>
-                  <span className="band-bar-track">
-                    <span
-                      className={`band-bar ${mine ? 'band-bar-mine' : ''}`}
-                      style={{ width: `${Math.max(left === 0 ? 0 : 2, (left / maxBand) * 100)}%` }}
-                    />
-                  </span>
-                  <span className="band-value">
-                    {left === 0 ? 'mined ✓' : `${(left / 1_000_000).toFixed(2)} MvB`}
-                    {mine && <strong className="band-mine-marker"> ▲ you</strong>}
-                  </span>
-                </div>
+            if (step === 0) {
+              const first = trace[0].mined[0]?.id;
+              setMessage(
+                `${prediction === first ? 'Prediction matched.' : 'Prediction differed.'} First selected: ${first}. Compare package rates, not the child alone.`,
               );
-            })}
-          </div>
-          {cleared > 0 && (
-            <div className={`auction-progress ${confirmed ? 'mine-won' : ''}`}>
-              {confirmed
-                ? `⛏ block ${cleared} mined after ~${cleared * 10} minutes. The waterline reached your bid. Confirmed. ✓`
-                : `⛏ block ${cleared} mined (~${cleared * 10} min): ${(cleared * BLOCK_VBYTES / 1_000_000).toFixed(0)} MvB of better-paying traffic gone, yours still waiting…`}
-            </div>
-          )}
-          <div className="stat-grid">
-            <div className="stat">
-              <div className="stat-label">estimated confirmation</div>
-              <div className="stat-value">
-                {estimate.timedOut ? '20+ blocks' : `block ${estimate.blocks}`}
-              </div>
-            </div>
-            <div className="stat">
-              <div className="stat-label">estimated wait</div>
-              <div className="stat-value">
-                {estimate.timedOut ? '3+ hours' : `~${estimate.minutes} min`}
-              </div>
-            </div>
-          </div>
-        </div>
+            }
+            setStep(step + 1);
+          }}
+        >
+          Mine next trace block
+        </button>
+        <button className="preset" onClick={reset}>
+          Reset fee experiment
+        </button>
       </div>
-    </div>
+      <p role="status">{message}</p>
+      <p>
+        Trace forecast from exactly these arrivals: payment{' '}
+        {confirmation
+          ? `in block ${confirmation}`
+          : 'unconfirmed at four-block cutoff'}
+        . No wall-clock estimate: blocks are probabilistic.
+      </p>
+      <h4>Queue after block {step}</h4>
+      <ul>
+        {view.map((t) => (
+          <li key={t.id}>
+            {t.id}: {t.fee} sats / {t.size} vB = {(t.fee / t.size).toFixed(2)}{' '}
+            sat/vB
+            {t.parent
+              ? ` · parent ${t.parent}: ${step > 0 && trace[step - 1].confirmed.includes(t.parent) ? 'already confirmed' : 'unconfirmed dependency'}`
+              : ''}
+          </li>
+        ))}
+      </ul>
+      <div aria-label="Queue histogram">
+        {[0, 2, 5, 10].map((floor, i) => {
+          const ceiling = [2, 5, 10, Infinity][i];
+          const size = view
+            .filter((t) => t.fee / t.size >= floor && t.fee / t.size < ceiling)
+            .reduce((s, t) => s + t.size, 0);
+          return (
+            <p key={floor}>
+              {floor}–{ceiling === Infinity ? '∞' : ceiling} sat/vB: {size} vB{' '}
+              <meter min={0} max={1000} value={size}>
+                {size}
+              </meter>
+            </p>
+          );
+        })}
+      </div>
+      <ol>
+        {trace.slice(0, step).map((b, i) => (
+          <li key={i}>
+            Block {i + 1}: arrivals{' '}
+            {b.before
+              .filter((t) => t.id.startsWith('arrival'))
+              .map((t) => t.id)
+              .join(', ') || 'none waiting'}
+            ; selected {b.mined.map((t) => t.id).join(' → ') || 'none'}. Fees{' '}
+            {b.mined.reduce((s, t) => s + t.fee, 0)} sats.
+          </li>
+        ))}
+      </ol>
+      {finale.note && (
+        <p className="finale-note">
+          The same trace drives the queue, histogram, selection and forecast.
+          Change the starting fee strategy, reset, and replay to compare.
+        </p>
+      )}
+    </section>
   );
 }

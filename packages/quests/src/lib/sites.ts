@@ -125,7 +125,7 @@ export const sites: Record<SiteId, SiteConfig> = {
       blurb:
         "Ready for the layer above? Lightning gets the same treatment there: its own specifications quoted verbatim, a real node's source beside them, and cryptography you can check against the spec's own published test vectors.",
       covers: [
-        'channels, and why cheating costs everything',
+        'channels, revocation and the need for timely recovery',
         'what is really inside an lnbc invoice',
         'payments that cross strangers who never learn who you are',
       ],
@@ -165,9 +165,9 @@ export const sites: Record<SiteId, SiteConfig> = {
       'The channel':
         'Two people, one shared lock, and a balance the blockchain never sees. The foundation everything else is built on.',
       'Money in motion':
-        'The object you actually paste. What is inside an lnbc string, and why the hash at its centre is the best payment receipt in ordinary use.',
+        'The object you actually paste. What is inside an lnbc string, and why the hash at its centre is fulfillment evidence with important limits.',
       Routing:
-        'From a private tab to a network of strangers: how a payment crosses people who can neither steal it nor learn who you are.',
+        'From a private tab to a network of strangers: how a payment crosses conditional channel promises, with explicit timing and privacy limits.',
       'The big questions':
         'The one that decides whether any of the above is yours: who is holding the key, what it costs to hold it yourself, and an honest scorecard with the weaknesses left in.',
     },

@@ -44,7 +44,7 @@ export const quest08: Quest = {
       takeaway:
         'The first block ever mined carries a message: **that day\'s front-page headline from The Times**. It\'s a timestamp you can\'t fake and, given what it says, a mission statement.',
       prose: [
-        'Why a headline? Proof of freshness. A block containing the 3 January 2009 front page **cannot have been mined before 3 January 2009**, which means Satoshi couldn\'t have pre-mined the chain in secret and backdated it. It\'s the same trick as photographing a hostage with today\'s newspaper, except the hostage is a monetary system.',
+        "The newspaper headline is a chronology clue. It supports a claim about when these bytes became available, not proof of every aspect of mining history or Satoshi’s intentions.",
         'And of all the headlines to land on: *Chancellor on brink of second bailout for banks*. Nobody can prove Satoshi chose it as commentary, but the code preserves it forever either way. When your node finishes this curriculum\'s journey and stores block zero, these exact bytes are what it stores.',
       ],
       annotations: [
@@ -133,15 +133,15 @@ export const quest08: Quest = {
           "It asks other nodes to vote",
           ],
           answer: 1,
-          explain: "Line 160 is an assert: at every startup the node re-hashes its genesis block, and if the result is not 000000000019d668\u2026 the program dies on the spot. Seventeen years on, every boot still checks the birth certificate.",
+          explain: "The source constructs genesis and compares it to expected constants with assertions. Assertions may be omitted in release builds; this is not evidence that every production startup independently audits the chain from genesis.",
         },
       ],
       title: 'The exact numbers, and the check your node runs at every boot',
       takeaway:
         'Here is the birth certificate: timestamp, the winning nonce, the easiest-ever difficulty, 50 BTC. And below it, an `assert`, which means **your node refuses to even start** unless its own genesis block hashes to the famous value.',
       prose: [
-        'Four arguments on line 158: `1231006505` is 3 January 2009, 18:15:05 UTC. `2083236893` is a Quest #6 lottery ticket: the winning nonce, one value out of the four billion a 32-bit field allows. `0x1d00ffff` is the easiest difficulty Bitcoin has ever had, and it has never been that easy again.',
-        'Then look at line 160. This is not documentation; `assert` means the program **checks its own birth certificate on startup and dies if it doesn\'t match**. If a single byte of the genesis construction were corrupted (in your download, on your disk, anywhere), your node would refuse to run. Seventeen years on, every node still verifies block zero before it verifies anything else. That hash is what you\'re about to recompute.',
+        "The arguments specify the genesis timestamp, nonce and compact target. The 0x1d00ffff difficulty also applied to subsequent early blocks, so genesis was not uniquely easy.",
+        "The expected genesis hash anchors this configured network. The quoted assertion checks construction when assertions are enabled; release builds may omit assertions. Genesis receives special handling rather than ordinary block-connection processing.",
       ],
       annotationsOpen: true,
       annotations: [
@@ -243,15 +243,15 @@ export const quest08: Quest = {
       'Look up block 0 on any explorer and find the Times headline in the coinbase data yourself. Every copy of the chain carries it, and you now know how to walk in and read it.',
     items: [
       {
-        text: '**Block zero carries that day\'s newspaper headline**: proof the chain wasn\'t pre-mined, preserved by every node forever.',
+        text: "**Genesis includes a newspaper headline.** This supports a chronology argument, but does not prove the author’s intentions or exclude all possible earlier unpublished work.",
         cite: 'chainparams.cpp:71',
       },
       {
-        text: '**The genesis block is built from the same parts as every block**; its only privilege is a parent pointer of all zeros.',
+        text: "**Genesis is special-cased:** it anchors the configured chain and its coinbase output is not added to the spendable UTXO set. Its header still uses the ordinary serialization format.",
         cite: 'chainparams.cpp:53',
       },
       {
-        text: '**Every node re-checks the genesis hash at every startup**: an assert, not a comment.',
+        text: "**Expected genesis constants anchor the configured chain.** The source assertions check construction in builds where assertions are enabled.",
         cite: 'chainparams.cpp:160',
       },
       {
@@ -268,6 +268,6 @@ export const quest08: Quest = {
   feynman: {
     prompt: "Explain why the newspaper headline is in block zero, in two sentences.",
     model:
-      "A block containing the morning paper of 3 January 2009 cannot have been created earlier, so the headline proves the chain was not secretly pre-mined. That it happens to be about bank bailouts reads like a mission statement, and the code preserves it forever either way.",
+      "The genesis coinbase contains the 3 January 2009 headline. It provides a chronology clue; a bailout message can be interpreted as commentary, but the bytes do not establish authorial intent or prove the absence of all earlier unpublished mining.",
   },
 };

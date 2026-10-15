@@ -1,3 +1,4 @@
+import { SnapshotLab } from '../labs/extended-labs';
 import { useState } from 'react';
 import {
   btcToSats,
@@ -27,21 +28,29 @@ export function SupplyCheck({ finale }: RunnerProps) {
   const [heightText, setHeightText] = useState('938343');
   const [reportedText, setReportedText] = useState('');
 
-  const parsedHeight = Number.parseInt(heightText.replace(/,/g, ''), 10);
-  const height = Number.isFinite(parsedHeight) && parsedHeight >= 0 ? parsedHeight : null;
+  const cleanedHeight = heightText.replace(/,/g, '');
+  const parsedHeight = /^\d+$/.test(cleanedHeight)
+    ? Number(cleanedHeight)
+    : NaN;
+  const height =
+    Number.isSafeInteger(parsedHeight) && parsedHeight >= 0
+      ? parsedHeight
+      : null;
 
   const scheduleSats = height !== null ? supplyThroughBlock(height) : null;
   const subsidySats = height !== null ? getBlockSubsidy(height) : null;
   const reportedSats = reportedText.trim() ? btcToSats(reportedText) : null;
   const delta =
-    scheduleSats !== null && reportedSats !== null ? scheduleSats - reportedSats : null;
+    scheduleSats !== null && reportedSats !== null
+      ? scheduleSats - reportedSats
+      : null;
 
   return (
     <div className="cols">
       <div className="prose">
         <p>
-          On a synced node, this is the whole ceremony. One command, answered from your own
-          disk:
+          On a synced node, this is the whole ceremony. One command, answered
+          from your own disk:
         </p>
         <pre className="cmd-card">{`$ bitcoin-cli gettxoutsetinfo
 {
@@ -81,6 +90,7 @@ export function SupplyCheck({ finale }: RunnerProps) {
             onChange={(e) => setReportedText(e.target.value)}
           />
         </label>
+        <SnapshotLab />
         {finale.note && (
           <p className="finale-note">
             <RichText text={finale.note} />
@@ -91,51 +101,64 @@ export function SupplyCheck({ finale }: RunnerProps) {
         <div className="viz-root">
           <div className="viz-title">The audit</div>
           <div className="viz-sub">
-            schedule: GetBlockSubsidy summed for blocks 0…{height !== null ? formatHeight(height) : '…'} ·
-            exact integer arithmetic
+            schedule: GetBlockSubsidy summed for blocks 0…
+            {height !== null ? formatHeight(height) : '…'} · exact integer
+            arithmetic
           </div>
           {height === null ? (
-            <Callout>Enter a block height (a whole number, 0 or above) to run the schedule.</Callout>
+            <Callout>
+              Enter a block height (a whole number, 0 or above) to run the
+              schedule.
+            </Callout>
           ) : (
             <>
               <div className="hero-num">
-                {satsToBtc(scheduleSats as bigint)} <span className="hero-unit">BTC</span>
+                {satsToBtc(scheduleSats as bigint)}{' '}
+                <span className="hero-unit">BTC</span>
               </div>
               <div className="hero-cap">
-                = {(scheduleSats as bigint).toLocaleString('en-US')} satoshis the schedule
-                permits to exist after block {formatHeight(height)} · block subsidy there:{' '}
-                {satsToBtc(subsidySats as bigint)} BTC
+                = {(scheduleSats as bigint).toLocaleString('en-US')} satoshis
+                the schedule permits to exist after block {formatHeight(height)}{' '}
+                · block subsidy there: {satsToBtc(subsidySats as bigint)} BTC
               </div>
               <div className="guess-feed">
                 <div className="stat-label">your node's measurement</div>
                 {reportedText.trim() === '' ? (
                   <div className="guess-verdict">
-                    No node yet? This number is the prediction to hold it to. When your sync
-                    finishes, paste <code>total_amount</code> here and close the loop.
+                    No node yet? This number is the prediction to hold it to.
+                    When your sync finishes, paste <code>total_amount</code>{' '}
+                    here and close the loop.
                   </div>
                 ) : reportedSats === null ? (
                   <div className="guess-verdict">
-                    That doesn't parse as a BTC amount: digits and up to 8 decimals, e.g.{' '}
-                    <code>19994825.30930052</code>.
+                    That doesn't parse as a BTC amount: digits and up to 8
+                    decimals, e.g. <code>19994825.30930052</code>.
                   </div>
                 ) : (
                   <>
-                    <code className="guess-hex">{satsToBtc(reportedSats)} BTC</code>
+                    <code className="guess-hex">
+                      {satsToBtc(reportedSats)} BTC
+                    </code>
                     {(delta as bigint) >= 0n ? (
                       <div className="guess-verdict mine-won">
-                        ✓ {satsToBtc(delta as bigint)} BTC <em>under</em> the schedule: coins
-                        destroyed or never claimed (Satoshi's frozen 50 BTC among them). A
+                        ✓ {satsToBtc(delta as bigint)} BTC <em>under</em> the
+                        schedule: coins not present in this UTXO total,
+                        potentially unclaimed, burned or excluded (including
+                        genesis). Lost-key outputs remain in the UTXO total. A
                         node with coinstatsindex even itemizes them as{' '}
-                        <code>total_unspendable_amount</code>. No hidden
-                        inflation: measurement ≤ schedule, exactly as Quest #1's check
-                        guarantees.
+                        <code>total_unspendable_amount</code>. This scalar
+                        comparison does not prove the absence of hidden
+                        inflation. Match the RPC height and bestblock, verify
+                        node validation, and use supported coinstats fields to
+                        reconcile differences.
                       </div>
                     ) : (
                       <div className="guess-verdict delta-bad">
-                        ✗ {satsToBtc(-(delta as bigint))} BTC <em>over</em> the schedule,
-                        which is impossible under the bad-cb-amount check every node runs. First
-                        suspect: the height above doesn't match the height your node reported.
-                        Make the two match and compare again.
+                        ✗ {satsToBtc(-(delta as bigint))} BTC <em>over</em> the
+                        schedule, which is impossible under the bad-cb-amount
+                        check every node runs. First suspect: the height above
+                        doesn't match the height your node reported. Make the
+                        two match and compare again.
                       </div>
                     )}
                   </>

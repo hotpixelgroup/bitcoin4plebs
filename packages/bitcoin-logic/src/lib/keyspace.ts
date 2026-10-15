@@ -1,6 +1,6 @@
 /**
  * The size of Bitcoin's private-key space: the order of the secp256k1
- * curve. Any 256-bit number below this is a valid private key.
+ * curve. Valid private keys are integers 1 through order − 1; zero is invalid.
  */
 export const SECP256K1_ORDER =
   0xfffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141n;
@@ -9,9 +9,11 @@ const SECONDS_PER_YEAR = 31_557_600n; // 365.25 days
 
 /**
  * Expected years to find one specific key by brute force at a given guess
- * rate (on average you search half the space). Exact BigInt arithmetic.
+ * rate, systematically without replacement (mean rank is order/2). Exact BigInt arithmetic.
  */
 export function expectedYearsToCrack(guessesPerSecond: bigint): bigint {
+  if (guessesPerSecond <= 0n)
+    throw new RangeError('guess rate must be positive');
   return SECP256K1_ORDER / 2n / guessesPerSecond / SECONDS_PER_YEAR;
 }
 

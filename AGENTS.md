@@ -16,4 +16,6 @@ Repo-specific setup, validation commands and constraints belong in a "Project sp
 
 ## Project specifics
 
-_Not yet documented. Add setup and validation commands, architectural constraints and the definition of done for this repository._
+Use `npm ci`, then `nx run-many -t lint test typecheck build`. Set the four pinned-source environment paths when running excerpt/vector checks. Verify both Bitcoin and Lightning variants and their artifact assertions.
+
+CI budget: batch a coherent change, run checks locally, then make one consolidated push when practical. Do not use incremental pushes or gratuitous reruns as a test loop. Keep the final CI check on the exact PR head; a failed gate still needs investigation. Never merge or deploy without authorization.

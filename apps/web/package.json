@@ -6,7 +6,74 @@
     "projectType": "application",
     "tags": [
       "scope:web"
-    ]
+    ],
+    "targets": {
+      "build": {
+        "executor": "nx:run-commands",
+        "cache": false,
+        "outputs": [],
+        "options": {
+          "command": "node tools/build-site.mjs",
+          "cwd": "."
+        }
+      },
+      "build-bitcoin": {
+        "executor": "nx:run-commands",
+        "cache": true,
+        "dependsOn": [
+          "^build"
+        ],
+        "inputs": [
+          "production",
+          "^production",
+          {
+            "env": "VITE_SITE"
+          },
+          {
+            "env": "VITE_BASE"
+          },
+          "{workspaceRoot}/tools/build-site.mjs"
+        ],
+        "outputs": [
+          "{projectRoot}/dist"
+        ],
+        "options": {
+          "command": "vite build --config apps/web/vite.config.ts",
+          "cwd": ".",
+          "env": {
+            "VITE_SITE": "bitcoin"
+          }
+        }
+      },
+      "build-lightning": {
+        "executor": "nx:run-commands",
+        "cache": true,
+        "dependsOn": [
+          "^build"
+        ],
+        "inputs": [
+          "production",
+          "^production",
+          {
+            "env": "VITE_SITE"
+          },
+          {
+            "env": "VITE_BASE"
+          },
+          "{workspaceRoot}/tools/build-site.mjs"
+        ],
+        "outputs": [
+          "{projectRoot}/dist-lightning"
+        ],
+        "options": {
+          "command": "vite build --config apps/web/vite.config.ts",
+          "cwd": ".",
+          "env": {
+            "VITE_SITE": "lightning"
+          }
+        }
+      }
+    }
   },
   "devDependencies": {
     "@bitcoin4plebs/bitcoin-logic": "*",

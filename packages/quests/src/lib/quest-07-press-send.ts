@@ -111,13 +111,13 @@ export const quest07: Quest = {
     {
       id: 'the-auction',
       contrast: [
-        { aspect: "Who processes payments", bank: "The bank, business hours apply", bitcoin: "An open auction among miners, every ~10 minutes, forever" },
+        { aspect: "Who processes payments", bank: "The bank, business hours apply", bitcoin: "An open auction among miners; blocks average about ten minutes under difficulty assumptions" },
         { aspect: "Fees", bank: "Set by the institution", bitcoin: "Your own bid against the crowd" },
-        { aspect: "Settlement", bank: "Days, reversible", bitcoin: "About an hour to deep burial, then final" },
+        { aspect: "Settlement", bank: "Days, reversible", bitcoin: 'More confirmations usually increase confidence; settlement remains probabilistic' },
       ],
       myth: {
         belief: "Miners charge a processing fee for each transaction, like a payment company.",
-        reality: "Nobody sets or charges fees. You *bid* whatever you like, and miners simply take the best-paying megabyte of waiting transactions first. A quiet mempool confirms tiny bids next block; a busy one prices you out until you raise yours.",
+        reality: "You choose a fee offer. Miners set local selection policies and usually prioritize profitable packages subject to resource constraints. A quiet mempool can improve a low bid’s prospects, but relay, inclusion and timing are never guaranteed.",
       },
       title: 'The waiting room is an auction, and your fee is your bid',
       takeaway:
@@ -166,9 +166,9 @@ export const quest07: Quest = {
       takeaway:
         'Bid too low and the auction simply passes you by, but the story doesn\'t end there. The sender can **replace** the transaction with a higher bid, and even the *recipient* can bump it, by spending the unconfirmed coins with a fat fee.',
       prose: [
-        'First escape hatch, for the sender: **replace-by-fee (RBF)**. If your wallet marks the transaction as replaceable when it sends (most good wallets do by default), you can rebroadcast the payment with a higher fee and nodes swap the old bid out of the waiting room for the new one. The replacement rules (BIP-125) are pure auction logic: the new bid must pay strictly more than what it replaces, which is exactly what un-sticking takes. One habit flows from this: an unconfirmed, replaceable payment is not yet money in hand, which is why serious settlements wait for a confirmation (the next stop).',
+        'The sender can try replace-by-fee under its peers’ local mempool policy. [Bitcoin Core 28.0](https://bitcoincore.org/en/releases/28.0/) enabled full-RBF by default, so opt-in signalling is not required by that default. Replacement must satisfy fee and conflict constraints, not just offer any higher fee. Neither relay nor confirmation is guaranteed. Unconfirmed payments can be replaced or conflict regardless of a wallet label.',
         'Second hatch, and the one most people never hear about: **child-pays-for-parent (CPFP)**. Even the *recipient* of a stuck payment can rescue it. Remember from Quest #3 that coins are boxes: the unconfirmed payment\'s output is already yours to spend. Spend it immediately in a "child" transaction with a generous fee, and miners, who price bundles of transactions together (the chunks you read at the last stop), will take parent and child as a package. The child\'s fee effectively covers both, and it works even when the sender never enabled RBF.',
-        'Neither trick touches a rule you\'ve verified; they are bids in the same auction, placed with better information. And that is the deeper lesson of this quest: on Bitcoin a stuck transaction is a *pricing* problem, and pricing problems have owner-operated solutions. Nobody to call, nothing to file. Just a better bid.',
+        "RBF and CPFP change fee incentives without changing consensus rules. They require spendable inputs, suitable wallet support and acceptance under peers’ policies. A stuck transaction may also face policy, validity, connectivity or conflicting-spend problems; a higher fee cannot repair every failure.",
       ],
     },
     {
@@ -179,7 +179,7 @@ export const quest07: Quest = {
         'A miner wins Quest #6\'s lottery with your transaction inside their block. That\'s **1 confirmation**. Every later block buries yours under more proof-of-work, and that, says this 2009 comment, is the whole finality machine.',
       prose: [
         'Read Satoshi\'s comment once more, from your transaction\'s point of view this time. Your payment was hashed into the tree (line 19). A nonce was found for the header above it (line 20). The block was broadcast "to everyone" (line 21). And every node re-audited every transaction in it, yours included, one last time, before extending the chain.',
-        'Why do exchanges wait for six confirmations? Because "undoing" your transaction now means re-mining its block *plus* every block stacked on top, faster than the honest network extends the chain. That\'s Quest #6\'s lottery, but needing to be won repeatedly, against a network guessing roughly a billion trillion times per second. Your coffee payment ends up defended by more raw computation than any military on Earth commands. Then your wallet just says: **confirmed**.',
+        'Rewriting a confirmed payment requires a valid competing chain with greater cumulative work. More confirmations usually make catching up less likely for an attacker with less hashpower, but outcomes depend on assumptions. Work accumulates additively; there is no fixed hour after which reversal becomes impossible.',
       ],
       annotations: [
         { lines: 'L19', text: 'Your transaction, hashed into the block\'s tree.' },
@@ -204,9 +204,9 @@ export const quest07: Quest = {
   finale: {
     title: 'Bid in the fee auction yourself',
     takeaway:
-      'Here\'s a busy waiting room and one payment: yours. Slide your fee bid and watch the auction from miner.cpp decide when you confirm. The mechanism is the real one: highest feerate first, one block every ten minutes.',
+      'Compare a replacement and a child-pays-for-parent strategy in one deterministic transaction trace. Predict which ancestor package wins space, step through blocks and inspect the queue. Real miners use additional constraints and block arrival is probabilistic.',
     runnerId: 'fee-auction',
-    note: 'A deterministic model mempool (the real one changes second to second), but the auction mechanism is exactly the one you just read: sort by fee-per-vbyte, fill ~1,000,000 vbytes, repeat.',
+    note: 'A deliberately tiny 500-vB block budget makes the package tradeoffs visible. The same arrivals drive selection, queue and forecast. Historical replacement-policy examples are explicitly dated; this is not a complete Core mempool or a live confirmation estimate.',
   },
   recap: {
     tryIt:
@@ -228,7 +228,7 @@ export const quest07: Quest = {
         text: '**An underbid is recoverable**: the sender rebroadcasts at a higher bid (RBF); even the recipient can bump it by spending the unconfirmed coins with a fat fee (CPFP).',
       },
       {
-        text: '**Finality is burial under proof-of-work**: each new block multiplies the cost of undoing yours. No court, just cumulative electricity.',
+        text: "**Confirmations add accumulated work.** They usually reduce an attacker's chance of catching up under stated hashpower assumptions; no fixed number makes a payment irreversible.",
       },
     ],
     closing:

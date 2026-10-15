@@ -112,12 +112,12 @@ export const quest03: Quest = {
           "Approval from a majority of miners",
           ],
           answer: 1,
-          explain: "The lock accepts exactly one thing: a signature that verifies against the public key it names. No signature, no spend; and forging one means guessing a 78-digit number.",
+          explain: 'A valid signature must satisfy the spending condition. This does not mean exhaustive key guessing is the only attack: stolen backups, malicious signing software and nonce leakage can expose keys. Exposed public keys also face discrete-log attacks.',
         },
       ],
       myth: {
         belief: "A quantum computer will guess everyone's keys one day soon, so none of this is safe.",
-        reality: "Not with any machine on the horizon: breaking this curve takes a fault-tolerant quantum computer millions of times beyond anything built, and coins behind **fresh, never-spent-from addresses** (whose public keys aren't even public yet) are safer still. If such machines ever loom, Bitcoin migrates to post-quantum signatures by the same near-unanimous upgrade process from Quest #4. It is a roadmap item to watch, not a doomsday.",
+        reality: 'Large fault-tolerant quantum computers could attack exposed elliptic-curve public keys using Shor’s algorithm. This runner does not model that attack. P2WPKH hides a public key until it is revealed, while P2TR includes an output public key directly. A future migration would require technical design and adoption; it is not guaranteed automatically. See [BIP340](https://bips.dev/340/).',
       },
       title: 'The moment of truth: OP_CHECKSIG',
       takeaway:
@@ -158,9 +158,9 @@ export const quest03: Quest = {
   finale: {
     title: 'Try to guess a key yourself',
     takeaway:
-      'If the only way in is a valid signature, the only attack is guessing the private key. Your browser will start guessing right now; then do the honest arithmetic on how long it would take to finish.',
+      'Try one narrowly defined attack: uniformly guessing a private key. The enormous key space makes this impractical. This runner does not model key theft, nonce failures, or solving the discrete-log problem from an exposed public key; secp256k1 targets roughly 128-bit classical security, as discussed in [BIP340](https://bips.dev/340/).',
     runnerId: 'guess-the-key',
-    note: 'The key space is the secp256k1 curve order, a 78-digit number. The math runs in exact integer arithmetic; the guessing really is random.',
+    note: 'Scale calculator only: valid secp256k1 private keys run from 1 through n−1. Expected search time assumes a systematic nonrepeating search and a uniformly located fixed target. It generates no keys and is not a benchmark.',
   },
   recap: {
     tryIt:
@@ -179,7 +179,7 @@ export const quest03: Quest = {
         cite: 'interpreter.cpp:1069',
       },
       {
-        text: '**The only attack left is guessing a key from a 78-digit space**, and your own computer just showed you how that goes.',
+        text: '**Random key guessing is impractical.** Protecting keys, signing devices and backups still matters. The runner measures key-space guessing, not every attack on a wallet.',
       },
     ],
     closing:
@@ -188,6 +188,6 @@ export const quest03: Quest = {
   feynman: {
     prompt: "Explain to a friend why nobody can spend your bitcoin, in two sentences.",
     model:
-      "Your coins sit in public locked boxes that open only for a signature from your private key, and every computer on the network independently checks that signature on every spend. The only attack left is guessing a 78-digit number.",
+      'Coins are locked by spending conditions, commonly signatures your keys can produce, and each node checks spends independently. Randomly guessing a key is impractical, but theft, unsafe signing and implementation failures are separate risks.',
   },
 };

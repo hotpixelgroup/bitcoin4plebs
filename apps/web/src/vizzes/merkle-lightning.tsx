@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { doubleSha256Hex } from '@bitcoin4plebs/bitcoin-logic';
+import { doubleSha256Hex, hexToBytes } from '@bitcoin4plebs/bitcoin-logic';
 import { VizFigure } from './viz-figure';
 
 const LEAVES = ['tx 1', 'tx 2', 'tx 3', 'tx 4', 'tx 5', 'tx 6', 'tx 7', 'tx 8'];
@@ -11,7 +11,7 @@ async function buildTree(texts: string[]): Promise<string[][]> {
   while (level.length > 1) {
     const next: string[] = [];
     for (let i = 0; i < level.length; i += 2) {
-      next.push(await doubleSha256Hex(level[i] + level[i + 1]));
+      next.push(await doubleSha256Hex(hexToBytes(level[i] + level[i + 1])));
     }
     levels.push(next);
     level = next;
@@ -19,7 +19,8 @@ async function buildTree(texts: string[]): Promise<string[][]> {
   return levels;
 }
 
-const X = (level: number, i: number): number => 40 + 40 * 2 ** level + i * 80 * 2 ** level;
+const X = (level: number, i: number): number =>
+  40 + 40 * 2 ** level + i * 80 * 2 ** level;
 const Y = (level: number): number => 212 - level * 59;
 
 type Mode = 'tamper' | 'proof';
@@ -46,24 +47,35 @@ export function MerkleLightning() {
 
   useEffect(() => {
     if (!pristine) return;
-    const texts = LEAVES.map((t, i) => (corrupted.has(i) ? `${t} (1 byte flipped)` : t));
+    const texts = LEAVES.map((t, i) =>
+      corrupted.has(i) ? `${t} (1 byte flipped)` : t,
+    );
     buildTree(texts).then(setTree);
   }, [corrupted, pristine]);
 
   if (!tree || !pristine) {
     return (
-      <VizFigure title="Merkle lightning" caption="Hashing eight transactions into a tree…">
-        <p className="viz-readout">Building the tree with real double SHA-256…</p>
+      <VizFigure
+        title="Merkle lightning"
+        caption="Hashing eight transactions into a tree…"
+      >
+        <p className="viz-readout">
+          Building the tree with real double SHA-256…
+        </p>
       </VizFigure>
     );
   }
 
-  const changed = (level: number, i: number) => tree[level][i] !== pristine[level][i];
+  const changed = (level: number, i: number) =>
+    tree[level][i] !== pristine[level][i];
   const proofSiblings: Array<[number, number]> = [0, 1, 2].map((level) => [
     level,
     (proofLeaf >> level) ^ 1,
   ]);
-  const proofPath: Array<[number, number]> = [0, 1, 2, 3].map((level) => [level, proofLeaf >> level]);
+  const proofPath: Array<[number, number]> = [0, 1, 2, 3].map((level) => [
+    level,
+    proofLeaf >> level,
+  ]);
   const inProof = (level: number, i: number) =>
     mode === 'proof' && proofSiblings.some(([l, s]) => l === level && s === i);
   const onPath = (level: number, i: number) =>
@@ -85,23 +97,30 @@ export function MerkleLightning() {
   return (
     <VizFigure
       title="Merkle lightning"
-      caption="Eight transactions, hashed in pairs, up to one root: the single line the block header commits to."
+      caption="Conceptual transaction labels, real byte-pair hashing. Eight transactions, hashed in pairs, up to one root: the single line the block header commits to."
     >
       <div className="preset-row">
         <button
           className={`preset ${mode === 'tamper' ? 'preset-active' : ''}`}
           onClick={() => setMode('tamper')}
         >
-          <span aria-hidden="true">⚡</span> tamper mode: click a transaction to corrupt it
+          <span aria-hidden="true">⚡</span> tamper mode: click a transaction to
+          corrupt it
         </button>
         <button
           className={`preset ${mode === 'proof' ? 'preset-active' : ''}`}
           onClick={() => setMode('proof')}
         >
-          <span aria-hidden="true">🔍</span> proof mode: click a transaction to prove it's included
+          <span aria-hidden="true">🔍</span> proof mode: click a transaction to
+          prove it's included
         </button>
       </div>
-      <svg className="merkle-svg" viewBox="0 0 640 260" role="img" aria-label="Merkle tree">
+      <svg
+        className="merkle-svg"
+        viewBox="0 0 640 260"
+        role="img"
+        aria-label="Merkle tree"
+      >
         {[0, 1, 2].map((level) =>
           tree[level].map((_, i) => (
             <line
@@ -114,7 +133,7 @@ export function MerkleLightning() {
                 onPath(level, i) ? 'merkle-path' : ''
               }`}
             />
-          ))
+          )),
         )}
         {tree.map((level, l) =>
           level.map((hash, i) => (
@@ -127,7 +146,13 @@ export function MerkleLightning() {
               }`}
               onClick={l === 0 ? () => clickLeaf(i) : undefined}
             >
-              <rect x={X(l, i) - 33} y={Y(l) - 11} width={66} height={22} rx={6} />
+              <rect
+                x={X(l, i) - 33}
+                y={Y(l) - 11}
+                width={66}
+                height={22}
+                rx={6}
+              />
               <text x={X(l, i)} y={Y(l) + 4}>
                 {hash.slice(0, 6)}
               </text>
@@ -143,14 +168,14 @@ export function MerkleLightning() {
                 </text>
               )}
             </g>
-          ))
+          )),
         )}
       </svg>
       <p className="viz-readout">
         {mode === 'tamper'
           ? corrupted.size === 0
             ? 'Click any transaction to flip one byte of it. All hashes here are computed live, so watch exactly which ones notice.'
-            : `The corruption climbs its exact path to the root, so the root in the header changes, so the block's hash changes, so its proof-of-work dies (Quest #7's cascade). One flipped byte anywhere in a block is unhideable, and this tree is why.`
+            : `The corruption climbs its exact path to the root, so the root in the header changes, so the block's hash changes, so its proof-of-work must be checked again (Quest #7's cascade). One flipped byte anywhere in a block is unhideable, and this tree is why.`
           : `To prove ${LEAVES[proofLeaf]} is inside this block, you don't need the other seven transactions; you need just the 3 highlighted sibling hashes: hash your transaction, combine upward, and land on the root. Eight transactions need 3 hashes; a real block's thousands need only ~12. That's how a phone can check inclusion against an 80-byte header.`}
       </p>
     </VizFigure>

@@ -43,7 +43,7 @@ export const quest09: Quest = {
       takeaway:
         'Nobody hands your node a balance sheet. It starts from the Quest #8 genesis block and **re-derives the entire state of Bitcoin**, downloading every block since 2009 and re-running every check you\'ve read in this curriculum. Including this old friend, once per block, over 900,000 times.',
       prose: [
-        'This is called the *initial block download*, and it\'s the part that takes days. Your machine fetches each historical block from its peers and audits it exactly as if it had just been mined. That means Quest #3\'s signature loop on every spend, Quest #6\'s proof-of-work comparison on every header, and (above) Quest #1\'s coinbase check on every miner reward since Satoshi\'s.',
+        "Initial sync validates ordinary connected history under the node’s rules, with a conditional assumevalid script-verification shortcut unless disabled. Genesis is special-cased. Peers can supply stale or withhold valid history, so local validation is not proof the node has learned every valid tip.",
         'Understand what those days of CPU are buying. Your node never asks "what\'s the balance?" Instead it **recomputes** the answer from raw history, then keeps enforcing the rules on every new block forever. When it finally says "synced," the state it holds isn\'t downloaded trust. It\'s arithmetic your own hardware performed.',
       ],
       annotations: [
@@ -98,10 +98,10 @@ export const quest09: Quest = {
       ],
       title: 'The honesty stop: a shortcut called assumevalid',
       takeaway:
-        'Full disclosure, in this site\'s tradition: out of the box, your node **skips script verification** (signature checking is the expensive part of it) for blocks buried below a reviewed block hash. Every non-script rule, from proof-of-work to amounts to double-spends, still runs on every block. And one flag turns even this shortcut off.',
+        "Assumevalid may skip ancestor script checks only when its ancestry, best-header work and burial conditions hold. Other ordinary-block checks remain; genesis is special-cased. Use -assumevalid=0 to disable this shortcut.",
       prose: [
-        'Line 142 names a specific block (height 938,343, released with this version after public review). During initial sync, if that block appears in your chain, blocks buried **beneath** it skip Quest #3\'s expensive signature math. The reasoning comes in three parts. The developers, and everyone who reviewed the release, already checked those scripts. The assumevalid hash commits to its entire ancestry, so no fake history can contain it. And line 141\'s floor makes your node ignore any chain with less total work than the chain had at release.',
-        'Know what is **not** skipped, because this matters: every block\'s proof-of-work, every subsidy amount, every fee, every double-spend check, the entire supply arithmetic. Those run in full, from genesis, on your machine, regardless. And if borrowing even the signature review offends you, Bitcoin Core\'s own help text says it plainly: start with `-assumevalid=0`, described in the source as *"0 to verify all"*, and your node re-checks every signature since 2009. The shortcut is a default, never a rule. You hold the dial.',
+        "Assumevalid may skip script verification for ancestors of a configured block only when additional ancestry, best-header work and burial conditions in validation.cpp hold. Merely receiving the configured hash is not enough. Set -assumevalid=0 to disable the shortcut.",
+        "Ordinary connected blocks still undergo non-script consensus checks. Genesis is a built-in special case and its reward is not inserted into the spendable UTXO set. With -assumevalid=0 the node does not use the assumevalid script shortcut; validation cannot reveal a valid chain that peers withhold from it.",
       ],
       annotationsOpen: true,
       annotations: [
@@ -128,15 +128,15 @@ export const quest09: Quest = {
       id: 'interrogate',
       title: 'Now interrogate it: how many bitcoin exist?',
       takeaway:
-        'A synced node answers questions **from its own disk**. Type `bitcoin-cli gettxoutsetinfo` and your machine counts every unspent coin (Quest #3\'s locked boxes, all of them) and reports `total_amount`: the money supply, *measured*, not quoted.',
+        "A node reports gettxoutsetinfo for its UTXO snapshot: the block height, bestblock and total_amount. That amount sums outputs still in the set, including outputs whose private keys may be lost; it does not measure how much is economically recoverable.",
       prose: [
-        'This is the moment the whole curriculum aimed at. Quest #1 verified the **schedule**: what the supply is allowed to be. Your node measures the **reality**: what the supply is. No explorer website in the middle, no API, no us: the command walks your own copy of the coin database and adds up every box.',
-        'Notice `total_unspendable_amount` on the very next line: the coins **permanently excluded**. Quest #8\'s frozen genesis reward is among them, alongside rewards miners forgot to claim and outputs provably burned. It\'s why the measured number lands slightly *below* the schedule, and your node itemizes the gap. Even the missing coins are accounted for. (And enjoy line 1041: the developers labeling their own statistic "meaningless." This codebase does not flatter itself.)',
+        "Quest #1 computes the scheduled subsidy ceiling. Your node can report the value in its UTXO set at a matching block. These are different quantities: permanently excluded or unclaimed amounts can reduce the UTXO total, while lost-key outputs remain included.",
+        "The optional coinstats-index fields can help reconcile amounts permanently excluded from the UTXO set. A lost private key does not remove its output from that set. Compare matching height/bestblock snapshots, and do not infer complete supply integrity from one scalar below a ceiling.",
       ],
       annotations: [
         { lines: 'L1040', text: 'How many locked boxes exist right now (well over a hundred million).' },
-        { lines: 'L1046', text: 'The answer: every spendable satoshi in existence, summed from your own disk.' },
-        { lines: 'L1047', text: 'The destroyed coins, itemized. Satoshi\'s unspendable 50 BTC from Quest #8 lives in this number.' },
+        { lines: 'L1046', text: "The total value of outputs in this node’s UTXO set at the reported block. Outputs whose keys are lost still count; this is not a measure of coins people can actually spend." },
+        { lines: 'L1047', text: "When coinstatsindex is used, optional accounting covers coins permanently excluded from the UTXO set, including the genesis reward. This is not a list of all lost or inaccessible coins." },
       ],
       excerpt: {
         ref: { file: 'src/rpc/blockchain.cpp', startLine: 1038, endLine: 1047 },
@@ -179,7 +179,7 @@ export const quest09: Quest = {
   finale: {
     title: 'Audit the supply: your node vs. the schedule',
     takeaway:
-      'Here is the supply audit as a tool you can keep. Pick any block height and this page computes what Quest #1\'s schedule says must have been minted by then (exact satoshis, no rounding). Then paste `total_amount` from **your** node\'s `gettxoutsetinfo` and compare. The measurement must come in at or just under the schedule, never over.',
+      "Pick a height to compute the maximum scheduled subsidy through that height. A pasted UTXO total is only a limited comparison: match RPC height and bestblock, account for excluded/unclaimed amounts, and verify the node’s validation. The calculator cannot certify absence of inflation from a scalar alone.",
     runnerId: 'supply-check',
     translation: {
       ref: { file: 'this page · faithful JavaScript translation', startLine: 1, endLine: 8 },
@@ -195,7 +195,7 @@ export const quest09: Quest = {
         { n: 8, text: '// (the real code sums era-by-era: same result, fewer loops)' },
       ],
     },
-    note: 'No node yet? The calculator still shows what a node at that height must report. When yours finishes syncing, come back and close the loop: schedule on the left, your own machine\'s measurement on the right, and nobody\'s word anywhere in between.',
+    note: "This tool computes a scheduled ceiling, not a required exact UTXO total. Full RPC reconciliation, source verification and matching block context are outside the scalar calculator; do not treat a green comparison as a supply audit certificate.",
   },
   recap: {
     tryIt:
@@ -214,11 +214,11 @@ export const quest09: Quest = {
         cite: 'chainparams.cpp:142',
       },
       {
-        text: '**`gettxoutsetinfo` measures the money supply from your own disk**, and it itemizes every missing satoshi, Satoshi\'s frozen 50 BTC included.',
+        text: "**gettxoutsetinfo reports the UTXO set’s total amount at a particular block.** When coinstatsindex is used, optional fields account for specified permanently excluded amounts, including the genesis reward. They do not identify lost keys or explain every difference from scheduled issuance.",
         cite: 'blockchain.cpp:1046',
       },
       {
-        text: '**Schedule and measurement agree**: Quest #1\'s ten lines, confirmed by your own hardware against the real chain. The audit nobody can fake, run by someone nobody appointed: you.',
+        text: "**Compare matching block snapshots, not unlike totals.** A UTXO amount below scheduled issuance is a consistency check, not proof of complete supply integrity; optional index fields explain specified excluded amounts, not every missing or inaccessible coin.",
       },
     ],
     closing:

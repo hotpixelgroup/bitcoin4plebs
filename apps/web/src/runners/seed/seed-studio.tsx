@@ -1,12 +1,12 @@
+import { RecoveryLab } from '../labs/extended-labs';
 import { useCallback, useState } from 'react';
 import {
-  BIP39_WORDLIST_EN,
   bytesToHex,
   entropyToMnemonic,
   mnemonicToSeed,
-  validateMnemonic,
 } from '@bitcoin4plebs/bitcoin-logic';
 import { Callout, RichText } from '@bitcoin4plebs/ui';
+import { substituteWord } from './substitute-word';
 import type { RunnerProps } from '../registry';
 
 /**
@@ -44,20 +44,20 @@ export function SeedStudio({ finale }: RunnerProps) {
     setBusy(false);
   }, [wordCount, passphrase, deriveSeed]);
 
-  const breakOne = useCallback(async () => {
-    if (original.length === 0) return;
-    const index = Math.floor(Math.random() * original.length);
-    let replacement = original[index];
-    while (replacement === original[index]) {
-      replacement = BIP39_WORDLIST_EN[Math.floor(Math.random() * BIP39_WORDLIST_EN.length)];
-    }
-    const broken = [...original];
-    broken[index] = replacement;
-    setWords(broken);
-    setTampered(index);
-    setValid(await validateMnemonic(broken));
-    setSeedHex(null);
-  }, [original]);
+  const breakOne = useCallback(
+    async (passesChecksum: boolean) => {
+      if (original.length === 0) return;
+      setBusy(true);
+      const changed = await substituteWord(original, passesChecksum);
+      setWords(changed);
+      setTampered(original.length - 1);
+      setValid(passesChecksum);
+      if (passesChecksum) await deriveSeed(changed, passphrase);
+      else setSeedHex(null);
+      setBusy(false);
+    },
+    [original, passphrase, deriveSeed],
+  );
 
   const repair = useCallback(async () => {
     setWords(original);
@@ -69,11 +69,11 @@ export function SeedStudio({ finale }: RunnerProps) {
   const onPassphrase = useCallback(
     async (value: string) => {
       setPassphrase(value);
-      if (original.length > 0 && tampered === null) {
-        await deriveSeed(original, value);
+      if (words.length > 0 && valid) {
+        await deriveSeed(words, value);
       }
     },
-    [original, tampered, deriveSeed]
+    [words, valid, deriveSeed],
   );
 
   return (
@@ -105,7 +105,10 @@ export function SeedStudio({ finale }: RunnerProps) {
         <>
           <ol className="seed-grid" aria-label="Generated practice phrase">
             {words.map((word, i) => (
-              <li key={i} className={`seed-word ${tampered === i ? 'seed-word-bad' : ''}`}>
+              <li
+                key={i}
+                className={`seed-word ${tampered === i ? 'seed-word-bad' : ''}`}
+              >
                 <span className="seed-word-num">{i + 1}</span>
                 {word}
               </li>
@@ -118,22 +121,38 @@ export function SeedStudio({ finale }: RunnerProps) {
             aria-live="polite"
           >
             {valid
-              ? 'checksum ✓ · the final word agrees with all the others (SHA-256, as the BIP specifies)'
+              ? tampered === null
+                ? 'checksum ✓ · valid practice phrase'
+                : 'checksum ✓ · DIFFERENT phrase, DIFFERENT wallet. A passing checksum does not prove the backup is correct.'
               : `checksum ✕ · word ${(tampered ?? 0) + 1} was changed, and the arithmetic refuses to add up. Honest software stops here.`}
           </div>
 
           <div className="seed-actions">
-            {tampered === null ? (
-              <button className="preset" onClick={() => void breakOne()}>
-                break it: swap one word
-              </button>
-            ) : (
-              <button className="preset" onClick={() => void repair()}>
-                repair the phrase
+            <button
+              className="preset"
+              disabled={busy}
+              onClick={() => void breakOne(false)}
+            >
+              Show invalid one-word substitution
+            </button>
+            <button
+              className="preset"
+              disabled={busy}
+              onClick={() => void breakOne(true)}
+            >
+              Show valid but different one-word substitution
+            </button>
+            {tampered !== null && (
+              <button
+                className="preset"
+                disabled={busy}
+                onClick={() => void repair()}
+              >
+                Restore original practice phrase
               </button>
             )}
             <label className="seed-pass">
-              optional passphrase (the 25th word)
+              optional passphrase (arbitrary text, not necessarily a word)
               <input
                 type="text"
                 value={passphrase}
@@ -153,15 +172,18 @@ export function SeedStudio({ finale }: RunnerProps) {
               </div>
               <code className="seed-hex">{seedHex}</code>
               <p className="seed-note">
-                Every key this phrase will ever control derives from this number. Change the
-                passphrase by one letter and watch it become a completely different number, which
-                is a completely different wallet.
+                Keys derived by this wallet convention depend on this seed and
+                derivation paths; imported keys and other backup data may be
+                separate. Change the passphrase by one letter and watch it
+                become a completely different number, which is a completely
+                different wallet.
               </p>
             </div>
           )}
         </>
       )}
 
+      <RecoveryLab />
       {finale.note && (
         <p className="finale-note">
           <RichText text={finale.note} />

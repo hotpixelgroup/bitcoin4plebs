@@ -47,7 +47,7 @@ export const quest06: Quest = {
         { lines: 'L31', text: 'Each header points at the previous block\'s hash, which is what makes it a *chain*.' },
         { lines: 'L32', text: 'One 32-byte fingerprint commits to every transaction in the block. Change any transaction, the fingerprint changes, the hash changes.' },
         { lines: 'L34', text: '`nBits`: the current difficulty target, in compact form (the next stop decodes it).' },
-        { lines: 'L35', text: '`nNonce`: the lucky number miners scan through. The entire "search" is trying values here.' },
+        { lines: 'L35', text: "`nNonce`: a uint32 field miners vary. Real miners also change other header fields and coinbase extraNonce/Merkle root when searching beyond this field’s range." },
       ],
       excerpt: {
         ref: { file: 'src/primitives/block.h', startLine: 19, endLine: 35 },
@@ -183,7 +183,7 @@ export const quest06: Quest = {
     takeaway:
       'Your browser will now do exactly what a mining rig does: hash a block header with **real double SHA-256**, bumping the nonce until the hash comes in under your chosen target. Pick a difficulty and start scanning.',
     runnerId: 'mine-a-block',
-    note: 'Same hash function as Bitcoin (SHA-256 twice), same rule (hash ≤ target). The real network\'s target is astronomically harder (roughly 10^17 times harder than this page\'s hardest setting), which is exactly why it takes warehouses, not laptops.',
+    note: "Double SHA-256 over an actual 80-byte header layout, with compact target decoding and display-order hash comparison. The text leaf and easy practice nBits do not constitute a valid mainnet block; no current difficulty multiplier is implied.",
   },
   recap: {
     tryIt:
@@ -202,7 +202,7 @@ export const quest06: Quest = {
         cite: 'pow.cpp:56',
       },
       {
-        text: '**You mined a block with the real algorithm**, and felt the lottery firsthand: pure luck per ticket, unstoppable statistics in aggregate.',
+        text: "**You searched serialized practice headers with double SHA-256.** Meeting the chosen target does not validate a mainnet block or its transactions.",
       },
     ],
     closing:
@@ -211,6 +211,6 @@ export const quest06: Quest = {
   feynman: {
     prompt: "Explain mining to a friend, in two sentences, without the phrase \"math problems.\"",
     model:
-      "Mining is guessing: hash an 80-byte block header over and over until the output happens to be a small enough number, like a lottery where tickets cost electricity. Checking a winner takes one hash, which is why the whole world can verify what took a warehouse to find.",
+      "Mining repeatedly double-hashes candidate 80-byte headers until the hash is at or below the required target. Verifying header PoW is inexpensive relative to finding it, but full block validation also checks contextual difficulty, ancestry and transactions.",
   },
 };

@@ -79,12 +79,12 @@ export const quest00: Quest = {
           question: 'In the figure, why does Mallory\'s edit fail?',
           options: [
             'A moderator bans her account',
-            'Her copy simply disagrees with everyone else\'s, so the others ignore it',
+            'Each node checks the rules independently and rejects her unauthorized mint',
             'The software deletes her list',
           ],
           answer: 1,
           explain:
-            'Nobody punishes her and nothing is deleted. Her copy just stops matching the majority who followed the rules, so her version carries no weight. Quest #4 shows this exact mechanism in Bitcoin\'s code.',
+            'Nobody counts votes. Each validating node rejects the edit because it violates the rules. Among valid competing histories, nodes follow the chain with greatest cumulative proof of work. A majority of peers cannot authorize invalid coins.',
         },
       ],
     },

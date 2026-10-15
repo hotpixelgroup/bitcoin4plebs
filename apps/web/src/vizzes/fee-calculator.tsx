@@ -3,7 +3,7 @@ import { hopFeeMsat } from '@bitcoin4plebs/lightning-logic';
 import { VizFigure } from './viz-figure';
 
 const PRESETS = [
-  { label: 'a typical routing node', base: 1_000, ppm: 100 },
+  { label: 'illustrative 1-sat base, 100 ppm', base: 1_000, ppm: 100 },
   { label: 'the spec’s example (B→C)', base: 200, ppm: 2_000 },
   { label: 'wants your traffic', base: 0, ppm: 0 },
   { label: 'priced itself out', base: 50_000, ppm: 5_000 },
@@ -23,9 +23,9 @@ const fmt = (msat: number) =>
 export function FeeCalculator() {
   const [base, setBase] = useState(200);
   const [ppm, setPpm] = useState(2_000);
-  const [amountSats, setAmountSats] = useState(5_000);
+  const [amountSats, setAmountSats] = useState(4_999.999);
 
-  const amountMsat = amountSats * 1_000;
+  const amountMsat = Math.round(amountSats * 1_000);
   const policy = {
     from: 'B',
     to: 'C',
@@ -43,7 +43,11 @@ export function FeeCalculator() {
       title="What one hop charges"
       caption="Two numbers the node picked for itself, in the one formula the specification fixes."
     >
-      <div className="paths-chips" role="group" aria-label="Example fee policies">
+      <div
+        className="paths-chips"
+        role="group"
+        aria-label="Example fee policies"
+      >
         {PRESETS.map((p) => (
           <button
             key={p.label}
@@ -59,8 +63,8 @@ export function FeeCalculator() {
       </div>
 
       <label className="height-input-label" htmlFor="fee-base">
-        <code>fee_base_msat</code>: <strong>{base.toLocaleString('en-US')}</strong>, flat, every
-        forward
+        <code>fee_base_msat</code>:{' '}
+        <strong>{base.toLocaleString('en-US')}</strong>, flat, every forward
       </label>
       <input
         id="fee-base"
@@ -74,7 +78,8 @@ export function FeeCalculator() {
       />
 
       <label className="height-input-label" htmlFor="fee-ppm">
-        <code>fee_proportional_millionths</code>: <strong>{ppm.toLocaleString('en-US')}</strong>, {' '}
+        <code>fee_proportional_millionths</code>:{' '}
+        <strong>{ppm.toLocaleString('en-US')}</strong>,{' '}
         {(ppm / 10_000).toFixed(4)}% of the amount
       </label>
       <input
@@ -83,7 +88,7 @@ export function FeeCalculator() {
         type="range"
         min={0}
         max={5_000}
-        step={100}
+        step={1}
         value={Math.min(ppm, 5_000)}
         onChange={(e) => setPpm(Number(e.target.value))}
       />
@@ -94,42 +99,50 @@ export function FeeCalculator() {
       <input
         id="fee-amount"
         className="fee-slider"
-        type="range"
+        type="number"
         min={1}
         max={100_000}
-        step={1}
+        step={0.001}
         value={amountSats}
-        onChange={(e) => setAmountSats(Number(e.target.value))}
+        onChange={(e) =>
+          setAmountSats(
+            Math.min(100_000, Math.max(0.001, Number(e.target.value) || 0.001)),
+          )
+        }
       />
 
       <div className="viz-readout">
         <div className="stat-label">
-          {base.toLocaleString('en-US')} + ( {amountMsat.toLocaleString('en-US')} ×{' '}
-          {ppm.toLocaleString('en-US')} ÷ 1,000,000 )
+          {base.toLocaleString('en-US')} + ({' '}
+          {amountMsat.toLocaleString('en-US')} × {ppm.toLocaleString('en-US')} ÷
+          1,000,000 )
         </div>
         <div className="stat">
           <div className="stat-value">
-            {fee.toLocaleString('en-US')} <span className="stat-unit">msat = {fmt(fee)}</span>
+            {fee.toLocaleString('en-US')}{' '}
+            <span className="stat-unit">msat = {fmt(fee)}</span>
           </div>
         </div>
         <span className="stat-unit">
-          {pct < 0.001 ? 'under a thousandth of a percent' : `${pct.toFixed(4)}% of the amount`}
+          {pct < 0.001
+            ? 'under a thousandth of a percent'
+            : `${pct.toFixed(4)}% of the amount`}
         </span>
       </div>
 
       <p className="utxo-box-note">
         {truncated ? (
           <>
-            The exact product is {exact.toLocaleString('en-US')} msat and the fee is{' '}
-            <strong>{fee.toLocaleString('en-US')}</strong>, the division{' '}
-            <strong>truncates</strong>. This is not pedantry: it is why the specification's own
-            worked example comes to 10,199 and not 10,200, and an implementation that rounded up
-            would offer a fee the next hop rejects.
+            The exact product is {exact.toLocaleString('en-US')} msat and the
+            fee is <strong>{fee.toLocaleString('en-US')}</strong>, the division{' '}
+            <strong>truncates</strong>. This is not pedantry: it is why the
+            specification's own worked example comes to 10,199 and not 10,200,
+            while rounding up can overpay the required minimum; the next hop does not automatically reject an extra millisatoshi.
           </>
         ) : (
           <>
-            No remainder to lose here. Nudge the amount until the numbers stop dividing evenly and
-            watch the fee truncate rather than round.
+            No remainder to lose here. Nudge the amount until the numbers stop
+            dividing evenly and watch the fee truncate rather than round.
           </>
         )}
       </p>

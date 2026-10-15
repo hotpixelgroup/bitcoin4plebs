@@ -1,7 +1,15 @@
 import { bytesToHex, hexToBytes } from '@bitcoin4plebs/bitcoin-logic';
 import { pseudoRandomStream, xorInto } from './chacha20.js';
 import { asciiBytes, concatBytes, hmacSha256, sha256 } from './crypto.js';
-import { compress, decompress, mod, multiply, publicKey, G, N } from './secp256k1.js';
+import {
+  compress,
+  decompress,
+  mod,
+  multiply,
+  publicKey,
+  G,
+  N,
+} from './secp256k1.js';
 
 /**
  * Sphinx: the onion BOLT #4 wraps every Lightning payment in.
@@ -39,7 +47,7 @@ export type KeyType = 'rho' | 'mu' | 'um' | 'pad';
 /** Derive one of the per-hop keys from a shared secret. */
 export function deriveKey(
   type: KeyType,
-  sharedSecret: Uint8Array
+  sharedSecret: Uint8Array,
 ): Promise<Uint8Array<ArrayBuffer>> {
   return hmacSha256(asciiBytes(type), sharedSecret);
 }
@@ -67,7 +75,7 @@ export interface HopKeys {
  */
 export async function deriveHopKeys(
   sessionKey: string,
-  hopNodeIds: readonly string[]
+  hopNodeIds: readonly string[],
 ): Promise<HopKeys[]> {
   let ephemeralPrivate = BigInt('0x' + sessionKey);
   const keys: HopKeys[] = [];
@@ -83,7 +91,9 @@ export async function deriveHopKeys(
     if (!shared) throw new Error(`degenerate ECDH for hop ${nodeId}`);
     const sharedSecret = await sha256(hexToBytes(compress(shared)));
 
-    const blinding = await sha256(concatBytes(hexToBytes(ephemeralHex), sharedSecret));
+    const blinding = await sha256(
+      concatBytes(hexToBytes(ephemeralHex), sharedSecret),
+    );
 
     keys.push({
       nodeId,
@@ -92,7 +102,10 @@ export async function deriveHopKeys(
       blindingFactor: bytesToHex(blinding),
     });
 
-    ephemeralPrivate = mod(ephemeralPrivate * BigInt('0x' + bytesToHex(blinding)), N);
+    ephemeralPrivate = mod(
+      ephemeralPrivate * BigInt('0x' + bytesToHex(blinding)),
+      N,
+    );
   }
 
   return keys;
@@ -115,7 +128,7 @@ function shiftSize(payload: Uint8Array): number {
  */
 async function generateFiller(
   hopKeys: readonly HopKeys[],
-  payloads: readonly Uint8Array[]
+  payloads: readonly Uint8Array[],
 ): Promise<Uint8Array<ArrayBuffer>> {
   let position = 0;
   let filler = new Uint8Array(0);
@@ -157,13 +170,15 @@ export interface OnionResult {
  * recipient's layer goes on first and ends up innermost, exactly like
  * wrapping a parcel from the inside out.
  */
-export async function constructOnion(request: OnionRequest): Promise<OnionResult> {
+export async function constructOnion(
+  request: OnionRequest,
+): Promise<OnionResult> {
   const { sessionKey, hops, associatedData } = request;
   const payloads = hops.map((h) => hexToBytes(h.payload));
   const assoc = hexToBytes(associatedData);
   const hopKeys = await deriveHopKeys(
     sessionKey,
-    hops.map((h) => h.nodeId)
+    hops.map((h) => h.nodeId),
   );
 
   const filler = await generateFiller(hopKeys, payloads);
@@ -204,7 +219,7 @@ export async function constructOnion(request: OnionRequest): Promise<OnionResult
     new Uint8Array([0x00]), // version
     hexToBytes(hopKeys[0].ephemeralPubkey),
     routingInfo,
-    hmac
+    hmac,
   );
 
   return { onion: bytesToHex(onion), hopKeys };
@@ -214,8 +229,16 @@ export async function constructOnion(request: OnionRequest): Promise<OnionResult
 function readBigsize(bytes: Uint8Array): { value: number; size: number } {
   if (bytes[0] < 0xfd) return { value: bytes[0], size: 1 };
   const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
-  if (bytes[0] === 0xfd) return { value: view.getUint16(1), size: 3 };
-  if (bytes[0] === 0xfe) return { value: view.getUint32(1), size: 5 };
+  if (bytes[0] === 0xfd) {
+    const value = view.getUint16(1);
+    if (value < 0xfd) throw new Error('noncanonical payload length');
+    return { value, size: 3 };
+  }
+  if (bytes[0] === 0xfe) {
+    const value = view.getUint32(1);
+    if (value < 0x10000) throw new Error('noncanonical payload length');
+    return { value, size: 5 };
+  }
   throw new Error('payload length exceeds what an onion can carry');
 }
 
@@ -239,12 +262,15 @@ export interface PeeledOnion {
 export async function peelOnion(
   onion: string,
   nodePrivateKey: string,
-  associatedData: string
+  associatedData: string,
 ): Promise<PeeledOnion> {
   const packet = hexToBytes(onion);
   if (packet.length !== ONION_PACKET_SIZE) {
-    throw new Error(`onion must be ${ONION_PACKET_SIZE} bytes, got ${packet.length}`);
+    throw new Error(
+      `onion must be ${ONION_PACKET_SIZE} bytes, got ${packet.length}`,
+    );
   }
+  if (packet[0] !== 0) throw new Error('unsupported onion version');
   const assoc = hexToBytes(associatedData);
 
   const ephemeral = bytesToHex(packet.subarray(1, 34));
@@ -256,7 +282,9 @@ export async function peelOnion(
   const sharedSecret = await sha256(hexToBytes(compress(shared)));
 
   const mu = await deriveKey('mu', sharedSecret);
-  const expected = bytesToHex(await hmacSha256(mu, concatBytes(routingInfo, assoc)));
+  const expected = bytesToHex(
+    await hmacSha256(mu, concatBytes(routingInfo, assoc)),
+  );
   if (expected !== packetHmac) {
     throw new Error('HMAC mismatch: this packet was altered in flight');
   }
@@ -269,20 +297,31 @@ export async function peelOnion(
   xorInto(widened, pseudoRandomStream(rho, 2 * ROUTING_INFO_SIZE));
 
   const { value: length, size } = readBigsize(widened);
+  if (
+    !Number.isSafeInteger(length) ||
+    length < 0 ||
+    size + length + HMAC_SIZE > ROUTING_INFO_SIZE
+  )
+    throw new Error('invalid onion payload length');
   const payloadEnd = size + length;
   const payload = widened.subarray(0, payloadEnd);
   const nextHmac = widened.subarray(payloadEnd, payloadEnd + HMAC_SIZE);
   const shift = payloadEnd + HMAC_SIZE;
 
-  const blinding = await sha256(concatBytes(hexToBytes(ephemeral), sharedSecret));
-  const nextEphemeral = multiply(decompress(ephemeral), BigInt('0x' + bytesToHex(blinding)));
+  const blinding = await sha256(
+    concatBytes(hexToBytes(ephemeral), sharedSecret),
+  );
+  const nextEphemeral = multiply(
+    decompress(ephemeral),
+    BigInt('0x' + bytesToHex(blinding)),
+  );
   if (!nextEphemeral) throw new Error('degenerate blinding while peeling');
 
   const nextOnion = concatBytes(
     new Uint8Array([0x00]),
     hexToBytes(compress(nextEphemeral)),
     widened.subarray(shift, shift + ROUTING_INFO_SIZE),
-    nextHmac
+    nextHmac,
   );
 
   return {
@@ -305,31 +344,35 @@ export { G };
  * reader reproduces on the page is provably the specification's own.
  */
 export const ONION_VECTOR = {
-  sessionKey: '4141414141414141414141414141414141414141414141414141414141414141',
-  associatedData: '4242424242424242424242424242424242424242424242424242424242424242',
+  sessionKey:
+    '4141414141414141414141414141414141414141414141414141414141414141',
+  associatedData:
+    '4242424242424242424242424242424242424242424242424242424242424242',
   hops: [
     {
-      nodeId: '02eec7245d6b7d2ccb30380bfbe2a3648cd7a942653f5aa340edcea1f283686619',
-      payload:
-        '1202023a98040205dc06080000000000000001',
+      nodeId:
+        '02eec7245d6b7d2ccb30380bfbe2a3648cd7a942653f5aa340edcea1f283686619',
+      payload: '1202023a98040205dc06080000000000000001',
     },
     {
-      nodeId: '0324653eac434488002cc06bbfb7f10fe18991e35f9fe4302dbea6d2353dc0ab1c',
+      nodeId:
+        '0324653eac434488002cc06bbfb7f10fe18991e35f9fe4302dbea6d2353dc0ab1c',
       payload:
         '52020236b00402057806080000000000000002fd02013c0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f0102030405060708090a0b0c0d0e0f',
     },
     {
-      nodeId: '027f31ebc5462c1fdce1b737ecff52d37d75dea43ce11c74d25aa297165faa2007',
-      payload:
-        '12020230d4040204e206080000000000000003',
+      nodeId:
+        '027f31ebc5462c1fdce1b737ecff52d37d75dea43ce11c74d25aa297165faa2007',
+      payload: '12020230d4040204e206080000000000000003',
     },
     {
-      nodeId: '032c0b7cf95324a07d05398b240174dc0c2be444d96b159aa6c7f7b1e668680991',
-      payload:
-        '1202022710040203e806080000000000000004',
+      nodeId:
+        '032c0b7cf95324a07d05398b240174dc0c2be444d96b159aa6c7f7b1e668680991',
+      payload: '1202022710040203e806080000000000000004',
     },
     {
-      nodeId: '02edabbd16b41c8371b92ef2f04c1185b4f03b6dcd52ba9b78d9d7c89c8f221145',
+      nodeId:
+        '02edabbd16b41c8371b92ef2f04c1185b4f03b6dcd52ba9b78d9d7c89c8f221145',
       payload:
         'fd011002022710040203e8082224a33562c54507a9334e79f0dc4f17d407e6d7c61f0e2f3d0d38599502f617042710fd012de02a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a',
     },

@@ -214,7 +214,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['signature', 'signatures'],
     category: 'Keys & ownership',
     definition:
-      'A proof, computed from a private key and a specific transaction, that convinces every node the key-holder approved *this exact spend*. Valid for that transaction only; copying it elsewhere proves nothing.',
+      'A signature proves authorization under a public key for the data selected by its sighash rules. Different sighash modes commit to different inputs and outputs; it is not always a commitment to every byte of one exact transaction.',
     quest: 3,
   },
   {
@@ -238,7 +238,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['quantum'],
     category: 'Keys & ownership',
     definition:
-      "The one honest asterisk on \"keys are unguessable.\" Breaking secp256k1 needs Shor's algorithm running on a fault-tolerant quantum computer millions of times beyond anything built. The nuance Bitcoiners track: coins behind fresh, never-spent-from addresses (public key not yet revealed) are the safest, and if the machines ever loom, migrating to post-quantum signatures is a soft-fork question (Quest #4), not an overnight emergency.",
+      'A sufficiently capable fault-tolerant quantum computer could attack exposed elliptic-curve public keys using Shor’s algorithm. Public-key exposure differs by output type: P2TR exposes an output key directly. A future migration would need design and adoption; no automatic migration is guaranteed.',
     quest: 3,
   },
   {
@@ -263,7 +263,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['seed phrase', 'seed words', 'mnemonic'],
     category: 'Keys & ownership',
     definition:
-      'Typically 12 or 24 dictionary words encoding the randomness from which a wallet derives all its keys: one giant random number in costume, with a built-in checksum so typos announce themselves (BIP-39, quoted and run in Quest #14). Whoever has the words has the money, so they are for paper and steel, **never** for websites, photos, or anyone who asks. No legitimate service ever needs them.',
+      'Typically 12 or 24 words encoding wallet entropy plus a short BIP39 checksum. Four checksum bits for 12 words or eight for 24 catch many errors, but a wrong phrase can pass and derive another wallet. Verify backups safely; never enter real phrases into this site.',
     quest: 14,
   },
   {
@@ -279,7 +279,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['hardware wallet', 'hardware signer', 'HWW'],
     category: 'Keys & ownership',
     definition:
-      'A small offline device whose one job is holding keys and signing transactions without the keys ever touching a networked computer. It stores keys, not coins: destroy the device, restore the seed words on any replacement, and everything reappears. The seed backup is the wallet; the gadget is a safe way to use it.',
+      'A signing device keeps keys away from the general-purpose host while authorizing transactions. Recovery may require a seed, passphrase, derivation and script information, descriptors or cosigners; device backups must match the wallet design. A phrase alone does not guarantee recovery of every wallet.',
     quest: 14,
   },
   {
@@ -358,7 +358,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['xpub', 'extended public key'],
     category: 'Keys & ownership',
     definition:
-      'One public key that can generate every receive address in a wallet. It cannot spend anything, which makes it safe to hand to a watch-only app. It also reveals your whole history and every future address to whoever holds it, so treat it as private even though it is not a secret key (Quest #15).',
+      'An extended public key derives public keys in its nonhardened descendant subtree, not every branch of a wallet. It cannot independently spend, but exposes addresses and transaction links in that subtree. Treat it as privacy-sensitive; hardened children need private derivation information. See [BIP32](https://bips.dev/32/).',
     quest: 15,
   },
   {
@@ -460,7 +460,7 @@ export const glossary: GlossaryEntry[] = [
     code: true,
     category: 'Transactions & the mempool',
     definition:
-      'The opening proof a spender attaches to an input: the key that fits the scriptPubKey lock. Modern (SegWit) transactions carry it in a separate "witness" section; old ones inline as scriptSig. Same job either way.',
+      'Data satisfying a spending condition, such as signatures, public keys, scripts or preimages. It does not reveal the private signing key. SegWit inputs put relevant data in the witness; older forms use scriptSig, and nested forms can use both.',
     quest: 3,
   },
   {
@@ -527,7 +527,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['replace-by-fee', 'rbf'],
     category: 'Transactions & the mempool',
     definition:
-      "The sender's escape hatch for an underbid transaction: rebroadcast the payment with a higher fee, and nodes swap the old bid out of their mempools for the new one (BIP-125: the replacement must pay strictly more). The flip side is a habit, not a rule: an unconfirmed, replaceable payment is not final yet, so large settlements wait for a confirmation.",
+      'Replacing an unconfirmed transaction under a node’s local mempool policy. Bitcoin Core 28.0 enabled full-RBF by default; original opt-in signalling is no longer required by that default. Replacement still has fee, conflict and other policy constraints. A higher fee alone does not guarantee replacement or confirmation. See [Core 28.0](https://bitcoincore.org/en/releases/28.0/).',
     quest: 7,
   },
   {
@@ -554,7 +554,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['unforgeable costliness'],
     category: 'Blocks & mining',
     definition:
-      "Why proof-of-work burns energy on purpose. A block is essentially a receipt that real electricity was spent to make it, and that cost is what makes it impossible to fake cheaply, the digital equivalent of the labor in a gold bar. Making mining 'efficient' would not improve Bitcoin; it would destroy the security the cost provides (Quest #18).",
+      'Proof of work makes block construction costly and comparison cheap. Chainwork is target-derived expected work, not a measurement of exact historical attempts or electricity. Efficient hardware does not inherently break Bitcoin; security depends on hashpower, incentives, difficulty and attack costs.',
     quest: 18,
   },
   {
@@ -769,7 +769,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['taproot'],
     category: 'Addresses & encoding',
     definition:
-      'The 2021 soft fork adding witness version 1 (bc1p addresses) and Schnorr signatures, which makes complex locks look identical to simple ones on-chain. The most recent consensus change as of the pinned commit.',
+      'Taproot supports key-path and script-path spending. Key-path spends need not reveal hidden scripts. Script-path spends reveal the executed leaf script and a control proof. The output exposes an elliptic-curve output public key. See [BIP341](https://bips.dev/341/).',
     cite: 'chainparams.cpp:125',
     quest: 4,
   },
@@ -1092,7 +1092,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['payment channel', 'payment channels'],
     category: 'Lightning & channels',
     definition:
-      'Coins locked in a **2-of-2 output** on the Bitcoin blockchain, plus a running balance between the two owners that they update privately and the chain never sees. Opening and closing are ordinary on-chain transactions; everything in between is free, instant, and invisible. The coins never leave Bitcoin: the chain simply is not asked about them in the meantime.',
+      'A Bitcoin funding output plus privately updated commitment transactions. Direct balance updates avoid per-payment on-chain mining fees; routed payments can charge forwarding fees. Opening, closing and recovery consume block space. Success depends on liquidity, availability and correct operation.',
     cite: '03-transactions.md:79',
     quest: 1,
     questSite: 'lightning',
@@ -1178,7 +1178,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['HTLC', 'HTLCs', 'Hashed Timelock Contract'],
     category: 'Lightning & channels',
     definition:
-      "Hashed Timelock Contract: a promise of money with two exits and no third. Either someone produces the [[Preimage]] of a given hash and takes it immediately, or a deadline passes and it refunds to whoever offered it. Chain those promises along a route, all locked to the same hash, and a payment either completes at every hop or at none of them, which is why a stranger in the middle can never keep it.",
+      'Hashed Timelock Contract: conditional payment paths use a preimage or a timeout. Revoked commitments also have penalty paths, and on-chain resolution may require second-stage transactions. Timeout makes a spend possible rather than automatically refunding. Linked hashes and staggered deadlines protect parties that monitor and confirm claims in time.',
     cite: '03-transactions.md:214',
     quest: 4,
     questSite: 'lightning',
@@ -1188,7 +1188,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['preimage'],
     category: 'Lightning & channels',
     definition:
-      'The secret that hashes to a given value. The payee invents one, publishes only its hash in the invoice, and releases it when paid, so holding it afterwards, next to their signed invoice, is a receipt nobody can forge or revoke. The specification puts it plainly: the preimage of the payment hash *provides proof of payment*.',
+      'The input that hashes to a payment hash. The signed invoice and matching preimage are useful fulfillment evidence, but do not uniquely identify the payer: forwarding hops learn the preimage and it can be shared or disclosed without payment.',
     cite: '11-payment-encoding.md:145',
     quest: 3,
     questSite: 'lightning',
@@ -1224,7 +1224,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['routing node', 'routing nodes', 'forwarding node'],
     category: 'Lightning & channels',
     definition:
-      'A node that forwards other people’s payments between its channels and keeps a small fee. It is never handed anything spendable, only an [[HTLC]] it cannot open, so its honesty is irrelevant rather than assumed. The worst it can do to you is fail, and failing earns it nothing.',
+      'A node that forwards payments using HTLCs on separate channels, reserving its own outbound liquidity and optionally earning a fee. It can delay or fail payments and tie up liquidity. Safe recovery depends on correct protocol handling, monitoring and confirmation deadlines.',
     quest: 4,
     questSite: 'lightning',
   },
@@ -1233,7 +1233,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['timelock', 'timelocks', 'timelocked'],
     category: 'Keys & ownership',
     definition:
-      'A condition in a script that makes coins unspendable until a given time or block height. Bitcoin enforces it at the consensus layer, which is what lets Lightning build refunds and penalties on top: a promise that expires on its own needs no referee.',
+      'A spending condition that prevents a qualifying transaction from confirming before a time or block height. Maturity does not broadcast or confirm a transaction by itself. Lightning uses these conditions for delayed spends and recovery paths.',
   },
   {
     term: 'P2WSH',
@@ -1307,7 +1307,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['cltv_expiry', 'cltv_expiry_delta'],
     category: 'Lightning & channels',
     definition:
-      'The block height after which an [[HTLC]] expires and refunds. Deadlines *descend* along a route so every hop has time to claim its incoming promise after paying out, which is why long routes need long timelocks, and why a stuck payment can lock funds for hours.',
+      'An absolute block-height deadline enabling HTLC timeout recovery. It does not automatically refund funds or switch off every preimage spend. Forwarding deadlines descend to allow time for claims; fees, monitoring and confirmation remain necessary.',
     cite: '02-peer-protocol.md:2789',
     quest: 4,
     questSite: 'lightning',

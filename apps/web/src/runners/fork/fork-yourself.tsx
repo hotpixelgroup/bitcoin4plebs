@@ -33,15 +33,19 @@ export function ForkYourself({ finale }: RunnerProps) {
   const [ran, setRan] = useState(false);
 
   const isConsensus = interval === SUBSIDY_HALVING_INTERVAL && subsidy === 50n;
-  const yourEras = computeEras({ halvingInterval: interval, initialSubsidy: subsidy * COIN });
+  const yourEras = computeEras({
+    halvingInterval: interval,
+    initialSubsidy: subsidy * COIN,
+  });
   const yourTotal = yourEras[yourEras.length - 1].cumulative;
 
   return (
     <div className="cols">
       <div className="prose">
         <p>
-          The source is open, so open it. Pick your own consensus parameters below. This is
-          exactly what anyone on Earth can do to Bitcoin's code, right now, no permission needed.
+          The source is open, so open it. Pick your own consensus parameters
+          below. This is exactly what anyone on Earth can do to Bitcoin's code,
+          right now, no permission needed.
         </p>
         <label className="fork-label">
           Halving interval
@@ -89,37 +93,41 @@ export function ForkYourself({ finale }: RunnerProps) {
       <div>
         <div className="viz-root">
           <div className="viz-title">Your chain vs. Bitcoin</div>
-          <div className="viz-sub">same ten lines of arithmetic: your parameters vs. everyone else's</div>
+          <div className="viz-sub">
+            same ten lines of arithmetic: your parameters vs. everyone else's
+          </div>
           <div className="stat-grid">
             <div className="stat">
               <div className="stat-label">your chain's total supply</div>
               <div className="stat-value">
-                {ran ? satsToBtc(yourTotal, 4) : ', '} <span className="stat-unit">coins</span>
+                {ran ? satsToBtc(yourTotal, 4) : ', '}{' '}
+                <span className="stat-unit">coins</span>
               </div>
             </div>
             <div className="stat">
               <div className="stat-label">Bitcoin's total supply</div>
               <div className="stat-value">
-                {satsToBtc(BITCOIN_TOTAL, 4)} <span className="stat-unit">BTC</span>
+                {satsToBtc(BITCOIN_TOTAL, 4)}{' '}
+                <span className="stat-unit">BTC</span>
               </div>
             </div>
           </div>
           {ran &&
             (isConsensus ? (
               <Callout>
-                <strong>✓ You're in consensus.</strong> You picked Bitcoin's own parameters, so
-                your node computes the same 20,999,999.9769 BTC as everyone else's, and your
-                blocks validate everywhere. This agreement, recomputed independently by every node on
-                every block, <em>is</em> Bitcoin.
+                <strong>✓ The subsidy schedules match.</strong> These parameters compute Bitcoin’s scheduled subsidy ceiling. Passing this one check does not establish full block validity: inputs, scripts, fees, proof of work and all other consensus conditions still matter.
               </Callout>
             ) : (
               <Callout>
-                <strong>⚠ Congratulations: you've forked yourself off the network.</strong> Your
-                chain now promises {satsToBtc(yourTotal, 4)} coins, so the first block you produce
-                under these rules is <strong>invalid to every Bitcoin node on Earth</strong>, because
-                they check it against <em>their</em> arithmetic, not yours (remember{' '}
-                <code>bad-cb-amount</code>). You didn't change Bitcoin. You left it. Changing the
-                code was never the hard part; changing <em>everyone else's</em> code is.
+                <strong>
+                  Different permitted subsidy schedule.
+                </strong>{' '}
+                Your schedule permits {satsToBtc(yourTotal, 4)} coins. A block
+                claiming more subsidy plus fees than Bitcoin permits is invalid;
+                changing the schedule need not invalidate the first block.
+                Miners may underclaim, and divergence may happen at a future
+                height, because they check it against <em>their</em> arithmetic,
+                not yours (remember <code>bad-cb-amount</code>). A fork occurs at an actual disagreement in accepted blocks, not merely when source parameters change.
               </Callout>
             ))}
         </div>

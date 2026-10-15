@@ -8,21 +8,24 @@ const PARTS = [
     label: 'lnbc',
     kind: 'prefix',
     what: 'Which network',
-    detail: 'ln for Lightning, bc for Bitcoin mainnet. A testnet invoice says lntb instead.',
+    detail:
+      'ln for Lightning, bc for Bitcoin mainnet. A testnet invoice says lntb instead.',
   },
   {
     id: 'amount',
     label: '2500u',
     kind: 'amount',
     what: 'How much',
-    detail: '2500 micro-bitcoin, 0.0025 BTC, or 250,000 sats. Leave it out entirely and the payer chooses.',
+    detail:
+      '2500 micro-bitcoin, 0.0025 BTC, or 250,000 sats. Leave it out entirely and the payer chooses.',
   },
   {
     id: 'sep',
     label: '1',
     kind: 'sep',
     what: 'The separator',
-    detail: 'Everything before this is human-readable; everything after is the checksummed data part.',
+    detail:
+      'Everything before this is human-readable; everything after is the checksummed data part.',
   },
   {
     id: 'timestamp',
@@ -36,28 +39,32 @@ const PARTS = [
     label: 'pp5…',
     kind: 'hash',
     what: 'The payment hash',
-    detail: 'The hash of a secret only the payee knows. Paying is what makes them reveal it, and that secret is your receipt.',
+    detail:
+      'The hash of a secret only the payee knows. Paying is what makes them reveal it, and the revealed preimage is fulfillment evidence, but forwarding nodes learn it too.',
   },
   {
     id: 'desc',
     label: 'dq5…',
     kind: 'field',
     what: 'What it is for',
-    detail: 'Plain UTF-8 text: "1 cup coffee". Committed to by the signature, so nobody can alter it in transit.',
+    detail:
+      'Plain UTF-8 text: "1 cup coffee". Committed to by the signature, so nobody can alter it in transit.',
   },
   {
     id: 'expiry',
     label: 'xqzpu',
     kind: 'field',
     what: 'How long it lasts',
-    detail: 'Seconds until it stops being payable. One hour if the field is omitted.',
+    detail:
+      'Seconds until it stops being payable. One hour if the field is omitted.',
   },
   {
-    id: 'sig',
-    label: '9qrsgq…',
-    kind: 'sig',
-    what: 'The signature',
-    detail: '512 bits over everything above, plus a recovery byte, which is how the payer learns the payee’s node id without it being written out.',
+    id: 'features',
+    label: '9qrsgq',
+    kind: 'field',
+    what: 'Feature bits',
+    detail:
+      'Tag 9 describes supported or required features. It is not the signature; the signature is a separate 104-character tail before the six checksum characters.',
   },
 ];
 
@@ -75,7 +82,11 @@ export function InvoiceAnatomy() {
       title="Anatomy of an invoice"
       caption="Tap any piece of this real invoice to find out what it is. It is a document, not a hash."
     >
-      <div className="paths-chips" role="group" aria-label="Parts of the invoice">
+      <div
+        className="paths-chips"
+        role="group"
+        aria-label="Parts of the invoice"
+      >
         {PARTS.map((p) => (
           <button
             key={p.id}
@@ -92,7 +103,10 @@ export function InvoiceAnatomy() {
       <div className="viz-readout">
         <div className="stat-label">{part.what}</div>
         <div className="stat">
-          <span className="stat-value" style={{ fontFamily: 'var(--mono)', fontSize: 20 }}>
+          <span
+            className="stat-value"
+            style={{ fontFamily: 'var(--mono)', fontSize: 20 }}
+          >
             {part.label}
           </span>
         </div>
@@ -100,9 +114,10 @@ export function InvoiceAnatomy() {
       </div>
 
       <p className="utxo-box-note">
-        Read left to right and an invoice tells a small story: on this network, for this much,
-        made at this moment, for this purpose, redeemable by whoever learns this secret, until
-        this deadline, signed. The finale below decodes the whole thing for real.
+        Read left to right and an invoice tells a small story: on this network,
+        for this much, made at this moment, for this purpose, redeemable by
+        whoever learns this secret, until this deadline, signed. The finale
+        below decodes the whole thing for real.
       </p>
     </VizFigure>
   );

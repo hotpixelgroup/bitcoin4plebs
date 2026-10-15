@@ -8,24 +8,32 @@ import {
   leadingZeroBits,
   targetForZeroBits,
 } from './pow.js';
-import { estimateConfirmation, feerateBands, generateMempool } from './fee-market.js';
+import {
+  estimateConfirmation,
+  feerateBands,
+  generateMempool,
+} from './fee-market.js';
 
 describe('proof-of-work math (pow.cpp translation)', () => {
   it('decodes the genesis compact bits to the famous easiest target', () => {
     expect(bitsToTarget(GENESIS_BITS)).toBe(
-      0xffff0000000000000000000000000000000000000000000000000000n
+      0xffff0000000000000000000000000000000000000000000000000000n,
     );
   });
 
   it('the real genesis block hash satisfies the rule from CheckProofOfWorkImpl', () => {
-    expect(hashMeetsTarget(GENESIS_HASH, bitsToTarget(GENESIS_BITS))).toBe(true);
+    expect(hashMeetsTarget(GENESIS_HASH, bitsToTarget(GENESIS_BITS))).toBe(
+      true,
+    );
     // Flip the hash to something bigger and it fails.
-    expect(hashMeetsTarget('ff' + GENESIS_HASH.slice(2), bitsToTarget(GENESIS_BITS))).toBe(false);
+    expect(
+      hashMeetsTarget('ff' + GENESIS_HASH.slice(2), bitsToTarget(GENESIS_BITS)),
+    ).toBe(false);
   });
 
   it('double SHA-256 matches the published test vector', async () => {
     expect(await doubleSha256Hex('hello')).toBe(
-      '9595c9df90075148eb06860365df33584b75bff782a510c6cd4883a419833d50'
+      '9595c9df90075148eb06860365df33584b75bff782a510c6cd4883a419833d50',
     );
   });
 
@@ -62,4 +70,15 @@ describe('fee auction model (miner.cpp:301 mechanism)', () => {
     const total = feerateBands(pool).reduce((s, b) => s + b.vbytes, 0);
     expect(total).toBe(pool.reduce((s, t) => s + t.vsize, 0));
   });
+});
+
+it('validates compact sign, zero, magnitude and overflow boundaries', () => {
+  expect(bitsToTarget(0x03012345)).toBe(0x12345n);
+  expect(bitsToTarget(0x02012345)).toBe(0x123n);
+  for (const bits of [0, 0x1d80ffff, 0x23000001, 0x22000100, 0x21010000])
+    expect(() => bitsToTarget(bits)).toThrow();
+  expect(hashMeetsTarget('01' + '00'.repeat(31), 0xffn)).toBe(false);
+  expect(hashMeetsTarget('00'.repeat(31) + '01', 0xffn)).toBe(true);
+  expect(hashMeetsTarget('ff', 0xffn)).toBe(false);
+  expect(() => targetForZeroBits(-1)).toThrow();
 });

@@ -24,6 +24,7 @@ interface TrackResult {
  * is the trust-free version of this exact lookup.
  */
 export function SignetTracker({ finale }: RunnerProps) {
+  const [observedAt, setObservedAt] = useState<string | null>(null);
   const [txid, setTxid] = useState('');
   const [state, setState] = useState<'idle' | 'loading' | 'done' | 'notfound' | 'error'>('idle');
   const [result, setResult] = useState<TrackResult | null>(null);
@@ -35,6 +36,7 @@ export function SignetTracker({ finale }: RunnerProps) {
       setResult(null);
       return;
     }
+    setObservedAt(new Date().toISOString());
     setState('loading');
     setResult(null);
     try {
@@ -80,6 +82,7 @@ export function SignetTracker({ finale }: RunnerProps) {
   return (
     <div className="cols">
       <div className="prose">
+        {observedAt && <p className="finale-note">Provider: mempool.space/signet · requested at {observedAt}. This is one external observation, not independent node verification.</p>}
         <label className="height-input-label">
           Your transaction ID (64 hex characters, from your wallet):
           <input
@@ -93,7 +96,7 @@ export function SignetTracker({ finale }: RunnerProps) {
         </label>
         <div className="preset-row">
           <button className="runbtn net-btn" onClick={() => track(txid)} disabled={state === 'loading'}>
-            {state === 'loading' ? 'Asking the network…' : '▶ Track my transaction'}
+            {state === 'loading' ? 'Asking mempool.space…' : '▶ Track my transaction'}
           </button>
           <button
             className="preset"
@@ -129,7 +132,7 @@ export function SignetTracker({ finale }: RunnerProps) {
           )}
           {state === 'notfound' && (
             <p className="viz-readout">
-              No signet node has seen that txid. Double-check you copied it from a wallet set to
+              mempool.space’s signet provider does not know that txid. Other nodes may have it; this response does not prove network-wide absence. Double-check you copied it from a wallet set to
               <strong> signet</strong> (not mainnet or another testnet), and that the send
               actually went out.
             </p>
@@ -179,8 +182,8 @@ export function SignetTracker({ finale }: RunnerProps) {
               </div>
               <p className="viz-readout">
                 {result.confirmed
-                  ? `This is the whole curriculum in one artifact: your wallet destroyed old boxes and made ${result.outputs} new one${result.outputs === 1 ? '' : 's'}, proved ownership with a signature, bid ${feerate} sat/vB in the auction, and a miner's winning lottery ticket sealed it into block ${result.blockHeight?.toLocaleString('en-US')}. Every machine on the signet network re-checked all of it. Yours now, forever.`
-                  : 'Your payment passed every node\'s AcceptToMemoryPool gauntlet and is gossiping across the network, waiting for the auction to reach your bid. Refresh in a minute or two; signet blocks arrive about every ten minutes.'}
+                  ? `This is the whole curriculum in one artifact: your wallet destroyed old boxes and made ${result.outputs} new one${result.outputs === 1 ? '' : 's'}, proved ownership with a signature, bid ${feerate} sat/vB in the auction, and a miner's winning lottery ticket sealed it into block ${result.blockHeight?.toLocaleString('en-US')}. This is the provider’s reported confirmation, not independent verification of every node or an irreversible guarantee.`
+                  : 'This provider reports the payment as unconfirmed. It does not establish what every other node knows or guarantee confirmation time.'}
               </p>
             </>
           )}

@@ -96,7 +96,7 @@ export const questLn05: Quest = {
       id: 'the-claim',
       title: 'The claim, and the caveat the spec makes itself',
       takeaway:
-        "The specification states the guarantee precisely: a hop cannot learn any node other than its immediate neighbours, nor the route's length, nor its own position. And then, in the same paragraph, it states the limit: none of this stops **traffic analysis**.",
+        'The onion hides the full ordinary route from an intermediate hop. A hop knows adjacent peers, the amounts and expiries it handles and the payment hash. The sender knows the ordinary route it constructed; the final recipient recognizes its final payload. Timing, amount and hash correlation remain possible, especially for colluding observers.',
       annotationsOpen: true,
       quiz: [
         {
@@ -158,7 +158,7 @@ export const questLn05: Quest = {
     takeaway:
       "Construct the exact 1,366-byte packet BOLT #4 publishes as its test vector, from this site's own dependency-free cryptography and require a byte-for-byte match. Then walk it hop by hop and watch each node recover its own payload and nothing else.",
     runnerId: 'onion-lab',
-    note: "The elliptic-curve math and the ChaCha20 stream cipher below are written from scratch in this site's own TypeScript, with no cryptography library. That is what makes the vector check meaningful: the specification's packet only comes out byte-identical if the curve arithmetic, the cipher, the four key derivations, the blinding chain and the filler accumulation are every one of them correct. There is no partial credit. The same check runs in CI on every change to this site.",
+    note: 'This educational implementation reproduces a published packet vector. A byte-for-byte match is a useful compatibility check for that fixture, not proof of correctness for all inputs. It is not a production Sphinx validator: malformed-version, public-key and payload validation is deliberately incomplete. Never use it for real payments.',
   },
   recap: {
     tryIt:
