@@ -10,7 +10,7 @@ interface Depth {
 
 const DEPTHS: Depth[] = [
   { blocks: 1, label: '1 confirmation', human: 'a few minutes old' },
-  { blocks: 6, label: '6 confirmations', human: 'about an hour old (the customary "final")' },
+  { blocks: 6, label: '6 confirmations', human: 'six confirmations; elapsed time varies' },
   { blocks: 144, label: '1 day deep', human: 'yesterday' },
   { blocks: 52_560, label: '1 year deep', human: 'a year ago (like Ana\'s bike payment)' },
 ];
@@ -28,14 +28,7 @@ export function RewriteCost({ finale }: RunnerProps) {
 
   const networkMinutes = depth.blocks * 10;
   const networkDays = networkMinutes / 60 / 24;
-  const scale =
-    depth.blocks <= 1
-      ? 'And even this shallow rewrite means out-mining the entire planet for those minutes, then pulling ahead. Possible only for an attacker who already commands most of the world\'s hashpower, and only briefly (Quest #4).'
-      : depth.blocks <= 6
-        ? 'Undoing this means re-burning about an hour of the entire global network\'s energy, faster than everyone else is adding more. This is why merchants treat six confirmations as settled.'
-        : depth.blocks <= 144
-          ? 'Rewriting a single day means redoing a day of the whole world\'s mining, while the honest network keeps stacking new work on top. No entity on Earth is known to be able to do this.'
-          : 'Rewriting a year means out-burning a year of humanity\'s entire Bitcoin mining effort, then racing past a network that never stopped. This is why deep history is treated as physically permanent.';
+  const scale = 'An alternative history must satisfy every consensus rule and exceed the active chain’s cumulative target-derived work. Even minority hashpower can sometimes catch up by luck; success probability depends on depth, relative hashpower, difficulty and assumptions. This display is only a depth-to-time scale at an assumed ten-minute interval, not a measurement of historical electricity or a full attack-cost model.';
 
   return (
     <div className="rw">
@@ -63,7 +56,7 @@ export function RewriteCost({ finale }: RunnerProps) {
           <div className="stat-value">{depth.blocks.toLocaleString('en-US')}</div>
         </div>
         <div className="stat">
-          <div className="stat-label">≈ network-time of energy to redo</div>
+          <div className="stat-label">illustrative elapsed time at 10 min/block</div>
           <div className="stat-value">
             {networkDays >= 1
               ? `${Math.round(networkDays).toLocaleString('en-US')} days`
@@ -72,7 +65,7 @@ export function RewriteCost({ finale }: RunnerProps) {
         </div>
         <div className="stat">
           <div className="stat-label">and simultaneously</div>
-          <div className="stat-value">out-race everyone</div>
+          <div className="stat-value">exceed valid-chain work</div>
         </div>
       </div>
 
@@ -81,7 +74,7 @@ export function RewriteCost({ finale }: RunnerProps) {
       </Callout>
 
       <p className="rw-punch">
-        <RichText text="Read the energy figure and the safety figure again: they are the **same number**. The electricity a critic calls wasted is the exact wall this attacker cannot climb." />
+        <RichText text="Chainwork measures expected hash work, not exact attempts or joules. More confirmations can increase confidence under stated assumptions, but no displayed depth proves physical permanence." />
       </p>
 
       {finale.note && (

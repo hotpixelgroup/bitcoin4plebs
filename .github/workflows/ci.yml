@@ -113,3 +113,6 @@ jobs:
           node tools/assert-site-build.mjs lightning /lightning4plebs/
           npx nx build web
           node tools/assert-site-build.mjs bitcoin /
+
+      - name: Verify sibling preservation across cache restores
+        run: node tools/assert-cache-isolation.mjs

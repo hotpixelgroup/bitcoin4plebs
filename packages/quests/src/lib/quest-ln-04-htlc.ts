@@ -56,7 +56,7 @@ export const questLn04: Quest = {
       id: 'the-message',
       title: 'The message that carries a payment',
       takeaway:
-        "`update_add_htlc` is how a payment enters a channel. Five fields, and three of them are the whole design: **how much**, **which hash unlocks it**, **when it expires**, and a sealed 1,366-byte packet the sender cannot read.",
+        "update_add_htlc carries amounts, a payment hash, an absolute expiry and an onion packet. The ordinary sender constructs and knows the route; an intermediary decrypts only its hop instructions, while still seeing its adjacent peers and local payment data.",
       quiz: [
         {
           question: 'What does the hub learn from the update_add_htlc that Mira sends it?',
@@ -159,7 +159,7 @@ export const questLn04: Quest = {
         'Each outgoing deadline is earlier than the incoming one, giving the forwarder a safety margin. This is time to monitor and confirm a claim, not a guarantee that congestion or an offline node cannot cause loss. Real wallets account for CLTV margins and chain fees.',
       prose: [
         "The deadlines have to descend. If the hub's outgoing HTLC to Ines expired *after* its incoming one from Mira, Ines could wait for Mira's to lapse, then claim, leaving the hub paying out with nothing to claim back. So every hop insists on a comfortable margin, and those margins add up down the route.",
-        "That is the real cost, and it is worth naming plainly rather than skipping. **Long routes need long timelocks.** A payment that gets stuck: a hop that goes offline mid-flight, say, can leave funds locked in an HTLC for hours or, on an unlucky route, over a day. Nothing is lost; it comes back. But it is unavailable, and if it was your whole channel balance, you cannot pay anyone else with it in the meantime.",
+        "Long routes accumulate timelock margins. A failed payment can lock liquidity until peers fail it off-chain or recovery transactions confirm on-chain. The passage of time alone does not guarantee return, and missing a competing-spend race can lose funds, as the deadline lab demonstrates.",
         "Two more honest costs, since this quest is where they belong. **Liquidity is directional**: the hub can only forward what is on its side of the outgoing channel, so a route can fail simply because the money is pointing the wrong way, and the payer usually cannot tell in advance. And **fees are per hop**, tiny but real: a base amount plus a proportion, which is why millisatoshis exist at all, who chooses those numbers, and how they add up into the price you actually pay, is the next quest.",
         "None of this is a flaw in the design so much as the price of the design. A system where a stranger cannot steal from you is a system where a stranger can still fail to help you, and where the money you have committed to a promise is genuinely committed until the promise resolves.",
       ],
@@ -174,10 +174,10 @@ export const questLn04: Quest = {
   },
   recap: {
     tryIt:
-      "Next time a Lightning payment fails in your wallet, read the error instead of retrying blindly. 'No route' usually means liquidity is pointing the wrong way somewhere. 'Timed out' means an HTLC hit its deadline and unwound: your money is coming back, not gone. Knowing which of those you are looking at turns a mysterious failure into an ordinary one.",
+      "Read the wallet’s status and recovery documentation. A timeout message is not proof of an automatic refund: distinguish an off-chain failure, an unresolved on-chain output and a confirmed recovery spend. Do not infer guaranteed return merely because an expiry height has passed.",
     items: [
       {
-        text: '**Routing puts a stranger in the middle**, and the design makes their honesty irrelevant rather than requiring it.',
+        text: "**HTLCs replace custodial forwarding with conditional claims.** Safe resolution still depends on correct operation, monitoring, liquidity and timely confirmed spends.",
       },
       {
         text: '**`update_add_htlc` carries the payment**: an amount, the payment hash unchanged from the invoice, a deadline, and a sealed 1,366-byte packet.',
@@ -188,7 +188,7 @@ export const questLn04: Quest = {
         cite: '03-transactions.md:214',
       },
       {
-        text: '**Deadlines descend along the route**, which is what keeps every hop safe and what makes stuck payments lock funds for a while.',
+        text: "**Staggered deadlines give forwarders time to act.** They do not disable preimage or penalty paths on maturity, guarantee inclusion, or protect an output after a competing spend confirms.",
       },
     ],
     closing:

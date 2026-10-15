@@ -43,8 +43,8 @@ const SAMPLES: Sample[] = [
   },
   {
     id: 'cve-2010',
-    title: '③ The 2010-style money printer',
-    description: 'Two outputs of 11,000,000 BTC each: 22M total, more than can ever exist.',
+    title: '③ Output-total ceiling example',
+    description: 'Two 11,000,000-BTC outputs exceed the output-total ceiling. This illustrates a current bound, not the historical 2010 overflow transaction.',
     tx: {
       vin: [{ txid: 'c0ffee…01', vout: 0 }],
       vout: [{ value: 11_000_000n * COIN }, { value: 11_000_000n * COIN }],
@@ -84,10 +84,7 @@ export function RunTheCheck({ finale }: RunnerProps) {
         )}
         {results && (
           <Callout>
-            <strong>What just happened:</strong> the honest transaction passed; the 2010 attack and the 2018 close call both died
-            instantly, with the <em>exact error strings</em> a real node emits. These two checks
-            run on every transaction, on every node, every time: the scars of 2010 and 2018,
-            permanently on duty.
+            <strong>What just happened:</strong> one simplified transaction passed the context-free checks; duplicate inputs and the output-total example failed. This does not check that inputs exist, signatures satisfy their scripts, or input value covers outputs. The 22-million example is not a reconstruction of the 2010 overflow exploit.
           </Callout>
         )}
       </div>
@@ -111,7 +108,7 @@ export function RunTheCheck({ finale }: RunnerProps) {
                     {r === undefined
                       ? 'awaiting check…'
                       : r.ok
-                        ? '✓ accepted'
+                        ? '✓ context-free checks passed; full acceptance not tested'
                         : `✗ rejected: "${r.error}"`}
                   </div>
                 </div>

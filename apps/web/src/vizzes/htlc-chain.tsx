@@ -2,7 +2,13 @@ import { useState } from 'react';
 import { VizFigure } from './viz-figure';
 
 type State =
-  'locked' | 'revealed' | 'settled' | 'failed' | 'timeout' | 'refunded';
+  | 'locked'
+  | 'revealed'
+  | 'settled'
+  | 'failed'
+  | 'timeout'
+  | 'refunded'
+  | 'upstream-refunded';
 /** A two-hop, single-part payment. No real funds, keys or on-chain signing. */
 export function HtlcChain() {
   const [state, setState] = useState<State>('locked');
@@ -67,23 +73,21 @@ export function HtlcChain() {
                 ? 'Forward failed: insufficient outbound liquidity. No payment or forwarding fee earned.'
                 : state === 'timeout'
                   ? 'Outgoing timeout recovery confirmed. Incoming HTLC remains pending until resolved separately.'
-                  : 'Incoming timeout recovery also confirmed. No forwarding fee earned.'}
+                  : state === 'upstream-refunded'
+                    ? 'Incoming timeout spent first: Mira recovered 180,180 sats. Ines retains 180,000 sats already received; hub loses 180,000 sats and earns no forwarding fee.'
+                    : 'Incoming timeout recovery also confirmed. No forwarding fee earned.'}
       </p>
       {state === 'locked' && (
         <button
           className="runbtn"
-          disabled={!prediction || height >= 800_100}
+          disabled={!prediction}
           onClick={() => setState(liquidity < 180_000 ? 'failed' : 'revealed')}
         >
           Reveal the recipient outcome
         </button>
       )}{' '}
       {state === 'revealed' && (
-        <button
-          className="runbtn"
-          disabled={height >= 800_140}
-          onClick={() => setState('settled')}
-        >
+        <button className="runbtn" onClick={() => setState('settled')}>
           Hub fulfills incoming HTLC with the same preimage
         </button>
       )}{' '}
@@ -97,15 +101,21 @@ export function HtlcChain() {
           Confirm outgoing timeout recovery (simplified)
         </button>
       )}
-      {state === 'timeout' && height >= 800_140 && (
-        <button className="preset" onClick={() => setState('refunded')}>
+      {(state === 'timeout' || state === 'revealed') && height >= 800_140 && (
+        <button
+          className="preset"
+          onClick={() =>
+            setState(state === 'revealed' ? 'upstream-refunded' : 'refunded')
+          }
+        >
           Confirm incoming timeout recovery
         </button>
       )}
       {state === 'revealed' && height >= 800_140 && (
         <p>
-          The hub waited too long. Incoming timeout recovery may now race its
-          claim. The safety margin was time to act, not an unconditional
+          Incoming timeout recovery is now eligible and competes with the
+          still-valid preimage claim. Whichever spend confirms first resolves
+          this output. The safety margin was time to act, not an unconditional
           guarantee.
         </p>
       )}

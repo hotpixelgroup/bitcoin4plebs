@@ -70,6 +70,9 @@ describe('learning lab transitions', () => {
     expect(stat('on-chain transactions')).toBe('2');
     fireEvent.click(screen.getByRole('button', { name: /Confirm Bo/ }));
     expect(screen.getByRole('status')).toHaveTextContent('Recovery missed');
+    expect(
+      screen.queryByRole('button', { name: /Confirm revocation penalty/ }),
+    ).not.toBeInTheDocument();
     expect(stat('on-chain transactions')).toBe('3');
   });
   it('rejects an invalid mint even when most peers propose it', () => {
@@ -194,4 +197,75 @@ describe('learning lab transitions', () => {
       ),
     ).toBeInTheDocument();
   });
+});
+
+describe('maturity enables competing spends without expiring existing paths', () => {
+  it('permits a penalty after delay maturity until Bo spends, then prevents double spending and resets', () => {
+    render(<ChannelSimulator finale={finale} />);
+    openAndPay();
+    fireEvent.click(screen.getByRole('button', { name: /Bo pays Ana/ }));
+    fireEvent.click(screen.getByRole('button', { name: /Bo tries to cheat/ }));
+    for (let i = 0; i < 6; i++)
+      fireEvent.click(screen.getByRole('button', { name: /Advance 24/ }));
+    expect(screen.getByRole('button', { name: /Confirm Bo/ })).toBeEnabled();
+    expect(
+      screen.getByRole('button', { name: /Confirm revocation penalty/ }),
+    ).toBeEnabled();
+    fireEvent.click(
+      screen.getByRole('button', { name: /Confirm revocation penalty/ }),
+    );
+    expect(
+      screen.queryByRole('button', { name: /Confirm Bo/ }),
+    ).not.toBeInTheDocument();
+    expect(stat('on-chain transactions')).toBe('3');
+    fireEvent.click(screen.getByRole('button', { name: /open a fresh tab/ }));
+    expect(stat('on-chain transactions')).toBe('1');
+    expect(stat('payments made')).toBe('0');
+  });
+  for (const winner of ['preimage', 'timeout'])
+    it(`resolves the incoming ${winner} after expiry, excludes the competing spend, and resets`, () => {
+      render(<HtlcChain />);
+      fireEvent.change(screen.getByLabelText(/Predict: who/), {
+        target: { value: 'recipient' },
+      });
+      // Outgoing timeout is eligible, but has not spent the output.
+      fireEvent.click(screen.getByRole('button', { name: /Advance 10/ }));
+      expect(
+        screen.getByRole('button', { name: /Reveal the recipient outcome/ }),
+      ).toBeEnabled();
+      fireEvent.click(
+        screen.getByRole('button', { name: /Reveal the recipient outcome/ }),
+      );
+      expect(
+        screen.queryByRole('button', { name: /Confirm outgoing timeout/ }),
+      ).not.toBeInTheDocument();
+      for (let i = 0; i < 4; i++)
+        fireEvent.click(screen.getByRole('button', { name: /Advance 10/ }));
+      expect(
+        screen.getByRole('button', { name: /Hub fulfills incoming/ }),
+      ).toBeEnabled();
+      expect(
+        screen.getByRole('button', { name: /Confirm incoming timeout/ }),
+      ).toBeEnabled();
+      fireEvent.click(
+        screen.getByRole('button', {
+          name:
+            winner === 'preimage'
+              ? /Hub fulfills incoming/
+              : /Confirm incoming timeout/,
+        }),
+      );
+      expect(screen.getByRole('status')).toHaveTextContent(
+        winner === 'preimage' ? 'hub earns 180 sats' : 'hub loses 180,000 sats',
+      );
+      expect(
+        screen.queryByRole('button', { name: /Hub fulfills incoming/ }),
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('button', { name: /Confirm incoming timeout/ }),
+      ).not.toBeInTheDocument();
+      fireEvent.click(screen.getByRole('button', { name: /Reset route/ }));
+      expect(screen.getByRole('status')).toHaveTextContent('Height 800,090');
+      expect(screen.getByRole('status')).toHaveTextContent('HTLCs pending');
+    });
 });

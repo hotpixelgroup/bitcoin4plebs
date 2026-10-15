@@ -26,7 +26,7 @@ export const quest11: Quest = {
   },
   intro: [
     'Ten quests of reading and verifying deserve a graduation exercise you can *feel*: sending a real Bitcoin transaction. Not a simulation, a real one, signed by a real wallet and mined into a real chain. The trick is choosing which chain.',
-    'Bitcoin Core ships several complete parallel networks. This quest uses **signet**, the stable practice network: real software, real blocks, real wallets, and coins that anyone can get for free, which is exactly what makes them worthless. Perfect.',
+    "This lesson uses signet, a separate testing network. Faucets may provide coins subject to limits and availability. Treat them only as practice data; use a fresh test wallet with no real funds.",
   ],
   promise:
     "Every snippet below is copied verbatim from the Bitcoin Core source, pinned to commit [18c05d9](https://github.com/bitcoin/bitcoin/commit/18c05d93016b28a9afd4c716dfe00b6e0accb30b). Don't trust this page either: every stop links to the same lines on GitHub so you can check we didn't edit a word.",
@@ -77,7 +77,7 @@ export const quest11: Quest = {
       myth: {
         belief: 'Maybe my testnet coins will be worth something someday.',
         reality:
-          'They cannot be, by construction: anyone can get unlimited practice coins for free from faucets, so scarcity is impossible. That is not a flaw. Worthlessness is the feature that makes fearless practice possible.',
+          "Signet has finite subsidy rules and faucets can run out, rate-limit or stop serving. These coins are intended for testing; the protocol does not guarantee that nobody trades them or assigns them value. Never buy practice coins for this exercise.",
       },
       prose: [
         'Read line 521 next to Quest #8\'s line 158: same builder, same 50 BTC reward, same embedded newspaper headline from 2009, because the coinbase construction is byte-for-byte the same. That is why line 524 asserts the *same* merkle root you recomputed in Quest #8.',
@@ -139,10 +139,10 @@ export const quest11: Quest = {
       id: 'do-it',
       title: 'Now actually do it: coins in, payment out',
       takeaway:
-        'Ten minutes, three steps, zero risk: get a practice wallet, collect free signet coins from a faucet, and send some. **This site never sees your keys**; the wallet and the network do all the real work, which is the point.',
+        "Practice with a fresh signet wallet and no real funds. Faucet availability, software mistakes and privacy still matter. This site does not request keys or seed phrases.",
       prose: [
         'Step one, a wallet: install [Sparrow Wallet](https://sparrowwallet.com) on a computer and restart it in signet mode (Tools → Restart in Signet), or use any wallet that lists signet support. Create a fresh wallet and let it generate a practice seed phrase. (House rule from the glossary applies even here: never type a seed phrase that guards real money into anything.)',
-        'Step two, free coins: copy a receive address from your wallet (it will start with tb1) and paste it into a public signet faucet such as [signetfaucet.com](https://signetfaucet.com). Coins arrive within a block or two. Step three, the graduation move: send some back to the faucet\'s return address, or to a second address of your own. Your wallet builds the boxes (Quest #3), signs, and gossips it (Quest #7). Then copy the **transaction ID** it shows you and bring it to the finale below.',
+        "Use an available signet faucet if one is operating; delivery and confirmation are not guaranteed. Check the wallet’s network and never enter real recovery material. Copy only the public transaction ID to the tracker, which reports one explorer’s observation.",
       ],
       quiz: [
         {
@@ -175,7 +175,7 @@ export const quest11: Quest = {
         cite: 'chainparams.cpp:444',
       },
       {
-        text: '**Play coins are worthless by design**, and the design is the feature: fearless practice with real software.',
+        text: "**Signet is for testing.** Its subsidy is finite, faucets are limited, and the protocol does not guarantee an absence of market value. Use fresh practice wallets and no real funds.",
       },
       {
         text: '**Network validation matters.** A correct wallet rejects tb1 when configured for mainnet, even when the checksum is valid.',

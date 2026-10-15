@@ -71,6 +71,7 @@ export function FeeAuction({ finale }: RunnerProps) {
   return (
     <div className="cols">
       <div className="prose">
+        <p className="finale-note">Two limited illustrations: the histogram drains a fixed initial pool; the separate seeded estimator includes new arrivals. They are not one synchronized event trace. Replay progress follows the estimator, not a transaction-level reconstruction of the histogram. Neither is a live fee quote or confirmation guarantee; package dependencies and miner discretion are omitted.</p>
         <label className="height-input-label">
           Your bid: <strong>{feerate} sat/vB</strong> (a typical {MY_VSIZE}-vbyte payment ={' '}
           {fee.toLocaleString('en-US')} sats total fee)
@@ -115,8 +116,7 @@ export function FeeAuction({ finale }: RunnerProps) {
           ) : (
             <>
               your payment confirms in about <strong>block {estimate.blocks}</strong>, roughly{' '}
-              <strong>~{estimate.minutes} minutes</strong>. Everything in the bands above your bid
-              goes first; each block clears ~1M vbytes off the top.
+              <strong>~{estimate.minutes} minutes</strong>. This result comes from the separate arrival model; the histogram only illustrates draining the initial queue.
             </>
           )}
         </Callout>

@@ -145,9 +145,9 @@ export const quest13: Quest = {
       annotations: [
         { lines: 'L23', text: 'Temporary and time-boxed: the rules expire after one year. Also: "checked". This is consensus, run by every node.' },
         { lines: 'L25', text: 'Output scripts capped near the old normal; OP_RETURN kept at its classic 83 bytes.' },
-        { lines: 'L26', text: 'The witness door from 2023 gets a 256-byte frame.' },
+        { lines: 'L26', text: "The historical proposal restricted specified pushes and witness items; datacarriersize itself is OP_RETURN relay policy, not a general witness inscription-size limit." },
         { lines: 'L30–31', text: 'The sharp edge: banning OP_SUCCESS and executed OP_IF in tapscripts also touches how future contracts and some second-layer designs are written.' },
-        { lines: 'L35', text: 'The mercy clause: everything from before activation is exempt. No coin freezes.' },
+        { lines: 'L35', text: "Historical grandfathering exempts pre-activation UTXOs. Presigned chains creating new post-activation outputs have separate risks; see the current Tradeoffs section." },
       ],
       excerpt: {
         pin: BIPS_PIN,

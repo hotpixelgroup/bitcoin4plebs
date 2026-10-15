@@ -97,9 +97,9 @@ export function ChannelSimulator({ finale }: RunnerProps) {
     setCheat([
       `Bo broadcasts stale commitment #1 (his balance then: ${old.bo.toLocaleString('en-US')} sats instead of ${bo.toLocaleString('en-US')} now).`,
       'His to_local output is timelocked: OP_CHECKSEQUENCEVERIFY makes him wait to_self_delay blocks before he can touch a satoshi.',
-      "Ana's node sees the stale broadcast during the delay. She holds the revocation key Bo surrendered when they signed commitment #2.",
+      "Ana or her watchtower detects the revoked commitment and holds the revocation key Bo surrendered when they signed commitment #2.",
       `Penalty path (the OP_IF branch): Ana spends Bo's ENTIRE output immediately. Ignoring fees and assuming timely confirmation, final score: Ana ${FUNDING.toLocaleString('en-US')}, Bo 0.`,
-      'This outcome requires Ana or a watchtower to detect the revoked state and get the penalty confirmed before Bo can spend the delayed output.',
+      'This outcome requires Ana or a watchtower to detect the revoked state and get the penalty confirmed before Bo’s competing delayed spend confirms.',
     ]);
     setBlocks(0);
     setPhase('revoked');
@@ -250,12 +250,12 @@ export function ChannelSimulator({ finale }: RunnerProps) {
                 <>
                   <p>
                     {online
-                      ? 'Observer detects the revoked commitment. Confirm a penalty before the delayed spend becomes possible.'
+                      ? 'Observer detects the revoked commitment. The penalty remains eligible until Bo actually spends the output; after maturity his delayed spend competes with it.'
                       : 'Observer offline: penalty will not submit itself. The delay is a chance to respond.'}
                   </p>
                   <button
                     className="runbtn"
-                    disabled={!online || blocks >= 144}
+                    disabled={!online}
                     onClick={() => {
                       setAna(FUNDING);
                       setBo(0);

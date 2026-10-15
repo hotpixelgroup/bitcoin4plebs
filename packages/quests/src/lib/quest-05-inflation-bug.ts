@@ -105,9 +105,9 @@ export const quest05: Quest = {
       id: 'cve-2018',
       myth: {
         belief: "Bugs in Bitcoin get quietly exploited all the time; we would never know.",
-        reality: "The two inflation-class bugs in Bitcoin\u2019s history are both fully documented: 2010 (exploited for hours, chain abandoned) and 2018 (caught and patched before anyone used it). Public code means bugs get found loudly, and the fixes below are permanent, checkable scars.",
+        reality: "The inflation-class incidents discussed here are 2010, which was exploited, and 2018, for which the disclosure reports no known exploitation. These examples do not prove all future inflation bugs impossible.",
       },
-      title: 'September 2018: the bug that was never exploited',
+      title: "September 2018: no known exploitation reported",
       takeaway:
         'CVE-2018-17144: for nearly two years, a performance optimization had removed the check below. A transaction spending **the same coin twice in one block** could crash nodes, or it could quietly **inflate the supply**. Here is the restored check, scar named on line 36.',
       prose: [

@@ -31,3 +31,11 @@ assert(readdirSync(`${dir}/assets`).some((name) => name.endsWith('.js')));
 console.log(
   `Verified ${site}: index, deep-link fallback, asset base, PWA manifest and cache inputs (${base})`,
 );
+
+const targets = JSON.parse(readFileSync('apps/web/package.json', 'utf8')).nx
+  .targets;
+assert.equal(targets.build.cache, false);
+for (const variant of ['bitcoin', 'lightning'])
+  assert.deepEqual(targets[`build-${variant}`].outputs, [
+    `{projectRoot}/dist${variant === 'lightning' ? '-lightning' : ''}`,
+  ]);

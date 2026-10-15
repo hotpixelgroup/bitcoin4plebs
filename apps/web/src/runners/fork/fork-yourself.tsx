@@ -115,25 +115,19 @@ export function ForkYourself({ finale }: RunnerProps) {
           {ran &&
             (isConsensus ? (
               <Callout>
-                <strong>✓ You're in consensus.</strong> You picked Bitcoin's own
-                parameters, so your node computes the same 20,999,999.9769 BTC
-                as everyone else's, and your blocks validate everywhere. This
-                agreement, recomputed independently by every node on every
-                block, <em>is</em> Bitcoin.
+                <strong>✓ The subsidy schedules match.</strong> These parameters compute Bitcoin’s scheduled subsidy ceiling. Passing this one check does not establish full block validity: inputs, scripts, fees, proof of work and all other consensus conditions still matter.
               </Callout>
             ) : (
               <Callout>
                 <strong>
-                  ⚠ Congratulations: you've forked yourself off the network.
+                  Different permitted subsidy schedule.
                 </strong>{' '}
                 Your schedule permits {satsToBtc(yourTotal, 4)} coins. A block
                 claiming more subsidy plus fees than Bitcoin permits is invalid;
                 changing the schedule need not invalidate the first block.
                 Miners may underclaim, and divergence may happen at a future
                 height, because they check it against <em>their</em> arithmetic,
-                not yours (remember <code>bad-cb-amount</code>). You didn't
-                change Bitcoin. You left it. Changing the code was never the
-                hard part; changing <em>everyone else's</em> code is.
+                not yours (remember <code>bad-cb-amount</code>). A fork occurs at an actual disagreement in accepted blocks, not merely when source parameters change.
               </Callout>
             ))}
         </div>

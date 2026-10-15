@@ -48,6 +48,10 @@ export function RouteFinder({ finale }: RunnerProps) {
   );
   const routes = findRoutes(graph, 'A', 'C', amountSats * 1_000);
   const chosen = routes[0];
+  const tied =
+    !!chosen &&
+    routes.filter((route) => route.totalFeeMsat === chosen.totalFeeMsat)
+      .length > 1;
 
   const runSpecCheck = () => {
     const got = hopFeeMsat(
@@ -128,9 +132,16 @@ export function RouteFinder({ finale }: RunnerProps) {
               {['A', ...chosen.hops.map((h) => h.to)].join(' → ')}, costing{' '}
               {fmt(chosen.totalFeeMsat)}.
             </strong>{' '}
-            {bBase > 3_000 || bPpm > 4_000
-              ? 'B has priced itself out: the payment now prefers D, who charges more per unit but asked for less overall. A node that overcharges does not earn more; it simply stops seeing traffic.'
-              : 'B is the cheaper way through, so that is where the payment goes. Push B’s numbers up and watch the route abandon it.'}
+            {tied
+              ? `Equal-fee tie: ${routes
+                  .filter((route) => route.totalFeeMsat === chosen.totalFeeMsat)
+                  .map((route) =>
+                    ['A', ...route.hops.map((hop) => hop.to)].join(' → '),
+                  )
+                  .join(
+                    ' and ',
+                  )} both cost ${fmt(chosen.totalFeeMsat)}. The displayed first route is not uniquely cheaper; real wallets also weigh reliability, timelock and privacy.`
+              : `Via ${chosen.hops[0].to} is cheaper by computed total fee for this amount. Advertised fee ranking does not guarantee delivery.`}
           </Callout>
         )}
         <label htmlFor="route-fixture">Private scenario (not in gossip)</label>{' '}
