@@ -128,15 +128,15 @@ export const quest09: Quest = {
       id: 'interrogate',
       title: 'Now interrogate it: how many bitcoin exist?',
       takeaway:
-        'A synced node answers questions **from its own disk**. Type `bitcoin-cli gettxoutsetinfo` and your machine counts every unspent coin (Quest #3\'s locked boxes, all of them) and reports `total_amount`: the money supply, *measured*, not quoted.',
+        "A node reports gettxoutsetinfo for its UTXO snapshot: the block height, bestblock and total_amount. That amount sums outputs still in the set, including outputs whose private keys may be lost; it does not measure how much is economically recoverable.",
       prose: [
-        'This is the moment the whole curriculum aimed at. Quest #1 verified the **schedule**: what the supply is allowed to be. Your node measures the **reality**: what the supply is. No explorer website in the middle, no API, no us: the command walks your own copy of the coin database and adds up every box.',
+        "Quest #1 computes the scheduled subsidy ceiling. Your node can report the value in its UTXO set at a matching block. These are different quantities: permanently excluded or unclaimed amounts can reduce the UTXO total, while lost-key outputs remain included.",
         "The optional coinstats-index fields can help reconcile amounts permanently excluded from the UTXO set. A lost private key does not remove its output from that set. Compare matching height/bestblock snapshots, and do not infer complete supply integrity from one scalar below a ceiling.",
       ],
       annotations: [
         { lines: 'L1040', text: 'How many locked boxes exist right now (well over a hundred million).' },
-        { lines: 'L1046', text: 'The answer: every spendable satoshi in existence, summed from your own disk.' },
-        { lines: 'L1047', text: 'The destroyed coins, itemized. Satoshi\'s unspendable 50 BTC from Quest #8 lives in this number.' },
+        { lines: 'L1046', text: "The total value of outputs in this node’s UTXO set at the reported block. Outputs whose keys are lost still count; this is not a measure of coins people can actually spend." },
+        { lines: 'L1047', text: "When coinstatsindex is used, optional accounting covers coins permanently excluded from the UTXO set, including the genesis reward. This is not a list of all lost or inaccessible coins." },
       ],
       excerpt: {
         ref: { file: 'src/rpc/blockchain.cpp', startLine: 1038, endLine: 1047 },
@@ -214,11 +214,11 @@ export const quest09: Quest = {
         cite: 'chainparams.cpp:142',
       },
       {
-        text: '**`gettxoutsetinfo` measures the money supply from your own disk**, and it itemizes every missing satoshi, Satoshi\'s frozen 50 BTC included.',
+        text: "**gettxoutsetinfo reports the UTXO set’s total amount at a particular block.** When coinstatsindex is used, optional fields account for specified permanently excluded amounts, including the genesis reward. They do not identify lost keys or explain every difference from scheduled issuance.",
         cite: 'blockchain.cpp:1046',
       },
       {
-        text: '**Schedule and measurement agree**: Quest #1\'s ten lines, confirmed by your own hardware against the real chain. The audit nobody can fake, run by someone nobody appointed: you.',
+        text: "**Compare matching block snapshots, not unlike totals.** A UTXO amount below scheduled issuance is a consistency check, not proof of complete supply integrity; optional index fields explain specified excluded amounts, not every missing or inaccessible coin.",
       },
     ],
     closing:
