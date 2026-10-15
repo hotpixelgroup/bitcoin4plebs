@@ -33,26 +33,26 @@ export const quest17: Quest = {
   stops: [
     {
       id: 'nothing-is-backed',
-      title: 'Nothing is "backed by" what you think',
+      title: "What does “backed by” mean?",
       takeaway:
-        "The favorite objection, *'Bitcoin isn't backed by anything,'* quietly assumes your dollars are. They aren't, not by gold, not since 1971. Money isn't backed by a *thing*; it's backed by **how well it works and how many people accept it**.",
+        "“Backed by” can mean a redeemable claim on an asset or issuer, or it can refer more loosely to confidence and acceptance. Bitcoin has no issuer promising redemption. Its usefulness and market acceptance are separate questions from such a promise.",
       myth: {
         belief: 'Real money is backed by gold or by the government. Bitcoin is backed by nothing, so it is fake.',
         reality:
-          "No major currency has been redeemable for gold since 1971; a dollar is backed by law, habit, and the expectation others will take it. Gold itself is 'backed' only by its properties and the fact that humans have wanted it for millennia. 'Backed by' is the wrong lens. The right question is: what makes something good at being money?",
+          "Some monetary instruments are redeemable claims; others are not. Bitcoin does not promise redemption for gold or an issuer’s assets. That distinction alone does not settle its usefulness, risks or future purchasing power.",
       },
       prose: [
-        "Ask where a dollar's value comes from and the honest answer surprises people: not a vault of gold (that link was severed in 1971), but a web of law, tax, habit, and the shared expectation that the next person will accept it too. Gold's value is even older and even barer: it is desirable because it is scarce, durable, and universally recognized, full stop. Nobody 'backs' gold.",
-        "So 'backed by nothing' is a category error, not an argument. Money has never needed a thing standing behind it. It needs to be *good at a job*: holding value across time, moving value across space, and splitting cleanly for trade. The next stop is the scorecard humanity has used, implicitly, for five thousand years, and how Bitcoin scores on it.",
+        "A currency’s acceptance depends on institutions, laws, obligations, network effects and expectations. Commodity money also has uses and market demand. These explanations should not be reduced to one universal backing rule.",
+        "Absence of a redemption promise is a feature to understand, not proof of either worthlessness or guaranteed value. Compare what the instrument lets you do, the risks you bear and the conditions under which others accept it.",
       ],
     },
     {
       id: 'the-scorecard',
       title: 'What makes money good, scored honestly',
       takeaway:
-        "For millennia, whatever was best at a short list of properties, **scarcity, durability, portability, divisibility, fungibility, verifiability**, won the job of money. Score gold, cash, and Bitcoin against that list and one row decides everything.",
+        "Scarcity, durability, portability, divisibility, fungibility and verifiability are useful comparison dimensions. Their importance varies with the user and situation; no single score proves what will become money.",
       prose: [
-        "Economists did not invent these properties; they noticed them. Societies drifted toward salt, shells, cattle, silver, and gold not by decree but because those things happened to score well on the same handful of traits. Seashells lost to gold on durability and scarcity. Cattle lost on divisibility (you cannot pay half a cow). The scorecard is the closest thing money has to physics.",
+        "Monetary history includes commodity use, credit, institutions, law and coordination. This scorecard is an explanatory lens, not a law of nature or a complete causal history.",
         "Tap through the figure and be honest with each cell, because the point is not that Bitcoin wins everything. It doesn't: on **fungibility** it scores *worse* than cash, because its ledger is public (that was Quest #15's whole lesson) and coins can carry a visible history. Where Bitcoin is unprecedented is the last row, **verifiability**: for the first time, ordinary people can check the entire supply and every rule themselves, which is the thing you have literally been doing for sixteen quests.",
       ],
       viz: 'money-scorecard',
@@ -132,7 +132,7 @@ export const quest17: Quest = {
       id: 'why-worth-wanting',
       title: 'So: why is it worth anything?',
       takeaway:
-        "Put it together. Bitcoin is worth something for the same reason anything is money, plus one property nothing before it had: it does money's job well **and you never have to trust anyone that it's doing it**. Value follows usefulness, and verifiable soundness is useful.",
+        "Usefulness, acceptance and expectations can support monetary demand. Independent verification is a valuable capability, with software, hardware and network assumptions; it does not establish a price or eliminate every form of trust.",
       contrastLabels: { left: 'Money you trust', right: 'Money you verify' },
       contrast: [
         {
@@ -143,7 +143,7 @@ export const quest17: Quest = {
         {
           aspect: 'Why you believe it is yours',
           bank: 'The institution says so, and can say otherwise',
-          bitcoin: 'Only your key can move it (Quest #3)',
+          bitcoin: "Spending must satisfy the output’s script: signatures, thresholds and other conditions can apply (Quest #3)",
         },
         {
           aspect: 'What holds the value up',
@@ -157,7 +157,7 @@ export const quest17: Quest = {
         },
       ],
       prose: [
-        "A thing becomes money when enough people will accept it, and people accept what does the job well. Bitcoin does the job well, gold's strengths without gold's weaknesses, and adds the property no money ever had: you can verify all of it, alone, for free, forever. That is not a promise of price. It is an explanation of *why the thing can hold value at all*, which is the question the skeptic actually asked.",
+        "Acceptance, usefulness and expectations can support monetary demand, but neither protocol rules nor this scorecard guarantee value. A full node can independently check the chain under chosen rules using software, data, hardware and energy. Verification has costs and assumptions.",
         "Here is the honest boundary this site will not cross. Whether that makes Bitcoin a good thing to *own*, at what price, in what amount, is a question about your life and the future, and anyone who answers it with certainty is selling something. What you can now do, that almost nobody arguing about Bitcoin can, is explain from first principles why it is money in the first place. That was the missing piece, and now you have it.",
       ],
     },
@@ -174,10 +174,10 @@ export const quest17: Quest = {
       "Ask someone why a $20 bill is worth $20. Most people reach for 'the government' or 'gold' and then falter. You can now give the real answer (properties plus acceptance) for both the dollar and Bitcoin, which is a genuinely rare thing to be able to do.",
     items: [
       {
-        text: '**"Backed by nothing" is a category error**: no money is backed by a thing. Money is backed by its properties and by who accepts it.',
+        text: "**Distinguish redemption from acceptance.** Some money represents redeemable claims; Bitcoin has no issuer promising redemption. Neither fact alone determines value.",
       },
       {
-        text: '**Money is judged on a scorecard**: scarcity, durability, portability, divisibility, fungibility, verifiability. Bitcoin trades weaker fungibility for unmatched verifiability.',
+        text: "**Compare monetary tradeoffs.** Scarcity, durability, portability, divisibility, fungibility and verifiability are useful dimensions, not a universal ranking. Public verification and public transaction history create different benefits and risks.",
       },
       {
         text: "**The real invention is stopping double-spends without a bank**: the shared ledger plus refereeless rules, not the price.",
@@ -194,6 +194,6 @@ export const quest17: Quest = {
   feynman: {
     prompt: 'A friend says "Bitcoin is worthless, it\'s not backed by anything." Answer them in three sentences without mentioning price.',
     model:
-      "Nothing is backed by a thing anymore; the dollar dropped its gold link in 1971, and gold itself is valued only for its properties, so 'backed by nothing' is true of all money. What makes something good money is a scorecard: scarcity, durability, portability, divisibility, fungibility, and verifiability, and Bitcoin scores well on most and uniquely well on the last, since you can check its entire supply and rules yourself. On top of that it solved the one problem that made digital cash impossible, spending the same coin twice, without needing a bank to police it, which is the actual invention.",
+      "Bitcoin has no issuer promising redemption, while other monetary instruments may represent claims on assets or institutions. Acceptance, usefulness, institutions and expectations help explain monetary demand; none guarantees future purchasing power. Bitcoin’s distinctive contribution is a system for independently validating spending rules and choosing a valid chain by cumulative work, under explicit software and network assumptions.",
   },
 };

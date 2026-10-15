@@ -3,10 +3,11 @@ import {
   doubleSha256Hex,
   hashMeetsTarget,
   leadingZeroBits,
-  targetForZeroBits,
+  bitsToTarget,
 } from '@bitcoin4plebs/bitcoin-logic';
 import { Callout, RichText } from '@bitcoin4plebs/ui';
 import type { RunnerProps } from '../registry';
+import { headerHash, practiceHeader } from '../labs/serialized';
 
 const DIFFICULTIES = [
   { label: 'Warm-up (8 zero bits)', bits: 8 },
@@ -23,6 +24,7 @@ interface MiningState {
   attempts: number;
   bestZeroBits: number;
   lastHash: string | null;
+  lastHeader: string | null;
   foundHash: string | null;
   startedAt: number | null;
 }
@@ -33,12 +35,13 @@ const INITIAL: MiningState = {
   attempts: 0,
   bestZeroBits: 0,
   lastHash: null,
+  lastHeader: null,
   foundHash: null,
   startedAt: null,
 };
 
 /**
- * The mine-a-block runner: genuine double SHA-256 over a toy header,
+ * The mine-a-block runner: genuine double SHA-256 over a serialized 80-byte practice header,
  * scanning nonces exactly the way block.h's comment describes.
  */
 export function MineABlock({ finale }: RunnerProps) {
@@ -47,7 +50,13 @@ export function MineABlock({ finale }: RunnerProps) {
   const [state, setState] = useState<MiningState>(INITIAL);
   const miningRef = useRef(false);
 
-  const target = targetForZeroBits(zeroBits);
+  const compact = (
+    { 8: 0x2000ffff, 12: 0x1f0fffff, 16: 0x1f00ffff, 20: 0x1e0fffff } as Record<
+      number,
+      number
+    >
+  )[zeroBits];
+  const target = bitsToTarget(compact);
 
   useEffect(() => {
     miningRef.current = state.status === 'mining';
@@ -56,12 +65,15 @@ export function MineABlock({ finale }: RunnerProps) {
 
     (async function mine() {
       let { nonce, attempts, bestZeroBits } = state;
+      const merkle = await doubleSha256Hex(payload);
       while (!cancelled && miningRef.current) {
         let lastHash = '';
+        let lastHeader = '';
         let found: { nonce: number; hash: string } | null = null;
         for (let i = 0; i < BATCH; i++) {
-          const header = `prev:000000…dead9 | merkle(${payload}) | time:now | nonce:${nonce}`;
-          lastHash = await doubleSha256Hex(header);
+          const header = practiceHeader(merkle, nonce, compact);
+          lastHeader = header;
+          lastHash = await headerHash(header);
           attempts++;
           const zeros = leadingZeroBits(lastHash);
           if (zeros > bestZeroBits) bestZeroBits = zeros;
@@ -72,7 +84,13 @@ export function MineABlock({ finale }: RunnerProps) {
           nonce++;
         }
         if (cancelled) return;
-        const snapshot = { nonce, attempts, bestZeroBits, lastHash };
+        const snapshot = {
+          nonce,
+          attempts,
+          bestZeroBits,
+          lastHash,
+          lastHeader,
+        };
         if (found) {
           const win = found;
           miningRef.current = false;
@@ -83,6 +101,7 @@ export function MineABlock({ finale }: RunnerProps) {
             attempts: snapshot.attempts,
             bestZeroBits: snapshot.bestZeroBits,
             lastHash: win.hash,
+            lastHeader: snapshot.lastHeader,
             foundHash: win.hash,
           }));
           return;
@@ -117,7 +136,7 @@ export function MineABlock({ finale }: RunnerProps) {
     <div className="cols">
       <div className="prose">
         <label className="height-input-label">
-          Your block's contents (changing one letter changes every hash):
+          Practice leaf text (not a serialized transaction):
           <input
             className="height-input mine-payload"
             type="text"
@@ -179,9 +198,17 @@ export function MineABlock({ finale }: RunnerProps) {
         <div className="viz-root">
           <div className="viz-title">Your mining rig (this browser tab)</div>
           <div className="viz-sub">
-            toy UTF-8 header · real double SHA-256 · comparison: hash ≤ target
-            (pow.cpp:167)
+            80-byte header · real double SHA-256 · display-order hash ≤ compact
+            target (pow.cpp:167)
           </div>
+          <p className="finale-note">
+            Version / previous hash / Merkle root / time / nBits / nonce = 4 +
+            32 + 32 + 4 + 4 + 4 bytes. Genesis layout is reused with zero
+            previous hash and a fixed timestamp; practice nBits 0x
+            {compact.toString(16)} is deliberately invalid for mainnet. Hash
+            bytes are reversed for numeric comparison. Stop is available between
+            bounded batches.
+          </p>
           <div className="stat-grid">
             <div className="stat">
               <div className="stat-label">nonces scanned</div>
@@ -207,6 +234,12 @@ export function MineABlock({ finale }: RunnerProps) {
               target (hash must be ≤ this number)
             </div>
             <code className="guess-hex mine-target">{targetHex}</code>
+            <div className="stat-label">
+              latest serialized header (80 bytes / 160 hex digits)
+            </div>
+            <code className="guess-hex">
+              {state.lastHeader ?? 'Start scanning to inspect the exact bytes'}
+            </code>
             <div className="stat-label">latest hash</div>
             <code
               className={`guess-hex ${state.status === 'found' ? 'mine-winner' : ''}`}
@@ -215,9 +248,11 @@ export function MineABlock({ finale }: RunnerProps) {
             </code>
             {state.status === 'found' && (
               <div className="guess-verdict mine-won">
-                ✓ This toy hash meets the chosen target. Bitcoin also validates
-                an 80-byte serialized header, expected difficulty, transactions
-                and consensus rules. PoW alone does not make a block valid.
+                ✓ This serialized header meets the practice nBits target. The
+                leaf is a text digest, not a valid transaction; these fields do
+                not form a valid mainnet block. Bitcoin also validates expected
+                difficulty, previous block, transactions and consensus rules.
+                PoW alone does not make a block valid.
               </div>
             )}
             {state.status === 'mining' && state.lastHash && (

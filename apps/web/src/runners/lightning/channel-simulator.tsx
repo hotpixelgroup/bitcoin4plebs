@@ -1,3 +1,4 @@
+import { FundingLab } from '../labs/extended-labs';
 import { useState } from 'react';
 import { Callout, RichText } from '@bitcoin4plebs/ui';
 import type { RunnerProps } from '../registry';
@@ -373,6 +374,7 @@ export function ChannelSimulator({ finale }: RunnerProps) {
         </>
       )}
 
+      {phase === 'closed' && <FundingLab />}
       {finale.note && (
         <p className="finale-note">
           <RichText text={finale.note} />

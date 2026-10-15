@@ -104,7 +104,7 @@ export const questLn06: Quest = {
       id: 'assessing-fees',
       title: 'How a fee is assessed: one line of arithmetic, and who pays it',
       takeaway:
-        "One formula, fixed by the specification, applied to each hop's own advertised numbers. The **sender pays every fee on the route**, up front, and each node charges using the channel it forwards *out of*, not the one the payment arrived on.",
+        "The sender computes outgoing amounts backwards from the destination and offers enough to cover each forwarding node’s required fee. Settlement earns those fees; a failed attempt does not automatically pay them. Nodes assess policy on the channel they forward out of.",
       annotationsOpen: true,
       quiz: [
         {
@@ -122,7 +122,7 @@ export const questLn06: Quest = {
       prose: [
         "There is exactly one fee formula in Lightning and this is it. Base, plus the amount times the proportional rate divided by a million. Everything else is which numbers go in.",
         'The proportional fee uses integer division, truncating any remainder, and is computed on the forwarded amount. BOLT #4 requires the incoming amount to cover at least the forwarding amount plus the required fee. Paying extra is not automatically refused; it can overpay. Route amounts are therefore computed from the destination backwards.',
-        "Who pays? The sender, entirely and in advance. A payment of 4,999,999 msat through one intermediate becomes 5,010,198 msat leaving the sender, of which 10,199 is B's. The payee receives exactly what they asked for; fees never come out of the invoice amount. This is the opposite of a card network, where the merchant absorbs the cost, and it is why Lightning fees feel invisible to whoever is being paid.",
+        "In this exact-amount example the sender offers 5,010,198 msat, the intermediate retains 10,199 msat on fulfillment and the recipient gets 4,999,999 msat. Amounts above required minima can overpay; an invoice and forwarding policy do not make every received payment exactly equal to the requested amount. Pending HTLCs reserve value before settlement.",
         "The last line is the specification doing our homework for us: `200 + ( 4999999 * 2000 / 1000000 ) = 10199`. The finale runs that exact sum in your browser and refuses to claim anything unless it matches.",
       ],
       annotations: [
@@ -275,7 +275,7 @@ export const questLn06: Quest = {
   },
   recap: {
     tryIt:
-      "Next Lightning payment you make, look at the fee your wallet reports and divide it by the amount. It will usually be a few thousandths of a percent, and now you know it is not a rate anyone published, but the sum of two numbers chosen independently by each node you happened to route through, added up by your own wallet before it asked you to confirm.",
+      "Inspect a wallet’s reported fee, amount and outcome. Compare the intended maximum with the fee actually charged on fulfillment. Fees vary with amount, route and local policies; this lesson supplies no empirical typical-rate estimate.",
     items: [
       {
         text: '**Nobody publishes a map.** Nodes gossip their own channels, and a channel announcement names the on-chain output backing it, so invented capacity cannot spread.',
@@ -289,7 +289,7 @@ export const questLn06: Quest = {
         cite: '07-routing-gossip.md:981',
       },
       {
-        text: '**The sender pays every fee, in advance**, so the payee always receives exactly the invoice amount.',
+        text: "**The sender funds forwarding fees on top of the intended recipient amount.** Successful settlement earns fees; failure releases the modeled reservations. Actual accepted amounts can exceed invoice minima.",
       },
       {
         text: '**Liquidity is never gossiped**, so a wallet routes on price and discovers capacity by trying. That is why payments fail and retry rather than being quoted.',

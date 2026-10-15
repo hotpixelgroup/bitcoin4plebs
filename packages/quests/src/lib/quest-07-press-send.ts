@@ -111,13 +111,13 @@ export const quest07: Quest = {
     {
       id: 'the-auction',
       contrast: [
-        { aspect: "Who processes payments", bank: "The bank, business hours apply", bitcoin: "An open auction among miners, every ~10 minutes, forever" },
+        { aspect: "Who processes payments", bank: "The bank, business hours apply", bitcoin: "An open auction among miners; blocks average about ten minutes under difficulty assumptions" },
         { aspect: "Fees", bank: "Set by the institution", bitcoin: "Your own bid against the crowd" },
         { aspect: "Settlement", bank: "Days, reversible", bitcoin: 'More confirmations usually increase confidence; settlement remains probabilistic' },
       ],
       myth: {
         belief: "Miners charge a processing fee for each transaction, like a payment company.",
-        reality: "Nobody sets or charges fees. You *bid* whatever you like, and miners simply take the best-paying megabyte of waiting transactions first. A quiet mempool confirms tiny bids next block; a busy one prices you out until you raise yours.",
+        reality: "You choose a fee offer. Miners set local selection policies and usually prioritize profitable packages subject to resource constraints. A quiet mempool can improve a low bid’s prospects, but relay, inclusion and timing are never guaranteed.",
       },
       title: 'The waiting room is an auction, and your fee is your bid',
       takeaway:
@@ -168,7 +168,7 @@ export const quest07: Quest = {
       prose: [
         'The sender can try replace-by-fee under its peers’ local mempool policy. [Bitcoin Core 28.0](https://bitcoincore.org/en/releases/28.0/) enabled full-RBF by default, so opt-in signalling is not required by that default. Replacement must satisfy fee and conflict constraints, not just offer any higher fee. Neither relay nor confirmation is guaranteed. Unconfirmed payments can be replaced or conflict regardless of a wallet label.',
         'Second hatch, and the one most people never hear about: **child-pays-for-parent (CPFP)**. Even the *recipient* of a stuck payment can rescue it. Remember from Quest #3 that coins are boxes: the unconfirmed payment\'s output is already yours to spend. Spend it immediately in a "child" transaction with a generous fee, and miners, who price bundles of transactions together (the chunks you read at the last stop), will take parent and child as a package. The child\'s fee effectively covers both, and it works even when the sender never enabled RBF.',
-        'Neither trick touches a rule you\'ve verified; they are bids in the same auction, placed with better information. And that is the deeper lesson of this quest: on Bitcoin a stuck transaction is a *pricing* problem, and pricing problems have owner-operated solutions. Nobody to call, nothing to file. Just a better bid.',
+        "RBF and CPFP change fee incentives without changing consensus rules. They require spendable inputs, suitable wallet support and acceptance under peers’ policies. A stuck transaction may also face policy, validity, connectivity or conflicting-spend problems; a higher fee cannot repair every failure.",
       ],
     },
     {
@@ -204,9 +204,9 @@ export const quest07: Quest = {
   finale: {
     title: 'Bid in the fee auction yourself',
     takeaway:
-      'Here\'s a busy waiting room and one payment: yours. Slide your fee bid and watch the auction from miner.cpp decide when you confirm. The mechanism is the real one: highest feerate first, one block every ten minutes.',
+      'Compare a replacement and a child-pays-for-parent strategy in one deterministic transaction trace. Predict which ancestor package wins space, step through blocks and inspect the queue. Real miners use additional constraints and block arrival is probabilistic.',
     runnerId: 'fee-auction',
-    note: 'A deterministic model mempool (the real one changes second to second), but the auction mechanism is exactly the one you just read: sort by fee-per-vbyte, fill ~1,000,000 vbytes, repeat.',
+    note: 'A deliberately tiny 500-vB block budget makes the package tradeoffs visible. The same arrivals drive selection, queue and forecast. Historical replacement-policy examples are explicitly dated; this is not a complete Core mempool or a live confirmation estimate.',
   },
   recap: {
     tryIt:

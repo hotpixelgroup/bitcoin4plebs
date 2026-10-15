@@ -1,4 +1,8 @@
-import { attemptRoute, type RouteFixture } from './payment-attempt';
+import {
+  attemptRoute,
+  routeBalanceTrace,
+  type RouteFixture,
+} from './payment-attempt';
 import { useState } from 'react';
 import {
   BOLT7_EXAMPLE_GRAPH,
@@ -198,6 +202,35 @@ export function RouteFinder({ finale }: RunnerProps) {
             {fmt(attempt.result.chargedMsat)}. Route:{' '}
             {['A', ...routes[attempt.index].hops.map((h) => h.to)].join(' → ')}.
           </p>
+        )}
+        {attempt && (
+          <div aria-label="Route balances">
+            <h4>Directional channel balances before / after</h4>
+            <p>
+              Private 200,000-sat capacity fixtures, shown in msat. Successful
+              fulfillment moves each hop’s carried amount; failed attempts
+              release illustrative reservations. These are replayed from a fresh
+              fixture per attempt, not repeated payments on a persistent
+              network.
+            </p>
+            <ul>
+              {routeBalanceTrace(routes[attempt.index], fixture).map((h) => (
+                <li key={h.from + h.to}>
+                  {h.from}→{h.to}: {h.before} → {h.after}; reverse{' '}
+                  {h.reverseBefore} → {h.reverseAfter}; {h.reserved} msat{' '}
+                  {h.released
+                    ? 'reservation released, no settlement'
+                    : 'reserved then settled'}
+                  . Channel total {h.after + h.reverseAfter} msat.
+                </li>
+              ))}
+            </ul>
+            <p>
+              {prediction === 'no'
+                ? 'Prediction matched the limitation: advertised policy does not guarantee delivery.'
+                : 'Prediction corrected: lowest advertised fees cannot guarantee delivery.'}
+            </p>
+          </div>
         )}
         <button
           className="preset"

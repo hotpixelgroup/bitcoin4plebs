@@ -137,8 +137,7 @@ export function FeeCalculator() {
             fee is <strong>{fee.toLocaleString('en-US')}</strong>, the division{' '}
             <strong>truncates</strong>. This is not pedantry: it is why the
             specification's own worked example comes to 10,199 and not 10,200,
-            and an implementation that rounded up would offer a fee the next hop
-            rejects.
+            while rounding up can overpay the required minimum; the next hop does not automatically reject an extra millisatoshi.
           </>
         ) : (
           <>

@@ -1,3 +1,4 @@
+import { RecoveryLab } from '../labs/extended-labs';
 import { useState } from 'react';
 import { Callout, RichText } from '@bitcoin4plebs/ui';
 import type { RunnerProps } from '../registry';
@@ -127,6 +128,7 @@ export function CustodyCheck({ finale }: RunnerProps) {
             without controlling keys. Never submit real keys or phrases here.
           </Callout>
         )}
+        <RecoveryLab lightning />
         {finale.note && (
           <p className="finale-note">
             <RichText text={finale.note} />

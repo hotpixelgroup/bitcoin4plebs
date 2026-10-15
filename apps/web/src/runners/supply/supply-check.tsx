@@ -1,3 +1,4 @@
+import { SnapshotLab } from '../labs/extended-labs';
 import { useState } from 'react';
 import {
   btcToSats,
@@ -89,6 +90,7 @@ export function SupplyCheck({ finale }: RunnerProps) {
             onChange={(e) => setReportedText(e.target.value)}
           />
         </label>
+        <SnapshotLab />
         {finale.note && (
           <p className="finale-note">
             <RichText text={finale.note} />

@@ -1,3 +1,4 @@
+import { HistoricOverflow } from '../labs/historic-overflow';
 import { useState } from 'react';
 import {
   checkTransaction,
@@ -77,6 +78,7 @@ export function RunTheCheck({ finale }: RunnerProps) {
         >
           ▶ Run CheckTransaction on all three
         </button>
+        <HistoricOverflow />
         {finale.note && (
           <p className="finale-note">
             <RichText text={finale.note} />

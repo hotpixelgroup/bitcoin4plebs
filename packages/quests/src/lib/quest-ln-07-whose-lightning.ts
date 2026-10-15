@@ -158,8 +158,8 @@ export const questLn07: Quest = {
         'Lightning can settle payments off-chain without a custodial intermediary. Cost, latency, availability and safe recovery depend on routing, liquidity, channel state, monitoring and on-chain conditions.',
       prose: [
         'Successful off-chain fulfillment can be fast and avoids recording each payment separately on-chain. Routing fees, failed attempts and recovery costs vary. The scripts enforce spending conditions, but do not guarantee instantaneous delivery, privacy or lossless recovery for an offline participant.',
-        "**What it costs.** Channels need on-chain transactions to open and close, so entering and leaving costs real fees at whatever the auction is charging that day. Receiving needs [[Inbound liquidity]] that has to come from somewhere. Failed payments are routine and their causes are often invisible. Your funds are committed while a channel is open, and a force close locks your own side behind a delay measured in days.",
-        "**Where it is genuinely weak.** Privacy is strong against the middle of a route and weak at its ends: your first hop knows you, and a custodial provider knows everything. The shared payment hash lets two nodes on the same route confirm they saw the same payment, which point-based payments (PTLCs) are designed to fix but which is not widely deployed. And the pressure toward custodial convenience is real, because self-custody asks for attention that most people do not want to give.",
+        "**What it costs.** Funding, closing and recovery require on-chain fees. Receiving needs inbound liquidity; failed payments can reserve funds temporarily. Unilateral-close output delays depend on the output and negotiated parameters, and maturity does not itself broadcast or confirm a sweep.",
+        "**Privacy boundaries.** A forwarding node sees adjacent peers, local amounts and timing; the first hop sees its direct peer, not necessarily the ultimate payer’s real-world identity. Colluding nodes can correlate shared payment hashes and metadata. A custodian’s visibility depends on architecture. Onion routing alone does not provide anonymity or hide every payment relationship.",
         "**What to actually do about it**, if you want the guarantees rather than the branding: keep small amounts in a convenient wallet and don't pretend it is self-custody; hold larger amounts on the base layer where the security model is simpler; and if you run channels, run more than one, to more than one peer, and let something watch the chain while you sleep.",
         "That is the whole honest picture. It is a good technology with real trade-offs, which is the most any technology can be.",
       ],
@@ -184,7 +184,7 @@ export const questLn07: Quest = {
         cite: '05-onchain.md:24',
       },
       {
-        text: '**Liquidity is directional and reserved**: a channel you funded can send but not receive, and `channel_reserve_satoshis` means neither side can ever run its balance to zero.',
+        text: "**Liquidity is directional and reserved.** Funding allocation, previous payments, pending HTLCs, fees and reserves constrain sending and receiving. A side may initially be below its reserve; payment updates must respect the applicable BOLT constraints.",
         cite: '02-peer-protocol.md:734',
       },
       {
@@ -192,7 +192,7 @@ export const questLn07: Quest = {
       },
     ],
     closing:
-      "**Keep verifying.** That is the curriculum: a channel, a penalty that makes cheating pointless, an invoice, a payment across strangers, an onion that hides it, and now an honest account of what it costs and who is really holding your money. You have read four specification documents and a node's source, reproduced the specification's own test vectors in your own browser, and been given the arguments against as carefully as the arguments for. Nobody in this story needs to be believed, which was the entire point.",
+      "**Keep verifying.** You have explored channels, breach remedies, invoices, HTLCs, routing and onion privacy with source excerpts and selected vectors. These exercises explain mechanisms and limits; they do not certify a wallet, guarantee anonymity or make cheating impossible. Recovery and monitoring remain essential.",
   },
   feynman: {
     prompt: "Explain to a friend how to tell whether their Lightning wallet is actually protecting them, and what it costs to do it properly.",

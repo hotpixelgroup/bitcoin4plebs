@@ -188,7 +188,7 @@ describe('learning lab transitions', () => {
     fireEvent.click(
       screen.getByRole('button', { name: /adopt a valid competing branch/ }),
     );
-    expect(screen.getByRole('status')).toHaveTextContent(
+    expect(screen.getByText(/Reorg: the old confirmation/)).toHaveTextContent(
       'old confirmation was disconnected',
     );
     expect(

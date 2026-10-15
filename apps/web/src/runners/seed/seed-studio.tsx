@@ -1,3 +1,4 @@
+import { RecoveryLab } from '../labs/extended-labs';
 import { useCallback, useState } from 'react';
 import {
   bytesToHex,
@@ -182,6 +183,7 @@ export function SeedStudio({ finale }: RunnerProps) {
         </>
       )}
 
+      <RecoveryLab />
       {finale.note && (
         <p className="finale-note">
           <RichText text={finale.note} />
