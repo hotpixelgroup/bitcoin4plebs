@@ -32,7 +32,9 @@ export function FeeAuction({ finale }: RunnerProps) {
         Deterministic 500-vB teaching blocks, not Bitcoin block capacity. Before
         each block, fixed arrivals enter; ancestor packages compete by combined
         fee / combined vsize. This greedy subset omits sigops, weight details,
-        miner discretion and other policy. Neither a fee quote nor a guarantee.
+        miner discretion and other policy. The starting queue is assumed
+        available; relay fee floors are omitted. Neither a fee quote nor a
+        guarantee.
       </p>
       <label>
         Replacement / child fee (sats){' '}
@@ -140,7 +142,10 @@ export function FeeAuction({ finale }: RunnerProps) {
         {view.map((t) => (
           <li key={t.id}>
             {t.id}: {t.fee} sats / {t.size} vB = {(t.fee / t.size).toFixed(2)}{' '}
-            sat/vB{t.parent ? ` · depends on ${t.parent}` : ''}
+            sat/vB
+            {t.parent
+              ? ` · parent ${t.parent}: ${step > 0 && trace[step - 1].confirmed.includes(t.parent) ? 'already confirmed' : 'unconfirmed dependency'}`
+              : ''}
           </li>
         ))}
       </ul>

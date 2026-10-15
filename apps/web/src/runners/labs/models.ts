@@ -18,14 +18,18 @@ export const arrivals: FeeTx[][] = [
   [],
 ];
 /** Ancestors before children; maximize ancestor-package feerate greedily, tiny 500-vB blocks. */
-export function selectBlock(pool: FeeTx[], capacity = 500): FeeTx[] {
+export function selectBlock(
+  pool: FeeTx[],
+  capacity = 500,
+  confirmed: ReadonlySet<string> = new Set(),
+): FeeTx[] {
   const selected: FeeTx[] = [];
   const available = new Map(pool.map((tx) => [tx.id, tx]));
   const packageFor = (tx: FeeTx, seen = new Set<string>()): FeeTx[] | null => {
     if (selected.some((t) => t.id === tx.id)) return [];
     if (seen.has(tx.id)) return null;
     seen.add(tx.id);
-    if (!tx.parent) return [tx];
+    if (!tx.parent || confirmed.has(tx.parent)) return [tx];
     if (selected.some((t) => t.id === tx.parent)) return [tx];
     const parent = available.get(tx.parent);
     if (!parent) return null;
@@ -57,12 +61,14 @@ export function selectBlock(pool: FeeTx[], capacity = 500): FeeTx[] {
 }
 export function feeTrace(pool: FeeTx[], blocks = 4) {
   let waiting = [...pool];
+  const confirmed = new Set<string>();
   return Array.from({ length: blocks }, (_, i) => {
     waiting = [...waiting, ...(arrivals[i] ?? [])];
     const before = [...waiting];
-    const mined = selectBlock(before);
+    const mined = selectBlock(before, 500, confirmed);
+    mined.forEach((tx) => confirmed.add(tx.id));
     waiting = waiting.filter((tx) => !mined.some((t) => t.id === tx.id));
-    return { before, mined, after: [...waiting] };
+    return { before, mined, after: [...waiting], confirmed: [...confirmed] };
   });
 }
 /** Historical Core 28-era policy fixture, not the newer pinned cluster-mempool rules: no new unconfirmed inputs, <=100 evictions,

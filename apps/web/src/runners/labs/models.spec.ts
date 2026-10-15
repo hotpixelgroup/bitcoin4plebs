@@ -281,3 +281,11 @@ it('requires optional coinstats excluded-amount accounting to reconcile rather t
     ).ok,
   ).toBe(false);
 });
+it('mines a child in a later block after its parent has already confirmed', () => {
+  const child = { id: 'child', parent: 'parent', fee: 0, size: 100 };
+  const trace = feeTrace([...initialPool, child]);
+  expect(trace[1].mined.map((t) => t.id)).toContain('parent');
+  expect(trace[1].after.map((t) => t.id)).toEqual(['child']);
+  expect(trace[2].mined.map((t) => t.id)).toEqual(['child']);
+  expect(trace[2].after).toEqual([]);
+});
