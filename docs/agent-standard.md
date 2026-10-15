@@ -17,6 +17,9 @@ Keep this proportional to the task. A small bug fix needs a short plan, not a la
 
 Do not declare completion until the acceptance criteria are satisfied. If something remains blocked or unverified, identify it explicitly.
 
+- Verify by running the real thing (the app, CLI, browser via DevTools, simulator, traces and profiles), not just reading code or passing type checks. If agents can't run it, build that ability first; otherwise the human becomes the bottleneck.
+- When delegating an outcome ("keep X crash-free") rather than a task, first give agents what they need to own it: data access (crash or error reports), version-to-commit mapping, and environments to reproduce and verify. Outcome goals still get a rubric, an attempt or budget limit, and PR review; ambitious targets never override attempt limits.
+
 2. SEPARATE DURABLE STATE FROM REPLACEABLE EXECUTION
 
 Treat processes, containers, sandboxes and worker environments as replaceable. A fresh worker should be able to resume safely without relying on one long-lived environment or the previous agent’s memory.
@@ -93,6 +96,10 @@ Version agent definitions, prompts, skills and configuration alongside the code 
 - Exact work (arithmetic, date math, schema or format validation) goes through tools or code, never mental math.
 - Record why each defensive instruction exists (inline note or commit message), and remove it only after evals show it is no longer needed. Prefer naming the source of truth over "never say X" rules, which can make a model withhold correct information.
 - Keep role, policy, guidelines, and data visibly separate in prompts and agent files (headings or XML tags). State the reasons and both sides of every trade-off: the cost of acting and the cost of not acting.
+- Rules files and skills are soft, and agents forget them. Anything that must always hold becomes a lint rule, type check, import-boundary check, or CI failure, and any review comment made twice becomes an automated check.
+- Make the shortest path the correct one: one folder per feature, consistent patterns to copy, and small atomic PRs.
+- For UI apps, keep docs/feature-map.md listing each user-facing feature, how to reach it, its shortcuts, its stable selectors or test IDs, and its code location. Update it when features change.
+- Give reviewer or red-team helper agents the concrete methods of a field (a security reviewer runs an attack-surface checklist), not a persona to play.
 
 7. TEST AGAINST REAL FAILURE MODES
 
@@ -110,6 +117,8 @@ Distinguish unit tests, mocks, synthetic integration tests, browser tests, stagi
 
 - Every eval set includes control cases (must always pass), regression cases from past failures, and boundary cases (when to hand off, ask, or refuse). Run several trials per case and compare results across runs, not one pass. Use deterministic graders for hard rules and an LLM judge only for subjective qualities.
 - When a change regresses, decide whether it is a behavior gap (fix with instructions) or a capability gap (fix with tools, a stronger model, more reasoning, or smaller steps). Emphasis like "CRITICAL" adds no capability.
+- Run evals in neutrally named workspaces so the agent can't tell it is being tested, and use a judge from a different model than the one under test. Test skills on every model that will run them.
+- Judge expert work by the methods and tools used (database queries, statistical tests, profilers), not its vocabulary. Test stated assumptions against raw data, and show that any claimed finding predicts on held-out data it wasn't built from.
 
 8. VERIFY THE EXACT ARTIFACT
 
@@ -196,6 +205,8 @@ Ask before destructive, irreversible or externally visible actions, including de
 A clear, specific instruction approving an action and its scope counts as approval where the applicable platform permits it. Do not repeatedly ask for unchanged approval. Reconfirm when scope, destination, data, cost, permissions or risk materially changes, or when a stricter rule requires confirmation at action time.
 
 Repository access, urgency and broad goals are not blanket authorization. Preserve unrelated changes and explicitly held work. Never bypass platform safeguards or required confirmation mechanisms.
+
+- Earn trust before scaling: watch one agent locally before adding parallel or cloud agents. Agents never auto-merge; protected branches go through Harry's review.
 
 16. KEEP THE STANDARD MAINTAINABLE
 
