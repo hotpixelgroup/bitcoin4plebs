@@ -1,11 +1,12 @@
 import type { ReactNode } from 'react';
-import type { SourcePin, Stop } from '@bitcoin4plebs/quests/content';
+import type { QuizItem, SourcePin, Stop } from '@bitcoin4plebs/quests/content';
 import { CodeCard } from './code-card.js';
 import { RichText } from './rich-text.js';
 import { SelfCheck } from './self-check.js';
 
 export interface StopSectionProps {
   stop: Stop;
+  onQuizMiss?: (item: QuizItem) => void;
   /** 1-based position of this stop. */
   index: number;
   /** Total number of stops in the quest. */
@@ -19,7 +20,7 @@ export interface StopSectionProps {
  * One quest stop: split-screen with three depths of explanation on the
  * left (takeaway → prose → line-by-line) and the real code on the right.
  */
-export function StopSection({ stop, index, total, pin, viz }: StopSectionProps) {
+export function StopSection({ stop, index, total, pin, viz, onQuizMiss }: StopSectionProps) {
   return (
     <section className="stop" id={stop.id}>
       <div className="stop-head">
@@ -94,7 +95,7 @@ export function StopSection({ stop, index, total, pin, viz }: StopSectionProps) 
       {viz && <div className="stop-viz">{viz}</div>}
       {stop.quiz && stop.quiz.length > 0 && (
         <div className="stop-quiz">
-          <SelfCheck items={stop.quiz} />
+          <SelfCheck items={stop.quiz} onMiss={onQuizMiss} />
         </div>
       )}
     </section>

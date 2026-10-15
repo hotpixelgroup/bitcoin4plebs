@@ -25,7 +25,8 @@ export function LiquiditySeesaw() {
       caption="Drag the balance. What you can send and what you can receive always move in opposite directions."
     >
       <label className="height-input-label" htmlFor="seesaw">
-        your side of a {fmt(CAPACITY)}-sat channel: <strong>{fmt(mine)} sats</strong>
+        your side of a {fmt(CAPACITY)}-sat channel:{' '}
+        <strong>{fmt(mine)} sats</strong>
       </label>
       <input
         id="seesaw"
@@ -38,11 +39,36 @@ export function LiquiditySeesaw() {
         onChange={(e) => setMine(Number(e.target.value))}
       />
 
-      <svg viewBox="0 0 100 10" preserveAspectRatio="none" style={{ width: '100%', height: 30 }} role="img" aria-label="Channel balance split between the two sides">
-        <rect x="0" y="1" width="100" height="8" rx="1" fill="var(--surface-2)" />
+      <svg
+        viewBox="0 0 100 10"
+        preserveAspectRatio="none"
+        style={{ width: '100%', height: 30 }}
+        role="img"
+        aria-label="Channel balance split between the two sides"
+      >
+        <rect
+          x="0"
+          y="1"
+          width="100"
+          height="8"
+          rx="1"
+          fill="var(--surface-2)"
+        />
         <rect x="0" y="1" width={pct} height="8" rx="1" fill="var(--brand)" />
-        <rect x={(RESERVE / CAPACITY) * 100} y="1" width="0.6" height="8" fill="var(--bad)" />
-        <rect x={100 - (RESERVE / CAPACITY) * 100} y="1" width="0.6" height="8" fill="var(--bad)" />
+        <rect
+          x={(RESERVE / CAPACITY) * 100}
+          y="1"
+          width="0.6"
+          height="8"
+          fill="var(--bad)"
+        />
+        <rect
+          x={100 - (RESERVE / CAPACITY) * 100}
+          y="1"
+          width="0.6"
+          height="8"
+          fill="var(--bad)"
+        />
       </svg>
 
       <div className="viz-readout">
@@ -53,31 +79,40 @@ export function LiquiditySeesaw() {
         </div>
         <div className="stat">
           <div className="stat-value">
-            {fmt(canReceive)} <span className="stat-unit">sats anyone can send you</span>
+            {fmt(canReceive)}{' '}
+            <span className="stat-unit">
+              sats the peer can send in this model
+            </span>
           </div>
         </div>
         <div className="stat-label">
-          the two red marks are the reserve, {fmt(RESERVE)} sats each side must always leave the
-          other, so nobody ever has nothing left to lose
+          the red marks illustrate a {fmt(RESERVE)}-sat reserve required of each
+          holder by the peer. Reserves are negotiated and need not be equal.
+          Commitment fees and pending HTLCs can further reduce spendable
+          liquidity.
         </div>
       </div>
 
       <p className="utxo-box-note">
         {mine === CAPACITY ? (
           <>
-            <strong>This is a channel you just funded yourself.</strong> Every satoshi is on your
-            side, so you can send freely and receive <strong>nothing</strong>, the most common
-            surprise in Lightning, and it is not a bug. There is simply no room on their end yet.
+            <strong>This is a channel you just funded yourself.</strong> Every
+            satoshi is on your side, so this simplified channel has outbound
+            liquidity and can receive <strong>nothing</strong>, the most common
+            surprise in Lightning, and it is not a bug. There is simply no room
+            on their end yet.
           </>
         ) : mine === 0 ? (
           <>
-            <strong>Fully spent.</strong> You can now receive the whole channel and send nothing.
-            Notice the reserve still holds a little back on each side.
+            <strong>Fully spent.</strong> You can receive up to the peer’s
+            spendable balance and send nothing. Notice the reserve still holds a
+            little back on each side.
           </>
         ) : (
           <>
-            A balanced channel is the useful one: {fmt(canSend)} out, {fmt(canReceive)} in. Nothing
-            was created or destroyed, the coins simply moved along the seesaw.
+            A balanced channel is the useful one: {fmt(canSend)} out,{' '}
+            {fmt(canReceive)} in. Nothing was created or destroyed, the coins
+            simply moved along the seesaw.
           </>
         )}
       </p>

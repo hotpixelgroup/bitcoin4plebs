@@ -18,22 +18,126 @@ interface ToyTx {
 }
 
 const CARELESS: ToyTx[] = [
-  { id: 't1', label: 'a customer pays the shop', inputs: ['N1'], outputs: [{ addr: 'S1', sats: 20_000 }, { addr: 'N1c', sats: 7_350, change: true }] },
-  { id: 't2', label: 'another customer pays', inputs: ['N2'], outputs: [{ addr: 'S2', sats: 35_000 }, { addr: 'N2c', sats: 2_180, change: true }] },
-  { id: 't3', label: 'a third customer pays', inputs: ['N3'], outputs: [{ addr: 'S3', sats: 15_000 }, { addr: 'N3c', sats: 940, change: true }] },
-  { id: 't4', label: 'the shop pays its supplier', inputs: ['S1', 'S2'], outputs: [{ addr: 'X1', sats: 50_000 }, { addr: 'C1', sats: 4_600, change: true }] },
-  { id: 't5', label: 'a fourth customer pays', inputs: ['N4'], outputs: [{ addr: 'S4', sats: 25_000 }, { addr: 'N4c', sats: 11_020, change: true }] },
-  { id: 't6', label: 'the shop pays rent', inputs: ['S3', 'C1'], outputs: [{ addr: 'X2', sats: 18_000 }, { addr: 'C2', sats: 1_450, change: true }] },
-  { id: 't7', label: 'the shop pays the supplier again', inputs: ['S4', 'C2'], outputs: [{ addr: 'X1b', sats: 26_000 }, { addr: 'C3', sats: 320, change: true }] },
+  {
+    id: 't1',
+    label: 'a customer pays the shop',
+    inputs: ['N1'],
+    outputs: [
+      { addr: 'S1', sats: 20_000 },
+      { addr: 'N1c', sats: 7_350, change: true },
+    ],
+  },
+  {
+    id: 't2',
+    label: 'another customer pays',
+    inputs: ['N2'],
+    outputs: [
+      { addr: 'S2', sats: 35_000 },
+      { addr: 'N2c', sats: 2_180, change: true },
+    ],
+  },
+  {
+    id: 't3',
+    label: 'a third customer pays',
+    inputs: ['N3'],
+    outputs: [
+      { addr: 'S3', sats: 15_000 },
+      { addr: 'N3c', sats: 940, change: true },
+    ],
+  },
+  {
+    id: 't4',
+    label: 'the shop pays its supplier',
+    inputs: ['S1', 'S2'],
+    outputs: [
+      { addr: 'X1', sats: 50_000 },
+      { addr: 'C1', sats: 4_600, change: true },
+    ],
+  },
+  {
+    id: 't5',
+    label: 'a fourth customer pays',
+    inputs: ['N4'],
+    outputs: [
+      { addr: 'S4', sats: 25_000 },
+      { addr: 'N4c', sats: 11_020, change: true },
+    ],
+  },
+  {
+    id: 't6',
+    label: 'the shop pays rent',
+    inputs: ['S3', 'C1'],
+    outputs: [
+      { addr: 'X2', sats: 18_000 },
+      { addr: 'C2', sats: 1_450, change: true },
+    ],
+  },
+  {
+    id: 't7',
+    label: 'the shop pays the supplier again',
+    inputs: ['S4', 'C2'],
+    outputs: [
+      { addr: 'X1b', sats: 320 },
+      { addr: 'C3', sats: 26_000, change: true },
+    ],
+  },
 ];
 
 const DISCIPLINED: ToyTx[] = [
-  { id: 't1', label: 'a customer pays the shop', inputs: ['N1'], outputs: [{ addr: 'S1', sats: 20_000 }, { addr: 'N1c', sats: 7_350, change: true }] },
-  { id: 't2', label: 'another customer pays', inputs: ['N2'], outputs: [{ addr: 'S2', sats: 35_000 }, { addr: 'N2c', sats: 2_180, change: true }] },
-  { id: 't3', label: 'a third customer pays', inputs: ['N3'], outputs: [{ addr: 'S3', sats: 15_000 }, { addr: 'N3c', sats: 940, change: true }] },
-  { id: 't4', label: 'the shop pays its supplier (one coin, no merge)', inputs: ['S2'], outputs: [{ addr: 'X1', sats: 34_000 }, { addr: 'C1', sats: 780, change: true }] },
-  { id: 't5', label: 'a fourth customer pays', inputs: ['N4'], outputs: [{ addr: 'S4', sats: 25_000 }, { addr: 'N4c', sats: 11_020, change: true }] },
-  { id: 't6', label: 'the shop pays rent (one coin, no merge)', inputs: ['S1'], outputs: [{ addr: 'X2', sats: 18_000 }, { addr: 'C2', sats: 1_820, change: true }] },
+  {
+    id: 't1',
+    label: 'a customer pays the shop',
+    inputs: ['N1'],
+    outputs: [
+      { addr: 'S1', sats: 20_000 },
+      { addr: 'N1c', sats: 7_350, change: true },
+    ],
+  },
+  {
+    id: 't2',
+    label: 'another customer pays',
+    inputs: ['N2'],
+    outputs: [
+      { addr: 'S2', sats: 35_000 },
+      { addr: 'N2c', sats: 2_180, change: true },
+    ],
+  },
+  {
+    id: 't3',
+    label: 'a third customer pays',
+    inputs: ['N3'],
+    outputs: [
+      { addr: 'S3', sats: 15_000 },
+      { addr: 'N3c', sats: 940, change: true },
+    ],
+  },
+  {
+    id: 't4',
+    label: 'the shop pays its supplier (one coin, no merge)',
+    inputs: ['S2'],
+    outputs: [
+      { addr: 'X1', sats: 34_000 },
+      { addr: 'C1', sats: 780, change: true },
+    ],
+  },
+  {
+    id: 't5',
+    label: 'a fourth customer pays',
+    inputs: ['N4'],
+    outputs: [
+      { addr: 'S4', sats: 25_000 },
+      { addr: 'N4c', sats: 11_020, change: true },
+    ],
+  },
+  {
+    id: 't6',
+    label: 'the shop pays rent (one coin, no merge)',
+    inputs: ['S1'],
+    outputs: [
+      { addr: 'X2', sats: 18_000 },
+      { addr: 'C2', sats: 1_820, change: true },
+    ],
+  },
 ];
 
 const KNOWN = 'S1';
@@ -51,10 +155,16 @@ interface HeuristicStep {
  * fresh-change detection (the marked change output of a cluster spend
  * belongs to the cluster).
  */
-function runHeuristics(ledger: ToyTx[]): { cluster: Set<string>; steps: HeuristicStep[] } {
+export function runHeuristics(ledger: ToyTx[]): {
+  cluster: Set<string>;
+  steps: HeuristicStep[];
+} {
   const cluster = new Set([KNOWN]);
   const steps: HeuristicStep[] = [
-    { text: `Ground truth to start: ${KNOWN} is taped in the shop window.`, found: [KNOWN] },
+    {
+      text: `Ground truth to start: ${KNOWN} is taped in the shop window.`,
+      found: [KNOWN],
+    },
   ];
   let grew = true;
   while (grew) {
@@ -65,16 +175,18 @@ function runHeuristics(ledger: ToyTx[]): { cluster: Set<string>; steps: Heuristi
         if (newInputs.length > 0) {
           newInputs.forEach((a) => cluster.add(a));
           steps.push({
-            text: `${tx.id} spends ${tx.inputs.join(' + ')} together. One signer controls them all (common-input heuristic), so ${newInputs.join(', ')} joins the cluster.`,
+            text: `${tx.id} spends ${tx.inputs.join(' + ')} together. They may share an owner (common-input hypothesis; collaborative spends can violate it), so ${newInputs.join(', ')} joins the cluster.`,
             found: newInputs,
           });
           grew = true;
         }
-        const change = tx.outputs.find((o) => o.change && !cluster.has(o.addr));
+        const candidate = [...tx.outputs].sort((a, b) => a.sats - b.sats)[0];
+        const change =
+          candidate && !cluster.has(candidate.addr) ? candidate : undefined;
         if (change) {
           cluster.add(change.addr);
           steps.push({
-            text: `${tx.id} is a cluster spend, and its ${change.sats.toLocaleString('en-US')}-sat output to never-seen ${change.addr} is a textbook change signature. ${change.addr} joins.`,
+            text: `${tx.id} is a cluster spend, and its ${change.sats.toLocaleString('en-US')}-sat output to never-seen ${change.addr} is the smaller output, so this deliberately weak heuristic guesses it is change. It may instead be a payment. ${change.addr} joins.`,
             found: [change.addr],
           });
           grew = true;
@@ -101,7 +213,9 @@ export function ClusterDetective({ finale }: RunnerProps) {
     setPicked(next);
   };
 
-  const truth = disciplined ? cluster : TRUTH_CARELESS;
+  const truth = disciplined
+    ? new Set(['S1', 'S2', 'S3', 'S4', 'C1', 'C2'])
+    : TRUTH_CARELESS;
   const hits = [...picked].filter((a) => truth.has(a)).length;
   const misses = [...picked].filter((a) => !truth.has(a)).length;
 
@@ -132,9 +246,16 @@ export function ClusterDetective({ finale }: RunnerProps) {
         </button>
       </div>
 
+      <p className="finale-note">
+        Toy address graph, not a complete UTXO ledger. Inference uses co-spends
+        and the public smaller-output assumption, never the private change
+        labels. CoinJoin, PayJoin and ambiguous output amounts can produce false
+        positives.
+      </p>
       <p className="cd-brief">
-        You know one fact: <code>{KNOWN}</code> belongs to the shop. Tap every other address you
-        believe is the shop&apos;s too, then run the heuristics and compare.
+        You know one fact: <code>{KNOWN}</code> belongs to the shop. Tap every
+        other address you believe is the shop&apos;s too, then run the
+        heuristics and compare.
       </p>
 
       <div className="cd-ledger">
@@ -191,14 +312,16 @@ export function ClusterDetective({ finale }: RunnerProps) {
           </ol>
           <Callout>
             <strong>
-              The heuristics found {cluster.size} address{cluster.size === 1 ? '' : 'es'}; you had
-              tagged {hits} of them{misses > 0 ? ` (plus ${misses} that aren't the shop's)` : ''}.
+              The heuristic hypothesized {cluster.size} address
+              {cluster.size === 1 ? '' : 'es'}; you had correctly tagged {hits}{' '}
+              true shop addresses
+              {misses > 0 ? ` (plus ${misses} that aren't the shop's)` : ''}.
             </strong>{' '}
             <RichText
               text={
                 disciplined
-                  ? 'With no co-spends to chain from, the cluster never grows past the one known address: the shop still received at S1 through S4, but the watcher cannot prove they share an owner. Same ledger transparency, radically less leakage. That is what spending discipline buys.'
-                  : 'One receipt in a window plus two heuristics unmasked the whole shop: every receiving address AND every change hop. Now press "the disciplined shop" and watch the identical attack starve when the shop stops co-spending.'
+                  ? 'No co-spends connect the receiving addresses. The smaller-output guess can still link S1 to C2, but does not identify all shop addresses. These are hypotheses, not ownership proofs.'
+                  : 'The common-input hypothesis links several addresses, but the smaller-output guess fails at t7: X1b is a small payment, while C3 is the larger change output. Public amounts alone do not prove change ownership. The fixture truth is kept separate from the inference.'
               }
             />
           </Callout>

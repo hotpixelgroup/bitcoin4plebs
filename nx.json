@@ -57,12 +57,46 @@
   ],
   "targetDefaults": {
     "test": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build"],
+      "inputs": [
+        "default",
+        "^production",
+        {
+          "env": "VITE_SITE"
+        },
+        {
+          "env": "VITE_BASE"
+        },
+        {
+          "env": "BITCOIN_SRC"
+        },
+        {
+          "env": "BIPS_SRC"
+        },
+        {
+          "env": "BOLTS_SRC"
+        },
+        {
+          "env": "LND_SRC"
+        }
+      ]
     },
     "@nx/js:tsc": {
       "cache": true,
       "dependsOn": ["^build"],
       "inputs": ["production", "^production"]
+    },
+    "build": {
+      "inputs": [
+        "production",
+        "^production",
+        {
+          "env": "VITE_SITE"
+        },
+        {
+          "env": "VITE_BASE"
+        }
+      ]
     }
   },
   "generators": {

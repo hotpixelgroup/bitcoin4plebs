@@ -70,7 +70,7 @@ export const questLn06: Quest = {
       prose: [
         "Here is the whole of fee-setting, in two fields of one message. `fee_base_msat` is a flat amount charged on every forward regardless of size. `fee_proportional_millionths` is charged per millionth of the amount, so 1,000 means 0.1%, and 1 means one part per million.",
         "A node picks both, for each direction of each channel, and changes them whenever it wants by broadcasting a fresh `channel_update`. Nobody approves the choice. There is no minimum, which is why plenty of nodes advertise zero and simply want the traffic, and no maximum, which is why a badly-configured node can price itself out of every route and never find out.",
-        "Two neighbouring fields matter as much as the fees and get less attention. `cltv_expiry_delta` is how much timelock this hop insists on, Quest #4's descending ladder, chosen here. And `htlc_minimum_msat` / `htlc_maximum_msat` are the smallest and largest payment it will carry; the maximum is usually a node telling you, politely, how much liquidity it actually has in that direction.",
+        'The channel update advertises forwarding fee terms, CLTV margin and allowed HTLC size bounds. The maximum is a policy limit, not a report of current directional balance, available HTLC slots or pending liquidity reservations.',
         "All of it is a claim, advertised in advance, that a sender can add up without asking anyone.",
       ],
       annotations: [
@@ -121,7 +121,7 @@ export const questLn06: Quest = {
       ],
       prose: [
         "There is exactly one fee formula in Lightning and this is it. Base, plus the amount times the proportional rate divided by a million. Everything else is which numbers go in.",
-        "Two details in that arithmetic are easy to miss and both are load-bearing. The division **truncates**: the specification's own example works out to 10,199 rather than 10,200, and an implementation that rounded up would compute a fee the next hop refuses. And the fee is charged on the amount **forwarded**, not the amount the payer sends, which is why routes are costed from the destination backwards: each hop's fee depends on what the hops after it need.",
+        'The proportional fee uses integer division, truncating any remainder, and is computed on the forwarded amount. BOLT #4 requires the incoming amount to cover at least the forwarding amount plus the required fee. Paying extra is not automatically refused; it can overpay. Route amounts are therefore computed from the destination backwards.',
         "Who pays? The sender, entirely and in advance. A payment of 4,999,999 msat through one intermediate becomes 5,010,198 msat leaving the sender, of which 10,199 is B's. The payee receives exactly what they asked for; fees never come out of the invoice amount. This is the opposite of a card network, where the merchant absorbs the cost, and it is why Lightning fees feel invisible to whoever is being paid.",
         "The last line is the specification doing our homework for us: `200 + ( 4999999 * 2000 / 1000000 ) = 10199`. The finale runs that exact sum in your browser and refuses to claim anything unless it matches.",
       ],
@@ -146,7 +146,7 @@ export const questLn06: Quest = {
       id: 'who-gets-paid',
       title: 'Who actually receives a fee, and how many of them are there?',
       takeaway:
-        "Every **forwarding** node takes one, and nobody else: not the sender, who is forwarding for no one, and not the payee, who is being paid. So a route through two intermediates has exactly two fees, and the sender knows that number before sending, because the sender chose the route.",
+        'Each forwarding node can charge its advertised fee, including zero. The sender does not charge itself and the recipient is not forwarding this payment. Route position determines that role; a zero-fee intermediary is still an intermediary.',
       annotationsOpen: true,
       quiz: [
         {
@@ -165,8 +165,8 @@ export const questLn06: Quest = {
         "**Who receives them.** Each forwarding node keeps the fee for its own forward, and here is the part that surprises people: it is never paid as a separate transaction. The hub is offered slightly more on the channel the payment arrives on than it offers on the channel it sends out of, and when the preimage comes back and settles both HTLCs, that difference simply stays on its side. A routing node's income is a gap between two numbers. Nothing is ever sent to it.",
         "**Does each hop add a fee.** Every hop that *forwards* does. Two hops do not: the sender, who is not forwarding on anyone's behalf, and the recipient, who is being paid rather than passing anything on. So a route across N channels carries N−1 fees. In the A→B→C example that is exactly one, B's, which is why the total came to 10,199 rather than something doubled.",
         "**How do you know how many hops there will be.** *You* know exactly, because you chose them. Route selection happens entirely in the sender's wallet: it picks the path, adds up the fees, and builds the onion around that decision (Quest #5). The number is settled before a single satoshi moves, and your wallet shows you the total in advance, which is why Lightning has no equivalent of a surprise charge.",
-        "Everyone else is in the dark, and deliberately so. Quest #5's guarantee was that a hop cannot learn the route's length or its own position in it. Both facts are true at once: the sender knows the hop count precisely, and nobody on the route does. The fee total is public to exactly one person, the one paying it.",
-        "**Does it matter.** Less than you would guess. More hops means more fees and more timelock, but a four-hop route of nodes charging nothing routinely beats a two-hop route through someone expensive, and your wallet will take it. What matters is the total, not the count, and you see the total first. There is a hard ceiling: the onion is a fixed 1,300 bytes, so a route tops out at **20 hops**, but real routes are rarely more than four or five, because each extra hop is another chance for something to be offline.",
+        'The ordinary sender knows the route and planned fee total. Intermediaries see their local terms and amounts, and the recipient sees its final payment. These observations and collusion can reveal more; onion routing is not a guarantee against inference or traffic analysis.',
+        'More forwarding hops can add fees, timelock and failure opportunities. Zero-fee intermediaries are possible. This lesson ranks advertised fees for a single-part fixture; actual routing also considers reliability, liquidity estimates, privacy and final-recipient CLTV. The cited protocol field supports a maximum of 20 hops; actual payload-size limits also matter.',
       ],
       annotations: [
         { lines: 'L1088–89', text: 'The ceiling, stated in passing: 20 hops, forced by the onion being a fixed size. Real routes are far shorter.' },

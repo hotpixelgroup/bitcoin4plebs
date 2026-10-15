@@ -1,36 +1,58 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { quest01, questions, quests, questsForSite } from '@bitcoin4plebs/quests';
-import { SITE, applySiteTheme, siteGlossary, siteQuestions, siteQuests } from '../lib/site';
+import { questions, quests, questsForSite } from '@bitcoin4plebs/quests';
+import {
+  SITE,
+  STORAGE_PREFIX,
+  applySiteTheme,
+  siteGlossary,
+  siteQuestions,
+  siteQuests,
+} from '../lib/site';
 import { getRunner } from '../runners/registry';
 import { getViz } from '../vizzes/registry';
 import App from './app';
+
+const quest01 = siteQuests.find((q) => q.number === 1)!;
 
 describe('App', () => {
   it('renders the home page with Quest #1', () => {
     render(
       <MemoryRouter initialEntries={['/']}>
         <App />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
-    expect(screen.getByText(/No engineering degree required/i)).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { level: 1, name: SITE.hero.title }),
+    ).toBeInTheDocument();
     // Heading role scopes to the home card, not the (hidden) nav drawer link.
-    expect(screen.getByRole('heading', { name: quest01.title })).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: quest01.title }),
+    ).toBeInTheDocument();
   });
 
   it('renders a quest page from data alone, including verbatim source', () => {
     render(
       <MemoryRouter initialEntries={[`/quests/${quest01.slug}`]}>
         <App />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     // A stop title and a verbatim source line must both be on screen.
-    expect(screen.getByText(/The entire emission schedule is ten lines of code/i)).toBeInTheDocument();
-    expect(screen.getByText(/nSubsidy >>= halvings;/)).toBeInTheDocument();
+    if (SITE.id === 'bitcoin')
+      expect(
+        screen.getByText(/The entire emission schedule is ten lines of code/i),
+      ).toBeInTheDocument();
+    if (SITE.id === 'bitcoin')
+      expect(screen.getByText(/nSubsidy >>= halvings;/)).toBeInTheDocument();
     // The verify link is pinned to the quest's commit.
-    const links = screen.getAllByRole('link', { name: /Verify these lines on GitHub/i });
-    expect(links.length).toBe(quest01.stops.length);
-    expect(links[0]).toHaveAttribute('href', expect.stringContaining(quest01.pin.commit));
+    const links = screen.getAllByRole('link', {
+      name: /Verify these lines on GitHub/i,
+    });
+    expect(links.length).toBe(quest01.stops.filter((s) => s.excerpt).length);
+    expect(links[0]).toHaveAttribute(
+      'href',
+      expect.stringContaining(quest01.pin.commit),
+    );
   });
 
   it('renders EVERY quest in the registry from data alone', () => {
@@ -38,17 +60,24 @@ describe('App', () => {
       const { unmount } = render(
         <MemoryRouter initialEntries={[`/quests/${quest.slug}`]}>
           <App />
-        </MemoryRouter>
+        </MemoryRouter>,
       );
-      expect(screen.getByRole('heading', { level: 1, name: quest.title })).toBeInTheDocument();
+      expect(
+        screen.getByRole('heading', { level: 1, name: quest.title }),
+      ).toBeInTheDocument();
       // Every excerpt-bearing stop's verify link is present and pinned to
       // its own source: the quest pin, or the excerpt's override (bips).
       const excerptStops = quest.stops.filter((s) => s.excerpt);
-      const links = screen.queryAllByRole('link', { name: /Verify these lines on GitHub/i });
+      const links = screen.queryAllByRole('link', {
+        name: /Verify these lines on GitHub/i,
+      });
       expect(links.length).toBe(excerptStops.length);
       links.forEach((link, i) => {
         const pin = excerptStops[i].excerpt?.pin ?? quest.pin;
-        expect(link).toHaveAttribute('href', expect.stringContaining(pin.commit));
+        expect(link).toHaveAttribute(
+          'href',
+          expect.stringContaining(pin.commit),
+        );
         expect(link).toHaveAttribute('href', expect.stringContaining(pin.repo));
       });
       unmount();
@@ -58,7 +87,10 @@ describe('App', () => {
   it('has a registered runner for every quest finale', () => {
     for (const quest of quests) {
       if (quest.finale) {
-        expect(getRunner(quest.finale.runnerId), `runner ${quest.finale.runnerId}`).toBeDefined();
+        expect(
+          getRunner(quest.finale.runnerId),
+          `runner ${quest.finale.runnerId}`,
+        ).toBeDefined();
       }
     }
   });
@@ -68,7 +100,10 @@ describe('App', () => {
     for (const quest of quests) {
       for (const stop of quest.stops) {
         if (stop.viz) {
-          expect(getViz(stop.viz), `viz ${stop.viz} (${quest.id}/${stop.id})`).toBeDefined();
+          expect(
+            getViz(stop.viz),
+            `viz ${stop.viz} (${quest.id}/${stop.id})`,
+          ).toBeDefined();
           wired++;
         }
       }
@@ -80,7 +115,7 @@ describe('App', () => {
     render(
       <MemoryRouter initialEntries={['/quests/nope']}>
         <App />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     expect(screen.getByText(/Quest not found/i)).toBeInTheDocument();
   });
@@ -92,13 +127,17 @@ describe('App', () => {
     render(
       <MemoryRouter initialEntries={['/map']}>
         <App />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
-    expect(screen.getByRole('heading', { level: 1, name: 'The map' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'The map' }),
+    ).toBeInTheDocument();
     const pills = screen.getAllByRole('button', { name: /^#\d+/ });
     expect(pills.length).toBe(siteQuests.length);
     // Selecting a quest with prerequisites must not throw.
-    const withPrereq = screen.getByRole('button', { name: new RegExp(`^#7\\b`) });
+    const withPrereq = screen.getByRole('button', {
+      name: new RegExp(`^#7\\b`),
+    });
     fireEvent.click(withPrereq);
     expect(screen.getByText(/Builds on/)).toBeInTheDocument();
   });
@@ -107,23 +146,31 @@ describe('App', () => {
     render(
       <MemoryRouter initialEntries={['/']}>
         <App />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
-    expect(screen.getByRole('heading', { name: 'Foundations' })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: 'Advanced' })).toBeInTheDocument();
+    if (SITE.id === 'bitcoin')
+      expect(
+        screen.getByRole('heading', { name: 'Foundations' }),
+      ).toBeInTheDocument();
+    if (SITE.id === 'bitcoin')
+      expect(
+        screen.getByRole('heading', { name: 'Advanced' }),
+      ).toBeInTheDocument();
   });
 
   it('links each quest to the next one in curriculum order', () => {
     const { container } = render(
       <MemoryRouter initialEntries={[`/quests/${quest01.slug}`]}>
         <App />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     // The footer nav shows the following quest's title as a link card.
     const next = siteQuests[siteQuests.indexOf(quest01) + 1];
     const footerNav = container.querySelector('.quest-nav');
     expect(footerNav).not.toBeNull();
-    expect(within(footerNav as HTMLElement).getByText(next.title)).toBeInTheDocument();
+    expect(
+      within(footerNav as HTMLElement).getByText(next.title),
+    ).toBeInTheDocument();
   });
 
   it('lets the reader mark a quest verified, persisted in localStorage', () => {
@@ -131,11 +178,15 @@ describe('App', () => {
     render(
       <MemoryRouter initialEntries={[`/quests/${quest01.slug}`]}>
         <App />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     fireEvent.click(screen.getByRole('button', { name: /Mark as verified/i }));
-    expect(screen.getByRole('button', { name: /Verified with my own eyes/i })).toBeInTheDocument();
-    expect(localStorage.getItem('b4p.verified.v1')).toContain(quest01.slug);
+    expect(
+      screen.getByRole('button', { name: /Verified with my own eyes/i }),
+    ).toBeInTheDocument();
+    expect(localStorage.getItem(`${STORAGE_PREFIX}.verified.v1`)).toContain(
+      quest01.slug,
+    );
     localStorage.clear();
   });
 
@@ -143,7 +194,7 @@ describe('App', () => {
     render(
       <MemoryRouter initialEntries={['/']}>
         <App />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     fireEvent.click(screen.getByRole('button', { name: /Open navigation/i }));
     const drawer = screen.getByLabelText('Site navigation');
@@ -157,12 +208,17 @@ describe('App', () => {
   it('routes every newbie question to a real quest and stop', () => {
     for (const q of questions) {
       const site = q.site ?? 'bitcoin';
-      const quest = questsForSite(site).find((candidate) => candidate.slug === q.slug);
-      expect(quest, `question "${q.question}" → ${site}/${q.slug}`).toBeDefined();
+      const quest = questsForSite(site).find(
+        (candidate) => candidate.slug === q.slug,
+      );
+      expect(
+        quest,
+        `question "${q.question}" → ${site}/${q.slug}`,
+      ).toBeDefined();
       if (q.stop) {
         expect(
           quest?.stops.some((stop) => stop.id === q.stop),
-          `question "${q.question}" → ${q.slug}#${q.stop}`
+          `question "${q.question}" → ${q.slug}#${q.stop}`,
         ).toBe(true);
       }
     }
@@ -173,16 +229,20 @@ describe('App', () => {
     const { unmount } = render(
       <MemoryRouter initialEntries={['/questions']}>
         <App />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
-    expect(screen.getByRole('heading', { level: 1, name: /Got a question/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { level: 1, name: /Got a question/i }),
+    ).toBeInTheDocument();
     unmount();
     render(
       <MemoryRouter initialEntries={['/review']}>
         <App />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
-    expect(screen.getByRole('heading', { level: 1, name: /Daily review/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { level: 1, name: /Daily review/i }),
+    ).toBeInTheDocument();
     expect(document.querySelectorAll('.flashcard').length).toBe(5);
   });
 
@@ -192,7 +252,7 @@ describe('App', () => {
     const { container } = render(
       <MemoryRouter initialEntries={['/']}>
         <App />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     // The wordmark is split so the "4" can carry the accent colour, so
     // assert on the assembled text rather than a single node.
@@ -204,7 +264,9 @@ describe('App', () => {
     // The other front door is signposted in several places, the home-page
     // card, the navigation and the footer. Every one of them must point at
     // the sibling, and none may be a bare unexplained link.
-    const siblingLinks = screen.getAllByRole('link', { name: new RegExp(SITE.sibling.name) });
+    const siblingLinks = screen.getAllByRole('link', {
+      name: new RegExp(SITE.sibling.name),
+    });
     expect(siblingLinks.length).toBeGreaterThanOrEqual(2);
     for (const link of siblingLinks) {
       expect(link).toHaveAttribute('href', SITE.sibling.url);
@@ -228,13 +290,52 @@ describe('App', () => {
     const { container } = render(
       <MemoryRouter initialEntries={['/glossary']}>
         <App />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
-    expect(screen.getByRole('heading', { level: 1, name: 'Glossary' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'Glossary' }),
+    ).toBeInTheDocument();
     expect(container.querySelectorAll('dt')).toHaveLength(siteGlossary.length);
-    fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'PolyMod' } });
+    fireEvent.change(screen.getByRole('searchbox'), {
+      target: { value: SITE.id === 'bitcoin' ? 'PolyMod' : 'HTLC' },
+    });
     const remaining = container.querySelectorAll('dt');
     expect(remaining.length).toBeGreaterThan(0);
     expect(remaining.length).toBeLessThan(siteGlossary.length);
   });
+});
+
+it('records a self-check miss in this site and resurfaces it in review', () => {
+  localStorage.clear();
+  const quest = siteQuests.find((q) => q.stops.some((s) => s.quiz?.length));
+  if (!quest) throw new Error('Expected a quiz fixture');
+  const stop = quest.stops.find((s) => s.quiz?.length);
+  const quiz = stop?.quiz?.[0];
+  if (!stop || !quiz) throw new Error('Expected a quiz question');
+  const { container, unmount } = render(
+    <MemoryRouter initialEntries={[`/quests/${quest.slug}`]}>
+      <App />
+    </MemoryRouter>,
+  );
+  const section = container.querySelector(`section[id="${stop.id}"]`);
+  if (!section) throw new Error('Expected quest stop');
+  fireEvent.click(within(section as HTMLElement).getByText(/Check yourself/));
+  const wrong = quiz.options.find((_, i) => i !== quiz.answer);
+  if (!wrong) throw new Error('Expected wrong answer');
+  fireEvent.click(
+    within(section as HTMLElement).getByRole('button', {
+      name: new RegExp(wrong.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')),
+    }),
+  );
+  expect(localStorage.getItem(`${STORAGE_PREFIX}.quiz-misses.v2`)).toContain(
+    quiz.question,
+  );
+  unmount();
+  render(
+    <MemoryRouter initialEntries={['/review']}>
+      <App />
+    </MemoryRouter>,
+  );
+  expect(screen.getByText(quiz.question)).toBeInTheDocument();
+  localStorage.clear();
 });

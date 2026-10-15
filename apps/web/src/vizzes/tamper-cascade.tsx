@@ -1,5 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import { doubleSha256Hex, hashMeetsTarget, targetForZeroBits } from '@bitcoin4plebs/bitcoin-logic';
+import {
+  doubleSha256Hex,
+  hashMeetsTarget,
+  targetForZeroBits,
+} from '@bitcoin4plebs/bitcoin-logic';
 import { VizFigure } from './viz-figure';
 
 /** Toy difficulty: ~1,000 attempts per block. Instant here, eternal at real difficulty. */
@@ -26,7 +30,11 @@ function headerOf(block: Omit<Block, 'hash'>): string {
   return `${block.height}|${block.prevHash}|${block.data}|nonce:${block.nonce}`;
 }
 
-async function mineBlock(height: number, prevHash: string, data: string): Promise<Block> {
+async function mineBlock(
+  height: number,
+  prevHash: string,
+  data: string,
+): Promise<Block> {
   for (let nonce = 0; ; nonce++) {
     const candidate = { height, data, nonce, prevHash };
     const hash = await doubleSha256Hex(headerOf(candidate));
@@ -43,7 +51,11 @@ async function mineBlock(height: number, prevHash: string, data: string): Promis
 export function TamperCascade() {
   const [blocks, setBlocks] = useState<Block[] | null>(null);
   const [mining, setMining] = useState<number | null>(null);
-  const [lastWork, setLastWork] = useState<{ height: number; tries: number; ms: number } | null>(null);
+  const [lastWork, setLastWork] = useState<{
+    height: number;
+    tries: number;
+    ms: number;
+  } | null>(null);
   const [everTampered, setEverTampered] = useState(false);
   const alive = useRef(true);
 
@@ -66,17 +78,25 @@ export function TamperCascade() {
 
   if (!blocks) {
     return (
-      <VizFigure title="The tamper cascade" caption="Forging a real 5-block chain in your browser…">
+      <VizFigure
+        title="The tamper cascade"
+        caption="Mining a five-block toy chain, using UTF-8 labels rather than Bitcoin headers."
+      >
         <p className="viz-readout">Mining 5 blocks with real proof-of-work…</p>
       </VizFigure>
     );
   }
 
   // A block is sealed only if its own proof-of-work holds AND it still points at its parent.
+  let ancestryOk = true;
   const status = blocks.map((block, i) => {
-    const prevOk = i === 0 ? block.prevHash === '0'.repeat(64) : block.prevHash === blocks[i - 1].hash;
+    const prevOk =
+      i === 0
+        ? block.prevHash === '0'.repeat(64)
+        : block.prevHash === blocks[i - 1].hash;
     const powOk = hashMeetsTarget(block.hash, TARGET);
-    return { prevOk, powOk, ok: prevOk && powOk };
+    ancestryOk = ancestryOk && prevOk && powOk;
+    return { prevOk, powOk, ok: ancestryOk };
   });
   const brokenCount = status.filter((s) => !s.ok).length;
   const firstBroken = status.findIndex((s) => !s.ok);
@@ -97,7 +117,11 @@ export function TamperCascade() {
     setMining(index);
     const started = performance.now();
     const prev = index === 0 ? '0'.repeat(64) : blocks[index - 1].hash;
-    const mined = await mineBlock(blocks[index].height, prev, blocks[index].data);
+    const mined = await mineBlock(
+      blocks[index].height,
+      prev,
+      blocks[index].data,
+    );
     if (!alive.current) return;
     setLastWork({
       height: mined.height,
@@ -121,7 +145,9 @@ export function TamperCascade() {
       <div className="chain-row">
         {blocks.map((block, i) => (
           <div key={block.height} className="chain-item">
-            <div className={`chain-block ${status[i].ok ? '' : 'chain-broken'}`}>
+            <div
+              className={`chain-block ${status[i].ok ? '' : 'chain-broken'}`}
+            >
               <div className="chain-block-head">
                 <span>block {block.height}</span>
                 <span className={status[i].ok ? 'chain-ok' : 'chain-bad'}>
@@ -143,7 +169,9 @@ export function TamperCascade() {
                 </div>
                 <div>
                   <span className="chain-hash-label">hash</span>
-                  <code className={status[i].powOk ? '' : 'chain-bad'}>{block.hash.slice(0, 12)}…</code>
+                  <code className={status[i].powOk ? '' : 'chain-bad'}>
+                    {block.hash.slice(0, 12)}…
+                  </code>
                 </div>
               </div>
               {!status[i].ok && (
@@ -152,12 +180,20 @@ export function TamperCascade() {
                   disabled={mining !== null || i !== firstBroken}
                   onClick={() => remine(i)}
                 >
-                  {mining === i ? '⛏ mining…' : i === firstBroken ? '⛏ re-mine this block' : 'fix parent first'}
+                  {mining === i
+                    ? '⛏ mining…'
+                    : i === firstBroken
+                      ? '⛏ re-mine this block'
+                      : 'fix parent first'}
                 </button>
               )}
             </div>
             {i < blocks.length - 1 && (
-              <div className={`chain-arrow ${status[i + 1].prevOk ? '' : 'chain-bad'}`}>→</div>
+              <div
+                className={`chain-arrow ${status[i + 1].prevOk ? '' : 'chain-bad'}`}
+              >
+                →
+              </div>
             )}
           </div>
         ))}
@@ -167,7 +203,7 @@ export function TamperCascade() {
           ? `One edit, ${brokenCount} invalid block${brokenCount > 1 ? 's' : ''}: your rewritten block fails its own proof-of-work, and every later block points at a parent hash that no longer exists. To cover your tracks you must re-mine them ALL, oldest first.`
           : everTampered && lastWork
             ? `Chain repaired: block ${lastWork.height} took ${lastWork.tries.toLocaleString('en-US')} attempts (${lastWork.ms} ms) at this toy difficulty. At real difficulty each block costs the ENTIRE NETWORK ~10 minutes, and while you re-mined your ${blocks.length}, honest nodes added more on top and moved the finish line. That race is what "immutable" actually means.`
-            : 'Every block\'s hash is computed from its contents AND its parent\'s hash (real double SHA-256, live). Change one letter of history in any block and watch what happens downstream.'}
+            : "Every block's hash is computed from its contents AND its parent's hash (real double SHA-256, live). Change one letter of history in any block and watch what happens downstream."}
       </p>
     </VizFigure>
   );

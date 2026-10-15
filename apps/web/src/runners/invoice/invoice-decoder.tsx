@@ -24,14 +24,24 @@ export function InvoiceDecoder({ finale }: RunnerProps) {
   const breakIt = () => {
     // Flip one character in the middle of the data part.
     const i = Math.floor(input.length / 2);
-    setInput(input.slice(0, i) + (input[i] === 'q' ? 'p' : 'q') + input.slice(i + 1));
+    setInput(
+      input.slice(0, i) + (input[i] === 'q' ? 'p' : 'q') + input.slice(i + 1),
+    );
   };
 
   return (
     <div className="cols">
+      <p className="finale-note">
+        Educational field decoder only. A checksum pass is not signature
+        verification or proof an invoice is payable. This parser does not verify
+        ECDSA signatures, all mandatory fields and lengths, or every amount
+        constraint. Use wallet software for real invoices. Never enter keys or
+        seed phrases.
+      </p>
       <div className="prose">
         <p>
-          Pick one of the specification's own published examples, or paste any real invoice: it is decoded in this tab and never leaves your browser.
+          Pick one of the specification's own published examples, or paste any
+          real invoice: it is decoded in this tab and never leaves your browser.
         </p>
         <div className="paths-chips" role="group" aria-label="Example invoices">
           {BOLT11_EXAMPLES.map((example) => (
@@ -60,9 +70,10 @@ export function InvoiceDecoder({ finale }: RunnerProps) {
         </button>
         {!result.ok && (
           <Callout>
-            <strong>Rejected: {result.error}</strong> This is the checksum earning its keep. A
-            single wrong character (a bad copy-paste, a chat client mangling a link, a typo) is
-            caught here, before any money moves, rather than becoming a mystery later.
+            <strong>Rejected: {result.error}</strong> This is the checksum
+            earning its keep. A single wrong character (a bad copy-paste, a chat
+            client mangling a link, a typo) is caught here, before any money
+            moves, rather than becoming a mystery later.
           </Callout>
         )}
         {decoded && (
@@ -74,9 +85,10 @@ export function InvoiceDecoder({ finale }: RunnerProps) {
                 : ''}
               .
             </strong>{' '}
-            {decoded.length} characters of bech32, carrying {decoded.fields.length} tagged
-            fields and a 520-bit signature over all of them. Nothing here was looked up: every
-            value on the right was read out of the string itself.
+            {decoded.length} characters of bech32, carrying{' '}
+            {decoded.fields.length} tagged fields and a 520-bit signature over
+            all of them. Nothing here was looked up: every value on the right
+            was read out of the string itself.
           </Callout>
         )}
         {finale.note && (
@@ -95,7 +107,8 @@ export function InvoiceDecoder({ finale }: RunnerProps) {
                 <div className="field-row">
                   <span className="field-label">prefix</span>
                   <span className="field-hex">
-                    {decoded.hrp} <span className="field-src">← {decoded.network}</span>
+                    {decoded.hrp}{' '}
+                    <span className="field-src">← {decoded.network}</span>
                   </span>
                 </div>
                 <div className="field-row">
@@ -103,22 +116,26 @@ export function InvoiceDecoder({ finale }: RunnerProps) {
                   <span className="field-hex">
                     {formatMsat(decoded.amountMsat)}
                     {decoded.amountSource && (
-                      <span className="field-src"> ← written “{decoded.amountSource}”</span>
+                      <span className="field-src">
+                        {' '}
+                        ← written “{decoded.amountSource}”
+                      </span>
                     )}
                   </span>
                 </div>
                 <div className="field-row">
                   <span className="field-label">timestamp</span>
                   <span className="field-hex">
-                    {decoded.timestampIso} <span className="field-src">← {decoded.timestamp}</span>
+                    {decoded.timestampIso}{' '}
+                    <span className="field-src">← {decoded.timestamp}</span>
                   </span>
                 </div>
               </div>
 
               <div className="guess-feed">
                 <div className="stat-label">
-                  tagged fields, each one announces its own length, so unknown fields are
-                  skipped rather than fatal
+                  tagged fields, each one announces its own length, so unknown
+                  fields are skipped rather than fatal
                 </div>
                 <div className="field-rows">
                   {decoded.fields.map((field, i) => (
@@ -136,18 +153,25 @@ export function InvoiceDecoder({ finale }: RunnerProps) {
               </div>
 
               <div className="guess-feed">
-                <div className="stat-label">signature (512 bits) + recovery id</div>
-                <code className="guess-hex mine-target">{short(decoded.signature, 40)}</code>
+                <div className="stat-label">
+                  signature (512 bits) + recovery id
+                </div>
+                <code className="guess-hex mine-target">
+                  {short(decoded.signature, 40)}
+                </code>
                 <div className="guess-verdict">
-                  recovery id {decoded.recoveryId}, enough to recover the payee's public key
-                  from the signature, which is why most invoices omit it
+                  recovery id {decoded.recoveryId}, enough to recover the
+                  payee's public key from the signature, which is why most
+                  invoices omit it
                 </div>
               </div>
             </>
           ) : (
             <div className="guess-feed">
               <div className="stat-label">nothing decoded</div>
-              <code className="guess-hex">{result.ok ? '…' : result.error}</code>
+              <code className="guess-hex">
+                {result.ok ? '…' : result.error}
+              </code>
             </div>
           )}
         </div>

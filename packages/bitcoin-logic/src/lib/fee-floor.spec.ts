@@ -37,7 +37,7 @@ describe('fee floor (GetMinFee translation)', () => {
   it('halves every 12 hours while the mempool stays full', () => {
     let floor = initialFeeFloor(0);
     floor = trackPackageRemoved(floor, 10_000);
-    floor = blockConnected(floor);
+    floor = blockConnected(floor, 0);
     const after = getMinFee(floor, { nowSeconds: ROLLING_FEE_HALFLIFE, usageBytes: FULL });
     expect(after.feePerKvB).toBe(5_000);
   });
@@ -45,7 +45,7 @@ describe('fee floor (GetMinFee translation)', () => {
   it('decays four times as fast once the queue drains below a quarter', () => {
     let floor = initialFeeFloor(0);
     floor = trackPackageRemoved(floor, 10_000);
-    floor = blockConnected(floor);
+    floor = blockConnected(floor, 0);
     const after = getMinFee(floor, {
       nowSeconds: ROLLING_FEE_HALFLIFE / 4,
       usageBytes: FULL / 4 - 1,
@@ -56,7 +56,7 @@ describe('fee floor (GetMinFee translation)', () => {
   it('snaps to zero once it falls below half the incremental relay fee', () => {
     let floor = initialFeeFloor(0);
     floor = trackPackageRemoved(floor, DEFAULT_INCREMENTAL_RELAY_FEE_PER_KVB - 2);
-    floor = blockConnected(floor);
+    floor = blockConnected(floor, 0);
     const after = getMinFee(floor, { nowSeconds: ROLLING_FEE_HALFLIFE, usageBytes: FULL });
     expect(after.feePerKvB).toBe(0);
     expect(after.floor.rollingMinimumFeeRate).toBe(0);
@@ -65,7 +65,7 @@ describe('fee floor (GetMinFee translation)', () => {
   it('while active, never returns less than the incremental relay fee', () => {
     let floor = initialFeeFloor(0);
     floor = trackPackageRemoved(floor, 120);
-    floor = blockConnected(floor);
+    floor = blockConnected(floor, 0);
     // One halflife: 120 -> 60, which is >= 50 (no snap) but < 100, so the
     // returned floor is the incremental relay fee itself.
     const after = getMinFee(floor, { nowSeconds: ROLLING_FEE_HALFLIFE, usageBytes: FULL });
@@ -75,8 +75,23 @@ describe('fee floor (GetMinFee translation)', () => {
   it('skips the decay math when called within ten seconds of the last update', () => {
     let floor = initialFeeFloor(0);
     floor = trackPackageRemoved(floor, 10_000);
-    floor = blockConnected(floor);
+    floor = blockConnected(floor, 0);
     const after = getMinFee(floor, { nowSeconds: 9, usageBytes: FULL });
     expect(after.feePerKvB).toBe(10_000);
   });
+});
+
+it('starts decay at the block timestamp, excluding time before that block', () => {
+  const bumped = trackPackageRemoved(initialFeeFloor(0), 10_000);
+  const connected = blockConnected(bumped, ROLLING_FEE_HALFLIFE);
+  expect(
+    getMinFee(connected, { nowSeconds: ROLLING_FEE_HALFLIFE, usageBytes: FULL })
+      .feePerKvB,
+  ).toBe(10_000);
+  expect(
+    getMinFee(connected, {
+      nowSeconds: 2 * ROLLING_FEE_HALFLIFE,
+      usageBytes: FULL,
+    }).feePerKvB,
+  ).toBe(5_000);
 });

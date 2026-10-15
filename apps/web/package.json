@@ -6,7 +6,15 @@
     "projectType": "application",
     "tags": [
       "scope:web"
-    ]
+    ],
+    "targets": {
+      "build": {
+        "outputs": [
+          "{projectRoot}/dist",
+          "{projectRoot}/dist-lightning"
+        ]
+      }
+    }
   },
   "devDependencies": {
     "@bitcoin4plebs/bitcoin-logic": "*",

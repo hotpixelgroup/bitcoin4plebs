@@ -6,12 +6,25 @@ import type { RunnerProps } from '../registry';
 
 /** The route: Mira pays Ines through a hub neither of them trusts. */
 const HOPS = [
-  { from: 'Mira', to: 'the hub', amountMsat: 180_000_000, cltv: 800_140, fee: 0 },
-  { from: 'the hub', to: 'Ines', amountMsat: 179_820_000, cltv: 800_100, fee: 180_000 },
+  {
+    from: 'Mira',
+    to: 'the hub',
+    amountMsat: 180_180_000,
+    cltv: 800_140,
+    fee: 0,
+  },
+  {
+    from: 'the hub',
+    to: 'Ines',
+    amountMsat: 180_000_000,
+    cltv: 800_100,
+    fee: 180_000,
+  },
 ];
 
 const PREIMAGE = '9f'.repeat(32);
-const sats = (msat: number) => `${Math.round(msat / 1000).toLocaleString('en-US')} sats`;
+const sats = (msat: number) =>
+  `${Math.round(msat / 1000).toLocaleString('en-US')} sats`;
 const short = (hex: string) => `${hex.slice(0, 16)}…${hex.slice(-6)}`;
 
 type Stage = 'idle' | 'offered' | 'settled';
@@ -24,7 +37,10 @@ type Stage = 'idle' | 'offered' | 'settled';
 export function HtlcRelay({ finale }: RunnerProps) {
   const [stage, setStage] = useState<Stage>('idle');
   const [paymentHash, setPaymentHash] = useState('');
-  const [theft, setTheft] = useState<{ guess: string; matches: boolean } | null>(null);
+  const [theft, setTheft] = useState<{
+    guess: string;
+    matches: boolean;
+  } | null>(null);
 
   const offer = async () => {
     const hash = bytesToHex(await sha256(hexToBytes(PREIMAGE)));
@@ -44,49 +60,67 @@ export function HtlcRelay({ finale }: RunnerProps) {
 
   return (
     <div className="cols">
+      <p className="finale-note">
+        Educational hash demonstration: the invoice pays Ines 180,000 sats; Mira
+        funds 180 sats extra for the hub. This is not an HTLC script validator
+        or an on-chain recovery engine. Fulfillment depends on timely action;
+        see the deadline lab above. The fixed public preimage is practice data
+        only.
+      </p>
       <div className="prose">
         <p>
-          Act one: <strong>offer the payment</strong>. Ines invents a secret and publishes only
-          its hash in her invoice. Mira offers the hub an HTLC locked to that hash; the hub
-          offers Ines one locked to the <em>same</em> hash, keeping a fee, with an earlier
-          deadline.
+          Act one: <strong>offer the payment</strong>. Ines invents a secret and
+          publishes only its hash in her invoice. Mira offers the hub an HTLC
+          locked to that hash; the hub offers Ines one locked to the{' '}
+          <em>same</em> hash, keeping a fee, with an earlier deadline.
         </p>
         <button className="runbtn" onClick={offer}>
-          {stage === 'idle' ? '▶ Offer the HTLCs along the route' : '▶ Start again'}
+          {stage === 'idle'
+            ? '▶ Offer the HTLCs along the route'
+            : '▶ Start again'}
         </button>
         {stage !== 'idle' && (
           <>
             <p>
-              Act two: <strong>play the hub and try to keep it</strong>. It is holding a promise
-              worth 180,000 sats. To claim it, it must produce a preimage of the hash. It has
-              never seen one.
+              Act two: <strong>play the hub and try to keep it</strong>. It is
+              holding a promise worth 180,180 sats. To claim it, it must produce
+              a preimage of the hash. It has never seen one.
             </p>
             <button className="runbtn" onClick={steal}>
               ▶ Try to claim without the preimage
             </button>
             {theft && !theft.matches && (
               <Callout>
-                <strong>✗ Rejected.</strong> The hub's guess hashes to something else entirely,
-                so the script's <code>OP_EQUALVERIFY</code> fails and the money stays locked.
-                There is no third branch to try: the only other exit is the timeout, which
-                refunds Mira. Cheating here is not risky: it is arithmetically unavailable.
+                <strong>✗ Rejected.</strong> The hub's guess hashes to something
+                else entirely, so the script's <code>OP_EQUALVERIFY</code> fails
+                and the money stays locked. This demonstrates only the hash
+                condition. Actual HTLC scripts also have timeout and revocation
+                paths; timeout recovery needs transactions and timely
+                confirmation.
               </Callout>
             )}
             <p>
-              Act three: <strong>let Ines claim</strong>. She is the only one who knows the
-              secret. Watch what claiming costs her.
+              Act three: <strong>let Ines claim</strong>. She is the only one
+              who knows the secret. Watch what claiming costs her.
             </p>
-            <button className="runbtn" onClick={settle} disabled={stage === 'settled'}>
-              {stage === 'settled' ? '✓ Settled backwards' : '▶ Ines reveals the preimage'}
+            <button
+              className="runbtn"
+              onClick={settle}
+              disabled={stage === 'settled'}
+            >
+              {stage === 'settled'
+                ? '✓ Settled backwards'
+                : '▶ Ines reveals the preimage'}
             </button>
           </>
         )}
         {stage === 'settled' && (
           <Callout>
-            <strong>✓ Settled, from the far end backwards.</strong> Revealing the secret is how
-            Ines takes her money and it necessarily hands that secret to the hub, which
-            immediately uses it to claim from Mira, because Mira locked to the same hash. Either
-            both hops paid or neither did. The hub earned its 180 sats for the service and never
+            <strong>✓ Settled, from the far end backwards.</strong> Revealing
+            the secret is how Ines takes her money and it necessarily hands that
+            secret to the hub, which uses it to claim from Mira, because Mira
+            locked to the same hash. This success path assumes timely
+            fulfillment. The hub earned its 180 sats for the service and never
             had the option of keeping the 180,000.
           </Callout>
         )}
@@ -99,10 +133,14 @@ export function HtlcRelay({ finale }: RunnerProps) {
       <div>
         <div className="viz-root">
           <div className="viz-title">One hash, two hops</div>
-          <div className="viz-sub">HTLCs per BOLT #2 §update_add_htlc, deadlines descending</div>
+          <div className="viz-sub">
+            HTLCs per BOLT #2 §update_add_htlc, deadlines descending
+          </div>
 
           <div className="guess-feed">
-            <div className="stat-label">payment_hash, identical at every hop, from the invoice</div>
+            <div className="stat-label">
+              payment_hash, identical at every hop, from the invoice
+            </div>
             <code className={`guess-hex ${paymentHash ? 'mine-target' : ''}`}>
               {paymentHash ? short(paymentHash) : 'press ▶ to begin'}
             </code>
@@ -129,32 +167,42 @@ export function HtlcRelay({ finale }: RunnerProps) {
           {stage !== 'idle' && (
             <div className="guess-feed">
               <div className="stat-label">
-                the ladder: 40 blocks of margin, so the hub can always claim its incoming HTLC
-                after paying out
+                the ladder: 40 blocks of margin, so the hub can always claim its
+                incoming HTLC after paying out
               </div>
               <div className="guess-verdict">
-                800,140 → 800,100. If it ran the other way, Ines could wait for Mira's HTLC to
-                lapse and then claim, leaving the hub out of pocket.
+                800,140 → 800,100. If it ran the other way, Ines could wait for
+                Mira's HTLC to lapse and then claim, leaving the hub out of
+                pocket.
               </div>
             </div>
           )}
 
           {theft && (
             <div className="guess-feed">
-              <div className="stat-label">the hub's attempt: SHA-256(guess)</div>
-              <code className="guess-hex">{short(bytesToHex(hexToBytes(theft.guess)))}</code>
+              <div className="stat-label">
+                the hub's attempted preimage (raw guess)
+              </div>
+              <code className="guess-hex">
+                {short(bytesToHex(hexToBytes(theft.guess)))}
+              </code>
               <div className="guess-verdict">
-                {theft.matches ? '✓ matched' : '✗ does not equal the payment hash, claim fails'}
+                {theft.matches
+                  ? '✓ matched'
+                  : '✗ does not equal the payment hash, claim fails'}
               </div>
             </div>
           )}
 
           {stage === 'settled' && (
             <div className="guess-feed">
-              <div className="stat-label">preimage, revealed by Ines and travelling backwards</div>
+              <div className="stat-label">
+                preimage, revealed by Ines and travelling backwards
+              </div>
               <code className="guess-hex mine-winner">{short(PREIMAGE)}</code>
               <div className="guess-verdict mine-won">
-                ✓ SHA-256 of this equals the payment hash above, both hops now settle
+                ✓ SHA-256 of this equals the payment hash above, both hops now
+                settle
               </div>
             </div>
           )}

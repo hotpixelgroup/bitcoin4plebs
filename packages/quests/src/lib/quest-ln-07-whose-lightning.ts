@@ -16,7 +16,7 @@ export const questLn07: Quest = {
   track: 'The big questions',
   title: 'Whose Lightning are you using?',
   summary:
-    'Every guarantee in this curriculum assumes you hold a key. Most popular wallets hold it for you. The custodial question, the liquidity nobody warns you about, and the three ways a channel can end.',
+    'Lightning channel protections depend on who controls signing and recovery. Learn how to investigate custody, directional liquidity and the ways a channel closes, without treating wallet screens as proof.',
   duration: '12 min',
   pin: BOLTS_PIN,
   story: {
@@ -44,14 +44,14 @@ export const questLn07: Quest = {
       contrast: [
         { aspect: 'Who holds the key', bank: 'The company', bitcoin: 'You' },
         { aspect: 'If they vanish', bank: 'You are a creditor, and you queue', bitcoin: 'You force close and take your money' },
-        { aspect: 'Who sees your payments', bank: 'They see all of them, in the clear', bitcoin: 'Only your channel peers, and only their own hop' },
-        { aspect: 'Who can freeze you', bank: 'They can, and may be required to', bitcoin: 'Nobody' },
+        { aspect: 'Who sees your payments', bank: 'They see all of them, in the clear', bitcoin: 'Peers see local payment data; correlation and collusion can reveal more' },
+        { aspect: 'Who can freeze you', bank: 'They can, and may be required to', bitcoin: 'No custodian is required, but peers can refuse routing and liquidity can be unavailable' },
         { aspect: 'What it costs you', bank: 'Nothing. That is the appeal', bitcoin: 'On-chain fees, and attention' },
       ],
       prose: [
-        "Be fair to the custodial option, because the appeal is real and the people choosing it are not being foolish. It is free, it works instantly, it needs no channel management, it receives payments while your phone is off, and it never asks you to understand anything on this site. For small amounts and everyday spending, plenty of thoughtful people make that trade deliberately.",
-        "The problem is not that the trade exists. The problem is that it is usually **invisible**, nothing in the app announces which kind it is, and the same word covers both. So make it visible. If the wallet showed you a recovery phrase and warned you to write it down, you are probably self-custodial. If you signed up with an email address or a phone number, you are almost certainly not.",
-        "Everything from here on assumes you have chosen to hold the key yourself, because that is the only case where the rest of this curriculum is a description of *your* protection rather than somebody else's.",
+        'Custodial services can simplify setup, receiving and availability, but their fees, speed, restrictions and reliability vary. The provider controls the keys and the user depends on its solvency and policies. Convenience does not establish protocol-level control.',
+        'A recovery phrase, account or channel screen is only a clue. Some phrases back up only on-chain funds, and some noncustodial designs use other recovery mechanisms or optional accounts. Check the documented signing and recovery architecture, required backups and provider-disappearance path.',
+        'The following channel discussion assumes you control the required signing keys and recovery data and can operate without the provider. Custody and recovery depend on the actual design, not merely the name of the app.',
       ],
     },
     {
@@ -113,7 +113,7 @@ export const questLn07: Quest = {
       id: 'the-liquidity',
       title: 'Why you cannot receive, and cannot spend it all',
       takeaway:
-        "A channel can only push what is on your side of it. Fund one yourself and you can send immediately but **receive nothing**, and you can never quite empty it either, because each side must leave the other a reserve.",
+        'Outbound and inbound liquidity depend on the channel split. A single-funded channel can begin with zero remote balance, so it initially has no inbound liquidity from that peer. Reserves, commitment fees, pending HTLCs and peer availability further constrain what can actually be sent.',
       viz: 'liquidity-seesaw',
       quiz: [
         {
@@ -130,7 +130,7 @@ export const questLn07: Quest = {
       ],
       prose: [
         "Picture the channel as a seesaw with a fixed total. Paying moves coins from your end to theirs; being paid moves them back. What you can send is your end; what you can receive is theirs. Nothing creates or destroys the total, which is why a freshly funded channel is all send and no receive.",
-        "Then there is the reserve. `channel_reserve_satoshis` is, in the spec's words, *the minimum amount that the other node is to keep as a direct payment*: a slice each side must always leave the other. Its purpose is straightforward: if a party's balance ever reached zero they would have nothing left to lose, and the penalty in Quest #2 would stop being a deterrent. The reserve guarantees every party always has skin in the game.",
+        'A peer advertises a reserve the other party must retain as its direct balance. Initial balances may be zero or below reserve; protocol rules constrain further reductions rather than guaranteeing both parties always begin above it. Reserves can differ. Available liquidity also accounts for commitment fees and in-flight HTLCs. Capacity and advertised HTLC maximum are not live spendable balances.',
         "The practical effect is that a channel's usable balance is a little smaller than its size, in both directions, permanently. A wallet showing you 500,000 sats of capacity is not lying, but you will never move all 500,000 through it.",
         "None of this is a defect. It is what it costs to have a payment network with no central balance sheet: liquidity has to be somewhere, somebody has to have committed it, and it can only ever be in one place at a time.",
       ],
@@ -155,9 +155,9 @@ export const questLn07: Quest = {
       id: 'the-scorecard',
       title: 'An honest scorecard',
       takeaway:
-        "Lightning does what it claims: instant, cheap, final payments secured by Bitcoin with no trusted party. It also has real costs, and anyone who tells you otherwise is selling something. Here they are in one place.",
+        'Lightning can settle payments off-chain without a custodial intermediary. Cost, latency, availability and safe recovery depend on routing, liquidity, channel state, monitoring and on-chain conditions.',
       prose: [
-        "**What genuinely works.** Payments settle in under a second, for a fraction of a satoshi, with no reversals and no chargebacks. It scales to volumes the base chain cannot approach, because most payments never touch it. Every guarantee is enforced by arithmetic rather than by a company's promise, and you can verify all of it: you just did.",
+        'Successful off-chain fulfillment can be fast and avoids recording each payment separately on-chain. Routing fees, failed attempts and recovery costs vary. The scripts enforce spending conditions, but do not guarantee instantaneous delivery, privacy or lossless recovery for an offline participant.',
         "**What it costs.** Channels need on-chain transactions to open and close, so entering and leaving costs real fees at whatever the auction is charging that day. Receiving needs [[Inbound liquidity]] that has to come from somewhere. Failed payments are routine and their causes are often invisible. Your funds are committed while a channel is open, and a force close locks your own side behind a delay measured in days.",
         "**Where it is genuinely weak.** Privacy is strong against the middle of a route and weak at its ends: your first hop knows you, and a custodial provider knows everything. The shared payment hash lets two nodes on the same route confirm they saw the same payment, which point-based payments (PTLCs) are designed to fix but which is not widely deployed. And the pressure toward custodial convenience is real, because self-custody asks for attention that most people do not want to give.",
         "**What to actually do about it**, if you want the guarantees rather than the branding: keep small amounts in a convenient wallet and don't pretend it is self-custody; hold larger amounts on the base layer where the security model is simpler; and if you run channels, run more than one, to more than one peer, and let something watch the chain while you sleep.",
@@ -170,11 +170,11 @@ export const questLn07: Quest = {
     takeaway:
       "Answer four questions about your own wallet and get a straight assessment: what you control, who can see your payments, what happens if the provider disappears, and which parts of this curriculum currently apply to you.",
     runnerId: 'custody-check',
-    note: 'This is a decision aid, not an audit. It reasons from how a wallet behaves, whether it gave you a recovery phrase, whether it asked for an email, whether it shows you channels, because those behaviours are what distinguish the models in practice. It cannot inspect your wallet and it makes no recommendation about specific products.',
+    note: 'This is a clue-gathering exercise, not a custody audit. Recovery phrases, accounts and channel screens cannot certify independent signing or recovery. Verify the documented architecture, what balance a backup covers and the provider-disappearance procedure. Never submit keys or real phrases.',
   },
   recap: {
     tryIt:
-      "Open the wallet you actually use and look for two things: a recovery phrase in the settings, and a channels or node-info screen. Both present, self-custodial. Neither present, custodial. One present, read more carefully. It takes a minute, and it tells you whether the last five quests described your protection or someone else's.",
+      'Read the wallet’s custody and recovery documentation. Identify who can sign, what the backup covers, whether current channel state is recoverable and how withdrawal works if the provider disappears. Screens and phrases alone do not answer those questions.',
     items: [
       {
         text: "**One question decides the rest**: if the provider vanished tonight, could you still get your money? Everything in this curriculum assumes the answer is yes.",
@@ -188,7 +188,7 @@ export const questLn07: Quest = {
         cite: '02-peer-protocol.md:734',
       },
       {
-        text: '**The honest scorecard**: instant, cheap and final, at the cost of on-chain fees, liquidity management, routine failures, and privacy that is strong in the middle and weak at the edges.',
+        text: '**The honest scorecard:** fast off-chain settlement is possible, with variable fees, liquidity and uptime constraints, recovery duties and limited privacy. Wallet custody must be investigated separately.',
       },
     ],
     closing:
@@ -197,6 +197,6 @@ export const questLn07: Quest = {
   feynman: {
     prompt: "Explain to a friend how to tell whether their Lightning wallet is actually protecting them, and what it costs to do it properly.",
     model:
-      "Ask one question: if the company behind the app disappeared tonight, could they still get their money out? If the app gave them a recovery phrase and shows them channels, the answer is yes and every protection in the protocol is theirs: nobody can freeze them, nobody sees their payments but their immediate neighbours, and even a dishonest channel partner loses everything by trying. If they signed up with an email and never wrote anything down, they have an account with a company that happens to use Lightning, which is fine for small amounts as long as they know it. Doing it properly costs on-chain fees to open and close channels, some attention to being able to receive as well as send, and accepting that payments sometimes just fail.",
+      'Ask who can sign and recover the Lightning balance if the provider disappears. A phrase or channel screen is not proof. Self-managed channels require usable backups, monitoring, directional liquidity and fees for on-chain recovery; custodial balances instead depend on a provider. No short quiz can certify those properties.',
   },
 };

@@ -176,7 +176,7 @@ export const questLn01: Quest = {
       ],
       prose: [
         "Here is the move that turns a shared piggy bank into a payment channel. The funding transaction is built but, crucially, *before it is broadcast*, each side signs a **commitment transaction**: a transaction spending the funding output back out, at the current balance. Only then do they publish the funding transaction. Neither can be held hostage, because each already holds an exit.",
-        "Every payment is then just a new pair of commitment transactions at a new split, signed and swapped privately. Instant, free, and invisible. The chain's role has been reduced to a promise: *if either of you brings me a signed commitment, I will enforce it.* That promise is what makes the tab trustless.",
+        'Payments update signed commitments off-chain. Direct updates need no per-payment mining fee, but funding, closing and dispute transactions cost fees; routed payments can also charge forwarding fees. Availability and liquidity affect completion. These updates are not broadcast to the chain, but are visible to the participants.',
         "Which leaves one enormous hole, and you have probably already found it. Tomas holds every commitment they have ever signed, including the very first one, where all 200,000 sats were his. What stops him from waiting until he has drunk fifty coffees and then broadcasting the state from day one? That is the next quest, and it contains the best script on this site.",
       ],
     },

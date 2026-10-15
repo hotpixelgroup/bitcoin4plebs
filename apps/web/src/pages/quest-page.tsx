@@ -1,3 +1,4 @@
+import { recordMiss } from '../lib/quiz-misses';
 import { Suspense, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { SITE, getSiteQuest, siteQuests } from '../lib/site';
@@ -123,6 +124,7 @@ export function QuestPage() {
         const Viz = stop.viz ? getViz(stop.viz) : undefined;
         return (
           <StopSection
+            onQuizMiss={recordMiss}
             key={stop.id}
             stop={stop}
             index={i + 1}

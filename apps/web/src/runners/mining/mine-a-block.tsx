@@ -106,8 +106,11 @@ export function MineABlock({ finale }: RunnerProps) {
     setState((s) => ({ ...s, status: 'idle' }));
   };
 
-  const elapsed = state.startedAt ? Math.max(0.001, (Date.now() - state.startedAt) / 1000) : 0;
-  const rate = state.attempts && elapsed ? Math.round(state.attempts / elapsed) : 0;
+  const elapsed = state.startedAt
+    ? Math.max(0.001, (Date.now() - state.startedAt) / 1000)
+    : 0;
+  const rate =
+    state.attempts && elapsed ? Math.round(state.attempts / elapsed) : 0;
   const targetHex = target.toString(16).padStart(64, '0');
 
   return (
@@ -144,7 +147,10 @@ export function MineABlock({ finale }: RunnerProps) {
             ))}
           </select>
         </label>
-        <button className="runbtn" onClick={state.status === 'mining' ? stop : start}>
+        <button
+          className="runbtn"
+          onClick={state.status === 'mining' ? stop : start}
+        >
           {state.status === 'mining'
             ? '⏸ Stop scanning'
             : state.status === 'found'
@@ -159,10 +165,12 @@ export function MineABlock({ finale }: RunnerProps) {
         {state.status === 'found' && state.foundHash && (
           <Callout>
             <strong>⛏ Block found!</strong> Nonce{' '}
-            <strong>{state.nonce.toLocaleString('en-US')}</strong> produced a hash under your
-            target after <strong>{state.attempts.toLocaleString('en-US')}</strong> attempts.
-            Notice there was no cleverness: attempt {state.attempts.toLocaleString('en-US')} knew
-            nothing attempt 1 didn't. Now raise the difficulty one notch and feel the wall every
+            <strong>{state.nonce.toLocaleString('en-US')}</strong> produced a
+            hash under your target after{' '}
+            <strong>{state.attempts.toLocaleString('en-US')}</strong> attempts.
+            Notice there was no cleverness: attempt{' '}
+            {state.attempts.toLocaleString('en-US')} knew nothing attempt 1
+            didn't. Now raise the difficulty one notch and feel the wall every
             miner lives against: each 4 extra zero bits ≈ 16× more guessing.
           </Callout>
         )}
@@ -170,11 +178,16 @@ export function MineABlock({ finale }: RunnerProps) {
       <div>
         <div className="viz-root">
           <div className="viz-title">Your mining rig (this browser tab)</div>
-          <div className="viz-sub">real double SHA-256 · rule: hash ≤ target (pow.cpp:167)</div>
+          <div className="viz-sub">
+            toy UTF-8 header · real double SHA-256 · comparison: hash ≤ target
+            (pow.cpp:167)
+          </div>
           <div className="stat-grid">
             <div className="stat">
               <div className="stat-label">nonces scanned</div>
-              <div className="stat-value">{state.attempts.toLocaleString('en-US')}</div>
+              <div className="stat-value">
+                {state.attempts.toLocaleString('en-US')}
+              </div>
             </div>
             <div className="stat">
               <div className="stat-label">hashes / second</div>
@@ -190,19 +203,27 @@ export function MineABlock({ finale }: RunnerProps) {
             </div>
           </div>
           <div className="guess-feed">
-            <div className="stat-label">target (hash must be ≤ this number)</div>
+            <div className="stat-label">
+              target (hash must be ≤ this number)
+            </div>
             <code className="guess-hex mine-target">{targetHex}</code>
             <div className="stat-label">latest hash</div>
-            <code className={`guess-hex ${state.status === 'found' ? 'mine-winner' : ''}`}>
+            <code
+              className={`guess-hex ${state.status === 'found' ? 'mine-winner' : ''}`}
+            >
               {state.lastHash ?? 'press ▶ to begin scanning'}
             </code>
             {state.status === 'found' && (
               <div className="guess-verdict mine-won">
-                ✓ hash ≤ target, so this is a valid block under your difficulty. That's all mining is.
+                ✓ This toy hash meets the chosen target. Bitcoin also validates
+                an 80-byte serialized header, expected difficulty, transactions
+                and consensus rules. PoW alone does not make a block valid.
               </div>
             )}
             {state.status === 'mining' && state.lastHash && (
-              <div className="guess-verdict">✗ too big. Bump the nonce, hash again.</div>
+              <div className="guess-verdict">
+                ✗ too big. Bump the nonce, hash again.
+              </div>
             )}
           </div>
         </div>

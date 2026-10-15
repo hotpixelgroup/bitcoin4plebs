@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   BECH32_CHARSET,
+  encodeBech32,
   decodeBech32,
   decodeSegwitAddress,
   encodeSegwitAddress,
@@ -140,4 +141,8 @@ describe('decode diagnostics', () => {
     const nosep = decodeBech32('bcqw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4');
     expect(!nosep.ok && nosep.error.includes('separator')).toBe(true);
   });
+});
+
+it('rejects a checksummed nonprintable human-readable prefix', () => {
+  expect(decodeBech32(encodeBech32('a\u0020', [], 'bech32')).ok).toBe(false);
 });

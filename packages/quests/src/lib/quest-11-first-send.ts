@@ -103,22 +103,22 @@ export const quest11: Quest = {
       id: 'tb-addresses',
       title: 'Play addresses cannot cross into real money',
       takeaway:
-        'Signet addresses start **tb1**, not bc1, because its prefixes are different in this file, and Quest #10 taught you the prefix lives *inside the checksum*. A play address pasted into a mainnet wallet fails arithmetic, instantly.',
+        'Signet uses the tb prefix for witness addresses. A correctly formed tb1 address can have a perfectly valid checksum. A mainnet wallet must reject it because the network prefix is wrong, a separate check from checksum verification.',
       prose: [
         'This is the safety rail that makes the whole exercise carefree. The two universes cannot leak into each other by accident: every address carries its network in its own checksum, and every wallet checks it before anything moves.',
-        'So when the faucet hands you a tb1 address, or your practice wallet shows one, you are looking at Quest #10\'s machinery doing quiet safety work. Mistype it, wrong-network it, mangle it: arithmetic catches all of it.',
+        'Wallets check the network prefix as well as the checksum. A wrong-network address need not contain any typo.',
       ],
       quiz: [
         {
           question: 'Why can\'t you accidentally send real bitcoin to a signet address?',
           options: [
             'A moderator reviews cross-network sends',
-            'The prefix is part of the checksum, so mainnet wallets reject tb1 addresses as invalid',
+            'A mainnet wallet rejects the wrong network prefix, even if the tb1 checksum is valid',
             'Signet addresses are secret',
           ],
           answer: 1,
           explain:
-            'The network prefix feeds the bech32 checksum from Quest #10. A tb1 address handed to a mainnet wallet fails validation before any transaction exists.',
+            'The checksum includes the network prefix, but a valid tb1 checksum remains valid on its own. A mainnet wallet separately requires the bc network prefix before constructing a transaction.',
         },
       ],
       excerpt: {
@@ -178,7 +178,7 @@ export const quest11: Quest = {
         text: '**Play coins are worthless by design**, and the design is the feature: fearless practice with real software.',
       },
       {
-        text: '**tb1 addresses cannot leak into real money**: the network prefix lives inside the Quest #10 checksum.',
+        text: '**Network validation matters.** A correct wallet rejects tb1 when configured for mainnet, even when the checksum is valid.',
         cite: 'chainparams.cpp:547',
       },
       {
@@ -191,6 +191,6 @@ export const quest11: Quest = {
   feynman: {
     prompt: 'Explain to a friend, in two sentences, why practicing on signet is completely safe.',
     model:
-      'Signet is a parallel Bitcoin network built into the same software, where anyone can get coins for free, so they can never be worth anything. Its addresses even fail the checksum on the real network, which means play money and real money physically cannot mix.',
+      'Signet is a separate practice network. Its witness addresses use tb, which a mainnet wallet rejects as the wrong network even when their checksum is valid. Practice coins do not authorize spending mainnet outputs.',
   },
 };

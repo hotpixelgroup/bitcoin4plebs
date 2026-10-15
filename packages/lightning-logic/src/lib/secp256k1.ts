@@ -8,7 +8,8 @@
  *
  * Don't trust it either: the sphinx test in this package reproduces the
  * Lightning specification's own onion test vector byte for byte, and that
- * vector only comes out right if everything below is exactly correct.
+ * vector exercises one case; it cannot prove correctness for every input.
+ * Educational variable-time code only; never use for real keys or funds.
  *
  * This is deliberately the SIMPLE formulation (affine coordinates, a
  * modular inverse per step) rather than the fast one. It is fast enough
@@ -19,7 +20,8 @@
 export const P = 2n ** 256n - 2n ** 32n - 977n;
 
 /** The order of the group, how many distinct private keys exist. */
-export const N = 0xfffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141n;
+export const N =
+  0xfffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141n;
 
 /** A point on the curve. `null` elsewhere means the point at infinity. */
 export interface Point {
@@ -111,11 +113,17 @@ export function compress(p: Point): string {
 
 /** Recover the full point from its 33-byte compressed form. */
 export function decompress(hex: string): Point {
+  if (!/^(02|03)[0-9a-fA-F]{64}$/.test(hex))
+    throw new Error('invalid compressed point encoding');
   const prefix = hex.slice(0, 2);
-  if (prefix !== '02' && prefix !== '03') throw new Error(`not a compressed point: ${prefix}`);
+  if (prefix !== '02' && prefix !== '03')
+    throw new Error(`not a compressed point: ${prefix}`);
   const x = BigInt('0x' + hex.slice(2));
+  if (x >= P) throw new Error('point x outside field');
   // y = sqrt(x^3 + 7). For this prime, the square root is a single exponentiation.
   let y = powMod(mod(x ** 3n + 7n), (P + 1n) / 4n, P);
+  if (mod(y * y) !== mod(x ** 3n + 7n))
+    throw new Error('point is not on secp256k1');
   if (((y & 1n) === 1n) !== (prefix === '03')) y = mod(-y);
   return { x, y };
 }

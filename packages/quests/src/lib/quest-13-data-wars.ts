@@ -17,7 +17,7 @@ export const quest13: Quest = {
   track: 'Zoom out',
   title: 'The data wars: what is the ledger for?',
   summary:
-    "Bitcoin's loudest live fight, from primary sources: the OP_RETURN valve, the inscription flood, Core v30 vs Knots, and BIP-110's plan to settle it in consensus. You pick a side, or don't.",
+    'A dated case study of OP_RETURN relay policy and the BIP110 debate. The pinned excerpts preserve the historical proposal; the current specification is Closed. Learn to separate policy, consensus and adoption status.',
   duration: '12 min',
   pin: BITCOIN_PIN,
   story: {
@@ -123,7 +123,7 @@ export const quest13: Quest = {
       id: 'bip-110',
       title: 'BIP-110: moving the fight into consensus',
       takeaway:
-        'Assigned in December 2025, BIP-110 proposes a **temporary, one-year soft fork** that makes oversized data fields *invalid in blocks*, not just unrelayed. That one word, invalid, is the entire escalation: policy asks, consensus binds.',
+        'Historical proposal at the pinned snapshot: BIP110 proposed temporary additional consensus restrictions. Status checked 2026-10-15: the [current BIP110 document](https://github.com/bitcoin/bips/blob/master/bip-0110.mediawiki) is Closed; its version 1.0.1 changelog dated 2026-08-09 reports chain splitting and stalled mining. A pinned proposal is not evidence of current Bitcoin consensus.',
       quiz: [
         {
           question: 'Under BIP-110, what happens to coins and inscriptions that existed before activation?',
@@ -134,7 +134,7 @@ export const quest13: Quest = {
           ],
           answer: 2,
           explain:
-            'The grandfathering clause (line 35 of the BIP) exempts every UTXO created before activation, so nothing anyone owns becomes unspendable, and after the year expires all restrictions lift. The design is a circuit breaker, not a purge. Whether even a temporary breaker belongs in consensus is the real argument.',
+            'The historical clause exempts UTXOs created before activation. It is not a universal guarantee for presigned chains that create new outputs after activation: the current Tradeoffs section describes cases that could freeze or lose funds. The proposal is now Closed; the excerpt below is a historical snapshot.',
         },
       ],
       prose: [
@@ -189,7 +189,7 @@ export const quest13: Quest = {
         },
       ],
       prose: [
-        "A BIP is a proposal, not a law: \"Status: Complete\" in its header means the specification is finished, not that Bitcoin adopted it. To become a rule it needs what every rule change since the scars of Quest #4 has needed: an activation mechanism, and then the only vote that counts, **enforcement by the economic majority**. Nodes that check the new rule, exchanges and merchants that stand behind it, and enough of the economy that mining against it means mining a coin nobody buys.",
+        'BIP110 status is Closed as checked on 2026-10-15 in the official BIPs repository. The excerpts here are pinned to an earlier snapshot for historical analysis. Specification status, activation rules and actual adoption are separate questions. Every node independently enforces its configured consensus rules; counting peers cannot make an invalid block valid.',
         'Notice what the machine has already done with this fight, with nobody chairing it. The fee auction priced the flood. The policy layer let dissenters filter in protest. The implementation market gave the protest teeth and a name. Now the last question waits at the consensus layer, wrapped in a deliberately temporary proposal, for the economy to accept or ignore. Thirteen quests ago you had to trust someone\'s summary of a fight like this. Today you can read the filter, the default, and the proposal in their own words, and decide what *you* will run.',
       ],
     },

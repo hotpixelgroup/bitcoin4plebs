@@ -463,8 +463,11 @@ h1 {
 }
 @media (max-width: 900px) {
   .cols {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
+}
+.cols > * {
+  min-width: 0;
 }
 
 .prose p {
@@ -5066,4 +5069,12 @@ tr:last-child td {
   color: var(--muted);
   font-family: var(--mono);
   font-size: 13px;
+}
+
+/* Lab controls and explanations must remain readable on narrow screens. */
+.cols select { max-width: 100%; }
+@media (max-width: 620px) {
+  .field-row { grid-template-columns: minmax(0, 1fr); }
+  .field-src { white-space: normal; overflow-wrap: anywhere; }
+  .runbtn, .preset { white-space: normal; max-width: 100%; }
 }

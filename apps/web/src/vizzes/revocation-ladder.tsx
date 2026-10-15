@@ -25,7 +25,11 @@ export function RevocationLadder() {
       title="Radioactive history"
       caption="Buy a coffee. Every balance you leave behind becomes one your counterparty can punish you for publishing."
     >
-      <button className="runbtn" onClick={() => setCount((c) => c + 1)}>
+      <button
+        className="runbtn"
+        disabled={count >= START / COFFEE}
+        onClick={() => setCount((c) => Math.min(START / COFFEE, c + 1))}
+      >
         ▶ Buy a coffee ({COFFEE.toLocaleString('en-US')} sats)
       </button>{' '}
       {count > 0 && (
@@ -33,7 +37,6 @@ export function RevocationLadder() {
           reset
         </button>
       )}
-
       <div className="viz-readout">
         {visible.map((state) => (
           <div
@@ -53,23 +56,30 @@ export function RevocationLadder() {
             <span className="stat-unit">
               Tomas {state.tomas.toLocaleString('en-US')} · Mira{' '}
               {state.mira.toLocaleString('en-US')}
-              {state.revoked && ', publishing this hands Mira the lot'}
+              {state.revoked &&
+                ', publishing this enables a timely penalty claim'}
             </span>
           </div>
         ))}
         {count > 5 && (
-          <div className="stat-label">…and {count - 5} older states, every one of them radioactive</div>
+          <div className="stat-label">
+            …and {count - 5} older states, every one of them radioactive
+          </div>
         )}
       </div>
-
       <p className="utxo-box-note">
         {count === 0 ? (
-          <>One state, nothing revoked yet. Nobody can punish anybody: there is no past to lie about.</>
+          <>
+            One state, nothing revoked yet. Nobody can punish anybody: there is
+            no past to lie about.
+          </>
         ) : (
           <>
-            Tomas holds <strong>{count + 1}</strong> perfectly valid signed transactions and can
-            publish any of them. {count} of them would cost him everything, because each was
-            revoked by handing Mira the secret that completes her penalty key.
+            Tomas holds <strong>{count + 1}</strong> perfectly valid signed
+            transactions and can publish any of them. {count} of them expose his
+            output to a penalty if Mira monitors and confirms her claim in time.
+            Each was revoked by handing Mira the secret that completes her
+            penalty key.
           </>
         )}
       </p>

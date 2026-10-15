@@ -39,10 +39,10 @@ export const quest10: Quest = {
       viz: 'address-pipeline',
       title: 'An address is a spelling of a lock, not a place',
       takeaway:
-        'Here is the whole recipe for a modern address: take the 20-byte hash of your public key (Quest #3), put a version number in front, regroup the bits, spell it in bech32 with the network\'s prefix. **The address IS the lock, re-spelled for humans.**',
+        'Here is one common recipe: P2WPKH encodes a 20-byte public-key hash as witness version 0 using Bech32. P2WSH uses a 32-byte script hash. P2TR uses version 1 and a 32-byte output key with Bech32m. An address tells a wallet how to construct a spending lock, not where an account lives. See [BIP173](https://bips.dev/173/) and [BIP350](https://bips.dev/350/).',
       prose: [
         'Notice what this function does *not* do: contact the network, register anything, check availability. Generating an address is pure local arithmetic, which is why your wallet can mint unlimited fresh ones, offline, forever, and none of them "exist" anywhere until someone pays them.',
-        'When a sender types your address, their wallet runs this recipe **backwards**: unspell the letters, recover the 20 bytes, and build the exact `scriptPubKey` lock from Quest #3 into a new box. The address was never money, never an account: just instructions for building your lock, with spell-checking built in.',
+        'The sender decodes the witness version and program, checks its network and checksum encoding, and constructs the corresponding scriptPubKey. Different address types describe different locks.',
       ],
       annotationsOpen: true,
       annotations: [
@@ -128,12 +128,12 @@ export const quest10: Quest = {
           "The address can only be used once",
           ],
           answer: 1,
-          explain: "The BCH code behind PolyMod guarantees detection of up to 4 character errors within 89 characters, and no address is longer than 62. Security of the coins is a separate machine entirely: the lock and signature from Quest #3.",
+          explain: '**Address length depends on the witness program.** Mainnet P2WPKH addresses are 42 characters and P2WSH/P2TR are 62. Supported witness programs can be 2–40 bytes, producing longer addresses too. Bech32 has a 90-character limit; BIP173 specifies its error-detection bounds.',
         },
       ],
       title: 'The checksum: a mathematical promise that typos get caught',
       takeaway:
-        'The last six letters of every address are a checksum, and this comment states its power **like a law**. The code is guaranteed to detect up to 3 errors in any 1,023 characters. It was hand-picked to guarantee **4 errors caught within 89 characters**. A bc1q address is 42 characters, and even the longest taproot addresses, at 62, sit well inside the window.',
+        'The last six characters are a checksum. The quoted Core comment describes its substitution-error guarantees. P2WPKH mainnet addresses are 42 characters and P2WSH/P2TR are 62, but 62 is not a universal maximum. Future witness versions can encode programs up to 40 bytes. Version 0 uses Bech32; versions 1–16 use Bech32m. These are error-detection tools, not proof that the recipient is trustworthy.',
       prose: [
         'You don\'t need the Galois-field algebra (nobody\'s quizzing you); you need the *contract* in the last three highlighted lines. This isn\'t "we probably notice typos." It\'s a proven property of a BCH code, chosen from many candidates specifically to over-deliver on short strings like addresses. Mistype one, two, three, even four characters of a bc1 address, and validation **cannot** come out clean.',
         'Every wallet on Earth runs this polynomial before letting you send: the six-letter checksum must come out exact, and the network prefix and every data letter feed into it. And in this site\'s honesty tradition: with *five or more* simultaneous errors the guarantee lapses, and a corrupted address slips through with odds of about one in a billion (2³⁰). Even the fine print here comes quantified. In the finale, you\'ll try to sneak a typo past it yourself.',
@@ -210,7 +210,7 @@ export const quest10: Quest = {
         cite: 'bech32.cpp:23',
       },
       {
-        text: '**The checksum\'s guarantee is proven, not hoped**: up to 4 errors in 89 characters cannot escape detection, and no address is longer than 62.',
+        text: '**Address length depends on the witness program.** Mainnet P2WPKH addresses are 42 characters and P2WSH/P2TR are 62. Supported witness programs can be 2–40 bytes, producing longer addresses too. Bech32 has a 90-character limit; BIP173 specifies its error-detection bounds.',
         cite: 'bech32.cpp:140',
       },
       {

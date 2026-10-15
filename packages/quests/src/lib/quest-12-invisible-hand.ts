@@ -63,17 +63,17 @@ export const quest12: Quest = {
     },
     {
       id: 'fee-floor',
-      title: 'You cannot be censored, only outbid',
+      title: 'Fees compete for block space; miners can still exclude transactions',
       takeaway:
         'When the queue overflows, the mempool computes a **floor price**: pay more than the cheapest evicted bidder or wait. The floor then **decays by half every 12 hours** until the surge is over. A thermostat, in twenty lines.',
       myth: {
         belief: 'When fees spike, Bitcoin is broken and someone should fix it.',
         reality:
-          'A fee spike is the auction doing its job: demand exceeded ~4 million weight units per ten minutes, so the price rose. This code guarantees the spike is also self-erasing: the floor halves every 12 hours (faster once the queue drains) until it snaps back to zero.',
+          "This code adjusts a node's local rolling minimum fee after eviction. It does not guarantee that market fees fall. Sustained new demand can sustain congestion, and a high fee does not force a miner to include a transaction.",
       },
       prose: [
         'Your node holds waiting transactions in a bounded queue, the mempool, capped at 300 MB by default. When it overflows, the lowest-feerate package is evicted, and `trackPackageRemoved` ratchets the floor up to what the loser was paying (line 865). From that moment, bids below the floor are not even relayed. Nobody chose the number; the overflow did.',
-        "Then read `GetMinFee` above it: the floor **decays exponentially**, halving every `ROLLING_FEE_HALFLIFE` (12 hours), and decays two or four times faster once the queue drains below half or a quarter full (lines 846 to 849). When it falls under half of 0.1 sat/vB it snaps to zero and the auction house is calm again. This is why every fee panic in Bitcoin's history has ended the same way: the code *forces* it to end.",
+        'GetMinFee lets the local rolling eviction floor decay under its conditions, faster as the queue empties. New evictions can raise it again. This is relay policy for one node, not a market-clearing price or a guarantee that a fee spike ends. The simulation makes demand subside to illustrate recovery; real demand need not stop.',
         "One honest nuance: this floor is each node's own relay behavior, not a law of the chain. A rich bidder can always hand a transaction straight to a miner. Hold that thought; it's the whole plot of stop 5.",
       ],
       annotations: [
@@ -256,7 +256,7 @@ export const quest12: Quest = {
       "Next time fees make the news, open the home page's live panel and note the number. Check again two days later. You'll watch the half-life do exactly what the code promised.",
     items: [
       {
-        text: '**Congestion sets its own price and its own cure**: eviction ratchets the fee floor up; a 12-hour half-life decays it back to zero.',
+        text: '**Local eviction floors can rise and decay.** Actual confirmation fees depend on continuing demand, miner choices and available block space.',
         cite: 'txmempool.cpp:851',
       },
       {
@@ -278,6 +278,6 @@ export const quest12: Quest = {
   feynman: {
     prompt: 'Explain who keeps Bitcoin usable for ordinary people, in three sentences, without naming any person or company.',
     model:
-      'Users bid for block space, miners profit by selling it to the highest bidders under rules they cannot bend, and every node discards any block that cheats, which makes honesty the only paying strategy. When demand spikes, fees rise, which recruits builders to fit more payments into fewer bytes, and a built-in half-life decays the surge back to zero. Nobody is in charge; each group polices a different group, and keeping the system usable is simply what maximizing their own profit looks like.',
+      'Users bid for block space, miners choose transactions, and validating nodes reject blocks that break consensus rules. A local eviction floor can decay, but sustained demand can keep market fees high. Miners may exclude transactions; fee incentives encourage inclusion without guaranteeing it.',
   },
 };

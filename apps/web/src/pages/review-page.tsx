@@ -1,31 +1,11 @@
+import { readMisses, writeMisses, type MissRecord } from '../lib/quiz-misses';
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import type { GlossaryEntry, QuizItem } from '@bitcoin4plebs/quests/content';
+import type { GlossaryEntry } from '@bitcoin4plebs/quests/content';
 import { SITE, siteGlossary } from '../lib/site';
 import { Callout, RichText } from '@bitcoin4plebs/ui';
 
 const DEFAULT_TITLE = `${SITE.name} · ${SITE.tagline}`;
-const MISS_KEY = 'b4p.quiz-misses.v1';
-
-type MissRecord = QuizItem & { cleared: number };
-
-function readMisses(): Record<string, MissRecord> {
-  try {
-    const raw = localStorage.getItem(MISS_KEY);
-    return raw ? (JSON.parse(raw) as Record<string, MissRecord>) : {};
-  } catch {
-    return {};
-  }
-}
-
-function writeMisses(all: Record<string, MissRecord>): void {
-  try {
-    localStorage.setItem(MISS_KEY, JSON.stringify(all));
-  } catch {
-    // Private browsing.
-  }
-}
-
 /** Deterministic "today's five" siteGlossary terms, same set all day. */
 function dailyTerms(): GlossaryEntry[] {
   const day = new Date().toISOString().slice(0, 10);
@@ -75,7 +55,13 @@ function ReviewQuestion({
       <div className="quiz-options">
         {record.options.map((option, i) => {
           const state =
-            picked === null ? '' : i === record.answer ? 'quiz-right' : i === picked ? 'quiz-wrong' : 'quiz-dim';
+            picked === null
+              ? ''
+              : i === record.answer
+                ? 'quiz-right'
+                : i === picked
+                  ? 'quiz-wrong'
+                  : 'quiz-dim';
           return (
             <button
               key={i}
@@ -93,7 +79,9 @@ function ReviewQuestion({
         })}
       </div>
       {picked !== null && (
-        <p className={`quiz-explain ${picked === record.answer ? 'quiz-explain-right' : ''}`}>
+        <p
+          className={`quiz-explain ${picked === record.answer ? 'quiz-explain-right' : ''}`}
+        >
           {picked === record.answer
             ? record.cleared + 1 >= 2
               ? 'Right again. This one retires from your deck. '
@@ -148,9 +136,10 @@ export function ReviewPage() {
         <div className="kicker">Five minutes. Most days.</div>
         <h1>Daily review</h1>
         <p>
-          Understanding fades without resurfacing, so here is a tiny daily deck: five glossary
-          terms chosen fresh each day, plus any self-check siteQuestions you've missed. Answer a
-          missed question correctly twice and it retires. Everything stays in your browser.
+          Understanding fades without resurfacing, so here is a tiny daily deck:
+          five glossary terms chosen fresh each day, plus any self-check
+          questions you've missed. Answer a missed question correctly twice and
+          it retires. Everything stays in your browser.
         </p>
       </section>
 
@@ -167,13 +156,18 @@ export function ReviewPage() {
         <h2>Questions you've missed</h2>
         {missList.length === 0 ? (
           <Callout>
-            Nothing here, either because you haven't missed any self-checks yet or because
-            you've cleared them all. The quizzes live inside the{' '}
-            <Link to="/">quests</Link>; miss one and it shows up here until you beat it twice.
+            Nothing here, either because you haven't missed any self-checks yet
+            or because you've cleared them all. The quizzes live inside the{' '}
+            <Link to="/">quests</Link>; miss one and it shows up here until you
+            beat it twice.
           </Callout>
         ) : (
           missList.map((record) => (
-            <ReviewQuestion key={record.question} record={record} onResult={onResult} />
+            <ReviewQuestion
+              key={record.question}
+              record={record}
+              onResult={onResult}
+            />
           ))
         )}
       </section>

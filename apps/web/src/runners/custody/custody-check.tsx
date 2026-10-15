@@ -16,29 +16,36 @@ const QUESTIONS: Question[] = [
     id: 'phrase',
     ask: 'Did the wallet show you a recovery phrase and tell you to write it down?',
     yesMeansSelf: true,
-    yesNote: 'A recovery phrase exists because there is a key only you hold.',
-    noNote: 'No phrase means there is nothing of yours to recover: the keys are not yours.',
+    yesNote:
+      'A phrase is evidence of a recovery mechanism, not proof that you alone control the Lightning balance.',
+    noNote:
+      'No phrase does not settle custody: some designs use other backups or recovery mechanisms.',
   },
   {
     id: 'signup',
     ask: 'Did you sign up with an email address, a phone number, or a password?',
     yesMeansSelf: false,
-    yesNote: 'Accounts imply a provider holding something on your behalf.',
-    noNote: 'No account: nothing to log into, and nothing for anyone to lock you out of.',
+    yesNote:
+      'An account can coexist with self-custody; check what the provider actually controls.',
+    noNote: 'No account alone does not prove independent spending or recovery.',
   },
   {
     id: 'channels',
     ask: 'Can you see a list of channels, with balances and a peer for each?',
     yesMeansSelf: true,
-    yesNote: 'Seeing your own channels means you are a party to them.',
-    noNote: 'If channels are invisible, they are probably not yours.',
+    yesNote:
+      'A channel screen is a clue, not evidence that your device holds the required signing and recovery data.',
+    noNote:
+      'A wallet may hide channels from its UI even when you control them.',
   },
   {
     id: 'onchain',
     ask: 'Did opening it cost an on-chain fee, or ask you to fund it from the chain?',
     yesMeansSelf: true,
-    yesNote: 'Somebody paid to put a 2-of-2 output on the chain, and it was you.',
-    noNote: 'Free and instant setup usually means no channel of your own was opened.',
+    yesNote:
+      'Funding is a clue. Confirm who can sign, force-close and recover without the provider.',
+    noNote:
+      'Subsidized or prearranged setup does not establish who controls the keys.',
   },
 ];
 
@@ -74,8 +81,9 @@ export function CustodyCheck({ finale }: RunnerProps) {
       <div className="prose">
         <p>
           Four questions about the wallet you actually use. They are about{' '}
-          <strong>behaviour</strong>, not brand names, how a wallet behaves is what distinguishes
-          the models in practice, and it does not go stale the way a list of products would.
+          <strong>behaviour</strong>, not brand names, how a wallet behaves is
+          what distinguishes the models in practice, and it does not go stale
+          the way a list of products would.
         </p>
         {QUESTIONS.map((q) => (
           <div key={q.id} style={{ marginBottom: 14 }}>
@@ -86,7 +94,9 @@ export function CustodyCheck({ finale }: RunnerProps) {
                   key={choice}
                   className={`preset ${answers[q.id] === choice ? 'preset-active' : ''}`}
                   aria-pressed={answers[q.id] === choice}
-                  onClick={() => setAnswers((prev) => ({ ...prev, [q.id]: choice }))}
+                  onClick={() =>
+                    setAnswers((prev) => ({ ...prev, [q.id]: choice }))
+                  }
                 >
                   {choice}
                 </button>
@@ -100,31 +110,21 @@ export function CustodyCheck({ finale }: RunnerProps) {
           </div>
         ))}
 
-        {verdict === 'self' && (
+        {done && (
           <Callout>
-            <strong>You are holding your own keys.</strong> Everything in this curriculum
-            describes <em>your</em> protection: the 2-of-2 lock is half yours, the penalty branch
-            is enforceable by you, and nobody can freeze or reverse your payments. The duties come
-            with it, being able to receive, and something watching the chain while you sleep.
-          </Callout>
-        )}
-        {verdict === 'custodial' && (
-          <Callout>
-            <strong>A company is holding your money.</strong> This is a normal, legitimate choice
-            for small amounts, and it works well. But be clear about what it is: the guarantees in
-            the last five quests are describing the <em>provider's</em> protection, not yours. They
-            can see every payment you make, they can freeze you, and if they fail you are a
-            creditor. The fix, if you want the guarantees, is a wallet that hands you a recovery
-            phrase.
-          </Callout>
-        )}
-        {verdict === 'mixed' && (
-          <Callout>
-            <strong>Mixed signals, worth checking properly.</strong> Some wallets are genuinely
-            hybrid: your keys, but channels managed by a service that can still see a great deal.
-            Others are custodial with a recovery phrase for an on-chain balance only. The
-            deciding question is the one from the first stop:{' '}
-            <em>if they disappeared tonight, could you still get your money?</em>
+            <strong>
+              {verdict === 'self'
+                ? 'Clues consistent with self-custody.'
+                : verdict === 'custodial'
+                  ? 'Clues consistent with provider custody.'
+                  : 'Mixed custody clues.'}
+            </strong>{' '}
+            These answers cannot certify custody or recovery. Check the wallet's
+            documented architecture: who holds signing keys, who holds
+            channel-state backups, and whether you can recover on-chain if the
+            provider disappears. A phrase may cover only an on-chain balance. A
+            provider may subsidize channel fees or offer an optional account
+            without controlling keys. Never submit real keys or phrases here.
           </Callout>
         )}
         {finale.note && (
@@ -137,7 +137,9 @@ export function CustodyCheck({ finale }: RunnerProps) {
         <div className="viz-root">
           <div className="viz-title">What applies to you</div>
           <div className="viz-sub">
-            {done ? 'based on your four answers' : `${answered} of ${QUESTIONS.length} answered`}
+            {done
+              ? 'based on your four answers'
+              : `${answered} of ${QUESTIONS.length} answered`}
           </div>
           <div className="field-rows">
             {[
@@ -150,7 +152,7 @@ export function CustodyCheck({ finale }: RunnerProps) {
               <div className="field-row" key={claim}>
                 <span className="field-label">{claim}</span>
                 <span className="field-hex">
-                  {!done ? ', ' : verdict === 'self' ? '✓ yours' : verdict === 'mixed' ? '? check' : '✗ theirs'}
+                  {!done ? 'unanswered' : '? verify independently'}
                 </span>
               </div>
             ))}
@@ -159,8 +161,11 @@ export function CustodyCheck({ finale }: RunnerProps) {
             <div className="guess-feed">
               <div className="stat-label">the deciding question</div>
               <div className="guess-verdict">
-                If the provider disappeared tonight, could you still get your money?
-                {verdict === 'self' ? ', yes, by force closing.' : verdict === 'custodial' ? ', no.' : ', worth finding out.'}
+                If the provider disappeared tonight, could you still get your
+                money?
+                {
+                  ' Check documented recovery requirements; this quiz cannot determine that.'
+                }
               </div>
             </div>
           )}

@@ -93,6 +93,7 @@ export function decodeBech32(input: string, options: Bech32Options = {}): Bech32
   if (sep === -1) return { ok: false, error: 'No separator: every bech32 string contains a "1" between prefix and data.' };
   if (sep === 0) return { ok: false, error: 'Empty human-readable part before the "1" separator.' };
   const hrp = str.slice(0, sep);
+  if ([...hrp].some(ch => ch.charCodeAt(0) < 33 || ch.charCodeAt(0) > 126)) return { ok: false, error: 'Human-readable prefix must contain printable ASCII (33–126).' };
   const dataPart = str.slice(sep + 1);
   if (dataPart.length < 6) return { ok: false, error: 'Data section too short to even hold the 6-character checksum.' };
   const values: number[] = [];

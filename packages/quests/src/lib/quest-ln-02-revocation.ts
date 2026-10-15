@@ -196,7 +196,7 @@ export const questLn02: Quest = {
     takeaway:
       "Build both halves of a revocation key from two independent secrets, watch them meet, then reveal the per-commitment secret and see the private key appear. Then load BOLT #3's own published test vectors and confirm this page reproduces every intermediate value the specification prints.",
     runnerId: 'revocation-forge',
-    note: "The elliptic-curve arithmetic and SHA-256 run in your browser, in this site's own dependency-free TypeScript, no cryptography library. That is why the vector check matters and why it is worth pressing: the spec's numbers only come out if every line of it is correct. The same check runs in CI on every change to this site.",
+    note: 'The elliptic-curve arithmetic and SHA-256 run locally in educational TypeScript. Matching published test vectors checks those specific cases and intermediate values; it does not prove every line correct or make this a production wallet. The same checks run in CI.',
   },
   recap: {
     tryIt:
@@ -219,7 +219,7 @@ export const questLn02: Quest = {
       },
     ],
     closing:
-      "**Keep verifying.** This is the quest where Lightning stops being a promise and becomes arithmetic: nobody is trusted, nobody is monitored, and cheating simply costs more than it pays. You checked it against the specification, against a node that implements it, and against the specification's own test vectors running in your own browser. Next: how Mira pays someone she has no channel with at all.",
+      '**Keep verifying.** Revocation penalties depend on monitoring the chain and getting a penalty transaction confirmed before the cheater can spend the delayed output. Your node or a watchtower must act in time. Cryptography supplies the spending paths; it does not monitor the chain for you.',
   },
   feynman: {
     prompt:

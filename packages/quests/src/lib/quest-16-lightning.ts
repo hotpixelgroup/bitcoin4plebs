@@ -18,7 +18,7 @@ export const quest16: Quest = {
   track: 'Beyond the chain',
   title: 'Where do a thousand coffees fit?',
   summary:
-    "Not on the chain, and that's the trick: open a tab secured by Bitcoin, pay a thousand times for free, settle twice. Lightning from primary sources, honest limits included and the doorway to a whole site about it.",
+    'Open a Bitcoin-secured channel, update balances off-chain, and compare cooperative close with unilateral recovery. Direct updates avoid per-payment mining fees, but liquidity, availability, routing fees and on-chain recovery still matter.',
   duration: '11 min',
   pin: BITCOIN_PIN,
   story: {
@@ -175,7 +175,7 @@ export const quest16: Quest = {
           "A Lightning balance in a real channel is a signed Bitcoin transaction you can enforce on-chain unilaterally; the base chain's full rules (all fifteen quests of them) back every sat. The caveat hides in wallet choice: many popular 'Lightning wallets' are custodial, meaning a company holds the channels and you hold an IOU, which is Quest #14's exchange problem wearing a lightning bolt. The protocol is trustless; your app may not be.",
       },
       prose: [
-        "Payments route. If Ana↔Bo and Bo↔Carla have channels, Ana can pay Carla *through* Bo. A cryptographic gadget (a hash-locked contract) makes sure Bo can't pocket the payment in transit: either he passes it along and earns a routing fee measured in millisats, or nothing moves at all. Chain those hops and you get a network where most participants are a few handshakes apart.",
+        'A routed payment uses conditional HTLCs on separate channels. Bo reserves his own outgoing liquidity and can claim upstream after learning the preimage. Safety depends on deadline margins, monitoring and timely confirmation; failed payments can lock liquidity and require on-chain recovery.',
         "Now the honest bill, itemized. **Liquidity:** a channel can only push what's on your side of it; receiving needs capacity pointed at you, and managing that is real work the marketing skips. **Uptime:** the penalty script only defends you if someone is watching the chain during `to_self_delay`; be offline too long and delegated watchers (or luck) are your defense. **On-chain gravity:** opens, closes, and disputes still bid in Quest #12's auction, so base-layer fee crises raise Lightning's floor too. **The custodial slide:** because self-managed channels take effort, many users drift to custodians, and Quest #14 already told you what an IOU is. Lightning removes the *need* for trust; it cannot remove the convenience of it.",
       ],
     },
@@ -199,7 +199,7 @@ export const quest16: Quest = {
         cite: '03-transactions.md:79',
       },
       {
-        text: "**Old states are radioactive**: each update surrenders the previous state's revocation key, so cheating forfeits everything via the OP_IF penalty branch while honesty waits out to_self_delay.",
+        text: '**Revoked states enable penalty claims.** Protection requires detecting the broadcast and confirming recovery before the cheater can successfully spend the delayed output. Time passing alone does not punish anyone.',
         cite: '03-transactions.md:117',
       },
       {
@@ -212,6 +212,6 @@ export const quest16: Quest = {
   feynman: {
     prompt: 'Explain to a friend how two people can pay each other a thousand times while the blockchain only sees two transactions, in three sentences.',
     model:
-      'They lock coins on-chain in a box that opens only with both signatures, then privately re-sign an updated split of that box every time one pays the other, so the thousand payments are just a thousand rewrites of who-owns-what. Either person can cash out to the chain at any moment using the latest split, and cheating with an old one fails because each update handed the other person a penalty key that instantly confiscates a cheater\'s entire share. The blockchain only sees the box open and the final split close it, and its readiness to enforce is what keeps every unwritten payment honest.',
+      'Two parties lock coins in a channel and privately update signed commitments. Cooperative closing can settle the final split in one closing transaction. A unilateral close may need delayed sweeps; a revoked state permits a penalty only if the other party detects it and confirms the claim in time. The chain enforces spending conditions, not automatic punishment.',
   },
 };

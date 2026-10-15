@@ -77,10 +77,39 @@ jobs:
           BOLTS_SRC: /tmp/bolts-pinned
           LND_SRC: /tmp/lnd-pinned
 
+      - name: Assert Bitcoin artifacts
+        run: node tools/assert-site-build.mjs bitcoin /
+
       # Both front doors are built from this one source tree, so a change
       # that breaks the sibling site must not reach main either.
+      - name: Test the Lightning front door
+        run: npx nx test web
+        env:
+          VITE_SITE: lightning
+
       - name: Build the Lightning front door
         run: npx nx build web
         env:
           VITE_SITE: lightning
           VITE_BASE: /lightning4plebs/
+
+      - name: Assert Lightning artifacts
+        run: node tools/assert-site-build.mjs lightning /lightning4plebs/
+
+      # Changing only the base path must also invalidate Nx's build cache.
+      - name: Verify alternate base cache input
+        run: |
+          VITE_SITE=lightning VITE_BASE=/cache-regression/ npx nx build web
+          node tools/assert-site-build.mjs lightning /cache-regression/
+          VITE_SITE=lightning VITE_BASE=/lightning4plebs/ npx nx build web
+          node tools/assert-site-build.mjs lightning /lightning4plebs/
+
+      - name: Verify cached output restoration
+        run: |
+          saved=$(mktemp -d)
+          mv apps/web/dist "$saved/bitcoin"
+          mv apps/web/dist-lightning "$saved/lightning"
+          VITE_SITE=lightning VITE_BASE=/lightning4plebs/ npx nx build web
+          node tools/assert-site-build.mjs lightning /lightning4plebs/
+          npx nx build web
+          node tools/assert-site-build.mjs bitcoin /
