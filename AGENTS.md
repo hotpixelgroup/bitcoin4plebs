@@ -19,3 +19,5 @@ Repo-specific setup, validation commands and constraints belong in a "Project sp
 Use `npm ci`, then `nx run-many -t lint test typecheck build`. Set the four pinned-source environment paths when running excerpt/vector checks. Verify both Bitcoin and Lightning variants and their artifact assertions.
 
 CI budget: batch a coherent change, run checks locally, then make one consolidated push when practical. Do not use incremental pushes or gratuitous reruns as a test loop. Keep the final CI check on the exact PR head; a failed gate still needs investigation. Never merge or deploy without authorization.
+
+Saved workflows: `.claude/workflows/` (each runs as `/<name>`; run capped first; report-only unless the file says otherwise). See docs/agent-standard.md, "Fan-out work".

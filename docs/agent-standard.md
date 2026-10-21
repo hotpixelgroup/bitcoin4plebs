@@ -19,6 +19,7 @@ Do not declare completion until the acceptance criteria are satisfied. If someth
 
 - Verify by running the real thing (the app, CLI, browser via DevTools, simulator, traces and profiles), not just reading code or passing type checks. If agents can't run it, build that ability first; otherwise the human becomes the bottleneck.
 - When delegating an outcome ("keep X crash-free") rather than a task, first give agents what they need to own it: data access (crash or error reports), version-to-commit mapping, and environments to reproduce and verify. Outcome goals still get a rubric, an attempt or budget limit, and PR review; ambitious targets never override attempt limits.
+- Automate the current bottleneck first (today usually review and verification, not code generation), and measure before and after.
 
 2. SEPARATE DURABLE STATE FROM REPLACEABLE EXECUTION
 
@@ -145,6 +146,20 @@ Give each worker the goal, relevant evidence, necessary context, constraints, au
 Avoid overlapping edits. Use explicit ownership and isolated branches or worktrees. Preserve my changes and other contributors’ work.
 
 Integrate and verify delegated results. A worker saying “done” is not sufficient evidence. Share meaningful findings promptly, particularly blockers or discoveries that change the plan.
+
+Fan-out work (graphs and dynamic workflows)
+
+- Use fan-out only for wide, independent work (audits, migrations, per-file or per-item checks, cross-checked research). Small, exploratory or truly sequential tasks stay with one agent.
+- Before fanning out, run the fake-edge test: a step depends on another only if it consumes that step's output. Shared files, schemas, lockfiles, databases, ports and rate-limited APIs are hidden edges: serialize them or isolate each worker in its own worktree.
+- Give every worker a contract: one bounded job, explicit inputs, and schema-validated output that includes its evidence (file:line, command output, or source URL and date).
+- Reduce with code, not a model (dedupe, filter, count). For more than ~40 results, summarize in batches and synthesize from the summaries.
+- Every merge reports how many results came back against how many were expected. A failed or empty worker is reported, never silently dropped; a partial set is never called complete; a claim no one could check is "unverified", not "refuted".
+- Verifiers run in a fresh context and see only the artifact, never the worker's conversation. Check distinct questions (correct? current? source real?) and keep a finding only if it survives.
+- Anchor the result in things that can't argue back: tests that ran on the delivered SHA, CI on the current head, real data. LLM verdicts inform; deterministic checks gate. A workflow may never edit its own tests, thresholds, rules or budget caps to pass.
+- Start with a capped slice (small size guideline or an explicit agent and file cap), record agents and tokens per run, and widen only after a run earns it. Don't enable automatic workflow orchestration as a session default for routine work.
+- Workflows can't take input mid-run, so each human approval is a boundary between two workflows. Workflow agents inherit the session's permissions: enforce "no push, PR, post, merge or destructive DB command" with deny rules, not prose.
+- Save a workflow that proved itself as a versioned script (`.claude/workflows/`), reviewed like code; third-party workflows and plugins are executable dependencies. When a repeated workflow produces a defect, fix the workflow and rerun rather than hand-patching its output.
+- Worker outputs integrate into one branch and one PR per workstream; respect each repo's CI budget.
 
 10. HANDLE FAILURES AND RETRIES DELIBERATELY
 
