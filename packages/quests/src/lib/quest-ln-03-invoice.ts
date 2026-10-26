@@ -44,7 +44,7 @@ export const questLn03: Quest = {
         { aspect: 'How many times', bank: 'As many as you like', bitcoin: 'Once. The secret is spent with it' },
         { aspect: 'Amount', bank: 'Not part of it', bitcoin: 'Usually fixed, and signed over' },
         { aspect: 'Lifetime', bank: 'Forever', bitcoin: 'Expires, one hour by default' },
-        { aspect: 'What proves payment', bank: 'A confirmed transaction anyone can look up', bitcoin: 'A secret only the payer ends up holding' },
+        { aspect: 'What proves payment', bank: 'A confirmed transaction anyone can look up', bitcoin: 'The preimage plus the signed invoice (forwarding nodes learn the preimage too)' },
       ],
       prose: [
         "Read the two columns and the design falls out. An address is a place. An invoice is a *contract offer*: this much, for this, before then, and here is my signature over all of it so you know it wasn't tampered with in transit.",
@@ -137,10 +137,10 @@ export const questLn03: Quest = {
       id: 'the-envelope',
       title: 'Why it is bech32, and why that was nearly free',
       takeaway:
-        "The whole invoice is wrapped in **bech32**, the same checksummed alphabet Bitcoin addresses use, with the 90-character limit lifted. One mistyped character is caught by the checksum, not discovered later by a payment going somewhere strange.",
+        "The whole invoice is wrapped in **bech32**, the same checksummed alphabet Bitcoin addresses use, with the 90-character limit lifted. A mistyped character is almost certainly caught by the checksum, not discovered later by a payment going somewhere strange.",
       prose: [
         "The specification is refreshingly plain about why: bech32 *can be simply reused for Lightning invoices*, and it admits the checksum is optimised for manual entry, which for a 400-character string is 'unlikely to happen often'. The honest reading is that reusing a well-analysed encoding beat inventing a new one, and the error detection came along for free.",
-        "The practical payoff is the one you can test below. Bech32's checksum is designed to catch any small number of wrong characters, so a typo, a truncated copy-paste, or a character mangled by a chat client is caught *at decode time* rather than becoming a mystery. Paste a broken invoice into the finale and watch it refuse.",
+        "The practical payoff is the one you can test below. Bech32's checksum is very likely to catch a typo, a truncated copy-paste, or a character mangled by a chat client *at decode time* rather than letting it become a mystery. (Its hard guarantees only cover strings up to 89 characters; invoices are longer, so here it is a very good net, not a proof.) Paste a broken invoice into the finale and watch it refuse.",
         "There is a nice symmetry here for anyone who came from the Bitcoin site: the decoder running below reuses the very same bech32 implementation that [that site's address quest](https://hotpixelgroup.github.io/bitcoin4plebs/quests/what-is-an-address) teaches you to break on purpose. One encoding, two layers, one checksum protecting both.",
       ],
       annotations: [

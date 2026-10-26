@@ -374,7 +374,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['bricking', 'bricked'],
     category: 'Keys & ownership',
     definition:
-      'When a device stops working permanently: as useful as a brick. For a hardware wallet this is an inconvenience, not a disaster, because the coins live on the ledger and your seed backup rebuilds the wallet on any replacement. The device dying is survivable. The backup being bad is not.',
+      'When a device stops working permanently: as useful as a brick. For a hardware wallet this is an inconvenience, not a disaster, because the coins live on the ledger and your seed backup (plus any passphrase, and for multisig the wallet descriptor) rebuilds the wallet on any replacement. The device dying is survivable. The backup being bad is not.',
     quest: 14,
   },
   {
@@ -742,7 +742,7 @@ export const glossary: GlossaryEntry[] = [
     code: true,
     category: 'Addresses & encoding',
     definition:
-      'The checksum polynomial every wallet runs over an address before sending. Its BCH-code construction *guarantees* catching up to 4 mistyped characters in strings up to 89 long; no address is longer than 62.',
+      'The checksum polynomial every wallet runs over an address before sending. Its BCH-code construction *guarantees* detecting up to 4 substituted characters in strings up to 89 long, which covers every segwit address (at most 74 characters). Other kinds of error are caught almost always, not with a guarantee.',
     cite: 'bech32.cpp:130',
     quest: 10,
   },
@@ -823,7 +823,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['Knots'],
     category: 'The network & your node',
     definition:
-      'A derivative of Bitcoin Core maintained by Luke Dashjr: the same consensus engine with a patch set of much stricter relay-policy defaults (data filtering on, bare multisig off). Its 2025 growth was node operators voting against Core v30\'s open OP_RETURN default. [Core vs. Knots, side by side](/core-vs-knots).',
+      'A derivative of Bitcoin Core maintained by Luke Dashjr. Until 2026 it was the same consensus engine with a patch set of much stricter relay-policy defaults (data filtering on, bare multisig off). Its 2025 growth was node operators voting against Core v30\'s open OP_RETURN default. Knots 29.3 then enforced BIP110 and Knots 29.4.1 changed proof-of-work, so current releases follow a separate chain from Core. [Core vs. Knots, side by side](/core-vs-knots).',
     quest: 13,
   },
   {
@@ -840,7 +840,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['economic node', 'economic nodes'],
     category: 'The network & your node',
     definition:
-      'A full node whose operator accepts bitcoin as payment: an exchange, a merchant, you when someone pays you. These are the nodes whose rules define which chain is "bitcoin," because miners can only sell coins the economy recognizes. In 2017 they outvoted over 80% of hashpower without mining anything.',
+      'A full node whose operator accepts bitcoin as payment: an exchange, a merchant, you when someone pays you. These are the nodes whose rules define which chain is "bitcoin," because miners can only sell coins the economy recognizes. In 2017 they are widely credited with outvoting over 80% of hashpower without mining anything.',
     quest: 12,
   },
   {
@@ -998,7 +998,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['cve-2018-17144'],
     category: 'Rules, forks & history',
     definition:
-      'The 2018 inflation bug: a refactor briefly made it possible (never exploited) for a miner to spend the same coin twice in one block. Quietly patched, then fully disclosed. The lesson isn\'t "Bitcoin is bug-free"; it\'s that the checks are public, so bugs get found and the fix is verifiable.',
+      'The 2018 inflation bug: a 2017 refactor made it possible, for about a year, for a miner to spend the same coin twice in one block (no known exploitation). Quietly patched, then fully disclosed. The lesson isn\'t "Bitcoin is bug-free"; it\'s that the checks are public, so bugs get found and the fix is verifiable.',
     quest: 5,
   },
   {
@@ -1013,7 +1013,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['pinned commit'],
     category: 'Rules, forks & history',
     definition:
-      'This site\'s anti-tampering rule. Every excerpt is copied letter-for-letter from one exact snapshot of its source repository: Bitcoin Core at commit `18c05d9`, the BIPs repository at `8c369ac`. Automated checks re-diff all of them against the real repositories on every change, and the "verify on GitHub" link under each excerpt lets you do the same.',
+      'This site\'s anti-tampering rule. Every excerpt is copied letter-for-letter from one exact snapshot of its source repository: Bitcoin Core at commit `18c05d9`, the BIPs repository at `8c369ac`, the BOLTs at `94eb038` and LND at `29257ec`. Automated checks re-diff all of them against the real repositories on every change, and the "verify on GitHub" link under each excerpt lets you do the same.',
   },
   {
     term: 'OP_RETURN',
@@ -1038,7 +1038,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['fee floor'],
     category: 'Transactions & the mempool',
     definition:
-      'The mempool\'s automatic price of admission when it overflows: eviction ratchets the floor up to what the evicted bidder paid, then the floor decays by half every 12 hours until it snaps back to zero. For feel: even a 100× fee spike decays to nothing in under four days of calm, faster once the queue drains. Congestion prices itself and cures itself; nobody chooses the number.',
+      'The mempool\'s automatic price of admission when it overflows: eviction ratchets the floor up to what the evicted bidder paid, then the floor decays by half every 12 hours until it snaps back to zero. For feel: even a 100× fee spike decays to nothing in under four days of calm, faster once the queue drains. This is one node\'s own admission floor, not the market rate: market fees fall only when demand does. Nobody chooses the number.',
     cite: 'txmempool.cpp:851',
     quest: 12,
   },
@@ -1074,7 +1074,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['revocation key', 'revocation'],
     category: 'Lightning & channels',
     definition:
-      "The secret each channel party surrenders for its *previous* state whenever the balance updates: the price of the new split. Holding it makes the counterparty's old commitment instantly spendable via the OP_IF penalty branch, which is what makes stale states radioactive and channels honest.",
+      "The key that guards the penalty branch of an old channel state. Each time the balance updates, a party surrenders the per-commitment secret for its *previous* state: the price of the new split. Combined with the counterparty's own basepoint secret, that yields the revocation key, which makes the old commitment instantly spendable via the OP_IF penalty branch. That is what makes stale states radioactive and channels honest.",
     quest: 16,
   },
   {
@@ -1082,7 +1082,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['UASF'],
     category: 'Rules, forks & history',
     definition:
-      'A rule change enforced by economic nodes on a schedule regardless of miner support: the 2017 escalation that pressured miners into activating SegWit and sank the SegWit2x hard fork. The proof, run live, that hashpower follows the economy and not the reverse.',
+      'A rule change enforced by economic nodes on a schedule regardless of miner support: the 2017 escalation widely credited with pressuring miners into activating SegWit and helping sink the SegWit2x hard fork. Many read it as evidence that hashpower follows the economy, not the reverse.',
     quest: 12,
   },
   // --- Lightning & channels ---
@@ -1151,7 +1151,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['force close', 'force-close'],
     category: 'Lightning & channels',
     definition:
-      'Closing a channel by broadcasting your latest commitment transaction unilaterally, without your counterparty\'s cooperation. Always available: that is the point, but it costs on-chain fees and puts your own funds behind `to_self_delay`. A cooperative close, where both sides sign one tidy transaction, is cheaper and immediate.',
+      'Closing a channel by broadcasting your latest commitment transaction unilaterally, without your counterparty\'s cooperation. Always available: that is the point, but it costs on-chain fees and puts your own funds behind `to_self_delay`. A cooperative close, where both sides sign one tidy transaction, is cheaper and has no timelock: the funds are usable as soon as it confirms.',
     quest: 2,
     questSite: 'lightning',
   },
@@ -1285,7 +1285,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['update_add_htlc'],
     category: 'Lightning & channels',
     definition:
-      'The message that offers a payment into a channel. Five fields: which channel, an id, `amount_msat`, the `payment_hash`, a `cltv_expiry` deadline, and a sealed 1,366-byte onion the sender cannot read. Notice what is absent, no payer, no payee, no route.',
+      'The message that offers a payment into a channel. Six fields: which channel, an id, `amount_msat`, the `payment_hash`, a `cltv_expiry` deadline, and a sealed 1,366-byte onion of which the receiving hop can open only its own layer. Notice what is absent, no payer, no payee, no route.',
     cite: '02-peer-protocol.md:2783',
     quest: 4,
     questSite: 'lightning',
@@ -1372,7 +1372,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['routing fee', 'routing fees'],
     category: 'Lightning & channels',
     definition:
-      'What a node charges to forward someone else’s payment. There is no schedule and no authority: each node picks two numbers per direction, [[fee_base_msat]] and [[fee_proportional_millionths]] and advertises them. The **sender pays every fee on the route in advance**, so the payee always receives exactly the invoice amount.',
+      'What a node charges to forward someone else’s payment. There is no schedule and no authority: each node picks two numbers per direction, [[fee_base_msat]] and [[fee_proportional_millionths]] and advertises them. The **sender pays every fee on the route in advance**, so the payee receives at least the invoice amount.',
     cite: '07-routing-gossip.md:981',
     quest: 6,
     questSite: 'lightning',

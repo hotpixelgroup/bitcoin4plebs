@@ -127,7 +127,7 @@ export const sites: Record<SiteId, SiteConfig> = {
       covers: [
         'channels, revocation and the need for timely recovery',
         'what is really inside an lnbc invoice',
-        'payments that cross strangers who never learn who you are',
+        'payments that cross strangers who cannot see where they started or end',
       ],
     },
     story: { label: 'ana pays bo', cast: ['A', 'B'] },

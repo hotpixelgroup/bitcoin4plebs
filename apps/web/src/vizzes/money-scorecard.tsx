@@ -70,7 +70,7 @@ const PROPERTIES: Property[] = [
     detail: {
       gold: 'You cannot shave exact change off a bar. Practical units are coarse.',
       fiat: 'Down to the cent, which is fine for daily life but no finer.',
-      bitcoin: '100,000,000 satoshis per coin, spendable down to a single sat (Quest #1).',
+      bitcoin: '100,000,000 satoshis per coin, accounted down to a single sat (Quest #1); on-chain outputs have a few-hundred-sat dust floor, and Lightning goes finer.',
     },
   },
   {

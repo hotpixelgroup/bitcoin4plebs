@@ -14,8 +14,8 @@ interface CompareRow {
 const ROWS: CompareRow[] = [
   {
     aspect: 'Consensus rules',
-    core: 'Identical. Both enforce the same rules and follow the same chain.',
-    knots: 'Identical. A block valid to one is valid to the other.',
+    core: 'Shared with Knots until August 2026. Core never adopted BIP110 and kept following the chain almost all miners extend.',
+    knots: 'Shared with Core until Knots 29.3 enforced BIP110 and the chain split at block 961,632 (August 2026). Knots 29.4.1 then changed its proof-of-work, so current Knots follows a separate chain.',
   },
   {
     aspect: 'Who maintains it',
@@ -25,7 +25,7 @@ const ROWS: CompareRow[] = [
   {
     aspect: 'Release rhythm',
     core: 'Major releases roughly twice a year, long deprecation cycles.',
-    knots: 'Tracks Core releases, usually shortly after each one.',
+    knots: 'Tracked Core releases until 2026; since the split it ships its own 29.x line with consensus changes Core does not have.',
   },
   {
     aspect: 'Default OP_RETURN budget',
@@ -43,9 +43,9 @@ const ROWS: CompareRow[] = [
     knots: 'A node should spend its bandwidth on payments, not billboards; filters express values even when they leak.',
   },
   {
-    aspect: 'What neither can do',
-    core: 'Change consensus by shipping a release.',
-    knots: 'Same. Filters shape relay, never the chain.',
+    aspect: 'What no release can do',
+    core: 'Make anyone else adopt its consensus rules.',
+    knots: 'Same. Its filters shape relay only; its 2026 consensus changes moved Knots nodes onto their own chain, not everyone else.',
   },
 ];
 
@@ -68,11 +68,14 @@ export function CoreVsKnotsPage() {
         <div className="kicker">Reference · choose your gatekeeper</div>
         <h1>Bitcoin Core vs. Bitcoin Knots</h1>
         <p>
-          Two programs, one chain. Both are full Bitcoin nodes: they speak the same network
-          protocol, enforce the same consensus rules, and follow the same history, letter for
-          letter. What differs is <strong>relay policy</strong> (what each will pass along while it
-          waits) and <strong>governance</strong> (who writes the software and how). Understanding
-          that difference is most of understanding the loudest fight in Bitcoin today.
+          Two programs that shared one chain until August 2026. For years both were full Bitcoin
+          nodes that enforced the same consensus rules and followed the same history, letter for
+          letter, and differed only in <strong>relay policy</strong> (what each will pass along
+          while it waits) and <strong>governance</strong> (who writes the software and how). Then
+          Knots shipped BIP110 enforcement, the chain split at block 961,632, and Knots later changed
+          its proof-of-work, so current Knots releases follow a separate chain. Understanding how a
+          relay-policy fight became a chain split is most of understanding Bitcoin&apos;s loudest
+          recent fight.
         </p>
       </section>
 
@@ -89,7 +92,7 @@ export function CoreVsKnotsPage() {
 
         <h2>Bitcoin Knots</h2>
         <p>
-          <RichText text="[Bitcoin Knots](https://github.com/bitcoinknots/bitcoin) is a derivative of Core maintained by Luke Dashjr, one of Bitcoin's earliest and longest-serving developers. Each release takes Core and applies a long-running patch set: stricter data-carrier defaults, additional spam and inscription filters, bare-multisig relay off, and extra configuration switches Core declines to ship. It is best understood as **Core plus an opinion**: the consensus engine is the same; the taste layer is much stricter. Its governance is the mirror image of Core's: one primary maintainer gives it coherence and speed, at the cost of a far smaller review pool, a trade-off you should weigh honestly in both directions." />
+          <RichText text="[Bitcoin Knots](https://github.com/bitcoinknots/bitcoin) is a derivative of Core maintained by Luke Dashjr, one of Bitcoin's earliest and longest-serving developers. Each release takes Core and applies a long-running patch set: stricter data-carrier defaults, additional spam and inscription filters, bare-multisig relay off, and extra configuration switches Core declines to ship. Until 2026 it was best understood as **Core plus an opinion**: the same consensus engine with a much stricter taste layer. Since Knots 29.3 enforced BIP110 and Knots 29.4.1 changed proof-of-work, its consensus rules differ from Core's and it follows a separate chain. Its governance is the mirror image of Core's: one primary maintainer gives it coherence and speed, at the cost of a far smaller review pool, a trade-off you should weigh honestly in both directions." />
         </p>
 
         <h2>Side by side</h2>
@@ -119,12 +122,12 @@ export function CoreVsKnotsPage() {
           <RichText text="When Core v30 opened the OP_RETURN default, operators who wanted filtering didn't file complaints; they **switched software**. Public node crawlers watched Knots grow from a rounding error at the start of 2025 to a clearly double-digit share of reachable nodes within the year. Check the live number yourself rather than trusting this paragraph. [bitnodes.io](https://bitnodes.io/nodes/all/) breaks reachable nodes down by user agent, and [Luke Dashjr's charts](https://luke.dashjr.org/programs/bitcoin/files/charts/software.html) track the same split with different methodology. (Crawlers only see *listening* nodes, so every such number is an estimate of a subset.) This is the implementation market from [Quest #12](/quests/who-keeps-bitcoin-usable) operating in daylight: defaults are proposals, and node operators are the electorate." />
         </p>
         <p>
-          <RichText text="It also proved the limits of the vote. Knots nodes filter what they relay, yet the data still reaches miners by other paths and still confirms, because **policy shapes your bandwidth while consensus shapes the chain** (Quest #13's finale lets you feel this yourself). That leak is why some filtering advocates now back [BIP-110](/quests/the-data-wars), which would move data limits into consensus, where they'd bind everyone or no one." />
+          <RichText text="It also proved the limits of the vote. Knots nodes filter what they relay, yet the data still reaches miners by other paths and still confirms, because **policy shapes your bandwidth while consensus shapes the chain** (Quest #13's finale lets you feel this yourself). That leak is why some filtering advocates backed [BIP-110](/quests/the-data-wars), which tried to move data limits into consensus, where they'd bind everyone or no one. In August 2026 BIP110-enforcing nodes split from the chain almost all miners were extending at block 961,632, mining on their side stalled, and the proposal was marked Closed." />
         </p>
 
         <h2>So which should you run?</h2>
         <p>
-          <RichText text="Both give you the thing that matters: **full validation with your own eyes**, the sovereignty Quest #9 is about. Beyond that: run **Core** if you want the implementation with the deepest review coverage and you're content to let the fee auction judge what fills blocks. Run **Knots** if you want your node's bandwidth to express a view about what the ledger is for, and you accept a smaller review pool as the price of that voice. Run either over neither: a pleb with a filtering node and a pleb with an open one have far more in common with each other than with someone trusting an exchange's word. And nothing here is a marriage; switching costs an evening." />
+          <RichText text="Until August 2026 this was a choice of relay policy on one network, and either gave you the thing that matters: **full validation with your own eyes**, the sovereignty Quest #9 is about. That is no longer the whole choice. Current Knots releases enforce different consensus rules and follow a separate chain from Core, so choosing between them now means choosing which chain your node validates, not just what it relays. Read each project's own release notes before you switch, and check which chain your wallet, your exchange and the people who pay you actually follow. Either way, running a node beats trusting an exchange's word." />
         </p>
 
         <Callout>

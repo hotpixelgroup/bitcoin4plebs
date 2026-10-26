@@ -90,7 +90,7 @@ export const quest15: Quest = {
       annotations: [
         { lines: 'L257–58', text: 'The wallet remembers which addresses have received AND spent: the "used" list. (Spot the doubled "the": verbatim means verbatim.)' },
         { lines: 'L259–61', text: 'The stated purpose, in Core\'s own words: coin selection avoids tying transactions together "to increase privacy."' },
-        { lines: 'L263', text: 'One boolean per address, defending you by default.' },
+        { lines: 'L263', text: 'One boolean per address. It is only set when the optional avoid_reuse wallet setting is on, and that setting is off by default.' },
       ],
       excerpt: {
         ref: { file: 'src/wallet/wallet.h', startLine: 256, endLine: 263 },
@@ -193,7 +193,7 @@ export const quest15: Quest = {
         text: '**The ledger is glass**: every payment public forever, names omitted. Pseudonymity is real but it is a discipline, not a feature.',
       },
       {
-        text: '**Your wallet defends you by default**: fresh receive addresses, a tracked "used" list, and change that always goes somewhere brand-new.',
+        text: '**Your wallet defends you by default**: fresh receive addresses and change that always goes somewhere brand-new, plus an optional `avoid_reuse` mode that tracks a "used" list.',
         cite: 'wallet.cpp:2639',
       },
       {
@@ -203,7 +203,7 @@ export const quest15: Quest = {
         text: '**The links that hurt most are off-chain**: exchanges and merchants already hold name-to-address joins no heuristic needs.',
       },
       {
-        text: '**The heuristics have answers**: CoinJoins and PayJoins break common-input clustering on purpose, and an xpub pasted into a service is your whole history, leaked.',
+        text: '**The heuristics have answers**: CoinJoins and PayJoins break common-input clustering on purpose, and an xpub pasted into a service leaks that account\'s entire history.',
       },
     ],
     closing:

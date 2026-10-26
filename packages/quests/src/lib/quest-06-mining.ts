@@ -123,7 +123,7 @@ export const quest06: Quest = {
       takeaway:
         'Every 2,016 blocks, the network measures how long they *actually* took versus the 14 days they *should* have taken. The correction is clamped to **4× in either direction**, so not even a massive hashrate shock can whipsaw the clock.',
       prose: [
-        'This is how "one block per ten minutes" survives mining machines getting a trillion times faster since 2009: the rules *measure reality* and adjust. Blocks came too fast? The target shrinks: harder lottery. Miners left and blocks crawled? It grows: easier lottery.',
+        'This is how "one block per ten minutes" survives the network\'s total hashrate growing more than a hundred-trillion-fold since 2009: the rules *measure reality* and adjust. Blocks came too fast? The target shrinks: harder lottery. Miners left and blocks crawled? It grows: easier lottery.',
         'Lines 57–60 are pure engineering paranoia, and worth loving: even if the measured fortnight looks absurd (an attack, a bug, half the hashrate vanishing overnight), one adjustment can never change difficulty by more than 4×. Every node computes this identical correction from the chain itself: no committee meets, no one announces the new difficulty. It\'s a thermostat, not a central bank.',
       ],
       annotations: [

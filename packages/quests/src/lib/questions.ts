@@ -39,7 +39,7 @@ export const questions: NewbieQuestion[] = [
   },
   {
     question: 'Who is in charge of Bitcoin?',
-    short: 'Nobody, and the code makes that enforceable. Rules only change when node operators adopt new code nearly unanimously, which has happened six times in seventeen years.',
+    short: 'Nobody, and the code makes that enforceable. Rules only change when node operators adopt new code nearly unanimously, which has happened only six times since 2013.',
     slug: 'who-can-change-bitcoins-rules',
     stop: 'how-rules-change',
   },
@@ -129,13 +129,13 @@ export const questions: NewbieQuestion[] = [
   },
   {
     question: 'What is a wallet address, really?',
-    short: 'Not an account: a spelling of a lock, invented offline by your wallet, with a checksum that catches every typo.',
+    short: 'Not an account: a spelling of a lock, invented offline by your wallet, with a checksum that catches typos.',
     slug: 'what-is-an-address',
     stop: 'respelled-lock',
   },
   {
     question: 'What happens if I mistype an address?',
-    short: 'The checksum math guarantees up to 4 typos are always caught. Plant typos yourself and watch every wallet refuse them.',
+    short: 'The checksum math guarantees any 4 or fewer wrong characters are caught, and almost always catches other mistakes. Plant typos yourself and watch every wallet refuse them.',
     slug: 'what-is-an-address',
     stop: 'checksum',
   },
@@ -175,7 +175,7 @@ export const questions: NewbieQuestion[] = [
   },
   {
     question: 'Why are fees sometimes huge? Is that Bitcoin failing?',
-    short: 'Fees are an open auction for limited space, and spikes are demand doing the bidding. The code even guarantees every spike decays: the floor halves every 12 hours.',
+    short: 'Fees are an open auction for limited space, and spikes are demand doing the bidding. Your own node\'s admission floor is built to fall back too: it halves every 12 hours once the pressure stops. Market fees fall when demand does.',
     slug: 'who-keeps-bitcoin-usable',
     stop: 'fee-floor',
   },
@@ -187,13 +187,13 @@ export const questions: NewbieQuestion[] = [
   },
   {
     question: 'Who decides what counts as "spam" on Bitcoin?',
-    short: 'Right now: nobody, which is exactly the fight. Your node can filter what it relays, the auction prices what confirms, and BIP-110 proposes moving the question into consensus.',
+    short: 'Nobody, which is exactly the fight. Your node can filter what it relays, the auction prices what confirms, and BIP-110 tried to move the question into consensus; it was Closed in August 2026 after a stalled chain split.',
     slug: 'the-data-wars',
     stop: 'the-flood',
   },
   {
     question: 'Should I run Bitcoin Core or Bitcoin Knots?',
-    short: 'Same consensus, different relay taste and governance. Either one gives you full sovereignty; the comparison page and this stop give you the honest trade-offs.',
+    short: 'Until August 2026 the difference was relay taste and governance. Current Knots releases enforce different consensus rules and follow a separate chain, so the choice is now which chain you validate. The comparison page and this stop give you the dated story.',
     slug: 'the-data-wars',
     stop: 'the-split',
   },
@@ -217,7 +217,7 @@ export const questions: NewbieQuestion[] = [
   },
   {
     question: 'What happens if my hardware wallet breaks or burns?',
-    short: 'Nothing, if your seed words survive: the device holds keys, not coins. Restore the words on any replacement and everything reappears.',
+    short: 'Nothing, if your seed words survive: the device holds keys, not coins. Restore the words (plus any passphrase, and for multisig the wallet descriptor) on any replacement and your coins reappear.',
     slug: 'your-keys-your-coins',
     stop: 'what-kills-wallets',
   },
@@ -303,7 +303,7 @@ export const questions: NewbieQuestion[] = [
   {
     site: 'lightning',
     question: 'My payment is stuck. Is my money gone?',
-    short: 'No: it is locked in an HTLC until its deadline, then it comes back. Long routes mean long deadlines, sometimes hours.',
+    short: 'No: it is locked in an HTLC until its deadline, then it comes back. Long routes mean long deadlines, sometimes hours, occasionally days.',
     slug: 'crossing-strangers',
     stop: 'the-ladder',
   },
@@ -324,7 +324,7 @@ export const questions: NewbieQuestion[] = [
   {
     site: 'lightning',
     question: 'Why does closing a channel take so long?',
-    short: 'A force close puts your own funds behind a timelock: the window in which your counterparty could prove you cheated. Cooperative closes are immediate.',
+    short: 'A force close puts your own funds behind a timelock: the window in which your counterparty could prove you cheated. Cooperative closes have no timelock: funds are yours as soon as the closing transaction confirms.',
     slug: 'why-cheating-fails',
     stop: 'delay-or-punish',
   },
@@ -373,7 +373,7 @@ export const questions: NewbieQuestion[] = [
   {
     site: 'lightning',
     question: 'Who decides what a Lightning payment costs?',
-    short: 'Nobody centrally. Each node picks two numbers, advertises them, and your wallet adds up the cheapest path. The specification fixes the formula, never the numbers.',
+    short: 'Nobody centrally. Each node picks two numbers, advertises them, and your wallet adds them up to pick a cheap path that is likely to succeed. The specification fixes the formula, never the numbers.',
     slug: 'finding-a-route',
     stop: 'setting-fees',
   },

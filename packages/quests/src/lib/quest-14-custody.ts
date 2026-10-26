@@ -43,7 +43,7 @@ export const quest14: Quest = {
       },
       prose: [
         "In Quest #3 you watched `OP_CHECKSIG` demand a signature that matches the lock on a coin. A **wallet** is just the machine that holds the signing keys and does the bookkeeping: it derives your addresses, scans the ledger for coins locked to them, and signs when you spend. It holds no coins, the way your house keys hold no house.",
-        'An **exchange account** is a different species entirely. There, the company holds the keys, and what you hold is a balance in *their* database: a promise, redeemable as long as they stay solvent, honest, and un-hacked. History grades that promise harshly: Mt. Gox was holding 750,000 customer bitcoin when it collapsed in 2014; FTX was "holding" billions in 2022. Not your keys, not your coins is not a slogan; it is an accounting statement.',
+        'An **exchange account** is a different species entirely. There, the company holds the keys, and what you hold is a balance in *their* database: a promise, redeemable as long as they stay solvent, honest, and un-hacked. History grades that promise harshly: Mt. Gox said it had lost almost 750,000 of its customers\' bitcoin when it collapsed in 2014; FTX was "holding" billions in 2022. Not your keys, not your coins is not a slogan; it is an accounting statement.',
       ],
       contrastLabels: { left: 'An exchange account', right: 'Your own keys' },
       contrast: [
@@ -184,7 +184,7 @@ export const quest14: Quest = {
       myth: {
         belief: 'A hardware wallet stores my coins, so if it breaks or burns, my coins are gone.',
         reality:
-          "The device stores keys and signs without exposing them; the coins stay on the ledger. Destroy the device, buy any replacement (any brand that speaks BIP-39), restore the words, and everything reappears. The seed backup is the wallet; the gadget is just a fireproof way to use it.",
+          "The device stores keys and signs without exposing them; the coins stay on the ledger. Destroy the device, buy any replacement (any brand that speaks BIP-39), restore the words (plus any passphrase, and for multisig the wallet descriptor), and your coins reappear. The seed backup is the wallet; the gadget is just a fireproof way to use it.",
       },
       quiz: [
         {

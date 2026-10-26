@@ -18,7 +18,7 @@ export const questLn06: Quest = {
   track: 'Routing',
   title: 'How does your wallet find a route?',
   summary:
-    'Nobody publishes a map of Lightning, and no one sets its prices. Nodes gossip their own terms, senders add them up, and the cheapest path wins, arithmetic you can run against the specification’s own worked example.',
+    'Nobody publishes a map of Lightning, and no one sets its prices. Nodes gossip their own terms, senders add them up, and a cheap path that is likely to succeed wins, arithmetic you can run against the specification’s own worked example.',
   duration: '12 min',
   pin: BOLTS_PIN,
   story: {
@@ -43,7 +43,7 @@ export const questLn06: Quest = {
           "There is no directory and no coordinator. A node announces its own channels, its neighbours pass the announcement on, and that is the whole mechanism. Two wallets can hold slightly different maps at the same moment and both be right, because an announcement takes time to spread. This is why a payment can fail for a reason your wallet could not have known: it was routing on a map that was a few minutes stale.",
       },
       prose: [
-        "A channel announcement is not a claim anyone has to take on faith. It names a `short_channel_id`, the block, the transaction and the output where that channel's funding transaction lives, so any node can go and look at the chain to confirm there really is a 2-of-2 output backing it. **You cannot announce a channel you did not fund.** That is what stops the map filling up with invented capacity.",
+        "A channel announcement is not a claim anyone has to take on faith. It names a `short_channel_id`, the block, the transaction and the output where that channel's funding transaction lives, so any node can go and look at the chain to confirm there really is a 2-of-2 output backing it. **You cannot announce a channel without a real 2-of-2 output on-chain that both of you sign for.** That is what stops the map filling up with invented capacity.",
         "The second message is the interesting one for this quest. A `channel_update` says: here is what I currently charge, here is how much timelock I want, here is the smallest and largest payment I will carry. It is per direction, Mira's terms for forwarding towards the hub are a different message from the hub's terms for forwarding towards Ines, and a node can replace it whenever it likes.",
         "So a wallet's map is not just a graph of who is connected to whom. It is a graph annotated with prices, and those prices are the input to everything that follows.",
       ],
@@ -301,6 +301,6 @@ export const questLn06: Quest = {
   feynman: {
     prompt: 'Explain to a friend who decides what a Lightning payment costs, and how the number is arrived at.',
     model:
-      "Nobody decides it centrally. Every node that forwards payments picks two numbers for itself, a flat charge and a percentage and broadcasts them to the whole network, changing them whenever it likes. When you pay, your wallet already holds those broadcasts, so it works out several possible paths, adds up each hop's two numbers against the amount being carried, and takes the cheapest path that can handle it. The sender covers all of it up front, so the person being paid always receives exactly what they asked for.",
+      "Nobody decides it centrally. Every node that forwards payments picks two numbers for itself, a flat charge and a percentage and broadcasts them to the whole network, changing them whenever it likes. When you pay, your wallet already holds those broadcasts, so it works out several possible paths, adds up each hop's two numbers against the amount being carried, and picks a cheap path that is likely to succeed. The sender covers all of it up front, so the person being paid receives at least what they asked for.",
   },
 };

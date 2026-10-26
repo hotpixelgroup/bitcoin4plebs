@@ -54,7 +54,7 @@ const HALVINGS = [210_000, 420_000, 630_000, 840_000];
 const TODAY = 938_343; // the reviewed checkpoint height from chainparams.cpp:142
 
 /**
- * The rule-change timeline: sixteen years of chain, six rule changes.
+ * The rule-change timeline: six rule changes since 2013.
  * Each one a tightening, each one adopted near-unanimously, each one
  * carved into chainparams.cpp at its exact block height.
  */
@@ -109,9 +109,10 @@ export function ActivationTimeline() {
         </div>
         <p className="viz-readout">
           {event.detail} Like every marker here, it's a <em>soft fork</em> (a tightening old
-          software tolerates), and it activated only after near-unanimous adoption. Six changes in
-          seventeen years, none loosening the rules, each recorded in the file you read at this
-          stop (P2SH, 2012, activated by timestamp instead, which is why it has no marker here). The gaps between markers aren't slowness; they're the price of
+          software tolerates), and it activated only after near-unanimous adoption. Six changes since
+          2013, none loosening the rules, each recorded in the file you read at this stop. (Earlier
+          soft forks, such as P2SH in 2012, activated by timestamp instead, which is why they have
+          no marker here.) The gaps between markers aren't slowness; they're the price of
           "nobody can change the rules on you."
         </p>
       </div>

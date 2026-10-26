@@ -46,7 +46,7 @@ export const questLn07: Quest = {
         { aspect: 'If they vanish', bank: 'You are a creditor, and you queue', bitcoin: 'You force close and take your money' },
         { aspect: 'Who sees your payments', bank: 'They see all of them, in the clear', bitcoin: 'Peers see local payment data; correlation and collusion can reveal more' },
         { aspect: 'Who can freeze you', bank: 'They can, and may be required to', bitcoin: 'No custodian is required, but peers can refuse routing and liquidity can be unavailable' },
-        { aspect: 'What it costs you', bank: 'Nothing. That is the appeal', bitcoin: 'On-chain fees, and attention' },
+        { aspect: 'What it costs you', bank: 'Little or nothing up front; fees are the provider\'s choice', bitcoin: 'On-chain fees, and attention' },
       ],
       prose: [
         'Custodial services can simplify setup, receiving and availability, but their fees, speed, restrictions and reliability vary. The provider controls the keys and the user depends on its solvency and policies. Convenience does not establish protocol-level control.',

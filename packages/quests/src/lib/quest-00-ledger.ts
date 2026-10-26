@@ -95,7 +95,7 @@ export const quest00: Quest = {
         'Shared copies alone aren\'t enough. You also need **rules for new lines** that anyone can check alone: no judge, no manager, no phone call. "Is this entry allowed?" has to be pure arithmetic.',
       prose: [
         'Think about what a rule must look like if four strangers with four copies have to agree without a referee. "Entries must be reasonable" fails: reasonable to whom? The rules must be mechanical. *An entry may only spend money an earlier entry gave you. An entry must carry a valid signature. New money may only appear on schedule.* Anyone can check those with a pencil.',
-        'That is all software is in this story: **a pencil that never gets tired.** Bitcoin\'s "code" is a rulebook for list entries, written precisely enough that fifty thousand computers reach the same verdict on every line, forever, without meeting.',
+        'That is all software is in this story: **a pencil that never gets tired.** Bitcoin\'s "code" is a rulebook for list entries, written precisely enough that tens of thousands of computers reach the same verdict on every line, forever, without meeting.',
       ],
       quiz: [
         {

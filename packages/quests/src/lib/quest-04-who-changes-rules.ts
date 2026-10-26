@@ -111,7 +111,7 @@ export const quest04: Quest = {
   },
   recap: {
     tryIt:
-      "Next headline that says 'Bitcoin is changing X,' ask one question: policy or consensus? You now know the difference, and you know consensus has changed exactly six times in seventeen years.",
+      "Next headline that says 'Bitcoin is changing X,' ask one question: policy or consensus? You now know the difference, and you know consensus has changed by soft fork only a handful of times, six of them since 2013, each one only after near-unanimous adoption.",
     items: [
       {
         text: '**No admin switch exists**: the developers themselves note in the code that changing consensus values forks you off the network.',

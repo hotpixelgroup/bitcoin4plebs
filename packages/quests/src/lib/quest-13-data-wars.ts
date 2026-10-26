@@ -25,7 +25,7 @@ export const quest13: Quest = {
     text: "Someone starts paying real fees to draw doodles on the neighborhood's money list. Half the town wants them scrubbed; half says a list with a doodle police isn't the list they signed up for. Ana notices nobody asks the mayor, because there isn't one: the argument will be settled by what people run.",
   },
   intro: [
-    "Everything you've verified so far is settled: the cap, the halvings, the signatures. This quest is different. It's about the one fight happening **right now**, in the code you can read and the nodes you can run: when people pay real fees to store *pictures and tokens* on the money ledger, is that the market working, or the money breaking?",
+    "Everything you've verified so far is settled: the cap, the halvings, the signatures. This quest is different. It's about the fight that split node operators in 2025 and 2026, in the code you can read and the nodes you can run: when people pay real fees to store *pictures and tokens* on the money ledger, is that the market working, or the money breaking?",
     "You already have every tool this fight is fought with: the fee auction (Quest #12), relay policy vs consensus (Quest #12, stop 5), soft forks and activation scars (Quest #4). What follows is the story told from **primary sources only**, including, for the first time on this site, verbatim excerpts from a second pinned repository: the BIPs themselves. We steelman both camps and issue no verdict. The whole point of thirteen quests was to make you fit to form your own.",
   ],
   promise:
@@ -106,11 +106,11 @@ export const quest13: Quest = {
       id: 'the-split',
       title: '2025: Core opens the valve, Knots slams it',
       takeaway:
-        'Bitcoin Core v30 raised the default OP_RETURN allowance from 83 bytes to **100,000 vbytes**, arguing filters had failed and prunable data beats UTXO poison. A visible slice of node operators disagreed and switched to **Bitcoin Knots**, which filters hard. Both run the same consensus.',
+        'Bitcoin Core v30 raised the default OP_RETURN allowance from 83 bytes to **100,000 vbytes**, arguing filters had failed and prunable data beats UTXO poison. A visible slice of node operators disagreed and switched to **Bitcoin Knots**, which filters hard. In 2025 both still ran the same consensus.',
       myth: {
         belief: 'The Bitcoin Core developers decide what Bitcoin is.',
         reality:
-          'Core ships defaults, and defaults are powerful, but every knob here is policy, and the 2025 exodus to Knots is the market for implementations working in the open. What no implementation can do is change consensus by shipping a release: a Knots node and a Core v30 node follow the identical chain today.',
+          'Core ships defaults, and defaults are powerful, but every knob here is policy, and the 2025 exodus to Knots is the market for implementations working in the open. What no implementation can do is make the network adopt new consensus rules by shipping a release: a Knots node and a Core v30 node followed the identical chain until August 2026, when Knots began enforcing BIP110 and its nodes split onto a separate chain that almost no miners extended.',
       },
       prose: [
         "Look at line 84 again, knowing what you now know. `MAX_STANDARD_TX_WEIGHT / WITNESS_SCALE_FACTOR` is 400,000 ÷ 4 = **100,000 vbytes**: the v30 (October 2025) default lets an OP_RETURN fill an entire standard transaction. The maintainers' argument was pragmatic harm reduction. The 83-byte filter had visibly failed; the data came in anyway, through the witness door. Determined publishers were paying miners *directly*, bypassing filtering nodes entirely. And if data is coming regardless, prunable OP_RETURN is the least toxic place for it. Better a bulletin board you can throw away than graffiti carved into the UTXO set.",
@@ -190,7 +190,7 @@ export const quest13: Quest = {
       ],
       prose: [
         'BIP110 status is Closed as checked on 2026-10-15 in the official BIPs repository. The excerpts here are pinned to an earlier snapshot for historical analysis. Specification status, activation rules and actual adoption are separate questions. Every node independently enforces its configured consensus rules; counting peers cannot make an invalid block valid.',
-        'Notice what the machine has already done with this fight, with nobody chairing it. The fee auction priced the flood. The policy layer let dissenters filter in protest. The implementation market gave the protest teeth and a name. Now the last question waits at the consensus layer, wrapped in a deliberately temporary proposal, for the economy to accept or ignore. Thirteen quests ago you had to trust someone\'s summary of a fight like this. Today you can read the filter, the default, and the proposal in their own words, and decide what *you* will run.',
+        'Notice what the machine has already done with this fight, with nobody chairing it. The fee auction priced the flood. The policy layer let dissenters filter in protest. The implementation market gave the protest teeth and a name. Then the last question was taken to the consensus layer by BIP110, a deliberately temporary proposal, for the economy to accept or ignore. In August 2026 BIP110 nodes split from the chain almost all miners were extending, mining on their side stalled, and the proposal was marked Closed. Thirteen quests ago you had to trust someone\'s summary of a fight like this. Today you can read the filter, the default, and the proposal in their own words, and decide what *you* will run.',
       ],
     },
   ],
@@ -213,11 +213,11 @@ export const quest13: Quest = {
         text: '**The 2023 flood came through the witness door** at a 75% byte discount, making the 83-byte valve irrelevant and the fee auction the only gate left.',
       },
       {
-        text: '**Core v30 opened the default to 100,000 vbytes; Knots kept filtering.** Same consensus, different taste, and operators chose sides with their software.',
+        text: '**Core v30 opened the default to 100,000 vbytes; Knots kept filtering.** Same consensus in 2025, different taste, and operators chose sides with their software.',
         cite: 'policy.h:84',
       },
       {
-        text: '**BIP-110 would escalate taste into law**: one year, grandfathered, narrow, and consensus-binding. That is exactly why it reads as a circuit breaker to one camp and a precedent to the other.',
+        text: '**BIP-110 tried to escalate taste into law**: one year, grandfathered, narrow, and consensus-binding. That is exactly why it read as a circuit breaker to one camp and a precedent to the other. It ended Closed after a stalled chain split in August 2026.',
         cite: 'bip-0110.mediawiki:23',
       },
     ],
