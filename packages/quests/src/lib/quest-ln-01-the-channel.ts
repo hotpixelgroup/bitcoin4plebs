@@ -45,7 +45,7 @@ export const questLn01: Quest = {
         {
           aspect: 'What it costs',
           bank: 'Whatever the global fee auction says today',
-          bitcoin: 'Fractions of a satoshi',
+          bitcoin: 'Nothing to a direct peer; small per-hop fees when routed',
         },
         {
           aspect: 'How long it takes',

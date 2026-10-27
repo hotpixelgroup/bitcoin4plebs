@@ -133,7 +133,7 @@ export const quest08: Quest = {
           "It asks other nodes to vote",
           ],
           answer: 1,
-          explain: "The source constructs genesis and compares it to expected constants with assertions. Assertions may be omitted in release builds; this is not evidence that every production startup independently audits the chain from genesis.",
+          explain: "The source constructs genesis and compares it to expected constants with assertions. Bitcoin Core refuses to compile with assertions disabled, so every build runs this check at startup. It checks the built-in genesis constants; it is not evidence that every startup independently audits the chain from genesis.",
         },
       ],
       title: 'The exact numbers, and the check your node runs at every boot',
@@ -141,7 +141,7 @@ export const quest08: Quest = {
         'Here is the birth certificate: timestamp, the winning nonce, the easiest-ever difficulty, 50 BTC. And below it, an `assert`, which means **your node refuses to even start** unless its own genesis block hashes to the famous value.',
       prose: [
         "The arguments specify the genesis timestamp, nonce and compact target. The 0x1d00ffff difficulty also applied to subsequent early blocks, so genesis was not uniquely easy.",
-        "The expected genesis hash anchors this configured network. The quoted assertion checks construction when assertions are enabled; release builds may omit assertions. Genesis receives special handling rather than ordinary block-connection processing.",
+        "The expected genesis hash anchors this configured network. Bitcoin Core cannot be compiled with assertions disabled (util/check.h stops the build), so every build checks the constructed genesis block against these constants at startup. Genesis receives special handling rather than ordinary block-connection processing.",
       ],
       annotationsOpen: true,
       annotations: [

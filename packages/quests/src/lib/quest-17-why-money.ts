@@ -105,10 +105,10 @@ export const quest17: Quest = {
       id: 'divisible',
       title: "'You can't afford a whole coin' misunderstands the unit",
       takeaway:
-        "The most common barrier to entry falls to one line of code. `COIN` is 100,000,000: one bitcoin is a hundred million **satoshis**, and sats are the real unit the code counts in. You transact in fractions, down to a single sat.",
+        "The most common barrier to entry falls to one line of code. `COIN` is 100,000,000: one bitcoin is a hundred million **satoshis**, and sats are the real unit the code counts in. You transact in fractions, accounted down to a single sat (on-chain outputs have a dust floor of a few hundred sats; Lightning goes to thousandths of a sat).",
       prose: [
         "Here is the line that dissolves 'Bitcoin is too expensive, I can't afford one.' Deep in the code, `COIN` is defined as 100,000,000. The software does not really count in bitcoin at all; it counts in **satoshis**, and one bitcoin is just a display name for a hundred million of them (you met this in Quest #1).",
-        "So 'I can't afford a whole bitcoin' is like saying you can't afford water because you can't buy the ocean. You hold, send, and receive sats, down to a single one, which makes Bitcoin divisible in a way physical cash and especially gold never managed. Divisibility was a whole row on the scorecard, and this one constant is why Bitcoin scores strong on it.",
+        "So 'I can't afford a whole bitcoin' is like saying you can't afford water because you can't buy the ocean. You hold and count sats down to a single one (on-chain outputs have a dust floor of a few hundred sats; Lightning goes finer still), which makes Bitcoin divisible in a way physical cash and especially gold never managed. Divisibility was a whole row on the scorecard, and this one constant is why Bitcoin scores strong on it.",
       ],
       annotations: [
         { lines: 'L14–15', text: 'The real unit: 100,000,000 satoshis to a bitcoin. Whole-coin pricing is a display choice, never a minimum.' },

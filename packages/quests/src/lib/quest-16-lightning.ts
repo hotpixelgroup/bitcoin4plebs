@@ -53,7 +53,7 @@ export const quest16: Quest = {
         {
           aspect: 'Speed and cost',
           bank: 'Minutes to hours; you bid in the fee auction',
-          bitcoin: 'Instant; fees are fractions of a sat',
+          bitcoin: 'Instant; free to a direct peer, usually a few sats or less when routed',
         },
         {
           aspect: 'What is public',
@@ -134,7 +134,7 @@ export const quest16: Quest = {
       prose: [
         "Here it is, verbatim from BOLT #3: the `to_local` output script that guards a broadcaster's own share. Read the two branches like the Quest #3 veteran you are. **OP_ELSE path:** the honest exit; wait `to_self_delay` blocks (`OP_CHECKSEQUENCEVERIFY`, a real consensus timelock), then your key spends your share. **OP_IF path:** labeled `# Penalty transaction` right in the spec; the *other* party spends this output instantly, with no delay, if they hold the revocation key.",
         "The genius is in when that key changes hands: every time the channel updates, each side **surrenders the revocation secret for its previous state** as the price of the new one. Result: broadcasting the latest commitment is safe (nobody holds its revocation key yet); broadcasting any older one puts your entire balance behind a script your counterparty can raid for `to_self_delay` blocks. The chain doesn't know which state is 'latest.' It doesn't have to. The incentives make old states radioactive.",
-        "One more echo before we zoom out: an `OP_IF` doing either/or duty inside a script securing real money is exactly the construction Quest #13 flagged as BIP-110 collateral (its rule 7 bans tapscripts that *execute* `OP_IF`). Today's Lightning channels use pre-taproot scripts and are untouched by that proposal, but the lesson stands: layers are built from the base chain's script legos, so consensus fights about the legos are never only about 'spam.'",
+        "One more echo before we zoom out: an `OP_IF` doing either/or duty inside a script securing real money is exactly the construction Quest #13 flagged as BIP-110 collateral (its rule 7 would have banned tapscripts that *execute* `OP_IF`). Most of today's Lightning channels use pre-taproot scripts and were untouched by that now-Closed proposal, but the lesson stands: layers are built from the base chain's script legos, so consensus fights about the legos are never only about 'spam.'",
       ],
       annotations: [
         { lines: 'L115', text: 'The spec\'s own summary: timelocked for the owner, instantly claimable by the other side with the revocation key.' },
@@ -207,7 +207,7 @@ export const quest16: Quest = {
       },
     ],
     closing:
-      "**Keep verifying:** this quest quoted a third pinned repository, and the promise never changed: letter for letter, link after link. Sixteen quests ago the ledger was a mystery someone else understood. Now you can read its constitution, audit its supply, hold its keys, and follow its money above the chain. There is nobody left you have to believe. **And this is a doorway, not a wall:** everything above is the first chapter of a much longer story: how a payment crosses strangers who never learn who you are, what is actually inside an `lnbc` invoice, where inbound liquidity comes from, and what happens when your channel partner vanishes. That story has its own site, built exactly like this one, the specifications quoted letter for letter, a real node's source beside them, and tools graded by the spec's own published test vectors. Walk through: **[lightning4plebs](https://hotpixelgroup.github.io/lightning4plebs/)**.",
+      "**Keep verifying:** this quest quoted a third pinned repository, and the promise never changed: letter for letter, link after link. Sixteen quests ago the ledger was a mystery someone else understood. Now you can read its constitution, audit its supply, hold its keys, and follow its money above the chain. There is nobody left you have to believe. **And this is a doorway, not a wall:** everything above is the first chapter of a much longer story: how a payment crosses strangers who cannot see where it started or ends, what is actually inside an `lnbc` invoice, where inbound liquidity comes from, and what happens when your channel partner vanishes. That story has its own site, built exactly like this one, the specifications quoted letter for letter, a real node's source beside them, and tools graded by the spec's own published test vectors. Walk through: **[lightning4plebs](https://hotpixelgroup.github.io/lightning4plebs/)**.",
   },
   feynman: {
     prompt: 'Explain to a friend how two people can pay each other a thousand times while the blockchain only sees two transactions, in three sentences.',

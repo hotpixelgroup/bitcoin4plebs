@@ -1,5 +1,6 @@
 import { useCallback, useRef, useState, type MouseEvent } from 'react';
 import {
+  estimateHeightAtTime,
   formatHeight,
   getBlockSubsidy,
   satsToBtc,
@@ -24,8 +25,14 @@ const y = (btc: number) => Y0 - (btc / VMAX) * (Y0 - Y1);
 
 const TOTAL = totalSupply();
 
-/** Roughly the present day: the reviewed checkpoint height from chainparams.cpp:142. */
-const TODAY = 938_343;
+/**
+ * Roughly the present day, estimated live at 10-minute blocks from the 2024
+ * halving anchor (packages/bitcoin-logic halving.ts), the same estimate the
+ * halving clock uses. A fixed height here went stale as the chain grew.
+ */
+const TODAY = estimateHeightAtTime(Date.now());
+/** Whole percent of the final supply minted by TODAY, rounded down. */
+const TODAY_PCT = Number((supplyAtHeight(TODAY) * 100n) / TOTAL);
 const HALVINGS = [1, 2, 3, 4].map((k) => k * SUBSIDY_HALVING_INTERVAL);
 
 interface Hover {
@@ -145,7 +152,7 @@ export function SupplyChart({ eras, revealed, done }: SupplyChartProps) {
             />
             <circle cx={x(TODAY)} cy={y(Number(supplyAtHeight(TODAY, eras)) / 1e8)} r={4} />
             <text x={x(TODAY)} y={y(Number(supplyAtHeight(TODAY, eras)) / 1e8) - 10} textAnchor="middle">
-              you are here (95% already minted)
+              you are here ({TODAY_PCT}% already minted)
             </text>
           </g>
         )}

@@ -82,9 +82,9 @@ export const quest18: Quest = {
         {
           question: "What does a block’s target-derived chainwork measure?",
           options: [
-            'It would make blocks too fast for the network',
+            'The exact electricity spent mining the block',
             "Expected hash work represented by the target, not exact electricity or historical attempts",
-            'Miners would stop earning fees',
+            'The number of hashes the miner actually attempted',
           ],
           answer: 1,
           explain:

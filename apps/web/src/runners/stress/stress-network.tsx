@@ -95,7 +95,7 @@ function fadSteps(): Step[] {
   const at48h = read(48 * HOUR, FULL / 10);
   steps.push({
     title: 'Saturday · zero',
-    body: 'The floor falls under half the incremental relay fee and snaps to **zero**. Total cost of the crisis to a patient user: waiting. And fee crises leave gifts behind: 2017’s spike drove SegWit adoption and batching, 2023’s drove Lightning growth. Fee pain is the network hiring engineers.',
+    body: 'The floor falls under half the incremental relay fee and snaps to **zero**. Total cost of the crisis to a patient user: waiting. And fee crises leave gifts behind: 2017’s spike drove SegWit adoption and batching. Fee pain is the network hiring engineers.',
     tone: 'good',
     stats: [{ label: 'mempool floor', value: `${perVb(at48h)} sat/vB` }],
   });
@@ -177,7 +177,7 @@ function majoritySteps(): Step[] {
     },
     {
       title: '2017 already ran this experiment',
-      body: 'SegWit2x had over 80% of hashpower publicly signed on and essentially zero economic nodes. It was canceled **before mining a single block**. Miners are employees on commission; economic nodes are the customers, and the customers define the product.',
+      body: 'SegWit2x had over 80% of hashpower publicly signed on and several big companies too, but little support among users and node operators. It was canceled **before mining a single block**. Miners are employees on commission; economic nodes are the customers, and the customers define the product.',
       tone: 'good',
     },
   ];
@@ -206,7 +206,7 @@ function filterSteps(): Step[] {
     },
     {
       title: 'The escalation, and the next quest',
-      body: 'Even if every node filtered by default, a determined payer can hand the transaction **straight to a pool**; one willing miner anywhere is enough. Policy expresses values; only consensus binds everyone. Moving this fight into consensus is exactly what [BIP-110 proposes](/quests/the-data-wars), and it deserves a whole quest.',
+      body: 'Even if every node filtered by default, a determined payer can hand the transaction **straight to a pool**; one willing miner anywhere is enough. Policy expresses values; only consensus binds everyone. Moving this fight into consensus is exactly what [BIP-110 tried](/quests/the-data-wars) before it was Closed in 2026, and it deserves a whole quest.',
       tone: 'good',
     },
   ];

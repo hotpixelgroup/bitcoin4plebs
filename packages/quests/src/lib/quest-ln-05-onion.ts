@@ -67,7 +67,7 @@ export const questLn05: Quest = {
       ],
       prose: [
         "A version byte, a 33-byte ephemeral public key, 1,300 bytes of routing information, and a 32-byte HMAC. 1,366 bytes total, the exact number you saw in `update_add_htlc` last quest.",
-        "The ephemeral public key is what lets each hop derive a shared secret with the sender without any prior arrangement, using the same Diffie-Hellman idea Bitcoin's key math already gives you. Crucially, it is *blinded* at each hop: the key the hub sees is different from the key Ines sees, so two nodes comparing notes cannot tell they handled the same payment.",
+        "The ephemeral public key is what lets each hop derive a shared secret with the sender without any prior arrangement, using the same Diffie-Hellman idea Bitcoin's key math already gives you. Crucially, it is *blinded* at each hop: the key the hub sees is different from the key Ines sees, so two nodes comparing notes cannot link the onion layers. The shared payment hash still lets colluding hops match them, a gap PTLCs would close.",
         "The HMAC is what stops the packet being tampered with. A hop that alters so much as one byte of what it forwards will be caught by the next hop, because the HMAC covers the whole payload and only the sender could have computed it.",
         "And the 1,300 bytes: fixed, forever, deliberately wasteful. A two-hop payment carries the same 1,300 bytes as a twenty-hop one. That waste **is** the privacy.",
       ],

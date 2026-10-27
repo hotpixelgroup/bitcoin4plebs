@@ -4,7 +4,7 @@ import { BITCOIN_PIN, EXCERPT_COINBASE_ENFORCEMENT } from './excerpts.js';
 /**
  * Quest #9: Run your own node.
  *
- * The graduation quest. Eight quests read the law; this one is about
+ * A milestone quest. Eight quests read the law; this one is about
  * enforcing it: what actually happens when a pleb runs Bitcoin Core on
  * their own machine (the full re-verification of history, the trustless
  * bootstrap, the assumevalid fine print), ending with the question the
@@ -19,12 +19,12 @@ export const quest09: Quest = {
   track: 'Advanced',
   title: 'Run your own node and audit the money supply yourself.',
   summary:
-    'The final quest leaves the browser. Install the program whose source you\'ve been reading, let it re-verify seventeen years of history on your machine, then ask it (not us, not an explorer, not anyone) how many bitcoin exist.',
+    'This quest leaves the browser. Install the program whose source you\'ve been reading, let it re-verify seventeen years of history on your machine, then ask it (not us, not an explorer, not anyone) how many bitcoin exist.',
   duration: '12 min',
   pin: BITCOIN_PIN,
   story: {
     stage: "audited forever",
-    text: "Every node that ever syncs will re-check Ana's payment: her signature, her amounts, her block's proof-of-work. Bo doesn't keep a receipt. Fifty thousand machines keep it for him, and after this quest, yours can too.",
+    text: "Every node that ever syncs will re-check Ana's payment: her signature, her amounts, her block's proof-of-work. Bo doesn't keep a receipt. Tens of thousands of machines keep it for him, and after this quest, yours can too.",
   },
   intro: [
     'For eight quests you\'ve **read** the law. Running a node is how you **enforce** it. A node is nothing exotic: it\'s Bitcoin Core, the exact program whose source code you\'ve been reading, running on a computer you control. No coding required: if you can install a browser, you can run a node.',
@@ -222,7 +222,7 @@ export const quest09: Quest = {
       },
     ],
     closing:
-      "**This is graduation.** Nine quests ago you held bitcoin on the word of engineers you'd never met. Now: you've read the emission schedule and its enforcement, watched keys defeat thieves, forked the rules and felt why forking is powerless, mined a block, rebuilt the genesis block from four numbers. And you know exactly what a node does all day, fine print included. Run one. From then on, when someone asks how you know there will only ever be 21 million bitcoin, you have the only answer that was ever worth anything: *because I checked.*",
+      "**This is a milestone.** Nine quests ago you held bitcoin on the word of engineers you'd never met. Now: you've read the emission schedule and its enforcement, watched keys defeat thieves, forked the rules and felt why forking is powerless, mined a block, rebuilt the genesis block from four numbers. And you know exactly what a node does all day, fine print included. Run one. From then on, when someone asks how you know there will only ever be 21 million bitcoin, you have the only answer that was ever worth anything: *because I checked.*",
   },
   feynman: {
     prompt: "Explain what running a node gets you, in two sentences.",

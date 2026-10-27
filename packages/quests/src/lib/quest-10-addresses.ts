@@ -20,7 +20,7 @@ export const quest10: Quest = {
   track: 'Advanced',
   title: 'What is an address, actually?',
   summary:
-    'You\'ve copy-pasted bc1q… strings a hundred times. They\'re not accounts, and coins never "sit" at them. X-ray the spelling: the network tag, the 32-letter alphabet, and checksum math that catches every typo. Then break one on purpose.',
+    'You\'ve copy-pasted bc1q… strings a hundred times. They\'re not accounts, and coins never "sit" at them. X-ray the spelling: the network tag, the 32-letter alphabet, and checksum math that catches typos. Then break one on purpose.',
   duration: '10 min',
   pin: BITCOIN_PIN,
   story: {
@@ -124,11 +124,11 @@ export const quest10: Quest = {
           question: "What does the bech32 checksum mathematically guarantee?",
           options: [
           "Nobody can steal from the address",
-          "Up to 4 typos in an address are always detected",
+          "Up to 4 substituted characters in an address are always detected",
           "The address can only be used once",
           ],
           answer: 1,
-          explain: '**Address length depends on the witness program.** Mainnet P2WPKH addresses are 42 characters and P2WSH/P2TR are 62. Supported witness programs can be 2–40 bytes, producing longer addresses too. Bech32 has a 90-character limit; BIP173 specifies its error-detection bounds.',
+          explain: '**Substitutions, guaranteed.** BIP173\'s BCH code guarantees detection of any 4 or fewer substituted characters in strings up to 89 characters long, which covers every address. Other errors are caught with overwhelming probability, not a guarantee. It says nothing about theft or reuse.',
         },
       ],
       title: 'The checksum: a mathematical promise that typos get caught',
@@ -223,6 +223,6 @@ export const quest10: Quest = {
   feynman: {
     prompt: "Explain what an address is, in two sentences.",
     model:
-      "An address is not an account: it is the recipe for a lock, spelled in a 32-letter alphabet with a checksum that mathematically catches up to four typos. Your wallet invents them offline for free, and the network first hears of one when somebody pays it.",
+      "An address is not an account: it is the recipe for a lock, spelled in a 32-letter alphabet with a checksum that mathematically catches up to four wrong characters. Your wallet invents them offline for free, and the network first hears of one when somebody pays it.",
   },
 };

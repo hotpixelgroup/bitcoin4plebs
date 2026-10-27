@@ -24,7 +24,7 @@ export const quest05: Quest = {
     text: "When Ana presses send, her transaction will walk through CheckTransaction: the door with 2010's and 2018's scars on it. Attacks that once threatened the whole ledger now bounce off checks her payment clears in microseconds.",
   },
   intro: [
-    "After four quests of \"the code guarantees it,\" you've earned the uncomfortable truth: **code has bugs, and Bitcoin's has had serious ones**. In 2010 someone printed 184 billion BTC. In 2018, a bug that could have allowed coin inflation sat undiscovered for nearly two years. If \"don't trust, verify\" means anything, it has to survive this quest, so let's look straight at it.",
+    "After four quests of \"the code guarantees it,\" you've earned the uncomfortable truth: **code has bugs, and Bitcoin's has had serious ones**. In 2010 someone printed 184 billion BTC. In 2018, a bug that could have allowed coin inflation sat undiscovered for about a year. If \"don't trust, verify\" means anything, it has to survive this quest, so let's look straight at it.",
   ],
   promise:
     "Every snippet below is copied verbatim from the Bitcoin Core source, pinned to commit [18c05d9](https://github.com/bitcoin/bitcoin/commit/18c05d93016b28a9afd4c716dfe00b6e0accb30b). Don't trust this page either: every stop links to the same lines on GitHub so you can check we didn't edit a word.",
@@ -109,9 +109,9 @@ export const quest05: Quest = {
       },
       title: "September 2018: no known exploitation reported",
       takeaway:
-        'CVE-2018-17144: for nearly two years, a performance optimization had removed the check below. A transaction spending **the same coin twice in one block** could crash nodes, or it could quietly **inflate the supply**. Here is the restored check, scar named on line 36.',
+        'CVE-2018-17144: for about 18 months, a performance optimization had removed the check below (the inflation path existed for about a year, since version 0.15.0). A transaction spending **the same coin twice in one block** could crash nodes, or it could quietly **inflate the supply**. Here is the restored check, scar named on line 36.',
       prose: [
-        'The bug\'s story matters as much as its mechanics. A developer working on Bitcoin Cash spotted the flaw and reported it responsibly. Core developers shipped a fix within hours, initially describing it publicly as a crash bug only. They revealed the inflation risk two days later, after it became clear others had independently worked it out; by then the fix was already spreading across the network. No coins were ever printed on Bitcoin.',
+        'The bug\'s story matters as much as its mechanics. A developer working on Bitcoin Cash spotted it as a crash bug and reported it responsibly; Core developers then realized the same flaw could inflate the supply. Core developers shipped a fix within hours, initially describing it publicly as a crash bug only. They revealed the inflation risk two days later, after it became clear others had independently worked it out; by then the fix was already spreading across the network. No coins were ever printed on Bitcoin.',
         'Read the developers\' comment on lines 37–40. It explains *exactly* what failing to run this check would cost: "either a crash or an inflation bug." This is the honest lesson of the quest: the 21M cap is not a law of physics. It\'s a promise kept by code, **and code is kept honest by people checking it**. As of five quests ago, that now includes you.',
       ],
       annotations: [
@@ -173,7 +173,7 @@ export const quest05: Quest = {
         cite: 'tx_check.cpp:23',
       },
       {
-        text: '**The 2018 bug could have inflated the supply and was fixed before anyone exploited it**. It was found by an outside developer reading the code.',
+        text: '**The 2018 bug could have inflated the supply and was fixed with no known exploitation**. The crash that exposed it was reported by an outside developer.',
         cite: 'tx_check.cpp:36',
       },
       {
