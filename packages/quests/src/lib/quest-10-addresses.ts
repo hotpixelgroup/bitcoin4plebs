@@ -75,7 +75,7 @@ export const quest10: Quest = {
         'Same file as the halving interval from Quest #1: the mainnet identity card. The legacy prefixes that make old addresses start with **1** or **3** are set here, and line 182 is the two letters in front of **every modern address on Earth**.',
       prose: [
         'Three generations of spelling, one paragraph of code. Addresses starting with `1` are the oldest style (a version byte of 0 in an alphabet called base58); `3` marks script-hash addresses (version byte 5); and `bc` is the *human-readable part* of the modern bech32 style: `bc1` + data. Your wallet still understands all three; they\'re different spellings of the same idea: a lock, encoded.',
-        'The prefix is not decoration; it\'s **inside the checksum**. Testnet (Bitcoin\'s play-money network) uses `tb` instead, and because the prefix participates in the Stop 4 math, a testnet address fails validation on mainnet instantly. The error text in `key_io.cpp` spells it out: *"expected bc, got tb."* There is no registry of addresses anywhere on the planet: only prefixes, arithmetic, and Quest #4\'s rule that every node checks everything.',
+        'The prefix is not decoration; it\'s **inside the checksum**. Testnet (Bitcoin\'s play-money network) uses `tb` instead, and a testnet address fails on mainnet instantly because Core compares the prefix directly. The error text in `key_io.cpp` spells it out: *"expected bc, got tb."* The prefix also feeds the Stop 4 checksum, so mistyping the prefix itself gets caught too. There is no registry of addresses anywhere on the planet: only prefixes, arithmetic, and Quest #4\'s rule that every node checks everything.',
       ],
       annotations: [
         { lines: 'L176', text: 'Version byte 0 → the base58 spelling starts with `1`. Satoshi-era addresses live here.' },
@@ -106,7 +106,7 @@ export const quest10: Quest = {
         'Two more rules complete the spelling. An address is valid in all-lowercase or all-UPPERCASE but **never mixed**, which eliminates one more class of transcription error. And the first data letter you\'ll usually see, `q`, is this alphabet\'s spelling of the number 0: the witness version from Stop 1, hiding in plain sight.',
       ],
       annotations: [
-        { lines: 'L23', text: '32 characters, 5 bits each. Your entire address is one large number, written in base 32.' },
+        { lines: 'L23', text: '32 characters, 5 bits each. Each letter after the `1` stands for one 5-bit value, not a digit of one big number.' },
       ],
       excerpt: {
         ref: { file: 'src/bech32.cpp', startLine: 22, endLine: 23 },
@@ -135,7 +135,7 @@ export const quest10: Quest = {
       takeaway:
         'The last six characters are a checksum. The quoted Core comment describes its substitution-error guarantees. P2WPKH mainnet addresses are 42 characters and P2WSH/P2TR are 62, but 62 is not a universal maximum. Future witness versions can encode programs up to 40 bytes. Version 0 uses Bech32; versions 1–16 use Bech32m. These are error-detection tools, not proof that the recipient is trustworthy.',
       prose: [
-        'You don\'t need the Galois-field algebra (nobody\'s quizzing you); you need the *contract* in the last three highlighted lines. This isn\'t "we probably notice typos." It\'s a proven property of a BCH code, chosen from many candidates specifically to over-deliver on short strings like addresses. Mistype one, two, three, even four characters of a bc1 address, and validation **cannot** come out clean.',
+        'You don\'t need the Galois-field algebra (nobody\'s quizzing you); you need the *contract* in the last three highlighted lines. This isn\'t "we probably notice typos." It\'s a proven property of a BCH code, chosen from many candidates specifically to over-deliver on short strings like addresses. Swap any one, two, three, even four characters of a bc1 address, and validation **cannot** come out clean.',
         'Every wallet on Earth runs this polynomial before letting you send: the six-letter checksum must come out exact, and the network prefix and every data letter feed into it. And in this site\'s honesty tradition: with *five or more* simultaneous errors the guarantee lapses, and a corrupted address slips through with odds of about one in a billion (2³⁰). Even the fine print here comes quantified. In the finale, you\'ll try to sneak a typo past it yourself.',
       ],
       annotations: [

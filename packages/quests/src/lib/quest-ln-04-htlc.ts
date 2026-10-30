@@ -20,7 +20,7 @@ export const questLn04: Quest = {
   pin: BOLTS_PIN,
   story: {
     stage: 'the relay',
-    text: "Mira has a channel with Tomas and a channel with the market's payment hub. Ines has a channel with the hub too. Nobody has a channel with exactly the right person, which is the normal state of affairs. So the 180,000 sats for the beans has to travel: Mira to the hub, hub to Ines. The hub is a stranger to both of them, it is briefly holding the whole amount, and it must not be able to keep it.",
+    text: "Mira has a channel with Tomas and a channel with the market's payment hub. Ines has a channel with the hub too. Nobody has a channel with exactly the right person, which is the normal state of affairs. So the 180,000 sats for the beans has to travel: Mira to the hub, hub to Ines. The hub is a stranger to both of them, it is briefly promised the whole amount and must put up the same amount of its own, and it must not be able to keep Mira's.",
   },
   intro: [
     "Channels are pairwise. A network is not. If Lightning only worked between people who had already locked money up with each other, it would be a curiosity: you would need a channel with your landlord, your grocer, and everyone else you ever pay, each one funded in advance out of your own coins.",
@@ -118,7 +118,7 @@ export const questLn04: Quest = {
         },
       ],
       prose: [
-        'The preimage path requires the correct secret and signature. The timeout path permits a timeout transaction after its deadline; it does not transfer coins automatically. The outer revocation branch allows penalty spending of a revoked commitment. Expiry does not switch off all competing preimage spends. BOLT #3 defines the scripts and BOLT #5 explains on-chain resolution.',
+        'The preimage path requires the correct secret and signature. The timeout path permits a timeout transaction after its deadline; it does not transfer coins automatically. The outer revocation branch allows penalty spending of a revoked commitment. Expiry does not switch off all competing preimage spends. BOLT #3 defines the scripts and BOLT #5 explains on-chain resolution. The script shown is the original (non-anchor) version; anchor channels, the modern default, add a one-block wait to the claim and timeout paths.',
         "And the branch at the very top is one you have met before: the revocation key from Quest #2, because an HTLC output lives inside a commitment transaction and every output of a commitment transaction must be punishable if that commitment is a stale one. Nothing here is a special case. It is the same machinery, applied again.",
         'For a 180,000-sat invoice and a 180-sat forwarding fee, Mira offers the hub 180,180 sats and the hub offers Ines the full 180,000 sats. Ines reveals the secret on fulfillment; the hub uses it to fulfill upstream. The sender covers fees on top, rather than deducting them from the invoice.',
         'If forwarding fails, HTLCs are normally failed and removed off-chain. If a peer will not cooperate, recovery can require force-close and timeout spends. Height passing alone does not return funds; transactions must be broadcast and confirmed, and liquidity may remain locked meanwhile.',
@@ -126,7 +126,7 @@ export const questLn04: Quest = {
       annotations: [
         { lines: 'L203–06', text: 'Quest #2 again: if this is a revoked commitment, the revocation key takes everything. Same machinery, applied to every output.' },
         { lines: 'L210–11', text: 'Timeout path: after the deadline a qualifying timeout transaction can spend the output. Recovery requires action and confirmation, not merely the passage of time.' },
-        { lines: 'L213–14', text: 'The claim path: produce the preimage of the payment hash, and the money is yours immediately.' },
+        { lines: 'L213–14', text: 'The claim path: produce the preimage of the payment hash, and the money is yours as soon as the claim confirms.' },
         { lines: 'L215', text: 'A signature is still required, knowing the secret is not enough, you must also be the intended recipient.' },
       ],
       excerpt: {
@@ -160,7 +160,7 @@ export const questLn04: Quest = {
       prose: [
         "The deadlines have to descend. If the hub's outgoing HTLC to Ines expired *after* its incoming one from Mira, Ines could wait for Mira's to lapse, then claim, leaving the hub paying out with nothing to claim back. So every hop insists on a comfortable margin, and those margins add up down the route.",
         "Long routes accumulate timelock margins. A failed payment can lock liquidity until peers fail it off-chain or recovery transactions confirm on-chain. The passage of time alone does not guarantee return, and missing a competing-spend race can lose funds, as the deadline lab demonstrates.",
-        "Two more honest costs, since this quest is where they belong. **Liquidity is directional**: the hub can only forward what is on its side of the outgoing channel, so a route can fail simply because the money is pointing the wrong way, and the payer usually cannot tell in advance. And **fees are per hop**, tiny but real: a base amount plus a proportion, which is why millisatoshis exist at all, who chooses those numbers, and how they add up into the price you actually pay, is the next quest.",
+        "Two more honest costs, since this quest is where they belong. **Liquidity is directional**: the hub can only forward what is on its side of the outgoing channel, so a route can fail simply because the money is pointing the wrong way, and the payer usually cannot tell in advance. And **fees are per hop**, tiny but real: a base amount plus a proportion, which is why millisatoshis exist at all, who chooses those numbers, and how they add up into the price you actually pay, is Quest #6.",
         "None of this is a flaw in the design so much as the price of the design. A system where a stranger cannot steal from you is a system where a stranger can still fail to help you, and where the money you have committed to a promise is genuinely committed until the promise resolves.",
       ],
     },

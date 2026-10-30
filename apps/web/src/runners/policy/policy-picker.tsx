@@ -14,7 +14,7 @@ interface PolicyPreset {
 const PRESETS: PolicyPreset[] = [
   {
     id: 'v30',
-    label: 'Core v30 default · 100,000 vbytes',
+    label: 'Core v30 default · 100,000 bytes',
     maxDataBytes: 100_000,
     blurb: 'The open valve: any standard-sized OP_RETURN relays. Prunable data beats UTXO poison.',
   },

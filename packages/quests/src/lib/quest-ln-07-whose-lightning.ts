@@ -135,9 +135,8 @@ export const questLn07: Quest = {
         "None of this is a defect. It is what it costs to have a payment network with no central balance sheet: liquidity has to be somewhere, somebody has to have committed it, and it can only ever be in one place at a time.",
       ],
       annotations: [
-        { lines: 'L734–35', text: 'The reserve: a slice each side must leave the other, always.' },
-        { lines: 'L735–36', text: 'Why it exists: a party with nothing left to lose has nothing to deter them.' },
-        { lines: 'L736–37', text: 'And a floor on HTLC size, because tiny outputs are not economically enforceable on-chain.' },
+        { lines: 'L734–35', text: 'The reserve: the minimum the other side must keep on its own side, once it has reached it. The spec explains why elsewhere: so a would-be cheat always has something to lose.' },
+        { lines: 'L736–37', text: 'The smallest HTLC this node will accept, a policy each node sets for itself.' },
       ],
       excerpt: {
         pin: BOLTS_PIN,

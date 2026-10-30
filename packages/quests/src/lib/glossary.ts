@@ -247,7 +247,7 @@ export const glossary: GlossaryEntry[] = [
     code: true,
     category: 'Keys & ownership',
     definition:
-      'The opcode at the bottom of the rabbit hole: a signature and a public key go in, the curve math runs, and a single true/false comes out. Most spends funnel through this verdict; taproot key-path spends run the same curve check directly in the engine.',
+      'The opcode at the bottom of the rabbit hole: a signature and a public key go in, the curve math runs, and a single true/false comes out. Most spends funnel through this verdict; taproot key-path spends run a similar signature check (Schnorr, on the same curve) directly in the engine.',
     cite: 'interpreter.cpp:1069',
     quest: 3,
   },
@@ -484,7 +484,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['feerate', 'vbytes', 'vbyte', 'sat/vB', 'sats per vbyte'],
     category: 'Transactions & the mempool',
     definition:
-      "What miners actually sort by: fee divided by the transaction's size in **virtual bytes**, so a small transaction can outbid a huge one paying more in total. For feel: a typical one-input, two-output payment is ~140 vbytes, so 10 sat/vB means ~1,400 sats of total fee, whether you send 0.001 BTC or 1,000. A block fits ~1,000,000 vbytes: up to ~7,000 of the simplest payments, a few thousand in practice.",
+      "What miners actually sort by: fee divided by the transaction's size in **virtual bytes** (counted together with any unconfirmed parents it depends on; see CPFP), so a small transaction can outbid a huge one paying more in total. For feel: a typical one-input, two-output payment is ~140 vbytes, so 10 sat/vB means ~1,400 sats of total fee, whether you send 0.001 BTC or 1,000. A block fits ~1,000,000 vbytes: up to ~7,000 of the simplest payments, a few thousand in practice.",
     cite: 'miner.cpp:302',
     quest: 7,
   },
@@ -543,7 +543,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['dust'],
     category: 'Transactions & the mempool',
     definition:
-      "An output so small that spending it would cost more in fees than it is worth. Nodes refuse to relay new transactions that create outputs below a policy dust threshold, precisely so the ledger doesn't fill with unspendable pocket lint. Practical takeaway: consolidate your small UTXOs while fees are cheap, not during a spike.",
+      "An output so small that spending it would cost more in fees than it is worth. Nodes normally won't relay new transactions that create outputs below a policy dust threshold (one narrow exception: a zero-fee transaction whose single dust output is spent straight away in the same package), so the ledger doesn't fill with coins too small to be worth spending. Practical takeaway: consolidate your small UTXOs while fees are cheap, not during a spike.",
     cite: 'policy.h',
     quest: 12,
   },
@@ -912,7 +912,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['pruned mode', 'pruned node'],
     category: 'The network & your node',
     definition:
-      'A full node that verifies everything during sync but then discards old raw blocks, keeping only the current state (roughly 10 GB instead of a terabyte). Same rules enforced, same trust in nobody; it just can\'t serve history to others.',
+      'A full node that verifies everything during sync but then discards old raw blocks, keeping only the current coin database plus a few recent blocks (about 15 GB instead of roughly 850 GB). Same rules enforced, same trust in nobody; it just can\'t serve history to others.',
     quest: 9,
   },
   {
@@ -956,7 +956,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['soft fork', 'soft forks'],
     category: 'Rules, forks & history',
     definition:
-      'A *tightening* of the rules that old software still tolerates, and the only way Bitcoin\'s rules have changed in over a decade. Each one activated only after near-unanimous adoption, and its block height is carved into the code like a tree ring.',
+      'A *tightening* of the rules: blocks valid under the new rules still look valid to old software. It is the only way Bitcoin\'s rules have changed in over a decade, and each one\'s block height is carved into the code like a tree ring. It keeps one chain only if most hashpower enforces it; without that, as BIP110 showed in 2026, a soft fork can split the chain too.',
     cite: 'chainparams.cpp:119',
     quest: 4,
   },
@@ -973,7 +973,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['bips'],
     category: 'Rules, forks & history',
     definition:
-      '"Bitcoin Improvement Proposal": the public design documents changes go through (BIP34, BIP173/350 for addresses, and so on). Proposing costs nothing; only near-unanimous voluntary adoption makes one real.',
+      '"Bitcoin Improvement Proposal": the public design documents changes go through (BIP34, BIP173/350 for addresses, and so on). Proposing costs nothing. Wallet standards (like BIP32 and BIP39) spread as software adopts them; changes to the consensus rules need broad voluntary adoption to become real.',
     quest: 4,
   },
   {
@@ -1021,7 +1021,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['OP_RETURN'],
     category: 'Transactions & the mempool',
     definition:
-      'An output type that declares "this carries data and can never be spent," letting nodes prune it instead of tracking it forever. Added in 2014 as harm reduction for data stuffing; how much of it a node relays (`-datacarriersize`) became Bitcoin\'s loudest argument in 2025.',
+      'An output type that declares "this carries data and can never be spent," letting nodes prune it instead of tracking it forever. The opcode dates from 2009; Core 0.9 (2014) began relaying small OP_RETURN outputs as harm reduction for data stuffing. How much of it a node relays (`-datacarriersize`, now about 100,000 vbytes by default) became Bitcoin\'s loudest argument in 2025.',
     cite: 'policy.h:84',
     quest: 13,
   },
@@ -1038,7 +1038,7 @@ export const glossary: GlossaryEntry[] = [
     match: ['fee floor'],
     category: 'Transactions & the mempool',
     definition:
-      'The mempool\'s automatic price of admission when it overflows: eviction ratchets the floor up to what the evicted bidder paid, then the floor decays by half every 12 hours until it snaps back to zero. For feel: even a 100× fee spike decays to nothing in under four days of calm, faster once the queue drains. This is one node\'s own admission floor, not the market rate: market fees fall only when demand does. Nobody chooses the number.',
+      'The mempool\'s automatic price of admission when it overflows: eviction ratchets the floor up to what the evicted bidder paid, then, once the next block arrives, the floor halves about every 12 hours (faster as the mempool empties) until it snaps back to zero. For feel: even a 100× fee spike decays to nothing in under four days of calm, faster once the queue drains. This is one node\'s own admission floor, not the market rate: market fees fall only when demand does. Nobody chooses the number.',
     cite: 'txmempool.cpp:851',
     quest: 12,
   },

@@ -3,6 +3,7 @@ import {
   fireEvent,
   render,
   screen,
+  waitFor,
   within,
 } from '@testing-library/react';
 import { afterEach, expect, it } from 'vitest';
@@ -135,15 +136,26 @@ it('shows split views until valid higher-work propagation then restores the one-
 });
 it('verifies the historical bytes before claiming a matching txid', async () => {
   render(<HistoricOverflow />);
+  const status = screen.getByRole('status');
+  // Nothing is claimed until the bytes have actually been decoded and hashed.
+  expect(status).toBeEmptyDOMElement();
   fireEvent.click(
     screen.getByRole('button', {
       name: 'Decode bytes and verify historic txid',
     }),
   );
-  expect(await screen.findByRole('status')).toHaveTextContent('');
-  expect(await screen.findByText(new RegExp(OVERFLOW_TXID))).toHaveTextContent(
-    'matches original report',
+  // The hash is async; wait for the verified result, then pin its contents.
+  await waitFor(() =>
+    expect(status).toHaveTextContent(`Reconstructed txid ${OVERFLOW_TXID}`),
   );
+  expect(status).toHaveTextContent(
+    `Reconstructed txid ${OVERFLOW_TXID}; matches original report`,
+  );
+  expect(status).toHaveTextContent(
+    'Outputs: 9223372036854275808 + 9223372036854275808 sats',
+  );
+  expect(status).toHaveTextContent('signed-64-bit wrapping demonstration -1000000');
+  expect(status).not.toHaveTextContent('MISMATCH');
 });
 it('existing graph inference never consumes hidden change labels, and declines equal outputs', () => {
   const tx = {

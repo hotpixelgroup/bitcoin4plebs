@@ -155,7 +155,7 @@ export function GossipNetwork() {
           </g>
         ))}
       </svg>
-      <p className="viz-readout">
+      <p className="viz-readout" role="status">
         {mode === 'idle' &&
           'Your node knows a few peers, who know a few peers. There is nowhere to "submit" a transaction. Press a button and watch how anything travels.'}
         {mode === 'valid' &&

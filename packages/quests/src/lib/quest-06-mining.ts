@@ -23,7 +23,7 @@ export const quest06: Quest = {
     text: "Somewhere, a machine is guessing numbers that will seal Ana's payment into a block. The miner doesn't know her, can't read her name (there isn't one), and can't alter a satoshi of it. They just hash, and collect her fee if they win.",
   },
   intro: [
-    'You\'ve heard mining described as "computers solving complex math problems." That\'s wrong in an important way: there is no equation, no cleverness, no partial credit. Mining is **guessing**: hashing a tiny 80-byte header trillions of times with different lucky numbers until the output happens to be small enough. This quest shows you the whole machine: the header, the one-line rule, and the thermostat that keeps the guessing honest. Then you\'ll mine a block yourself, for real, in this tab.',
+    'You\'ve heard mining described as "computers solving complex math problems." That\'s wrong in an important way: there is no equation, no cleverness, no partial credit. Mining is **guessing**: hashing a tiny 80-byte header hundreds of sextillions of times with different lucky numbers until the output happens to be small enough. This quest shows you the whole machine: the header, the one-line rule, and the thermostat that keeps the guessing honest. Then you\'ll mine a block yourself, for real, in this tab.',
   ],
   promise:
     "Every snippet below is copied verbatim from the Bitcoin Core source, pinned to commit [18c05d9](https://github.com/bitcoin/bitcoin/commit/18c05d93016b28a9afd4c716dfe00b6e0accb30b). Don't trust this page either: every stop links to the same lines on GitHub so you can check we didn't edit a word.",
@@ -92,7 +92,7 @@ export const quest06: Quest = {
         'Here is what "satisfying proof-of-work" means: read the block\'s hash **as a 256-bit number**, and check it\'s **not bigger than the target**. Line 167. That\'s mining.',
       prose: [
         'A hash is just a huge number written in hexadecimal. The target (decoded from `nBits` on line 163) is another huge number. A block wins if its hash ≤ target, which, for a small target, means the hash must start with a long run of zeros. That\'s why real block hashes all begin `000000000000…`: each is a lottery ticket that came up all zeros.',
-        'Notice what this buys everyone: **verification is one hash and one comparison**. Your phone can check in microseconds what took a warehouse of machines quintillions of guesses to find. Producing proof is brutally expensive; checking it is nearly free. Sound familiar? It\'s the same beautiful asymmetry as the signatures in Quest #3, and it\'s the entire reason "longest valid chain" can settle disagreements without a referee.',
+        'Notice what this buys everyone: **verification is one hash and one comparison**. Your phone can check in microseconds what took the whole network hundreds of sextillions of guesses to find. Producing proof is brutally expensive; checking it is nearly free. Sound familiar? It\'s the same beautiful asymmetry as the signatures in Quest #3, and it\'s the entire reason "the valid chain with the most work" can settle disagreements without a referee.',
       ],
       annotations: [
         { lines: 'L163', text: 'Decode the compact `nBits` field from the header into the full 256-bit target.' },
@@ -121,13 +121,13 @@ export const quest06: Quest = {
       viz: 'difficulty-thermostat',
       title: 'The thermostat: measure two weeks, clamp the correction',
       takeaway:
-        'Every 2,016 blocks, the network measures how long they *actually* took versus the 14 days they *should* have taken. The correction is clamped to **4× in either direction**, so not even a massive hashrate shock can whipsaw the clock.',
+        'Every 2,016 blocks, the network measures how long the period *actually* took versus the 14 days it *should* have taken. The correction is clamped to **4× in either direction**, so not even a massive hashrate shock can whipsaw the clock.',
       prose: [
         'This is how "one block per ten minutes" survives the network\'s total hashrate growing more than a hundred-trillion-fold since 2009: the rules *measure reality* and adjust. Blocks came too fast? The target shrinks: harder lottery. Miners left and blocks crawled? It grows: easier lottery.',
         'Lines 57–60 are pure engineering paranoia, and worth loving: even if the measured fortnight looks absurd (an attack, a bug, half the hashrate vanishing overnight), one adjustment can never change difficulty by more than 4×. Every node computes this identical correction from the chain itself: no committee meets, no one announces the new difficulty. It\'s a thermostat, not a central bank.',
       ],
       annotations: [
-        { lines: 'L56', text: 'Measure: how long did the last 2,016 blocks actually take?' },
+        { lines: 'L56', text: 'Measure: the time from the first to the last block of this 2,016-block period (2,015 gaps, a quirk kept since 2009).' },
         { lines: 'L57–60', text: 'Clamp: whatever happened, the correction is capped at 4× per adjustment, both directions.' },
       ],
       excerpt: {
@@ -198,7 +198,7 @@ export const quest06: Quest = {
         cite: 'pow.cpp:167',
       },
       {
-        text: '**Difficulty is a thermostat**: measure 2,016 real blocks against 14 days, correct by at most 4×, no committee anywhere.',
+        text: '**Difficulty is a thermostat**: measure a real 2,016-block period against 14 days, correct by at most 4×, no committee anywhere.',
         cite: 'pow.cpp:56',
       },
       {

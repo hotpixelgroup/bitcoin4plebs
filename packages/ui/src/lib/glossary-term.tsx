@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import {
   QUEST_SLUGS,
-  glossary,
+  glossaryForSite,
   sites,
   type GlossaryEntry,
   type SiteId,
@@ -32,41 +32,81 @@ function currentSite(): SiteId {
 const escapeRe = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const isIdentifier = (p: string) => /[A-Z_]/.test(p);
 
-const proseEntries: Array<{ pattern: string; entry: GlossaryEntry }> = [];
-const identEntries: Array<{ pattern: string; entry: GlossaryEntry }> = [];
-for (const entry of glossary) {
-  for (const pattern of entry.match ?? []) {
-    (isIdentifier(pattern) ? identEntries : proseEntries).push({ pattern, entry });
-  }
+interface Matcher {
+  prose: Array<{ pattern: string; entry: GlossaryEntry }>;
+  ident: Array<{ pattern: string; entry: GlossaryEntry }>;
+  proseRe: RegExp | null;
+  identRe: RegExp | null;
 }
-// Longest pattern first so "difficulty adjustment" beats "difficulty".
-proseEntries.sort((a, b) => b.pattern.length - a.pattern.length);
-identEntries.sort((a, b) => b.pattern.length - a.pattern.length);
 
-const PROSE_RE = proseEntries.length
-  ? new RegExp(`\\b(${proseEntries.map((p) => escapeRe(p.pattern)).join('|')})\\b`, 'i')
-  : null;
-const IDENT_RE = identEntries.length
-  ? new RegExp(`\\b(${identEntries.map((p) => escapeRe(p.pattern)).join('|')})\\b`)
-  : null;
+/**
+ * How strongly an entry belongs to this site, used only to break ties when
+ * two visible entries share a pattern ("gossip" is both Bitcoin relay and
+ * Lightning's network map): an entry restricted to this site beats one that
+ * merely cites a quest here, which beats one that points elsewhere.
+ */
+function affinity(entry: GlossaryEntry, site: SiteId): number {
+  if (entry.site === site) return 2;
+  if (entry.quest !== undefined && (entry.questSite ?? 'bitcoin') === site) return 1;
+  return 0;
+}
 
-function entryForProse(matched: string): GlossaryEntry | undefined {
+/**
+ * Patterns are indexed per front door: only entries visible on this site
+ * (glossaryForSite) can be linked, so a Lightning reader never gets a
+ * Bitcoin-only definition and vice versa.
+ */
+function buildMatcher(site: SiteId): Matcher {
+  const prose: Matcher['prose'] = [];
+  const ident: Matcher['ident'] = [];
+  for (const entry of glossaryForSite(site)) {
+    for (const pattern of entry.match ?? []) {
+      (isIdentifier(pattern) ? ident : prose).push({ pattern, entry });
+    }
+  }
+  // Longest pattern first so "difficulty adjustment" beats "difficulty";
+  // equal patterns resolve to the entry that belongs to this site.
+  const order = (a: Matcher['prose'][number], b: Matcher['prose'][number]) =>
+    b.pattern.length - a.pattern.length || affinity(b.entry, site) - affinity(a.entry, site);
+  prose.sort(order);
+  ident.sort(order);
+  return {
+    prose,
+    ident,
+    proseRe: prose.length ? new RegExp(`\\b(${prose.map((p) => escapeRe(p.pattern)).join('|')})\\b`, 'i') : null,
+    identRe: ident.length ? new RegExp(`\\b(${ident.map((p) => escapeRe(p.pattern)).join('|')})\\b`) : null,
+  };
+}
+
+const matchers = new Map<SiteId, Matcher>();
+function matcher(): Matcher {
+  const site = currentSite();
+  let m = matchers.get(site);
+  if (!m) {
+    m = buildMatcher(site);
+    matchers.set(site, m);
+  }
+  return m;
+}
+
+function entryForProse(m: Matcher, matched: string): GlossaryEntry | undefined {
   const lower = matched.toLowerCase();
   return (
-    proseEntries.find((p) => p.pattern.toLowerCase() === lower)?.entry ??
-    identEntries.find((p) => p.pattern === matched)?.entry
+    m.prose.find((p) => p.pattern.toLowerCase() === lower)?.entry ??
+    m.ident.find((p) => p.pattern === matched)?.entry
   );
 }
 
-function entryForIdent(matched: string): GlossaryEntry | undefined {
-  return identEntries.find((p) => p.pattern === matched)?.entry;
+function entryForIdent(m: Matcher, matched: string): GlossaryEntry | undefined {
+  return m.ident.find((p) => p.pattern === matched)?.entry;
 }
 
 /** Exact-token lookup for `code` spans in prose markup. */
 export function entryForCodeToken(token: string): GlossaryEntry | undefined {
+  const m = matcher();
   return (
-    identEntries.find((p) => p.pattern === token)?.entry ??
-    proseEntries.find((p) => p.pattern === token.toLowerCase())?.entry
+    m.ident.find((p) => p.pattern === token)?.entry ??
+    m.prose.find((p) => p.pattern === token.toLowerCase())?.entry
   );
 }
 
@@ -189,18 +229,19 @@ export function GlossaryTerm({ entry, children, codeStyle }: GlossaryTermProps) 
  * the match is left untouched (one underline per segment keeps prose calm).
  */
 export function linkFirstTerm(segment: string, keyBase: number): ReactNode {
+  const site = matcher();
   const candidates: Array<{ index: number; text: string; entry: GlossaryEntry }> = [];
-  if (PROSE_RE) {
-    const m = PROSE_RE.exec(segment);
+  if (site.proseRe) {
+    const m = site.proseRe.exec(segment);
     if (m) {
-      const entry = entryForProse(m[1]);
+      const entry = entryForProse(site, m[1]);
       if (entry) candidates.push({ index: m.index, text: m[1], entry });
     }
   }
-  if (IDENT_RE) {
-    const m = IDENT_RE.exec(segment);
+  if (site.identRe) {
+    const m = site.identRe.exec(segment);
     if (m) {
-      const entry = entryForIdent(m[1]);
+      const entry = entryForIdent(site, m[1]);
       if (entry) candidates.push({ index: m.index, text: m[1], entry });
     }
   }
@@ -218,12 +259,13 @@ export function linkFirstTerm(segment: string, keyBase: number): ReactNode {
 
 /** All identifier matches in one code line, for CodeCard. */
 export function findCodeTerms(line: string): Array<{ start: number; end: number; entry: GlossaryEntry }> {
-  if (!IDENT_RE) return [];
-  const re = new RegExp(IDENT_RE.source, 'g');
+  const site = matcher();
+  if (!site.identRe) return [];
+  const re = new RegExp(site.identRe.source, 'g');
   const out: Array<{ start: number; end: number; entry: GlossaryEntry }> = [];
   let m: RegExpExecArray | null;
   while ((m = re.exec(line)) !== null) {
-    const entry = entryForIdent(m[1]);
+    const entry = entryForIdent(site, m[1]);
     if (entry) out.push({ start: m.index, end: m.index + m[1].length, entry });
   }
   return out;

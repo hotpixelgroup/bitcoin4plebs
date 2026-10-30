@@ -8,7 +8,7 @@ import {
   getBlockSubsidy,
   nextHalvingHeight,
   satsToBtc,
-  supplyAtHeight,
+  supplyThroughBlock,
   totalSupply,
 } from '@bitcoin4plebs/bitcoin-logic';
 import { Callout, RichText } from '@bitcoin4plebs/ui';
@@ -88,7 +88,7 @@ export function HalvingClock({ finale }: RunnerProps) {
   const clamped = Math.max(0, Math.min(height, 10_000_000));
   const era = eraForHeight(clamped);
   const subsidy = getBlockSubsidy(clamped);
-  const supply = supplyAtHeight(clamped);
+  const supply = supplyThroughBlock(clamped);
   const pct = Number((supply * 10_000n) / TOTAL) / 100;
   const date = estimateDateForHeight(clamped);
   const next = nextHalvingHeight(clamped);
@@ -155,7 +155,7 @@ export function HalvingClock({ finale }: RunnerProps) {
               </div>
             </div>
             <div className="stat">
-              <div className="stat-label">total supply by then</div>
+              <div className="stat-label">total supply through this block</div>
               <div className="stat-value">
                 {satsToBtc(supply, 4)} <span className="stat-unit">BTC</span>
               </div>
@@ -171,6 +171,7 @@ export function HalvingClock({ finale }: RunnerProps) {
                   year: 'numeric',
                   month: 'short',
                   day: 'numeric',
+                  timeZone: 'UTC',
                 })}
               </div>
             </div>

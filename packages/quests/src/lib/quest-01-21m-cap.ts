@@ -81,7 +81,7 @@ export const quest01: Quest = {
       annotations: [
         { lines: 'L1846', text: '"Given a block height, return the allowed new-coin reward, in satoshis."' },
         { lines: 'L1848', text: 'Count how many halvings have happened: height ÷ 210,000, whole part only.' },
-        { lines: 'L1850–51', text: 'Safety rail: after 64 halvings the reward is forced to exactly zero forever.' },
+        { lines: 'L1850–51', text: 'Safety rail: shifting by 64 or more places is undefined in C++, so from halving 64 on the code returns zero outright. (The halving itself already hits zero at halving 33, around 2140.)' },
         { lines: 'L1853', text: 'Start at 50 BTC (written as 50 × COIN = 5,000,000,000 satoshis).' },
         {
           lines: 'L1855',

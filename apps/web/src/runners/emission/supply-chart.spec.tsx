@@ -2,7 +2,7 @@ import { render } from '@testing-library/react';
 import {
   computeEras,
   estimateHeightAtTime,
-  supplyAtHeight,
+  supplyThroughBlock,
   totalSupply,
 } from '@bitcoin4plebs/bitcoin-logic';
 import { SupplyChart } from './supply-chart';
@@ -16,7 +16,7 @@ describe('SupplyChart "you are here" marker', () => {
     const label =
       container.querySelector('.chart-today text')?.textContent ?? '';
     const today = estimateHeightAtTime(Date.now());
-    const pct = Number((supplyAtHeight(today) * 100n) / totalSupply());
+    const pct = Number((supplyThroughBlock(today) * 100n) / totalSupply());
     expect(label).toBe(`you are here (${pct}% already minted)`);
     // Same axis maths as the chart: 62px left margin, 800 - 16px right, 7,000,000-block axis.
     const cx = Number(

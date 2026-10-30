@@ -67,9 +67,9 @@ export function BitshiftHalving() {
             </div>
           </div>
         </div>
-        <p className="viz-readout">
+        <p className="viz-readout" role="status">
           {subsidy === 0n
-            ? 'After 33 shifts every bit has fallen off the edge. That, not a constant anyone wrote, is where "21 million" comes from: the sum of everything this row held along the way, 20,999,999.9769 BTC.'
+            ? 'After 33 shifts every bit has fallen off the edge. That, not a constant anyone wrote, is where "21 million" comes from: everything this row held along the way, each value paid out for 210,000 blocks, adds up to 20,999,999.9769 BTC.'
             : halvings === 0
               ? '5,000,000,000 satoshis (50 BTC), as the machine sees it. Press the button: whole-number division by two is just sliding everything right and letting the last bit fall off. Remainders are never kept.'
               : `Each press erased the rightmost bit permanently, which is why the sum of all rewards lands just UNDER 21M, never on it. ${33 - halvings} shifts until zero.`}

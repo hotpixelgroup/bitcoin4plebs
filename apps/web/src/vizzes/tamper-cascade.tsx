@@ -82,7 +82,7 @@ export function TamperCascade() {
         title="The tamper cascade"
         caption="Mining a five-block toy chain, using UTF-8 labels rather than Bitcoin headers."
       >
-        <p className="viz-readout">Mining 5 blocks with real proof-of-work…</p>
+        <p className="viz-readout" role="status">Mining 5 blocks with real proof-of-work…</p>
       </VizFigure>
     );
   }
@@ -198,7 +198,7 @@ export function TamperCascade() {
           </div>
         ))}
       </div>
-      <p className="viz-readout">
+      <p className="viz-readout" role="status">
         {brokenCount > 0
           ? `One edit, ${brokenCount} invalid block${brokenCount > 1 ? 's' : ''}: your rewritten block fails its own proof-of-work, and every later block points at a parent hash that no longer exists. To cover your tracks you must re-mine them ALL, oldest first.`
           : everTampered && lastWork

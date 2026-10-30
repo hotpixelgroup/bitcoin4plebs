@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { COIN, MAX_MONEY } from './constants.js';
 import {
   computeEras,
+  firstSubsidyDisagreement,
   getBlockSubsidy,
   supplyAtHeight,
   supplyThroughBlock,
@@ -124,5 +125,26 @@ describe('btcToSats (exact parsing of node output)', () => {
     expect(btcToSats('21e6')).toBeNull();
     expect(btcToSats('1.123456789')).toBeNull();
     expect(btcToSats('-5')).toBeNull();
+  });
+});
+
+describe('firstSubsidyDisagreement', () => {
+  it('finds no disagreement for Bitcoin itself', () => {
+    expect(firstSubsidyDisagreement()).toBeNull();
+    expect(firstSubsidyDisagreement({ halvingInterval: 210_000, guard64: true })).toBeNull();
+  });
+  it('a shorter interval underclaims first (existing nodes would accept)', () => {
+    expect(firstSubsidyDisagreement({ halvingInterval: 100_000 })).toMatchObject({ height: 100_000, kind: 'under' });
+  });
+  it('a longer interval overclaims at the first real halving', () => {
+    expect(firstSubsidyDisagreement({ halvingInterval: 300_000 })).toMatchObject({ height: 210_000, kind: 'over' });
+  });
+  it('removing the guard diverges only when the shift wraps, at era 65', () => {
+    expect(firstSubsidyDisagreement({ guard64: false })).toMatchObject({
+      height: 64 * 210_000,
+      kind: 'over',
+      yours: 50n * COIN,
+      bitcoin: 0n,
+    });
   });
 });

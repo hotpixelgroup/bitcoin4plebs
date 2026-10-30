@@ -108,7 +108,7 @@ export function SharedLedger() {
           );
         })}
       </div>
-      <p className="viz-readout">
+      <p className="viz-readout" role="status">
         {!tampered &&
           honestCount === 0 &&
           'Four strangers, four identical copies. There is no "main" copy and no keeper in charge. Add an entry and watch how honest news spreads.'}

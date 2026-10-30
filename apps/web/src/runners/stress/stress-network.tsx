@@ -187,12 +187,12 @@ function filterSteps(): Step[] {
   return [
     {
       title: 'You raise the drawbridge',
-      body: 'You run a strict relay policy: `-datacarriersize 83`, the old default, the same spirit as Bitcoin Knots. A 40,000-vbyte inscription paying 25 sat/vB arrives at your node’s door.',
+      body: 'You run a strict relay policy: `-datacarriersize 83`, the old default, the same spirit as Bitcoin Knots. A transaction carrying a 40,000-byte `OP_RETURN` payload (an image, say) and paying 25 sat/vB arrives at your node’s door. That is exactly what `-datacarriersize` limits: it counts `OP_RETURN` output bytes only, not data tucked into witnesses.',
       stats: [{ label: 'your datacarriersize', value: '83 bytes' }],
     },
     {
       title: 'Your mempool stays clean. The network shrugs.',
-      body: 'Your node refuses to relay it, exactly as configured. Eight of your ten peers relay it anyway, and one of them peers with a mining pool. Filters are per-node **taste**; the gossip network routes around any single palate.',
+      body: 'Your node refuses to relay it (reason: `datacarrier`), exactly as configured. Eight of your ten peers run the Core v30 default, which allows up to 100,000 bytes of `OP_RETURN` data, and relay it anyway, and one of them peers with a mining pool. Filters are per-node **taste**; the gossip network routes around any single palate.',
       stats: [
         { label: 'your mempool', value: 'clean' },
         { label: 'paths to a miner', value: 'plenty' },
@@ -200,7 +200,7 @@ function filterSteps(): Step[] {
     },
     {
       title: 'The block arrives',
-      body: 'The next block includes the inscription. Your node checks **consensus** rules only: valid. The block enters your chain, inscription and all. Your filter changed your bandwidth and your queue; it did not change the ledger.',
+      body: 'The next block includes the `OP_RETURN` transaction. Your node checks **consensus** rules only: valid. The block enters your chain, payload and all. Your filter changed your bandwidth and your queue; it did not change the ledger.',
       tone: 'bad',
       stats: [{ label: 'your node’s verdict on the block', value: 'accept' }],
     },

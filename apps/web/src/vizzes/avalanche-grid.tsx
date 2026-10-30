@@ -66,7 +66,7 @@ export function AvalancheGrid() {
             />
           ))}
         </div>
-        <p className="viz-readout">
+        <p className="viz-readout" role="status">
           {flipped === null
             ? '256 bits, waiting for your first edit.'
             : flipped === 0

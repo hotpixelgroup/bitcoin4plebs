@@ -105,7 +105,7 @@ export const quest11: Quest = {
       takeaway:
         'Signet uses the tb prefix for witness addresses. A correctly formed tb1 address can have a perfectly valid checksum. A mainnet wallet must reject it because the network prefix is wrong, a separate check from checksum verification.',
       prose: [
-        'This is the safety rail that makes the whole exercise carefree. The two universes cannot leak into each other by accident: every address carries its network in its own checksum, and every wallet checks it before anything moves.',
+        'This is the safety rail that makes the whole exercise carefree. The two universes cannot leak into each other by accident: every address carries a network tag, and wallets reject the wrong one before anything moves, separately from the checksum.',
         'Wallets check the network prefix as well as the checksum. A wrong-network address need not contain any typo.',
       ],
       quiz: [

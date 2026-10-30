@@ -135,7 +135,7 @@ export const questions: NewbieQuestion[] = [
   },
   {
     question: 'What happens if I mistype an address?',
-    short: 'The checksum math guarantees any 4 or fewer wrong characters are caught, and almost always catches other mistakes. Plant typos yourself and watch every wallet refuse them.',
+    short: 'The checksum math guarantees any 4 or fewer substituted characters are caught, and almost always catches other mistakes. Plant typos yourself and watch every wallet refuse them.',
     slug: 'what-is-an-address',
     stop: 'checksum',
   },
@@ -148,8 +148,8 @@ export const questions: NewbieQuestion[] = [
   {
     question: 'Is Bitcoin anonymous?',
     short: 'No: it is public. Every coin sits in plain view; what protects you is a lock, not secrecy. Reusing addresses links your history.',
-    slug: 'what-is-an-address',
-    stop: 'network-tag',
+    slug: 'who-can-see-your-money',
+    stop: 'glass-ledger',
   },
   {
     question: 'How do I actually check any of this instead of trusting websites?',
@@ -241,7 +241,7 @@ export const questions: NewbieQuestion[] = [
   },
   {
     question: 'Why is Bitcoin worth anything at all?',
-    short: "Same reason anything is money (its properties plus who accepts it), plus one nothing had before: you can verify all of it yourself. \"Backed by nothing\" is true of the dollar too.",
+    short: "Bitcoin has no issuer promising redemption, and neither do most modern currencies. Acceptance, usefulness and expectations drive demand, and you can verify Bitcoin's supply and rules yourself.",
     slug: 'why-is-this-money',
     stop: 'nothing-is-backed',
   },
@@ -249,11 +249,11 @@ export const questions: NewbieQuestion[] = [
     question: "I can't afford a whole bitcoin, is it too late?",
     short: "A misunderstanding: Bitcoin is counted in satoshis, 100 million per coin, so you hold and send any fraction. Whole-coin pricing is a display choice, not a minimum.",
     slug: 'why-is-this-money',
-    stop: 'checkable-scarcity',
+    stop: 'divisible',
   },
   {
     question: "Doesn't Bitcoin waste a huge amount of energy?",
-    short: 'It really does use a country\'s worth of power, and the mix is not all clean. But that energy is the product, not overhead: it is what makes the ledger impossible to forge. Both columns, honestly.',
+    short: 'It uses a lot: Cambridge (CCAF) estimated about 138 TWh a year, roughly 0.5% of world electricity, in April 2025, and not all of it clean. That energy makes rewriting history expensive, not impossible. Both columns, honestly.',
     slug: 'does-bitcoin-waste-energy',
     stop: 'the-objection',
   },
@@ -310,7 +310,7 @@ export const questions: NewbieQuestion[] = [
   {
     site: 'lightning',
     question: 'Can routing nodes see who I am paying?',
-    short: 'No. The specification is precise: a hop learns its neighbours and nothing else, not the route, not its length, not its own position.',
+    short: 'Not directly: the onion hides the route, its length and each hop\'s position from the hops. Amounts, timing and the payment hash can still leak clues.',
     slug: 'who-paid-whom',
     stop: 'the-claim',
   },

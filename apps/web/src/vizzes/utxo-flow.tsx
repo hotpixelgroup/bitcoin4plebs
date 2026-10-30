@@ -17,7 +17,7 @@ interface LiveBox {
 }
 
 /**
- * The box builder: Ana pays Bo 0.60 BTC out of boxes that don't divide.
+ * The box builder: you pay Bo 0.60 BTC out of boxes that don't divide.
  * Selected boxes are DESTROYED; brand-new boxes appear for Bo and for
  * your change; the fee is the visible gap. The point: there is no
  * account, no balance, no "0.6 leaves your box": only boxes opened
@@ -100,7 +100,7 @@ export function UtxoFlow() {
   return (
     <VizFigure
       title="The box builder"
-      caption="Build Ana’s payment. Choose whole inputs, a recipient amount and a fee, then compare pending and confirmed state."
+      caption="Build your payment to Bo. Choose whole inputs, a recipient amount and a fee, then compare pending and confirmed state."
     >
       <label htmlFor="utxo-payment">
         Recipient amount: {satsToBtc(PAYMENT)} BTC
@@ -243,7 +243,7 @@ export function UtxoFlow() {
                   sent.spent.length > 1 ? 'es' : ''
                 } stopped existing, ${sent.created.length} brand-new box${
                   sent.created.length > 1 ? 'es' : ''
-                } appeared, and the missing ${satsToBtc(FEE)} BTC (inputs minus outputs) is the fee, claimable by whichever miner buries this (Quest #2). Your "balance" was never a number in an account; it's just the sum of boxes your keys still open.`
+                } appeared, and the missing ${satsToBtc(FEE)} BTC (inputs minus outputs) is the fee, claimable by whichever miner includes this in a block. Your "balance" was never a number in an account; it's just the sum of boxes your keys still open.`
               : sent
                 ? 'Transaction built, not confirmed. The proposed outputs do not yet replace the confirmed inputs.'
                 : enough

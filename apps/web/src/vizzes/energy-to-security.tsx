@@ -22,7 +22,7 @@ export function EnergyToSecurity() {
       <div className="e2s-flow" aria-hidden="true">
         <span className="e2s-stage e2s-energy">electricity spent</span>
         <span className="e2s-arrow">→</span>
-        <span className="e2s-stage e2s-guess">trillions of guesses</span>
+        <span className="e2s-stage e2s-guess">hundreds of sextillions of guesses</span>
         <span className="e2s-arrow">→</span>
         <span className="e2s-stage e2s-block">one valid block</span>
         <span className="e2s-arrow">→</span>
@@ -41,7 +41,7 @@ export function EnergyToSecurity() {
             </div>
           ))}
         </div>
-        <div className="e2s-readout">
+        <div className="e2s-readout" role="status">
           <div className="e2s-metric">
             <span className="e2s-metric-num">{blocks}</span>
             <span className="e2s-metric-label">blocks of history</span>

@@ -10,6 +10,13 @@ import {
 import { Callout, RichText } from '@bitcoin4plebs/ui';
 import type { RunnerProps } from '../registry';
 
+/**
+ * An illustrative (not measured) total_amount for the default height: about
+ * 150 BTC under the 19,994,825 BTC schedule, roughly what the unspendable
+ * genesis output plus the two BIP30-overwritten coinbases alone remove.
+ */
+const EXAMPLE_TOTAL = '19994674.86811500';
+
 /** Handy heights: the story so far, plus the release's assumevalid block. */
 const PRESETS = [
   { label: 'Genesis (0)', height: 0 },
@@ -85,7 +92,7 @@ export function SupplyCheck({ finale }: RunnerProps) {
             className="height-input"
             type="text"
             inputMode="decimal"
-            placeholder="e.g. 19994825.30930052"
+            placeholder={`e.g. ${EXAMPLE_TOTAL}`}
             value={reportedText}
             onChange={(e) => setReportedText(e.target.value)}
           />
@@ -132,7 +139,7 @@ export function SupplyCheck({ finale }: RunnerProps) {
                 ) : reportedSats === null ? (
                   <div className="guess-verdict">
                     That doesn't parse as a BTC amount: digits and up to 8
-                    decimals, e.g. <code>19994825.30930052</code>.
+                    decimals, e.g. <code>{EXAMPLE_TOTAL}</code>.
                   </div>
                 ) : (
                   <>

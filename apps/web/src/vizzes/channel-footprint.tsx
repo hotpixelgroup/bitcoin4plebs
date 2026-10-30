@@ -65,11 +65,13 @@ export function ChannelFootprint() {
         </div>
       </div>
 
-      <p className="utxo-box-note">
-        {payments === 1 ? (
+      <p className="utxo-box-note" role="status">
+        {saved <= 0 ? (
           <>
-            At one payment the channel is <strong>worse</strong>, two transactions instead of
-            one. Channels are not free; they are amortised. Drag right.
+            At {payments === 1 ? 'one payment' : `${payments.toLocaleString('en-US')} payments`} the
+            channel is <strong>worse</strong>: its open and close take {inChannel} vbytes, more than{' '}
+            {onChain.toLocaleString('en-US')} on the chain. Channels are not free; they are
+            amortised. Drag right.
           </>
         ) : (
           <>

@@ -4,7 +4,8 @@ import { BITCOIN_PIN, EXCERPT_COINBASE_ENFORCEMENT, EXCERPT_MAX_MONEY } from './
 /**
  * Quest #4: Who can change Bitcoin's rules?
  * The governance quest: no admin key exists, miners can't out-vote the
- * rules, changes happen by near-unanimous adoption, and every node
+ * rules, changes stick only with broad adoption (a soft fork stays one
+ * chain only if most hashpower enforces it), and every node
  * operator (including the reader) holds a veto.
  */
 export const quest04: Quest = {
@@ -20,7 +21,7 @@ export const quest04: Quest = {
   pin: BITCOIN_PIN,
   story: {
     stage: "nobody's permission",
-    text: "Count who Ana has asked so far: nobody. No bank approved her, no company can freeze her boxes, no government can rewrite the rules mid-payment. The comment you're about to read is the developers admitting even *they* can't.",
+    text: "Count who Ana has asked so far: nobody. No bank approved her, no company can freeze her boxes, no government can rewrite the rules mid-payment. The comment you're about to read is the developers warning that even *they* can't change them safely.",
   },
   intro: [
     'Every system you\'ve ever used has an owner who can change the rules on you: a bank, a platform, a government. Bitcoin\'s strangest property is that it doesn\'t. This quest looks for the admin switch, finds out what happens to rule-breakers with majority power, and reads the scars of the times the rules *did* change. It ends with you changing them yourself, to see exactly what that gets you.',
@@ -32,18 +33,18 @@ export const quest04: Quest = {
       id: 'no-admin-key',
       myth: {
         belief: "Bitcoin's developers can change the rules whenever enough of them agree.",
-        reality: "Developers publish code; they cannot make anyone run it. A rule change becomes Bitcoin only when node operators near-unanimously adopt it, and the developers' own comment on this screen says changing this value would fork them off the network.",
+        reality: "Developers publish code; they cannot make anyone run it. A rule change becomes Bitcoin only when node operators broadly adopt it, and a soft fork stays one chain only if most hashpower enforces it too. And the developers' own comment on this screen warns that changing this value could split the network.",
       },
-      title: 'There is no admin switch, and the developers say so in a comment',
+      title: 'There is no admin switch, and the developers\' own comment shows why',
       takeaway:
-        'You met MAX_MONEY in Quest #1. Read its comment again with new eyes: even *this* constant\'s exact value is **"consensus critical"**, with the developers writing that **they too cannot touch it** without splitting the network.',
+        'You met MAX_MONEY in Quest #1. Read its comment again with new eyes: even *this* constant\'s exact value is **"consensus critical"**, with the developers warning that **even they** could split the network by changing it.',
       prose: [
-        'This comment is a remarkable confession. The people with commit access to Bitcoin\'s repository are writing, in the code itself, that changing this line wouldn\'t *update* Bitcoin. It would cause "a fork": their software would simply stop being Bitcoin and wander off onto its own lonely chain.',
+        'This comment is a remarkable admission. The people with commit access to Bitcoin\'s repository are warning, in the code itself, that changing this line might not *update* Bitcoin at all. It "could lead to a fork": their software would stop agreeing with everyone else\'s and wander off onto its own lonely chain.',
         'That\'s the deep answer to "who controls Bitcoin": the rules aren\'t enforced *by* anyone; they\'re enforced *against* everyone, developers included, by every node independently checking every block. Authority doesn\'t live in the repository. It lives in tens of thousands of machines that each decide, alone, what code they run.',
       ],
       annotations: [
         { lines: 'L21–22', text: '"used by consensus-critical validation code": every node checks this on every block.' },
-        { lines: 'L23–24', text: 'The confession: modify it and you don\'t change Bitcoin; you leave it ("could lead to a fork").' },
+        { lines: 'L23–24', text: 'The warning: every node checks this value, so changing it, especially around a bug that let coins appear from nothing, "could lead to a fork".' },
       ],
       excerpt: EXCERPT_MAX_MONEY,
     },
@@ -67,7 +68,7 @@ export const quest04: Quest = {
         'The famous "51% attack" can *reorder recent* transactions. It **cannot** print coins, steal your keys, or change the rules, because every node discards rule-breaking blocks **regardless of how much work they carry**.',
       prose: [
         'Read this check one more time. It\'s the same five lines from Quest #1, and this is their most important property: nothing in them asks how much mining power produced the block. A block with an oversized coinbase is invalid with 1% of the world\'s hashrate behind it, and exactly as invalid with 99%.',
-        'This is the part of Bitcoin most people get backwards. Miners don\'t vote on what\'s valid; they *compete for the reward within* rules that nodes enforce. A miner majority that starts breaking rules doesn\'t take over Bitcoin; it exiles itself onto a chain that every wallet, exchange, and node running this code simply cannot see.',
+        'This is the part of Bitcoin most people get backwards. Miners don\'t vote on what\'s valid; they *compete for the reward within* rules that nodes enforce. A miner majority that starts breaking rules doesn\'t take over Bitcoin; it exiles itself onto a chain that every full node running this code, and every exchange or wallet relying on one, simply rejects.',
       ],
       excerpt: EXCERPT_COINBASE_ENFORCEMENT,
     },
@@ -114,7 +115,7 @@ export const quest04: Quest = {
       "Next headline that says 'Bitcoin is changing X,' ask one question: policy or consensus? You now know the difference, and you know consensus has changed by soft fork only a handful of times, six of them since 2013, each one only after near-unanimous adoption.",
     items: [
       {
-        text: '**No admin switch exists**: the developers themselves note in the code that changing consensus values forks you off the network.',
+        text: '**No admin switch exists**: the developers themselves warn in the code that changing a consensus value could split the network.',
         cite: 'amount.h:23',
       },
       {
@@ -122,7 +123,7 @@ export const quest04: Quest = {
         cite: 'validation.cpp:2621',
       },
       {
-        text: '**Rule changes happen by near-unanimous adoption, years apart**: each activation height is carved into the code.',
+        text: '**Rule changes have come by near-unanimous adoption, years apart**: each activation height is carved into the code. Without most hashpower enforcing it, a soft fork splits off instead.',
         cite: 'chainparams.cpp:119',
       },
       {

@@ -109,7 +109,7 @@ export const quest05: Quest = {
       },
       title: "September 2018: no known exploitation reported",
       takeaway:
-        'CVE-2018-17144: for about 18 months, a performance optimization had removed the check below (the inflation path existed for about a year, since version 0.15.0). A transaction spending **the same coin twice in one block** could crash nodes, or it could quietly **inflate the supply**. Here is the restored check, scar named on line 36.',
+        'CVE-2018-17144: for about 18 months, a performance optimization had made nodes skip the check below when validating blocks (the inflation path existed for about a year, since version 0.15.0). A transaction spending **the same coin twice in one block** could crash nodes, or it could quietly **inflate the supply**. Here is the check, now run on every block again, scar named on line 36.',
       prose: [
         'The bug\'s story matters as much as its mechanics. A developer working on Bitcoin Cash spotted it as a crash bug and reported it responsibly; Core developers then realized the same flaw could inflate the supply. Core developers shipped a fix within hours, initially describing it publicly as a crash bug only. They revealed the inflation risk two days later, after it became clear others had independently worked it out; by then the fix was already spreading across the network. No coins were ever printed on Bitcoin.',
         'Read the developers\' comment on lines 37–40. It explains *exactly* what failing to run this check would cost: "either a crash or an inflation bug." This is the honest lesson of the quest: the 21M cap is not a law of physics. It\'s a promise kept by code, **and code is kept honest by people checking it**. As of five quests ago, that now includes you.',

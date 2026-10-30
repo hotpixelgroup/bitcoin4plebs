@@ -123,13 +123,10 @@ export const questLn06: Quest = {
         "There is exactly one fee formula in Lightning and this is it. Base, plus the amount times the proportional rate divided by a million. Everything else is which numbers go in.",
         'The proportional fee uses integer division, truncating any remainder, and is computed on the forwarded amount. BOLT #4 requires the incoming amount to cover at least the forwarding amount plus the required fee. Paying extra is not automatically refused; it can overpay. Route amounts are therefore computed from the destination backwards.',
         "In this exact-amount example the sender offers 5,010,198 msat, the intermediate retains 10,199 msat on fulfillment and the recipient gets 4,999,999 msat. Amounts above required minima can overpay; an invoice and forwarding policy do not make every received payment exactly equal to the requested amount. Pending HTLCs reserve value before settlement.",
-        "The last line is the specification doing our homework for us: `200 + ( 4999999 * 2000 / 1000000 ) = 10199`. The finale runs that exact sum in your browser and refuses to claim anything unless it matches.",
+        "The next stop shows the specification putting real numbers into this exact line.",
       ],
       annotations: [
         { lines: 'L981', text: 'The formula, in full. Base plus proportional, integer division, no rounding up.' },
-        { lines: 'L1114–15', text: 'The answer to the quiz above, stated by the spec: A pays the fee from the B->C update.' },
-        { lines: 'L1118', text: 'The same formula again, now with real numbers about to go into it.' },
-        { lines: 'L1120', text: '10,199, not 10,200. The truncation is the whole reason to check your arithmetic against this line.' },
       ],
       excerpt: {
         pin: BOLTS_PIN,
@@ -139,6 +136,35 @@ export const questLn06: Quest = {
           { n: 979, text: 'The origin node:' },
           { n: 980, text: '  - SHOULD accept HTLCs that pay a fee equal to or greater than:' },
           { n: 981, text: '    - fee_base_msat + ( amount_to_forward * fee_proportional_millionths / 1000000 )', highlight: true },
+        ],
+      },
+    },
+    {
+      id: 'worked-example',
+      title: "The specification's own worked example",
+      takeaway:
+        'A pays C through B. The spec charges B’s fee from the B->C update and does the sum itself: 10,199 msat, with the remainder dropped.',
+      annotationsOpen: true,
+      prose: [
+        "This is the specification doing our homework for us: `200 + ( 4999999 * 2000 / 1000000 ) = 10199`. The exact answer is 10,199.998, and integer division drops the fraction. The finale runs that sum in your browser and refuses to claim anything unless it matches.",
+      ],
+      annotations: [
+        { lines: 'L1114–15', text: 'The answer to the quiz above, stated by the spec: A pays the fee from the B->C update.' },
+        { lines: 'L1118', text: 'The same formula again, now with real numbers about to go into it.' },
+        { lines: 'L1120', text: '10,199, not 10,200. The truncation is the whole reason to check your arithmetic against this line.' },
+      ],
+      excerpt: {
+        pin: BOLTS_PIN,
+        ref: { file: '07-routing-gossip.md', startLine: 1114, endLine: 1120 },
+        language: 'text',
+        lines: [
+          { n: 1114, text: '**A->B->C.** If A were to send 4,999,999 millisatoshi to C via B, it needs to', highlight: true },
+          { n: 1115, text: 'pay B the fee it specified in the B->C `channel_update`, calculated as', highlight: true },
+          { n: 1116, text: 'per [HTLC Fees](#htlc-fees):' },
+          { n: 1117, text: '' },
+          { n: 1118, text: '        fee_base_msat + ( amount_to_forward * fee_proportional_millionths / 1000000 )' },
+          { n: 1119, text: '' },
+          { n: 1120, text: '        200 + ( 4999999 * 2000 / 1000000 ) = 10199', highlight: true },
         ],
       },
     },
@@ -158,7 +184,7 @@ export const questLn06: Quest = {
           ],
           answer: 1,
           explain:
-            "There is no second payment and nothing is deducted from the payee. The hub is offered 1,002.2 sats on one channel and offers 1,000 sats on the other; when the preimage settles both, the 2.2 sat difference is simply left on the hub's side of its channels. The fee is a gap between two numbers, not a transfer, which is why routing income arrives as channel balance and never as an on-chain payment.",
+            "There is no second payment and nothing is deducted from the payee. The hub is offered 180,180 sats on one channel and offers 180,000 sats on the other; when the preimage settles both, the 180-sat difference is simply left on the hub's side of its channels. The fee is a gap between two numbers, not a transfer, which is why routing income arrives as channel balance and never as an on-chain payment.",
         },
       ],
       prose: [
@@ -169,7 +195,7 @@ export const questLn06: Quest = {
         'More forwarding hops can add fees, timelock and failure opportunities. Zero-fee intermediaries are possible. This lesson ranks advertised fees for a single-part fixture; actual routing also considers reliability, liquidity estimates, privacy and final-recipient CLTV. The cited protocol field supports a maximum of 20 hops; actual payload-size limits also matter.',
       ],
       annotations: [
-        { lines: 'L1088–89', text: 'The ceiling, stated in passing: 20 hops, forced by the onion being a fixed size. Real routes are far shorter.' },
+        { lines: 'L1088–89', text: "The spec's stated maximum route length, 20 hops, mentioned while sizing an error field. Large per-hop payloads can make the real limit lower. Real routes are far shorter." },
       ],
       excerpt: {
         pin: BOLTS_PIN,
@@ -192,7 +218,7 @@ export const questLn06: Quest = {
       viz: 'route-race',
       prose: [
         "Add the numbers up and the search is almost boring: enumerate plausible paths, cost each one, take the cheapest that fits inside the hops' advertised minimums and maximums. Real implementations dress this up, they weight timelock as a cost too, penalise long routes, and remember which hops failed recently, but the core is arithmetic on a graph you already hold.",
-        "The cheapest route is frequently not the shortest. A four-hop path of nodes charging nothing beats a two-hop path through someone charging a thousand base, and wallets take it. That is worth knowing when a payment goes somewhere surprising: the route was chosen by price, not by distance.",
+        "The cheapest route is not always the shortest. On fees alone, a four-hop path of nodes charging nothing beats a two-hop path that charges a little. But real wallets also add a penalty for each extra hop that might fail, so a few sats of fee often buys the shorter, likelier route. When a payment goes somewhere surprising, price and reliability chose it, not distance.",
         "Now the honest limit, which is the whole reason Lightning payments fail. **Liquidity is not gossiped.** A `channel_update` tells you a channel exists, what it charges and the largest HTLC it will accept: it does not and cannot tell you how much is currently sitting on the near side. That changes with every payment through it, and broadcasting it would leak everyone's balances to the world.",
         "So your wallet picks a route on price, tries it, and finds out. A failure comes back saying which hop could not continue, the wallet marks it, and tries again. What you experience as a spinner is often two or three real attempts. This is not a bug that will be fixed; it is the direct cost of not publishing everybody's balances, and most people would make the same trade.",
       ],

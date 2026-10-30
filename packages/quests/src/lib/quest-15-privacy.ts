@@ -131,8 +131,8 @@ export const quest15: Quest = {
       ],
       annotations: [
         { lines: 'L2639', text: 'The name is the policy: change goes to a NEW destination. There is no "the change address."' },
-        { lines: 'L2643–44', text: 'Reserve a fresh destination from the keypool your Quest #14 seed makes infinite.' },
-        { lines: 'L2645', text: 'Only once the destination is actually used does the wallet consume it for good.' },
+        { lines: 'L2643–44', text: 'Reserve a fresh change destination; your wallet\'s master key (Quest #14\'s idea, minus the words) can derive endless new ones.' },
+        { lines: 'L2645', text: 'As soon as the reservation succeeds, the wallet marks this address as used up, so it is never handed out again.' },
       ],
       excerpt: {
         ref: { file: 'src/wallet/wallet.cpp', startLine: 2639, endLine: 2648 },
@@ -155,11 +155,11 @@ export const quest15: Quest = {
       id: 'clustering',
       title: "The watcher's one great trick",
       takeaway:
-        'When a transaction spends **several inputs at once**, one signer almost certainly controls all of them. That single assumption, the *common-input heuristic*, is how analysts collapse thousands of addresses into one "wallet," and Satoshi warned about it in the whitepaper.',
+        'When a transaction spends **several inputs at once**, one owner usually controls all of them, unless it is a collaborative transaction like a CoinJoin or PayJoin. That single assumption, the *common-input heuristic*, is how analysts collapse thousands of addresses into one "wallet," and Satoshi warned about it in the whitepaper.',
       myth: {
         belief: 'I get a fresh address for every payment, so my history cannot be connected.',
         reality:
-          "Fresh addresses protect you until you *spend*. The moment your wallet gathers three old coins to fund one payment, it has signed a public confession that one owner held all three (plus, usually, the change of each earlier hop). Privacy on-chain is won or lost mostly at spend time, which is why coin selection, consolidation habits, and avoid-reuse matter more than receiving etiquette.",
+          "Fresh addresses protect you until you *spend*. The moment your wallet gathers three old coins to fund one payment, it has published strong evidence that one owner held all three (plus, usually, the change of each earlier hop). Privacy on-chain is won or lost mostly at spend time, which is why coin selection, consolidation habits, and avoid-reuse matter more than receiving etiquette.",
       },
       prose: [
         "Time to think like the other side. You're an analyst with the whole glass ledger and one confirmed fact: address A belongs to the corner shop. Fresh addresses everywhere should stop you cold. They don't, because of one pattern: **multi-input spending**. When the shop pays its supplier by combining eight incoming payments into one transaction, all eight input addresses collapse into one cluster. Add the change heuristic from the last stop, and each spend also donates its change address to the cluster. Repeat until the shop's 'privacy' is a single labeled blob with a revenue chart.",

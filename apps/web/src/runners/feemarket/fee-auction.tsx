@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { RichText } from '@bitcoin4plebs/ui';
 import type { RunnerProps } from '../registry';
 import {
   feeTrace,
@@ -178,10 +179,13 @@ export function FeeAuction({ finale }: RunnerProps) {
           </li>
         ))}
       </ol>
+      <p>
+        The same trace drives the queue, histogram, selection and forecast.
+        Change the starting fee strategy, reset, and replay to compare.
+      </p>
       {finale.note && (
         <p className="finale-note">
-          The same trace drives the queue, histogram, selection and forecast.
-          Change the starting fee strategy, reset, and replay to compare.
+          <RichText text={finale.note} />
         </p>
       )}
     </section>

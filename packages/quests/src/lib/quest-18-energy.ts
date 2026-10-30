@@ -25,7 +25,7 @@ export const quest18: Quest = {
     text: "Ana’s payment is buried under accumulated proof of work. A replacement history must be valid and carry greater cumulative work. That comparison measures expected hash work, not exact past electricity; a minority attacker can sometimes succeed by chance.",
   },
   intro: [
-    "Mining consumes electricity. A current estimate needs a dated methodology, assumptions about hardware efficiency and measured or estimated hashpower. This lesson supplies no current country comparison or electricity total.",
+    "Mining consumes electricity. A current estimate needs a dated methodology, assumptions about hardware efficiency and measured or estimated hashpower. This lesson cites one dated estimate (Cambridge CCAF, April 2025: about 138 TWh a year) and makes no country comparison.",
     "Proof of work makes competing history costly to produce and cheap to compare. Energy use is a real cost, but the protocol measures hashes against targets, not joules. Efficiency improvements do not inherently break Bitcoin.",
   ],
   promise:
@@ -39,7 +39,7 @@ export const quest18: Quest = {
       myth: {
         belief: 'Defenders of Bitcoin deny it uses much energy, or claim it is all renewable.',
         reality:
-          "Serious answers concede the consumption is large and real, and do not pretend the energy mix is all clean. The honest argument is different: that the energy buys something specific and hard to buy any other way, and that miners are pushed toward energy nobody else wants. Overclaiming 'it's all green' is as dishonest as calling it pure waste.",
+          "Serious answers concede the consumption is large and real, and do not pretend the energy mix is all clean. The honest argument is different: that the energy buys something specific and hard to buy any other way, and that miners have incentives to seek cheap power, which is sometimes curtailed or stranded and sometimes not. Overclaiming 'it's all green' is as dishonest as calling it pure waste.",
       },
       prose: [
         "For current consumption or emissions, consult a dated estimate and examine its hardware and energy-mix assumptions. Hashrate alone does not determine electricity use, and a country comparison can become stale.",
@@ -126,7 +126,7 @@ export const quest18: Quest = {
         {
           aspect: 'The energy figure',
           bank: '"It uses a whole country of power!"',
-          bitcoin: 'True, and it buys tamper-proof settlement for anyone on Earth',
+          bitcoin: 'Large and real (Cambridge CCAF, Apr 2025: about 138 TWh a year, roughly 0.5% of world electricity); it buys history that is costly to rewrite, never strictly tamper-proof',
         },
         {
           aspect: 'The energy source',
@@ -136,7 +136,7 @@ export const quest18: Quest = {
         {
           aspect: 'The comparison',
           bank: 'Compared against zero',
-          bitcoin: 'Compared against what it replaces: banking towers, cash logistics, gold mining',
+          bitcoin: 'Compared against stated alternatives; proponents point to banking and gold mining, critics dispute what Bitcoin actually replaces',
         },
       ],
       prose: [
@@ -177,6 +177,6 @@ export const quest18: Quest = {
   feynman: {
     prompt: 'Explain in three sentences why Bitcoin\'s energy use is not simply "waste," without pretending the energy is all clean.',
     model:
-      "Mining consumes energy while searching for proof of work. Nodes compare cumulative target-derived work among valid chains; they do not measure past joules. Current electricity, emissions and attack costs need dated estimates and explicit assumptions. More confirmations usually increase confidence under stated hashpower assumptions, but finality remains probabilistic.",
+      "Mining consumes energy searching for proof of work, and nodes compare cumulative target-derived work among valid chains rather than past joules. Current electricity, emissions and attack costs need dated estimates and explicit assumptions. More confirmations usually increase confidence under stated hashpower assumptions, but finality remains probabilistic.",
   },
 };

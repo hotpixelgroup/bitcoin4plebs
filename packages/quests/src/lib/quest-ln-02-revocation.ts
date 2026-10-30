@@ -34,7 +34,7 @@ export const questLn02: Quest = {
       title: 'The attack that has to fail',
       viz: 'revocation-ladder',
       takeaway:
-        "Tomas holds fifty valid transactions. The chain will accept any of them. Nothing in Bitcoin's rules prefers the newest one, as far as consensus is concerned, they are fifty equally legitimate ways to spend the same output, and only the first one broadcast will confirm.",
+        "Tomas holds fifty valid transactions. The chain will accept any of them. Nothing in Bitcoin's rules prefers the newest one, as far as consensus is concerned, they are fifty equally legitimate ways to spend the same output, and only one of them can ever confirm.",
       myth: {
         belief: "Lightning must rely on trusting your channel partner not to cheat.",
         reality:
@@ -61,7 +61,7 @@ export const questLn02: Quest = {
           ],
           answer: 2,
           explain:
-            "The two branches are not symmetric, and that is the whole design. Tomas's own payout is behind `OP_CHECKSEQUENCEVERIFY`, a real Bitcoin consensus timelock, hundreds of blocks of enforced waiting. Mira's penalty path has no delay at all. She doesn't need to race him; she gets a window measured in hours or days while his money sits visibly stranded in public.",
+            "The two branches are not symmetric, and that is the whole design. Tomas's own payout is behind `OP_CHECKSEQUENCEVERIFY`, a real Bitcoin consensus timelock, hundreds of blocks of enforced waiting. Mira's penalty path has no delay at all. She doesn't need to race him; she gets a window of roughly one day to two weeks (144 to 2,016 blocks in LND) while his money sits visibly stranded in public.",
         },
       ],
       prose: [
@@ -200,7 +200,7 @@ export const questLn02: Quest = {
   },
   recap: {
     tryIt:
-      "Next time you close a Lightning channel, watch the closing transaction on a block explorer and note how long your funds take to become spendable. A cooperative close pays out immediately, because both sides signed and there is nothing to punish. A force close makes you wait out `to_self_delay`, hundreds of blocks of watching your own money sit there. That wait is not your wallet being slow. It is the window in which your counterparty could have proven you were cheating, and the reason they never bother trying.",
+      "Next time you close a Lightning channel, watch the closing transaction on a block explorer and note how long your funds take to become spendable. A cooperative close pays out immediately, because both sides signed and there is nothing to punish. If you force close, you wait out `to_self_delay`, hundreds of blocks of watching your own money sit there (if your counterparty force closes, your side arrives almost at once). That wait is not your wallet being slow. It is the window in which your counterparty could have proven you were cheating, and the reason they never bother trying.",
     items: [
       {
         text: '**Old states are never destroyed**, both parties keep every signed split, and the chain has no notion of which is newest.',

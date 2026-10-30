@@ -82,7 +82,7 @@ export function AddressPipeline() {
           </button>
         )}
       </div>
-      <p className="viz-readout">
+      <p className="viz-readout" role="status">
         {stage < STAGES.length - 1
           ? 'Every value here is the real, published example from BIP-173 (the segwit specification). Step through and watch a secret become something safe to say out loud.'
           : 'Notice the direction of every arrow: computing downward is instant; climbing back up is impossible at stages 2 and 3. That asymmetry is why an address is safe to publish, why wallets mint them offline and infinitely, and why the only secret that ever needs guarding is the number at the top.'}

@@ -138,9 +138,51 @@ export function supplyAtHeight(height: number, eras: Era[] = computeEras()): big
  * destroyed or left unclaimed (the real number runs slightly lower —
  * starting with the genesis block's famously unspendable 50 BTC).
  */
-export function supplyThroughBlock(height: number): bigint {
-  return supplyAtHeight(height + 1);
+export function supplyThroughBlock(height: number, eras: Era[] = computeEras()): bigint {
+  return supplyAtHeight(height + 1, eras);
 }
 
 /** BTC has 8 decimal places; COIN satoshis = 1 BTC. Re-exported for convenience. */
 export { COIN };
+
+/** Where an alternative schedule first stops agreeing with Bitcoin's. */
+export interface SubsidyDisagreement {
+  /** First block height whose permitted subsidy differs. */
+  height: number;
+  /** 'over': it permits MORE than Bitcoin (existing nodes reject, bad-cb-amount).
+   *  'under': it permits LESS (existing nodes accept such blocks; YOUR node
+   *  rejects Bitcoin's). */
+  kind: 'over' | 'under';
+  yours: bigint;
+  bitcoin: bigint;
+}
+
+/** Permitted subsidy at a height under alternative parameters. */
+export function subsidyUnder(height: number, params: EmissionParams = {}): bigint {
+  const interval = params.halvingInterval ?? SUBSIDY_HALVING_INTERVAL;
+  const initial = params.initialSubsidy ?? INITIAL_SUBSIDY;
+  const halvings = Math.floor(height / interval);
+  if (params.guard64 ?? true) return halvings >= 64 ? 0n : initial >> BigInt(halvings);
+  return initial >> BigInt(halvings % 64);
+}
+
+/**
+ * The first height at which `params` permits a different subsidy than
+ * Bitcoin's real GetBlockSubsidy, or null if the schedules agree over the
+ * horizon checked (every era start of both, 96 eras deep). Subsidy is
+ * constant within an era, so a disagreement always starts at an era start.
+ */
+export function firstSubsidyDisagreement(params: EmissionParams = {}): SubsidyDisagreement | null {
+  const interval = params.halvingInterval ?? SUBSIDY_HALVING_INTERVAL;
+  const starts = new Set<number>();
+  for (let k = 0; k < UNGUARDED_ERAS; k++) {
+    starts.add(k * interval);
+    starts.add(k * SUBSIDY_HALVING_INTERVAL);
+  }
+  for (const height of [...starts].sort((a, b) => a - b)) {
+    const yours = subsidyUnder(height, params);
+    const bitcoin = getBlockSubsidy(height);
+    if (yours !== bitcoin) return { height, kind: yours > bitcoin ? 'over' : 'under', yours, bitcoin };
+  }
+  return null;
+}

@@ -71,8 +71,8 @@ export const entryPaths: EntryPath[] = [
     site: 'lightning',
     prompt: 'My payment failed and I don\'t know why',
     blurb:
-      'Failure is the normal failure mode here, and the reasons are knowable: liquidity pointing the wrong way, a deadline hit, an invoice expired. Learn to read what your wallet is telling you.',
-    questNumbers: [4, 3, 1],
+      'Failure is the normal failure mode here, and the reasons are knowable: liquidity pointing the wrong way, a deadline hit, an invoice expired. Learn why your wallet retries, and how to read what it is telling you.',
+    questNumbers: [4, 6, 3],
   },
   {
     id: 'ln-privacy',

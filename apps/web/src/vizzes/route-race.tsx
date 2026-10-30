@@ -7,8 +7,8 @@ const fmtMsat = (m: number) => `${(m / 1000).toFixed(3)} sats`;
 /**
  * The route race: every path from A to C in the specification's own
  * four-node network, costed and ranked. The point is that the cheapest
- * route is chosen by price, not by hop count and here the two-hop
- * options differ by more than double.
+ * route is chosen by price, not by hop count, and here the two-hop
+ * options differ by about double.
  */
 export function RouteRace() {
   const [amountSats, setAmountSats] = useState(1_000);
@@ -42,7 +42,7 @@ export function RouteRace() {
             <div key={path} style={{ marginBottom: 10 }}>
               <div className="stat-label">
                 {i === 0 ? '✓ chosen · ' : ''}
-                {path} · {route.hops.length} hops · {route.totalCltvDelta} blocks of timelock
+                {path} · {route.hops.length} hops · {route.totalCltvDelta} blocks of forwarding timelock, plus the payee's final delta
               </div>
               <svg viewBox="0 0 100 6" preserveAspectRatio="none" style={{ width: '100%', height: 16 }}>
                 <rect x="0" y="1" width="100" height="4" rx="1" fill="var(--surface-2)" />
@@ -61,7 +61,7 @@ export function RouteRace() {
         })}
       </div>
 
-      <p className="utxo-box-note">
+      <p className="utxo-box-note" role="status">
         {cheapest && dearest && cheapest !== dearest ? (
           <>
             Both routes are two hops, yet the dearest costs{' '}

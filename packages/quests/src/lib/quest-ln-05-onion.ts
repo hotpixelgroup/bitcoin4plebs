@@ -21,7 +21,7 @@ export const questLn05: Quest = {
   pin: BOLTS_PIN,
   story: {
     stage: 'the envelope',
-    text: "The hub forwarded Mira's 180,000 sats to Ines and kept a few sats for the trouble. What the hub does not know is that Mira sent it, or that Ines received it, or that the payment was for coffee beans. It knows it took money from one neighbour and gave it to another. Everything else it handled was sealed, and stayed sealed, and was exactly the same size going out as coming in.",
+    text: "The hub forwarded Mira's 180,000 sats to Ines and kept a 180-sat fee for the trouble. What the hub does not know is that Mira sent it, or that Ines received it, or that the payment was for coffee beans. It knows it took money from one neighbour and gave it to another. Everything else it handled was sealed, and stayed sealed, and was exactly the same size going out as coming in.",
   },
   intro: [
     "Quest #4 left the hub holding a 1,366-byte packet it could not read. That packet is the reason routing does not destroy your privacy, and it deserves a quest of its own, not least because it is the one piece of Lightning where you can check the cryptography yourself, exactly, against numbers the specification publishes.",
@@ -72,7 +72,7 @@ export const questLn05: Quest = {
         "And the 1,300 bytes: fixed, forever, deliberately wasteful. A two-hop payment carries the same 1,300 bytes as a twenty-hop one. That waste **is** the privacy.",
       ],
       annotations: [
-        { lines: 'L142–43', text: 'The ephemeral key, blinded at every hop so two nodes cannot correlate the same payment.' },
+        { lines: 'L142–43', text: 'The ephemeral key, blinded at every hop so the onion layers themselves cannot be linked. The shared payment hash still can be.' },
         { lines: 'L144–45', text: 'Always 1,300 bytes. Each hop peels its layer and re-pads, so the size never changes.' },
         { lines: 'L146', text: 'The integrity check: alter one byte in transit and the next hop rejects the packet.' },
       ],
@@ -103,7 +103,7 @@ export const questLn05: Quest = {
           question: 'What does the hub learn about its own position in the route?',
           options: [
             'That it is the second of three hops',
-            'Nothing: it cannot tell whether it is first, last, or somewhere in a much longer route',
+            'Almost nothing: it knows it is not the final hop, but not whether it is first or how long the route is',
             'Only whether it is the final hop',
           ],
           answer: 1,
@@ -162,7 +162,7 @@ export const questLn05: Quest = {
   },
   recap: {
     tryIt:
-      "Look up how many channels your wallet actually has. If the answer is one, your privacy against your own provider is close to zero no matter how good the onion is: every payment you make leaves through that single door. If you care about this, more channels to more peers is the lever you personally control, and it costs nothing but on-chain fees to open them.",
+      "Look up how many channels your wallet actually has. If the answer is one, your privacy against your own provider is close to zero no matter how good the onion is: every payment you make leaves through that single door. If you care about this, more channels to more peers is the lever you personally control, and it costs on-chain fees plus the sats you commit to each channel.",
     items: [
       {
         text: '**A hop must learn its next neighbour and the amount**, and the design withholds everything else by construction, not by policy.',

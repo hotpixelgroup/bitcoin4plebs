@@ -65,26 +65,26 @@ export const quest12: Quest = {
       id: 'fee-floor',
       title: 'Fees compete for block space; miners can still exclude transactions',
       takeaway:
-        'When the queue overflows, the mempool computes a **floor price**: pay more than the cheapest evicted bidder or wait. The floor then **decays by half every 12 hours** until the surge is over. A thermostat, in twenty lines.',
+        'When the queue overflows, the mempool computes a **floor price**: pay more than the cheapest evicted bidder or wait. Once a new block arrives, the floor **halves about every 12 hours** (faster as the mempool empties) until the surge is over. A thermostat, in twenty lines.',
       myth: {
         belief: 'When fees spike, Bitcoin is broken and someone should fix it.',
         reality:
           "This code adjusts a node's local rolling minimum fee after eviction. It does not guarantee that market fees fall. Sustained new demand can sustain congestion, and a high fee does not force a miner to include a transaction.",
       },
       prose: [
-        'Your node holds waiting transactions in a bounded queue, the mempool, capped at 300 MB by default. When it overflows, the lowest-feerate package is evicted, and `trackPackageRemoved` ratchets the floor up to what the loser was paying (line 865). From that moment, bids below the floor are not even relayed. Nobody chose the number; the overflow did.',
+        'Your node holds waiting transactions in a bounded queue, the mempool, capped at 300 MB by default. When it overflows, the lowest-feerate package is evicted, and `trackPackageRemoved` ratchets the floor up to what the loser was paying, plus a 0.1 sat/vB step (line 865; the step is added at txmempool.cpp:886). From that moment, bids below the floor are not even relayed. Nobody chose the number; the overflow did.',
         'GetMinFee lets the local rolling eviction floor decay under its conditions, faster as the queue empties. New evictions can raise it again. This is relay policy for one node, not a market-clearing price or a guarantee that a fee spike ends. The simulation makes demand subside to illustrate recovery; real demand need not stop.',
         "One honest nuance: this floor is each node's own relay behavior, not a law of the chain. A rich bidder can always hand a transaction straight to a miner. Hold that thought; it's the whole plot of stop 5.",
       ],
       annotations: [
         { lines: 'L838', text: 'The question every node can answer at any moment: what does a seat in my queue cost right now?' },
-        { lines: 'L840–41', text: 'No eviction since the last block, or no floor set: answer unchanged.' },
+        { lines: 'L840–41', text: 'No block since the floor was last raised, or no floor at all: return it undecayed.' },
         { lines: 'L845', text: 'The thermostat constant: ROLLING_FEE_HALFLIFE is 60 × 60 × 12 seconds (txmempool.h:212). Surges are built to fade.' },
         { lines: 'L846–49', text: 'A draining queue decays faster: below half full, twice as fast; below a quarter, four times.' },
         { lines: 'L851', text: 'Exponential decay, the same arithmetic shape as radioactive half-life.' },
         { lines: 'L854–57', text: 'Under half the minimum step (0.05 sat/vB), the floor snaps to zero. The surge is officially over.' },
         { lines: 'L859', text: 'While active, the quoted floor never drops below the incremental relay fee, 0.1 sat/vB.' },
-        { lines: 'L862–68', text: 'The ratchet. Evicting a package jumps the floor to that package\'s feerate: outbid the loser or wait.' },
+        { lines: 'L862–68', text: 'The ratchet. Evicting a package jumps the floor to that package\'s feerate (plus the 0.1 sat/vB step the caller adds): outbid the loser or wait.' },
       ],
       excerpt: {
         ref: { file: 'src/txmempool.cpp', startLine: 838, endLine: 868 },
@@ -148,7 +148,7 @@ export const quest12: Quest = {
         },
       ],
       prose: [
-        "This is `BlockAssembler::addChunks`, the loop that fills the next block a miner will attempt. Line 302 asks the mempool for the best remaining **chunk**: a transaction together with any unconfirmed parents, ranked by combined feerate so nobody sneaks in a cheap transaction under an expensive child. Line 305 keeps taking chunks until the block's 4-million-weight budget runs out.",
+        "This is `BlockAssembler::addChunks`, the loop that fills the next block a miner will attempt. Line 302 asks the mempool for the best remaining **chunk**: a transaction together with any unconfirmed parents, ranked by combined feerate so nobody sneaks in a cheap transaction under an expensive child. Line 305 keeps going while the mempool still has chunks to offer; the block's 4-million-weight budget is checked inside the loop.",
         'Read lines 307 to 309 slowly, because they are the entire philosophy of mining in three lines: chunks arrive **best-first**, so the first one that pays under the minimum means everything left pays even less, and the assembler simply stops. No allowlist, no review, no opinion about what the bytes mean. The miner is an auctioneer with a gavel, not an editor with a red pen.',
         "Where does the gavel money go? You already read that in Quest #2: the coinbase claims `nFees + GetBlockSubsidy(...)` (miner.cpp:182), every bid in the room plus the minting schedule you verified in Quest #1. Serving the queue faithfully *is* the profit-maximizing strategy.",
       ],
@@ -156,7 +156,7 @@ export const quest12: Quest = {
         { lines: 'L288–95', text: 'Housekeeping: when the block is nearly full, stop trying after 1,000 failed fits.' },
         { lines: 'L297–99', text: 'A chunk is a bundle: a transaction plus its unconfirmed ancestors, priced together.' },
         { lines: 'L302', text: 'Ask the mempool for the single best-paying remaining bundle. This line is the auction.' },
-        { lines: 'L305', text: 'Repeat until the 4M-weight block budget is spent.' },
+        { lines: 'L305', text: 'Keep going while the mempool has chunks left; weight limits are checked further inside the loop.' },
         { lines: 'L307–09', text: 'Bundles arrive best-first, so the first one below the minimum ends the auction: all that remains is worse.' },
       ],
       excerpt: {
@@ -232,7 +232,7 @@ export const quest12: Quest = {
         },
       ],
       prose: [
-        "These six lines are among the most argued-about defaults in Bitcoin right now. `-datacarrier` decides whether your node relays transactions that carry arbitrary data in an OP_RETURN slot, and `-datacarriersize` caps how much. At this pinned commit the default cap is `MAX_STANDARD_TX_WEIGHT / WITNESS_SCALE_FACTOR`: 400,000 ÷ 4 = **100,000 vbytes**, an entire standard transaction's worth. In other words, today's Bitcoin Core ships with the data door effectively wide open, a 2025 change that split the community loudly enough to make newspapers.",
+        "These six lines are among the most argued-about defaults in Bitcoin right now. `-datacarrier` decides whether your node relays (and, if you mine, includes) transactions that carry arbitrary data in an OP_RETURN slot, and `-datacarriersize` caps how much. At this pinned commit the default cap is `MAX_STANDARD_TX_WEIGHT / WITNESS_SCALE_FACTOR`: 400,000 ÷ 4 = **100,000 vbytes**, an entire standard transaction's worth. In other words, today's Bitcoin Core ships with the data door effectively wide open, a 2025 change that split the community loudly enough to make newspapers.",
         'Here is the part that matters for the machine: these are **relay policy**, each operator\'s own taste about what to carry while it waits. They are not consensus. A transaction your node refuses to relay can still reach a miner by another path, and once mined, your node accepts the block without complaint. Filters express values; they cannot bind a determined bidder. Some Bitcoiners run [Bitcoin Knots](/core-vs-knots), a Core derivative with much stricter data defaults, precisely to express that taste.',
         'So the data question has three possible settlements: let the auction stay neutral and price it (stops 2 and 3), filter at the relay layer and accept the leaks (this stop), or escalate into consensus itself, where rules bind everyone. That third door was tried by a proposal called BIP-110, and it gets the whole next quest.',
       ],

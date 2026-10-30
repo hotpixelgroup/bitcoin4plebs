@@ -111,33 +111,34 @@ export function MoneyScorecard() {
   return (
     <VizFigure
       title="The scorecard money is judged on"
-      caption="Tap any property. The point isn't that Bitcoin wins every row (it doesn't); it's the last row nothing else scores strong on."
+      caption="Our ratings, not measurements: tap any property to see the reasoning. The point isn't that Bitcoin wins every row (it doesn't); it's the last row nothing else scores strong on."
+      interactive={false}
     >
-      <div className="sc-grid" role="table" aria-label="Money properties compared">
-        <div className="sc-row sc-head" role="row">
-          <span role="columnheader">property</span>
-          <span role="columnheader">gold</span>
-          <span role="columnheader">cash / bank</span>
-          <span role="columnheader">bitcoin</span>
+      <div className="sc-grid" role="group" aria-label="Money properties compared (editorial ratings)">
+        <div className="sc-row sc-head" aria-hidden="true">
+          <span>property</span>
+          <span>gold</span>
+          <span>cash / bank</span>
+          <span>bitcoin</span>
         </div>
         {PROPERTIES.map((p) => (
           <button
             key={p.key}
             className={`sc-row ${openKey === p.key ? 'sc-row-open' : ''}`}
-            role="row"
+            aria-label={`${p.name}: gold ${RATING_LABEL[p.gold]}, cash or bank ${RATING_LABEL[p.fiat]}, bitcoin ${RATING_LABEL[p.bitcoin]}`}
             aria-expanded={openKey === p.key}
             onClick={() => setOpenKey(p.key)}
           >
-            <span className="sc-prop" role="cell">
+            <span className="sc-prop" aria-hidden="true">
               {p.name}
             </span>
-            <span className={`sc-cell sc-${p.gold}`} role="cell" title={RATING_LABEL[p.gold]}>
+            <span className={`sc-cell sc-${p.gold}`} aria-hidden="true" title={RATING_LABEL[p.gold]}>
               {RATING_MARK[p.gold]}
             </span>
-            <span className={`sc-cell sc-${p.fiat}`} role="cell" title={RATING_LABEL[p.fiat]}>
+            <span className={`sc-cell sc-${p.fiat}`} aria-hidden="true" title={RATING_LABEL[p.fiat]}>
               {RATING_MARK[p.fiat]}
             </span>
-            <span className={`sc-cell sc-${p.bitcoin}`} role="cell" title={RATING_LABEL[p.bitcoin]}>
+            <span className={`sc-cell sc-${p.bitcoin}`} aria-hidden="true" title={RATING_LABEL[p.bitcoin]}>
               {RATING_MARK[p.bitcoin]}
             </span>
           </button>

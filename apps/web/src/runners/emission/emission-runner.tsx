@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import {
   computeEras,
   formatHeight,
+  firstSubsidyDisagreement,
   MAX_MONEY,
   satsToBtc,
   totalSupply,
@@ -21,7 +22,7 @@ const STEP_MS = 110;
  * onto a lonely chain; removing the 64-halving guard reproduces the exact
  * disaster (x86 shift wraparound) that lines 1850-51 exist to prevent.
  */
-function TamperPanel() {
+export function TamperPanel() {
   const [interval, setIntervalValue] = useState('210000');
   const [guard, setGuard] = useState(true);
   const [result, setResult] = useState<{ eras: Era[]; interval: number; guard: boolean } | null>(null);
@@ -37,8 +38,9 @@ function TamperPanel() {
   };
 
   const total = result ? result.eras[result.eras.length - 1].cumulative : null;
-  const blewCap = total !== null && total > MAX_MONEY;
-  const changedInterval = result !== null && result.interval !== 210_000;
+  const disagreement = result
+    ? firstSubsidyDisagreement({ halvingInterval: result.interval, guard64: result.guard })
+    : null;
 
   return (
     <details className="depth tamper">
@@ -78,22 +80,36 @@ function TamperPanel() {
                 lines 1850–51 exist.{' '}
               </>
             )}
-            {changedInterval && result.guard && (
+            {disagreement === null ? (
               <>
-                Different interval, different money: your cap is now{' '}
-                {satsToBtc(total, 4)} BTC across {result.eras.length} eras.{' '}
-              </>
-            )}
-            {blewCap ? (
-              <>
-                <span className="chain-bad">✗ MAX_MONEY exceeded.</span> On the real network your
-                very first oversized coinbase dies with <code>bad-cb-amount</code> on every node
-                (Quest #1, Stop 4).
+                These are Bitcoin's own parameters: the schedule matches GetBlockSubsidy at every
+                height, so nothing here disagrees with the network. Change a number and run again.
               </>
             ) : (
               <>
-                The arithmetic works, but as Quest #4 showed: you just described a different
-                network with zero users, because every existing node rejects its blocks.
+                {result.guard && result.interval !== 210_000 && (
+                  <>Different interval, different money, across {result.eras.length} eras. </>
+                )}
+                Both schedules agree until block {formatHeight(disagreement.height)}, where yours
+                permits {satsToBtc(disagreement.yours)} BTC and Bitcoin permits{' '}
+                {satsToBtc(disagreement.bitcoin)} BTC.{' '}
+                {disagreement.kind === 'over' ? (
+                  <>
+                    A block claiming more subsidy plus fees than Bitcoin permits is invalid: the
+                    first such coinbase dies with <code>bad-cb-amount</code> on every existing node
+                    (Quest #1, Stop 4), because they check it against <em>their</em> arithmetic,
+                    not yours.
+                  </>
+                ) : (
+                  <>
+                    Miners may underclaim, so existing nodes would accept blocks paying your smaller
+                    reward. The split runs the other way: your node rejects Bitcoin's blocks,
+                    which claim more than your rules allow (<code>bad-cb-amount</code> by your
+                    arithmetic), and you are left on a chain of your own.
+                  </>
+                )}{' '}
+                A fork occurs at an actual disagreement in accepted blocks, not merely when source
+                parameters change.
               </>
             )}
           </Callout>

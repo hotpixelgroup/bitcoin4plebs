@@ -67,7 +67,7 @@ export const quest16: Quest = {
         },
       ],
       prose: [
-        'Do the arithmetic you learned in Quest #12: ~1,000,000 vbytes per block, a typical payment ~140 vbytes, one block per ten minutes. That is a global ceiling of a few payments per second, shared by all of humanity. Raise it a hundredfold and you get Quest #13\'s trade in its starkest form: nodes only institutions can run, which quietly repeals Quest #9.',
+        'Do the arithmetic you learned in Quest #12: ~1,000,000 vbytes per block, a typical payment ~140 vbytes, one block per ten minutes. That is a global ceiling of roughly ten payments per second at best, shared by all of humanity. Raise it a hundredfold and you get Quest #13\'s trade in its starkest form: nodes only institutions can run, which quietly repeals Quest #9.',
         "So flip the question. A payment needs the chain for exactly one thing: **enforcement**. If Ana and Bo could hold signed, chain-enforceable IOUs that either can cash at any moment, they wouldn't need the world to witness every coffee; the *threat* of settlement does the honest-keeping. The next two stops show the two scripts that make that threat real, quoted from the Lightning specs themselves.",
       ],
     },
@@ -189,7 +189,7 @@ export const quest16: Quest = {
   },
   recap: {
     tryIt:
-      "Next payment QR you meet in the wild, read its first letters before anything else: bc1 means an address, a seat in the on-chain auction; lnbc means a Lightning invoice, a tab. You now know exactly which ledger each one writes to, and what that costs. (Curious what the rest of that lnbc string actually says? That is [lightning4plebs](https://hotpixelgroup.github.io/lightning4plebs/) Quest #3, and you can decode a real one there.)",
+      "Next payment QR you meet in the wild, read its first letters before anything else: bc1 (or an old-style 1 or 3) means an on-chain address, a seat in the auction; lnbc means a Lightning invoice, a tab. You now know exactly which ledger each one writes to, and what that costs. (Curious what the rest of that lnbc string actually says? That is [lightning4plebs](https://hotpixelgroup.github.io/lightning4plebs/) Quest #3, and you can decode a real one there.)",
     items: [
       {
         text: '**Block space is deliberately scarce**, so scaling means writing less, not printing bigger pages: agreements above the chain, enforcement on it.',
@@ -212,6 +212,6 @@ export const quest16: Quest = {
   feynman: {
     prompt: 'Explain to a friend how two people can pay each other a thousand times while the blockchain only sees two transactions, in three sentences.',
     model:
-      'Two parties lock coins in a channel and privately update signed commitments. Cooperative closing can settle the final split in one closing transaction. A unilateral close may need delayed sweeps; a revoked state permits a penalty only if the other party detects it and confirms the claim in time. The chain enforces spending conditions, not automatic punishment.',
+      'Two parties lock coins in a channel and privately update signed commitments, and a cooperative close settles the final split in one closing transaction. A unilateral close may need delayed sweeps, and a revoked state permits a penalty only if the other party detects it and confirms the claim in time. The chain enforces spending conditions, not automatic punishment.',
   },
 };

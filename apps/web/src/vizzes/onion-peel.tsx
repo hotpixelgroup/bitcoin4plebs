@@ -1,19 +1,24 @@
 import { useState } from 'react';
 import { VizFigure } from './viz-figure';
 
-const HOPS = ['Mira', 'the hub', 'a relay', 'another relay', 'Ines'];
+/** Mira builds the onion; she never peels it. One layer per receiving node. */
+const SENDER = 'Mira';
+const HOPS = ['the hub', 'a relay', 'another relay', 'Ines'];
 const PACKET_BYTES = 1366;
 
 /**
- * The peel figure: layers come off one at a time, and the packet that
- * gets forwarded is always exactly the same size. The constant number is
- * the whole point: a shrinking packet would leak your position.
+ * The peel figure: the sender wraps one layer per hop, then layers come
+ * off one at a time, and the packet that gets forwarded is always exactly
+ * the same size. The constant number is the whole point: a shrinking
+ * packet would leak your position.
  */
 export function OnionPeel() {
+  // How many layers have been peeled so far (0 = still as Mira built it).
   const [peeled, setPeeled] = useState(0);
 
   const remaining = HOPS.length - peeled;
-  const atFinal = peeled === HOPS.length - 1;
+  const atFinal = peeled === HOPS.length;
+  const lastPeeler = peeled > 0 ? HOPS[peeled - 1] : null;
 
   return (
     <VizFigure
@@ -38,13 +43,13 @@ export function OnionPeel() {
           );
         })}
         <text x={120} y={74} textAnchor="middle" fontSize="11" fill="var(--ink-2)">
-          {remaining} layer{remaining === 1 ? '' : 's'}
+          {remaining === 0 ? 'all opened' : `${remaining} layer${remaining === 1 ? '' : 's'}`}
         </text>
       </svg>
 
       <button
         className="runbtn"
-        onClick={() => setPeeled((p) => Math.min(p + 1, HOPS.length - 1))}
+        onClick={() => setPeeled((p) => Math.min(p + 1, HOPS.length))}
         disabled={atFinal}
       >
         {atFinal ? '✓ Reached the recipient' : `▶ ${HOPS[peeled]} peels a layer`}
@@ -62,12 +67,18 @@ export function OnionPeel() {
             <span className="stat-unit">bytes forwarded, the same after every single hop</span>
           </div>
         </div>
-        <div className="stat-label">what {HOPS[peeled]} learns</div>
-        <span className="stat-unit">
-          {atFinal
-            ? 'that the payment is for them: the onward HMAC is all zeros, which is the only positional fact anyone on the route gets'
-            : `send it to ${HOPS[peeled + 1]}, and this much. Not who started it, not who ends it, not how long the route is, not where in it they are.`}
-        </span>
+        <div role="status">
+          <div className="stat-label">
+            {lastPeeler ? `what ${lastPeeler} learns` : `${SENDER}, the sender, built this`}
+          </div>
+          <span className="stat-unit">
+            {lastPeeler === null
+              ? `${SENDER} wrapped one layer per hop, ${HOPS.length} in all, so she alone knows the whole route. Nobody downstream learns that she started it.`
+              : atFinal
+                ? 'that the payment is for them: the onward HMAC is all zeros, which is the only positional fact anyone on the route gets'
+                : `send it to ${HOPS[peeled]}, and this much. Not who started it, not who ends it, not how long the route is, not where in it they are.`}
+          </span>
+        </div>
       </div>
 
       <p className="utxo-box-note">

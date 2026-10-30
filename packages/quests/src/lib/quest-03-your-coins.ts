@@ -20,7 +20,7 @@ export const quest03: Quest = {
   pin: BITCOIN_PIN,
   story: {
     stage: "locked to Ana",
-    text: "Ana's 0.6 BTC sits in public view, in locked boxes anyone can see and only her key can open. The box builder below is literally her situation: to pay Bo she must destroy whole boxes and mint a fresh one locked to him.",
+    text: "Ana's 0.6 BTC sits in public view, in locked boxes anyone can see and only her key can open. The box builder below is literally her situation: to pay Bo she must use up whole boxes and create a fresh one locked to him, plus a change box back to herself.",
   },
   intro: [
     'Here\'s an uncomfortable fact: your bitcoin is **public**. Anyone can see the coins, and there is no login page, no fraud department, and no password reset between a thief and your money. So what actually stops them? Three pieces of code (a lock, a checkpoint, and one opcode) plus a number so large it defends you better than any bank vault ever could.',
@@ -37,7 +37,7 @@ export const quest03: Quest = {
       viz: 'utxo-flow',
       title: 'Your coins are locked boxes, not account balances',
       takeaway:
-        'Bitcoin has no accounts. Your "balance" is a pile of **outputs**: little locked boxes, each holding satoshis and a lock. Read the developers\' own comment: the lock says who *must be able to sign* to open it.',
+        'Bitcoin has no accounts. Your "balance" is a pile of **outputs**: little locked boxes, each holding satoshis and a lock. Read the developers\' own comment: the lock says who *must be able to sign* to open it. (That comment dates from Bitcoin\'s earliest days; most locks today hold a hash of the key, not the key itself.)',
       prose: [
         'This is the actual data structure your money lives in, and it holds just two fields: `nValue`, the satoshis inside (the same `CAmount` from Quest #1), and `scriptPubKey`, the lock. When someone "sends you bitcoin," they create one of these boxes locked to *your* key.',
         'Notice what "ownership" means here: nothing about identity, names, or accounts. A coin isn\'t *registered* to you; it\'s **locked** such that only your key produces an opening proof. Possession of the key *is* ownership, in the most literal sense the word has ever had.',
@@ -121,9 +121,9 @@ export const quest03: Quest = {
       },
       title: 'The moment of truth: OP_CHECKSIG',
       takeaway:
-        'Deep inside the script engine, the classic address types all come down to this: a signature and a public key go onto a stack, and **one opcode** answers a single question. *Does this proof match this lock?* (Newer taproot spends run the same curve check directly in the engine; the question never changes.)',
+        'Deep inside the script engine, the classic address types all come down to this: a signature and a public key go onto a stack, and **one opcode** answers a single question. *Does this proof match this lock?* (Newer taproot spends run a similar signature check, Schnorr on the same curve, directly in the engine; the question never changes.)',
       prose: [
-        'This is the bottom of the rabbit hole. `vchSig` is the spender\'s signature; `vchPubKey` is the public key the box is locked to. `EvalChecksig` runs the elliptic-curve math and sets `fSuccess`: true or false, no middle ground, no appeal.',
+        'This is the bottom of the rabbit hole. `vchSig` is the spender\'s signature; `vchPubKey` is the spender\'s public key (for most addresses the box stores only its hash, checked earlier). `EvalChecksig` runs the elliptic-curve math and sets `fSuccess`: true or false, no middle ground, no appeal.',
         'Here is the beautiful asymmetry that makes Bitcoin work: producing a valid signature **requires the private key**, but *checking* one requires nothing secret at all. That\'s why every node on Earth can verify your coins are protected without any of them being trusted with anything. Verification is public; the power to spend is yours alone.',
       ],
       annotations: [

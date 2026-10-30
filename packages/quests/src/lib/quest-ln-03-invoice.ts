@@ -43,7 +43,7 @@ export const questLn03: Quest = {
       contrast: [
         { aspect: 'How many times', bank: 'As many as you like', bitcoin: 'Once. The secret is spent with it' },
         { aspect: 'Amount', bank: 'Not part of it', bitcoin: 'Usually fixed, and signed over' },
-        { aspect: 'Lifetime', bank: 'Forever', bitcoin: 'Expires, one hour by default' },
+        { aspect: 'Lifetime', bank: 'Forever', bitcoin: 'Expires. The spec assumes one hour if none is set; wallets usually pick their own (LND: 24 hours)' },
         { aspect: 'What proves payment', bank: 'A confirmed transaction anyone can look up', bitcoin: 'The preimage plus the signed invoice (forwarding nodes learn the preimage too)' },
       ],
       prose: [
@@ -114,7 +114,7 @@ export const questLn03: Quest = {
       prose: [
         "`p` is the payment hash: 256 bits of SHA-256 output. The sentence after it is doing enormous work. **Preimage of this provides proof of payment**, a preimage being the input that produces a given hash.",
         "Mira obtains the preimage on successful fulfillment. Combined with the signed invoice it is useful evidence, but it is not exclusive proof of the payer's identity or of why the payee disclosed it. Do not treat possession alone as a complete dispute-resolution system.",
-        "Then look at `s`, the payment secret, whose stated purpose is to prevent *forwarding nodes from probing the payment recipient*. A hop in the middle could otherwise try paying a guessed hash to see what happens. The payment secret means a hop cannot construct a valid final payload without having seen the invoice, so probing fails. Small field, and it closes a real attack.",
+        "Then look at `s`, the payment secret, whose stated purpose is to prevent *forwarding nodes from probing the payment recipient*. Without it, a hop in the middle could send small test payments with the same hash to nodes it suspects are the recipient, and learn who you are paying from their replies. The payment secret means only someone who saw the invoice can build a payment the recipient will accept, so probing fails. Small field, and it closes a real attack.",
         "And `d`, the description, is UTF-8 text, which is why the specification's own examples include 'ナンセンス 1杯'. The finale decodes that one, unmangled.",
       ],
       annotations: [

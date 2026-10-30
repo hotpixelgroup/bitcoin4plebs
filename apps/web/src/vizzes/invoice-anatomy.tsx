@@ -35,6 +35,14 @@ const PARTS = [
     detail: 'Seconds since 1970, in 35 bits. The expiry is counted from here.',
   },
   {
+    id: 'secret',
+    label: 'sp5…',
+    kind: 'hash',
+    what: 'The payment secret',
+    detail:
+      'A 256-bit secret the payer hands only to the payee, inside the onion. It stops forwarding nodes from probing the recipient, and every invoice must carry exactly one.',
+  },
+  {
     id: 'payhash',
     label: 'pp5…',
     kind: 'hash',
@@ -100,7 +108,7 @@ export function InvoiceAnatomy() {
         ))}
       </div>
 
-      <div className="viz-readout">
+      <div className="viz-readout" role="status">
         <div className="stat-label">{part.what}</div>
         <div className="stat">
           <span
@@ -115,9 +123,9 @@ export function InvoiceAnatomy() {
 
       <p className="utxo-box-note">
         Read left to right and an invoice tells a small story: on this network,
-        for this much, made at this moment, for this purpose, redeemable by
-        whoever learns this secret, until this deadline, signed. The finale
-        below decodes the whole thing for real.
+        for this much, made at this moment, with a secret for the payee alone,
+        settled by revealing what hashes to this, for this purpose, until this
+        deadline, signed. The finale below decodes the whole thing for real.
       </p>
     </VizFigure>
   );

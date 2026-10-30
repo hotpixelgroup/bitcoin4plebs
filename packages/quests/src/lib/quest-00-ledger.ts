@@ -142,7 +142,7 @@ export const quest00: Quest = {
       { text: '**Money is a ledger**: a list of who paid whom. Cash and banks are just ways of keeping it.' },
       { text: '**One keeper means one ruler.** The fix: everyone keeps a full copy and agrees on mechanical rules for new lines.' },
       { text: '**Rules must need no referee**: pure arithmetic anyone can check alone. Software is the pencil that never tires.' },
-      { text: '**Bitcoin\'s code is the public rulebook** for such a list, and reading it is exactly what the next ten quests are for.' },
+      { text: '**Bitcoin\'s code is the public rulebook** for such a list, and reading it is exactly what every quest from here on is for.' },
     ],
     closing:
       "**Next:** the first page of the rulebook. Quest #1 shows you the ten lines that decide how new money appears on the list, and then your own browser runs them. No trust required; that's the house style here.",

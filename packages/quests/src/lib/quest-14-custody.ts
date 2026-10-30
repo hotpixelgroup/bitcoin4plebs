@@ -55,7 +55,7 @@ export const quest14: Quest = {
         {
           aspect: 'Who can freeze or lose them',
           bank: 'The company, a hacker of the company, a court',
-          bitcoin: 'Only you, by losing the backup',
+          bitcoin: 'Only you, by losing or leaking the backup',
         },
         {
           aspect: 'What you must protect',
@@ -150,7 +150,7 @@ export const quest14: Quest = {
       ],
       prose: [
         "Second excerpt, same pinned BIP. The words (plus an optional passphrase) go through **PBKDF2 with 2,048 rounds of HMAC-SHA512** and come out as a 512-bit seed. From there, the BIP-32 standard ('deterministic wallets', line 101) grows an entire tree of keys: every address your wallet has ever shown you, and every one it ever will, is derived from this one number by arithmetic that never needs luck twice.",
-        "That's why modern custody is *one* backup made *once*. You are not backing up coins (they're on the ledger), not backing up an app, not backing up addresses. You are backing up 128 bits of entropy in costume, from which everything else re-grows on any device, from any vendor, in any decade.",
+        "That's why modern custody is *one* backup made *once*. You are not backing up coins (they're on the ledger), not backing up an app, not backing up addresses. You are backing up 128 bits of entropy in costume (256 for a 24-word phrase), from which everything else re-grows on any device, from any vendor, in any decade.",
         'The passphrase deserves respect: it is a **25th word that creates a different wallet for every value**, including the empty one. Used well, it means a thief with your paper still has nothing. Used casually, it means you can lock yourself out with no error message in the universe to tell you why. The finale lets you feel both edges safely.',
       ],
       annotations: [

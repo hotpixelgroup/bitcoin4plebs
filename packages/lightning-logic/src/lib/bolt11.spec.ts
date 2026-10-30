@@ -1,6 +1,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { decodeBech32, encodeBech32 } from '@bitcoin4plebs/bitcoin-logic';
 import { BOLT11_EXAMPLES, decodeInvoice, formatMsat, type Bolt11Invoice } from './bolt11.js';
 
 /**
@@ -134,5 +135,105 @@ describe.skipIf(!boltsAvailable)("BOLT #11: the specification's own example invo
       expect(decoded.recoveryId).toBeGreaterThanOrEqual(0);
       expect(decoded.recoveryId).toBeLessThanOrEqual(3);
     }
+  });
+});
+
+/** Every `> ### title` + `> ln…` pair in the pinned spec's invalid-invoice section. */
+function loadInvalidInvoices(): { title: string; invoice: string }[] {
+  const doc = readFileSync(join(BOLTS_SRC as string, '11-payment-encoding.md'), 'utf8');
+  const start = doc.indexOf('# Examples of Invalid Invoices');
+  if (start < 0) throw new Error('Invalid-examples section not found in the pinned BOLT #11');
+  const out: { title: string; invoice: string }[] = [];
+  let title = '';
+  for (const raw of doc.slice(start).split('\n')) {
+    const line = raw.trim();
+    const heading = /^> #+ (.*)$/.exec(line);
+    if (heading) title = heading[1];
+    else if (/^> ln[a-z0-9]+1[a-z0-9]+$/i.test(line)) out.push({ title, invoice: line.slice(2) });
+  }
+  return out;
+}
+
+/**
+ * Signature checks need public-key recovery (or verification against `n`),
+ * which this teaching decoder deliberately does not perform. These vectors
+ * are therefore ACCEPTED here, and the invoice runner says so on screen.
+ */
+const SIGNATURE_ONLY_VECTORS = [
+  'Signature is not recoverable.',
+  "Non canonical signature (high-S) with 'n' field defined",
+];
+
+describe.skipIf(!boltsAvailable)("BOLT #11: the specification's invalid invoices", () => {
+  it('rejects every structurally invalid example', () => {
+    const invalid = loadInvalidInvoices();
+    expect(invalid.length).toBeGreaterThanOrEqual(8);
+    for (const { title, invoice } of invalid) {
+      if (SIGNATURE_ONLY_VECTORS.includes(title)) continue;
+      expect(decodeInvoice(invoice).ok, title).toBe(false);
+    }
+  });
+
+  it('rejects the unknown even feature bit 100 vector', () => {
+    const v = loadInvalidInvoices().find((i) => /unknown feature 100/.test(i.title));
+    expect(v).toBeTruthy();
+    const r = decodeInvoice(v?.invoice as string);
+    expect(r.ok ? '' : r.error).toMatch(/feature bit 100/);
+  });
+
+  it('rejects the missing-s vector with a payment_secret error', () => {
+    const v = loadInvalidInvoices().find((i) => i.title === 'Missing required `s` field.');
+    expect(v).toBeTruthy();
+    const r = decodeInvoice(v?.invoice as string);
+    expect(r).toMatchObject({ ok: false });
+    expect(r.ok ? '' : r.error).toMatch(/payment_secret/);
+  });
+
+  it('discloses that signature-only vectors pass, because signatures are not verified', () => {
+    for (const title of SIGNATURE_ONLY_VECTORS) {
+      const v = loadInvalidInvoices().find((i) => i.title === title);
+      expect(v, title).toBeTruthy();
+      const r = decodeInvoice(v?.invoice as string);
+      expect(r.ok, title).toBe(true);
+      expect(r.ok && r.signatureVerified).toBe(false);
+    }
+  });
+});
+
+describe('BOLT #11 description rule: exactly one of d or h', () => {
+  const coffee =
+    'lnbc2500u1pvjluezsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqdq5xysxxatsyp3k7enxv4jsxqzpu9qrsgquk0rl77nj30yxdy8j9vdx85fkpmdla2087ne0xh8nhedh8w27kyke0lp53ut353s06fv3qfegext0eh0ymjpf39tuven09sam30g4vgpfna3rh';
+  // Re-encode the coffee invoice with its field list edited; the signature no
+  // longer matches, but this decoder checks structure, not signatures.
+  const rebuild = (edit: (fields: number[][]) => number[][]) => {
+    const dec = decodeBech32(coffee, { maxLength: Number.MAX_SAFE_INTEGER });
+    if (!dec.ok) throw new Error('fixture');
+    const p = dec.payload;
+    const fields: number[][] = [];
+    for (let c = 7; c < p.length - 104; ) {
+      const len = p[c + 1] * 32 + p[c + 2];
+      fields.push(p.slice(c, c + 3 + len));
+      c += 3 + len;
+    }
+    const payload = [...p.slice(0, 7), ...edit(fields).flat(), ...p.slice(p.length - 104)];
+    return encodeBech32(dec.hrp, payload, 'bech32');
+  };
+  const isD = (f: number[]) => f[0] === 13; // 'd' in the bech32 charset
+  const hField = [23, 1, 20, ...new Array<number>(52).fill(0)]; // 'h', 52 groups
+
+  it('accepts the unedited fixture', () => {
+    expect(decodeInvoice(rebuild((f) => f)).ok).toBe(true);
+  });
+
+  it('rejects an invoice with neither d nor h', () => {
+    const r = decodeInvoice(rebuild((f) => f.filter((x) => !isD(x))));
+    expect(r).toMatchObject({ ok: false });
+    expect(r.ok ? '' : r.error).toMatch(/description/);
+  });
+
+  it('rejects an invoice with both d and h', () => {
+    const r = decodeInvoice(rebuild((f) => [...f, hField]));
+    expect(r).toMatchObject({ ok: false });
+    expect(r.ok ? '' : r.error).toMatch(/description/);
   });
 });

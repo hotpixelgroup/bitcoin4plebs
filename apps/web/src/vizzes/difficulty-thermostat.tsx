@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { VizFigure } from './viz-figure';
+import { usePrefersReducedMotion } from '../lib/use-reduced-motion';
 
 const EPOCH = 12; // compressed stand-in for Bitcoin's 2,016
 const TARGET_MINUTES = 10;
@@ -22,31 +23,43 @@ export function DifficultyThermostat() {
   const [ticks, setTicks] = useState<Tick[]>([]);
   const [running, setRunning] = useState(false);
   const sinceRetarget = useRef<number[]>([]);
+  const reduced = usePrefersReducedMotion();
+
+  // Mine `count` blocks. All the randomness and the retarget happen here,
+  // outside any state updater, so React StrictMode's double-invoked
+  // updaters cannot draw twice or retarget twice.
+  const mine = (count: number) => {
+    let d = difficulty;
+    const fresh: Tick[] = [];
+    for (let n = 0; n < count; n++) {
+      // A real exponential draw: mean interval = 10 min × difficulty ÷ hashrate.
+      const mean = (TARGET_MINUTES * d) / hashrate;
+      const minutes = -mean * Math.log(1 - Math.random());
+      sinceRetarget.current.push(minutes);
+      let retargetAfter = false;
+      if (sinceRetarget.current.length >= EPOCH) {
+        const actual = sinceRetarget.current.reduce((x, y) => x + y, 0);
+        const expected = EPOCH * TARGET_MINUTES;
+        // pow.cpp's clamp: the measured timespan counts, but never more
+        // than 4× off in either direction.
+        const clamped = Math.min(Math.max(actual, expected / 4), expected * 4);
+        d = d * (expected / clamped);
+        sinceRetarget.current = [];
+        retargetAfter = true;
+      }
+      fresh.push({ minutes, retargetAfter });
+    }
+    if (d !== difficulty) setDifficulty(d);
+    setTicks((prev) => [...prev, ...fresh].slice(-WINDOW));
+  };
 
   useEffect(() => {
-    if (!running) return;
-    const timer = setInterval(() => {
-      setTicks((prev) => {
-        // A real exponential draw: mean interval = 10 min × difficulty ÷ hashrate.
-        const mean = (TARGET_MINUTES * difficulty) / hashrate;
-        const minutes = -mean * Math.log(1 - Math.random());
-        sinceRetarget.current.push(minutes);
-        let retargetAfter = false;
-        if (sinceRetarget.current.length >= EPOCH) {
-          const actual = sinceRetarget.current.reduce((a, b) => a + b, 0);
-          const expected = EPOCH * TARGET_MINUTES;
-          // pow.cpp's clamp: the measured timespan counts, but never more
-          // than 4× off in either direction.
-          const clamped = Math.min(Math.max(actual, expected / 4), expected * 4);
-          setDifficulty((d) => d * (expected / clamped));
-          sinceRetarget.current = [];
-          retargetAfter = true;
-        }
-        return [...prev, { minutes, retargetAfter }].slice(-WINDOW);
-      });
-    }, 380);
+    if (!running || reduced) return;
+    const timer = setInterval(() => mine(1), 380);
     return () => clearInterval(timer);
-  }, [running, hashrate, difficulty]);
+    // `mine` closes over hashrate and difficulty, both listed.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [running, reduced, hashrate, difficulty]);
 
   const reset = () => {
     setRunning(false);
@@ -87,9 +100,15 @@ export function DifficultyThermostat() {
           <button className="preset" onClick={() => setHashrate(Math.max(0.25, hashrate / 2))}>
             2021 China ban: half the hashrate exits
           </button>
-          <button className="runbtn thermo-btn" onClick={() => setRunning((r) => !r)}>
-            {running ? '⏸ pause' : ticks.length ? '▶ resume' : '▶ start the clock'}
-          </button>
+          {reduced ? (
+            <button className="runbtn thermo-btn" onClick={() => mine(EPOCH)}>
+              ▶ mine {EPOCH} blocks
+            </button>
+          ) : (
+            <button className="runbtn thermo-btn" onClick={() => setRunning((r) => !r)}>
+              {running ? '⏸ pause' : ticks.length ? '▶ resume' : '▶ start the clock'}
+            </button>
+          )}
           {ticks.length > 0 && (
             <button className="preset" onClick={reset}>
               reset
@@ -123,7 +142,7 @@ export function DifficultyThermostat() {
           </div>
         </div>
       </div>
-      <p className="viz-readout">
+      <p className="viz-readout" role="status">
         {ticks.length === 0
           ? `Every ${EPOCH} blocks (standing in for Bitcoin's 2,016) the network measures how long they actually took against the ten-minute ideal, and corrects, clamped to 4× per step, exactly like pow.cpp. Start the clock, then sabotage it with the buttons.`
           : `Fast orange bars mean too much hashrate for the current difficulty; tall pale bars mean too little. The dotted marks are retargets: reality measured, difficulty ${difficulty > 1 ? 'raised' : difficulty < 1 ? 'lowered' : 'held'}, average dragged back toward 10. No operator exists: you just watched blind arithmetic absorb whatever you threw at it.`}

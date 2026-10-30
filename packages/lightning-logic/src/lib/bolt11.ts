@@ -65,6 +65,13 @@ export interface Bolt11Invoice {
   recoveryId: number;
   /** Total characters, for the "this is a long string" point. */
   length: number;
+  /**
+   * Always false: this teaching decoder reads the signature but does not
+   * recover or verify the public key, so a forged or non-recoverable
+   * signature still decodes. A paying wallet MUST verify it (BOLT #11
+   * reader requirements).
+   */
+  signatureVerified: false;
 }
 
 export interface Bolt11Error {
@@ -120,6 +127,23 @@ const FIELD_META: Record<string, { name: string; note: string }> = {
 };
 
 const CHARSET = 'qpzry9x8gf2tvdw0s3jn54khce6mua7l';
+
+/**
+ * Even ("required") feature bits this decoder recognises in an invoice:
+ * the BOLT #9 rows whose Context includes `9`, plus the ASSUMED
+ * var_onion_optin (8) and payment_secret (14) that invoices still set.
+ */
+const KNOWN_INVOICE_FEATURE_PAIRS = new Set([8, 14, 16, 24, 36, 48]);
+
+/** Set bit numbers of a `9` field: bit 0 is the low bit of the LAST group. */
+function featureBits(groups: number[]): number[] {
+  const bits: number[] = [];
+  groups.forEach((g, i) => {
+    const base = (groups.length - 1 - i) * 5;
+    for (let b = 0; b < 5; b++) if ((g >> b) & 1) bits.push(base + b);
+  });
+  return bits;
+}
 
 /** Read a big-endian integer out of 5-bit groups. */
 function readInt(groups: number[]): number {
@@ -262,12 +286,39 @@ export function decodeInvoice(input: string): Bolt11Invoice | Bolt11Error {
     else if (tag === 'n') value = groupsToHex(data, 264);
     else value = groupsToHex(data, groups * 5);
 
+    if (tag === '9') {
+      // BOLT #11 reader: unknown odd bits are ignored; unknown EVEN bits
+      // ("you must understand this") MUST fail the payment.
+      const unknownEven = featureBits(data).filter(
+        (bit) => bit % 2 === 0 && !KNOWN_INVOICE_FEATURE_PAIRS.has(bit)
+      );
+      if (unknownEven.length > 0)
+        return {
+          ok: false,
+          error: `Invoice requires unknown feature bit ${unknownEven.join(', ')}: a reader must refuse what it does not understand.`,
+        };
+    }
+
     fields.push({ tag, name: meta.name, groups, value, note: meta.note });
     cursor = dataEnd;
   }
 
   if (!fields.some((field) => field.tag === 'p'))
     return { ok: false, error: 'Missing valid payment_hash field.' };
+  // BOLT #11 reader: "if a valid `s` field is not provided: MUST fail the payment."
+  if (!fields.some((field) => field.tag === 's'))
+    return { ok: false, error: 'Missing valid payment_secret (s) field.' };
+  // BOLT #11 reader: "MUST fail the payment if neither a `d` field nor a `h`
+  // field is present, or if both are present."
+  const hasD = fields.some((field) => field.tag === 'd');
+  const hasH = fields.some((field) => field.tag === 'h');
+  if (hasD === hasH)
+    return {
+      ok: false,
+      error: hasD
+        ? 'Both a description (d) and a description_hash (h): exactly one is allowed.'
+        : 'Missing description: an invoice needs a d or an h field.',
+    };
   const signatureHex = groupsToHex(signatureGroups, 520);
   const recoveryId = parseInt(signatureHex.slice(128, 130), 16);
   if (recoveryId > 3)
@@ -287,6 +338,7 @@ export function decodeInvoice(input: string): Bolt11Invoice | Bolt11Error {
     signature: signatureHex.slice(0, 128),
     recoveryId,
     length: trimmed.length,
+    signatureVerified: false,
   };
 }
 

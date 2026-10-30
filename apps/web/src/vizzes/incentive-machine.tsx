@@ -31,13 +31,13 @@ const ACTORS: Actor[] = [
     name: 'Full nodes',
     wants: 'Sound money: every rule checked, no trust extended to anyone.',
     power: 'The veto. Blocks they reject never become money, no matter how much hashpower mined them.',
-    checkedBy: 'Nothing to cheat for: a node that loosens its own rules just quietly exits to a different coin (2017 proved which side wins).',
+    checkedBy: 'Nothing to cheat for: a node that loosens its own rules just quietly exits to a different coin (in 2017, the SegWit2x block-size increase was dropped before activation).',
   },
   {
     id: 'builders',
     name: 'Wallet builders',
     wants: 'Users. Fee pain drives users away, so fee pain is their to-do list.',
-    power: 'Efficiency: batching, SegWit, taproot, Lightning. Every fee crisis in history shipped one of these.',
+    power: 'Efficiency: batching, SegWit, taproot, Lightning. Fee spikes have repeatedly pushed adoption of these.',
     checkedBy: 'Users switch wallets in a minute. Serve them or vanish.',
   },
 ];

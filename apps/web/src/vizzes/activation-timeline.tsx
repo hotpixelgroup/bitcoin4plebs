@@ -2,7 +2,24 @@ import { useState } from 'react';
 import { formatHeight } from '@bitcoin4plebs/bitcoin-logic';
 import { VizFigure } from './viz-figure';
 
-const MAX_HEIGHT = 960_000;
+/** The fourth halving: block 840,000, mined 2024-04-20 00:09 UTC. */
+const HALVING_4_HEIGHT = 840_000;
+const HALVING_4_TIME_MS = Date.UTC(2024, 3, 20, 0, 9);
+
+/**
+ * Rough tip height for a date: blocks since the fourth halving at the
+ * ten-minute target. Real blocks drift a little faster or slower, which
+ * is why the marker says "est."; the axis only needs to stay ahead of it.
+ */
+function estimateTipHeight(nowMs: number = Date.now()): number {
+  const minutes = Math.max(0, (nowMs - HALVING_4_TIME_MS) / 60_000);
+  return HALVING_4_HEIGHT + Math.floor(minutes / 10);
+}
+
+/** Axis end: the estimated tip plus headroom, rounded up, never below 960,000. */
+function timelineMaxHeight(tip: number): number {
+  return Math.max(960_000, Math.ceil((tip + 20_000) / 20_000) * 20_000);
+}
 
 /** The soft forks carved into chainparams.cpp, plus context. */
 const EVENTS = [
@@ -51,23 +68,26 @@ const EVENTS = [
 ];
 
 const HALVINGS = [210_000, 420_000, 630_000, 840_000];
-const TODAY = 938_343; // the reviewed checkpoint height from chainparams.cpp:142
 
 /**
  * The rule-change timeline: six rule changes since 2013.
- * Each one a tightening, each one adopted near-unanimously, each one
+ * Each one a tightening, each one adopted near-unanimously (history, not
+ * a rule: a soft fork without majority hashpower splits), each one
  * carved into chainparams.cpp at its exact block height.
  */
 export function ActivationTimeline() {
   const [selected, setSelected] = useState(4); // SegWit, the famous one
 
-  const x = (height: number) => 30 + (height / MAX_HEIGHT) * 580;
+  const today = estimateTipHeight();
+  const maxHeight = timelineMaxHeight(today);
+  const x = (height: number) => 30 + (height / maxHeight) * 580;
   const event = EVENTS[selected];
 
   return (
     <VizFigure
       title="The tree rings"
-      caption="Every soft fork whose activation height chainparams.cpp records. Click the markers. Note the spacing."
+      caption="Every soft fork activated by block height, as chainparams.cpp records it (Taproot via its warning height). Click the markers. Note the spacing."
+      interactive={false}
     >
       <svg className="timeline-svg" viewBox="0 0 640 110" role="img" aria-label="Soft fork activation timeline">
         <line x1={30} y1={62} x2={610} y2={62} className="timeline-axis" />
@@ -93,9 +113,9 @@ export function ActivationTimeline() {
           </g>
         ))}
         <g className="timeline-today">
-          <line x1={x(TODAY)} y1={50} x2={x(TODAY)} y2={74} />
-          <text x={x(TODAY)} y={94}>
-            today-ish
+          <line x1={x(today)} y1={50} x2={x(today)} y2={74} />
+          <text x={x(today)} y={94}>
+            today (est.)
           </text>
         </g>
         <text x={30} y={84} className="timeline-tick">
@@ -107,9 +127,11 @@ export function ActivationTimeline() {
           <strong>{event.name}</strong> · {event.year} · block {formatHeight(event.height)}
           <span className="glossary-cite">{event.cite}</span>
         </div>
-        <p className="viz-readout">
+        <p className="viz-readout" role="status">
           {event.detail} Like every marker here, it's a <em>soft fork</em> (a tightening old
-          software tolerates), and it activated only after near-unanimous adoption. Six changes since
+          software tolerates), and it activated only after near-unanimous adoption. That was history,
+          not a guarantee: a soft fork stays one chain only if most hashpower enforces it, and BIP110,
+          pushed through without that in August 2026, split off on its own. Six changes since
           2013, none loosening the rules, each recorded in the file you read at this stop. (Earlier
           soft forks, such as P2SH in 2012, activated by timestamp instead, which is why they have
           no marker here.) The gaps between markers aren't slowness; they're the price of

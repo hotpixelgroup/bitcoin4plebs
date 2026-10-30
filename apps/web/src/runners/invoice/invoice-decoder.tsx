@@ -70,10 +70,10 @@ export function InvoiceDecoder({ finale }: RunnerProps) {
         </button>
         {!result.ok && (
           <Callout>
-            <strong>Rejected: {result.error}</strong> This is the checksum
-            earning its keep. A single wrong character (a bad copy-paste, a chat
-            client mangling a link, a typo) is caught here, before any money
-            moves, rather than becoming a mystery later.
+            <strong>Rejected: {result.error}</strong>{' '}
+            {/^Checksum failed/.test(result.error)
+              ? 'This is the checksum earning its keep. A single wrong character (a bad copy-paste, a chat client mangling a link, a typo) is caught here, before any money moves, rather than becoming a mystery later.'
+              : 'The checksum may be fine; the invoice itself breaks a BOLT #11 reader rule, so a wallet must refuse to pay it.'}
           </Callout>
         )}
         {decoded && (
@@ -86,9 +86,11 @@ export function InvoiceDecoder({ finale }: RunnerProps) {
               .
             </strong>{' '}
             {decoded.length} characters of bech32, carrying{' '}
-            {decoded.fields.length} tagged fields and a 520-bit signature over
-            all of them. Nothing here was looked up: every value on the right
-            was read out of the string itself.
+            {decoded.fields.length} tagged fields and a 512-bit signature (plus
+            a recovery id) over all of them. Nothing here was looked up: every
+            value on the right was read out of the string itself. This decoder
+            does not verify the signature, so a forged or unrecoverable one
+            still decodes; a paying wallet must check it.
           </Callout>
         )}
         {finale.note && (
@@ -162,7 +164,8 @@ export function InvoiceDecoder({ finale }: RunnerProps) {
                 <div className="guess-verdict">
                   recovery id {decoded.recoveryId}, enough to recover the
                   payee's public key from the signature, which is why most
-                  invoices omit it
+                  invoices omit it. Not verified here: a wallet performs that
+                  recovery and rejects the invoice if it fails.
                 </div>
               </div>
             </>

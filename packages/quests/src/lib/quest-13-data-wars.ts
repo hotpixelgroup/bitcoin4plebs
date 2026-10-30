@@ -35,7 +35,7 @@ export const quest13: Quest = {
       id: 'the-valve',
       title: 'OP_RETURN: a valve, not an invitation',
       takeaway:
-        "Data on the ledger is as old as the ledger: Satoshi put a newspaper headline in block zero. OP_RETURN exists because people were **faking addresses** to store data, which bloats the database every node keeps forever. The valve made data *less* harmful, not welcome.",
+        "Data on the ledger is as old as the ledger: Satoshi put a newspaper headline in block zero. OP_RETURN exists because people were **faking addresses** to store data, which bloats the database every node keeps forever. Core's 2014 release notes said so plainly: the valve was \"not an endorsement of storing data in the blockchain\", just a less harmful place for it.",
       quiz: [
         {
           question: 'Why did Bitcoin developers add the OP_RETURN data slot in 2014?',
@@ -51,13 +51,13 @@ export const quest13: Quest = {
       ],
       prose: [
         'Quest #8 showed you the original sin, committed by Satoshi personally: *"The Times 03/Jan/2009 Chancellor on brink of second bailout for banks"*, hard-coded into block zero. People have stuffed messages into the ledger ever since, and the earliest method was ugly: encode your data as a **fake address** and pay to it. Nobody can ever spend that output, but no node can *prove* nobody can, so it squats in the UTXO set, the database from Quest #3 that every node must keep hot, forever.',
-        "In 2014, Bitcoin Core 0.9 added a pressure valve: **OP_RETURN**, an output type that says out loud \"this carries data and can never be spent.\" Nodes can prune it on sight. The relay default allowed 40 bytes of payload, later 80 (an 83-byte script with overhead), deliberately enough for a hash or a timestamp and nothing more. The code enforcing your node's limit is this stop's excerpt: count the data bytes, compare to your budget, refuse to *relay* anything over it. Note the word relay. Keep noting it.",
+        "In 2014, Bitcoin Core 0.9 added a pressure valve: **OP_RETURN**, an output type that says out loud \"this carries data and can never be spent.\" Nodes can prune it on sight. The relay default allowed 40 bytes of payload, later 80 (an 83-byte script with overhead), deliberately enough for a hash or a timestamp and nothing more. The code enforcing your node's limit is this stop's excerpt: add up the size of every OP_RETURN script in the transaction, compare the total to your budget, and refuse anything over it. Refuse to do what? Relay it, and put it in blocks your own node builds; Core's help text says \"Relay and mine.\" It never decides what a valid block may contain. Keep noting that.",
       ],
       annotations: [
         { lines: 'L137', text: 'Your budget: the -datacarriersize setting you (or your software\'s defaults) chose.' },
         { lines: 'L145', text: 'NULL_DATA is the OP_RETURN output type: declared data, provably unspendable, prunable.' },
         { lines: 'L147–49', text: 'Over budget? Your node refuses to pass it along, with the reason string "datacarrier".' },
-        { lines: 'L152–55', text: 'The older trick, bare multisig stuffing, has its own off-by-default gate.' },
+        { lines: 'L152–55', text: 'The older trick, bare-multisig stuffing, has its own gate, -permitbaremultisig, which Core leaves open by default.' },
       ],
       excerpt: {
         ref: { file: 'src/policy/policy.cpp', startLine: 137, endLine: 156 },
@@ -110,12 +110,12 @@ export const quest13: Quest = {
       myth: {
         belief: 'The Bitcoin Core developers decide what Bitcoin is.',
         reality:
-          'Core ships defaults, and defaults are powerful, but every knob here is policy, and the 2025 exodus to Knots is the market for implementations working in the open. What no implementation can do is make the network adopt new consensus rules by shipping a release: a Knots node and a Core v30 node followed the identical chain until August 2026, when Knots began enforcing BIP110 and its nodes split onto a separate chain that almost no miners extended.',
+          'Core ships defaults, and defaults are powerful, but every knob here is policy, and the 2025 exodus to Knots is the market for implementations working in the open. What no implementation can do is make the network adopt new consensus rules by shipping a release: a Knots node and a Core v30 node followed the identical chain until 8 August 2026 (block 961,632), when nodes that had opted in to BIP110, mostly Knots users who switched it on, rejected a non-signaling block and split onto a chain almost no miners extended. Knots nodes that left it off stayed on the main chain.',
       },
       prose: [
-        "Look at line 84 again, knowing what you now know. `MAX_STANDARD_TX_WEIGHT / WITNESS_SCALE_FACTOR` is 400,000 ÷ 4 = **100,000 vbytes**: the v30 (October 2025) default lets an OP_RETURN fill an entire standard transaction. The maintainers' argument was pragmatic harm reduction. The 83-byte filter had visibly failed; the data came in anyway, through the witness door. Determined publishers were paying miners *directly*, bypassing filtering nodes entirely. And if data is coming regardless, prunable OP_RETURN is the least toxic place for it. Better a bulletin board you can throw away than graffiti carved into the UTXO set.",
-        "A loud minority of operators found that surrender dressed as pragmatism. Many switched to **Bitcoin Knots**, a long-running Bitcoin Core derivative maintained by Luke Dashjr that keeps strict data filters on by default and adds more. Through 2025 its share of reachable nodes grew from a rounding error to a visible slice of the network, node operators voting with their software, exactly the implementation market Quest #12 described. What they did *not* get is a different Bitcoin: policy filters what a node repeats, not what the chain contains. [Core vs. Knots, side by side →](/core-vs-knots)",
-        'So by late 2025 the board state was: data flowing, filters leaking by design, defaults opened, a counter-movement running stricter software that consensus renders mostly symbolic. Which left exactly one escalation on the table.',
+        "Look at line 84 again, knowing what you now know. `MAX_STANDARD_TX_WEIGHT / WITNESS_SCALE_FACTOR` is 400,000 ÷ 4 = **100,000 vbytes**: the v30 (October 2025) default lets an OP_RETURN fill an entire standard transaction. The maintainers' argument was pragmatic harm reduction. In their view the 83-byte filter had failed: the data came in anyway, through the witness door, and determined publishers were paying miners *directly*, bypassing filtering nodes entirely. If data is coming regardless, prunable OP_RETURN is the least toxic place for it. Better a bulletin board you can throw away than graffiti carved into the UTXO set.",
+        "Critics, a minority of operators but a growing one, called that surrender dressed as pragmatism. Their case: a default is a signal, and Core had just made data storage a supported use; filters still raise the cost, delay and hassle of non-standard data even when they leak; and most miners build blocks from what their nodes relay, so what nodes relay shapes what miners see. Many switched to **Bitcoin Knots**, a long-running Bitcoin Core derivative maintained by Luke Dashjr that keeps strict data filters on by default and adds more. Through 2025 its share of reachable nodes grew from a rounding error to a visible slice of the network, node operators voting with their software, exactly the implementation market Quest #12 described. What neither side's policy can change is consensus: a filter shapes what a node repeats, not which blocks are valid. [Core vs. Knots, side by side →](/core-vs-knots)",
+        'So by late 2025 the board state was: data flowing, Core\'s defaults opened, and a counter-movement running stricter filters. Core\'s side called those filters leaky by design; the filtering side called them friction that works, if not a wall. Both agreed on one thing: a filter cannot make a valid block invalid. Which left exactly one escalation on the table.',
       ],
       excerpt: EXCERPT_DATACARRIER_DEFAULTS,
     },
@@ -143,7 +143,7 @@ export const quest13: Quest = {
         "**The steelman against it:** Quest #0's founding principle says a rule only counts if checking it needs no referee. \"This data is legitimate, that data is not\" is referee work smuggled into arithmetic. Consensus has never judged *content* before, and one-year emergencies have a habit of renewing. The collateral damage is real too: tapscripts that execute `OP_IF` are the either/or contracts several second-layer designs are built from. And the precedent cuts forever, because the tool that bans their bytes today can ban your bytes when fashions change. The auction being annoying is the price of the auction being neutral.",
       ],
       annotations: [
-        { lines: 'L23', text: 'Temporary and time-boxed: the rules expire after one year. Also: "checked". This is consensus, run by every node.' },
+        { lines: 'L23', text: 'Temporary and time-boxed: the rules expire after one year. Also: "checked". This would be consensus, enforced by every node that adopts it, whether or not it ever relayed the transaction.' },
         { lines: 'L25', text: 'Output scripts capped near the old normal; OP_RETURN kept at its classic 83 bytes.' },
         { lines: 'L26', text: "The historical proposal restricted specified pushes and witness items; datacarriersize itself is OP_RETURN relay policy, not a general witness inscription-size limit." },
         { lines: 'L30–31', text: 'The sharp edge: banning OP_SUCCESS and executed OP_IF in tapscripts also touches how future contracts and some second-layer designs are written.' },

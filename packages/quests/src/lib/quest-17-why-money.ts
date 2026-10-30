@@ -59,7 +59,7 @@ export const quest17: Quest = {
       myth: {
         belief: "Gold is the perfect money, so a digital version is pointless.",
         reality:
-          "Gold scores brilliantly on scarcity and durability and terribly on portability, divisibility, and verifiability: you cannot email it, cannot pay exact change in it, and cannot check a bar is real without an assay. Every property gold is weak on is one Bitcoin was designed to be strong on. They are not rivals so much as gold's strengths, minus its weaknesses, in software.",
+          "Gold is strong on scarcity and durability and weak on portability and easy verification: you cannot email it, and checking a bar is real takes an assay. Bitcoin makes different trade-offs, with weaknesses gold lacks (software risk, lost keys, a public history). Proponents call it gold's strengths in software; critics dispute that, and the scorecard is for judging it yourself.",
       },
     },
     {
@@ -153,7 +153,7 @@ export const quest17: Quest = {
         {
           aspect: 'What you must trust',
           bank: 'People and institutions',
-          bitcoin: 'Arithmetic you can run yourself',
+          bitcoin: 'Software and arithmetic you can check, plus hardware and network assumptions',
         },
       ],
       prose: [
@@ -181,7 +181,6 @@ export const quest17: Quest = {
       },
       {
         text: "**The real invention is stopping double-spends without a bank**: the shared ledger plus refereeless rules, not the price.",
-        cite: 'amount.h:26',
       },
       {
         text: "**It is counted in satoshis**: a hundred million per coin, so the money is fully divisible and 'a whole coin' is never the minimum.",

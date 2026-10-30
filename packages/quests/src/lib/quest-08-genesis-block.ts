@@ -86,7 +86,7 @@ export const quest08: Quest = {
       viz: 'merkle-lightning',
       title: 'Block zero is built exactly like block 900,000',
       takeaway:
-        'No special cases: the genesis block is assembled from the same parts as every block since, one coinbase transaction and the 80-byte header you met in Quest #6. **One field gives away its rank: the previous-block hash is set to nothing.**',
+        'Built from the same parts as every block since: one coinbase transaction and the 80-byte header you met in Quest #6. **One field gives away its rank: the previous-block hash is set to nothing.**',
       prose: [
         'Read the assembly. The headline is packed into the coinbase input (line 43, the same trick miners use for messages to this day). The 50 BTC reward is locked to Satoshi\'s key (lines 44–45). Then the six header fields you know from Quest #6 are filled in, one per line.',
         'Line 53 is the beautiful one: `hashPrevBlock.SetNull()`. Every other block that will ever exist points at a parent. This one points at **zero**. That\'s not a placeholder, it\'s the definition of "first." When your node verifies history in Quest #9, it walks the parent pointers back until it lands exactly here.',
@@ -126,19 +126,19 @@ export const quest08: Quest = {
       id: 'birth-certificate',
       quiz: [
         {
-          question: "What happens if your node's copy of the genesis block is corrupted?",
+          question: "What happens if someone alters the genesis numbers compiled into Bitcoin Core?",
           options: [
           "It downloads a fresh copy and continues",
           "The program refuses to start at all",
           "It asks other nodes to vote",
           ],
           answer: 1,
-          explain: "The source constructs genesis and compares it to expected constants with assertions. Bitcoin Core refuses to compile with assertions disabled, so every build runs this check at startup. It checks the built-in genesis constants; it is not evidence that every startup independently audits the chain from genesis.",
+          explain: "The source constructs genesis and compares it to expected constants with assertions. Bitcoin Core refuses to compile with assertions disabled, so every build runs this check at startup. It checks the compiled-in constants, not the block file stored on disk, and it does not re-audit the chain from genesis.",
         },
       ],
       title: 'The exact numbers, and the check your node runs at every boot',
       takeaway:
-        'Here is the birth certificate: timestamp, the winning nonce, the easiest-ever difficulty, 50 BTC. And below it, an `assert`, which means **your node refuses to even start** unless its own genesis block hashes to the famous value.',
+        'Here is the birth certificate: timestamp, the winning nonce, the easiest difficulty mainnet allows, 50 BTC. And below it, an `assert`, which means **your node refuses to even start** unless its own genesis block hashes to the famous value.',
       prose: [
         "The arguments specify the genesis timestamp, nonce and compact target. The 0x1d00ffff difficulty also applied to subsequent early blocks, so genesis was not uniquely easy.",
         "The expected genesis hash anchors this configured network. Bitcoin Core cannot be compiled with assertions disabled (util/check.h stops the build), so every build checks the constructed genesis block against these constants at startup. Genesis receives special handling rather than ordinary block-connection processing.",
@@ -248,10 +248,10 @@ export const quest08: Quest = {
       },
       {
         text: "**Genesis is special-cased:** it anchors the configured chain and its coinbase output is not added to the spendable UTXO set. Its header still uses the ordinary serialization format.",
-        cite: 'chainparams.cpp:53',
+        cite: 'chainparams.cpp:59',
       },
       {
-        text: "**Expected genesis constants anchor the configured chain.** The source assertions check construction in builds where assertions are enabled.",
+        text: "**Expected genesis constants anchor the configured chain.** Bitcoin Core can't be built without assertions, so every node checks these constants at startup.",
         cite: 'chainparams.cpp:160',
       },
       {

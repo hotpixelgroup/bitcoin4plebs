@@ -67,7 +67,7 @@ export function RevocationLadder() {
           </div>
         )}
       </div>
-      <p className="utxo-box-note">
+      <p className="utxo-box-note" role="status">
         {count === 0 ? (
           <>
             One state, nothing revoked yet. Nobody can punish anybody: there is

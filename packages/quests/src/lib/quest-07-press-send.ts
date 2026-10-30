@@ -47,13 +47,13 @@ export const quest07: Quest = {
       viz: 'gossip-network',
       title: 'The front door: AcceptToMemoryPool',
       takeaway:
-        'Before your transaction goes *anywhere*, the first node it meets audits it through this function. Pass, and the node adds it to its **mempool** (the waiting room) and gossips it onward. Fail, and it dies here, silently.',
+        'Before your transaction goes *anywhere*, the first node it meets audits it through this function. Pass, and the node adds it to its **mempool** (the waiting room) and gossips it onward. Fail, and it dies here: the node tells your wallet why, but stores nothing and relays nothing.',
       prose: [
         'There is no central place to "submit" a Bitcoin transaction. Your wallet hands it to one ordinary node, that node hands it to its peers, and so on across the planet, but **every single hop re-runs this same acceptance gauntlet** before agreeing to hold or relay it. Within seconds, thousands of independent machines have each audited your payment and voted with their memory to carry it.',
-        'Notice `test_accept` on line 1783: nodes can even dry-run a transaction without committing it. And notice what happens on rejection (line 1795): nothing dramatic. No error letter, no appeal. The network simply declines to remember you, which is why a well-formed transaction matters: the gauntlet is the same for a coffee payment and a billion-dollar settlement.',
+        'Notice `test_accept` on line 1783: nodes can even dry-run a transaction without committing it. And on rejection, nothing dramatic happens. The node hands your wallet a short reason; its peers hear nothing at all. No appeal: the network simply declines to remember you, which is why a well-formed transaction matters: the gauntlet is the same for a coffee payment and a billion-dollar settlement.',
       ],
       annotations: [
-        { lines: 'L1782', text: 'The front door. Every transaction on Earth enters node memory through here.' },
+        { lines: 'L1782', text: 'The front door for a single transaction; packages (like the parent-and-child pairs later in this quest) use a sibling entrance, ProcessNewPackage.' },
         { lines: 'L1788', text: 'The mempool: this node\'s private waiting room of valid, not-yet-mined transactions.' },
         { lines: 'L1792–93', text: 'Build the audit\'s arguments, run the full acceptance check.' },
       ],

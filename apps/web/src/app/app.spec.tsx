@@ -55,7 +55,10 @@ describe('App', () => {
     );
   });
 
-  it('renders EVERY quest in the registry from data alone', () => {
+  // Renders the whole app once per quest, so it outgrows vitest's 5s default:
+  // measured 3.1-4.6s alone on the Bitcoin site (about 1s on Lightning) and
+  // past 5s under full-suite load. 30s leaves ~6x headroom without hiding a hang.
+  it('renders EVERY quest in the registry from data alone', { timeout: 30_000 }, () => {
     for (const quest of siteQuests) {
       const { unmount } = render(
         <MemoryRouter initialEntries={[`/quests/${quest.slug}`]}>

@@ -71,9 +71,9 @@ export function FeeCalculator() {
         className="fee-slider"
         type="range"
         min={0}
-        max={5_000}
+        max={50_000}
         step={100}
-        value={Math.min(base, 5_000)}
+        value={base}
         onChange={(e) => setBase(Number(e.target.value))}
       />
 
@@ -111,7 +111,7 @@ export function FeeCalculator() {
         }
       />
 
-      <div className="viz-readout">
+      <div className="viz-readout" role="status">
         <div className="stat-label">
           {base.toLocaleString('en-US')} + ({' '}
           {amountMsat.toLocaleString('en-US')} × {ppm.toLocaleString('en-US')} ÷

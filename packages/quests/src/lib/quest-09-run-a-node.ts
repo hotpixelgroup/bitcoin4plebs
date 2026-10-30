@@ -28,7 +28,7 @@ export const quest09: Quest = {
   },
   intro: [
     'For eight quests you\'ve **read** the law. Running a node is how you **enforce** it. A node is nothing exotic: it\'s Bitcoin Core, the exact program whose source code you\'ve been reading, running on a computer you control. No coding required: if you can install a browser, you can run a node.',
-    'What it costs: disk space (roughly 1 TB for the full chain, or ~10 GB in pruned mode), some bandwidth, and a few days of patience for the initial sync. What it buys: **every claim this curriculum made stops being our word and becomes your machine\'s measurement.** This quest walks through what the program actually does with those days, and ends with the supply audit Quest #1 promised you.',
+    'What it costs: disk space (roughly 1 TB for the full chain, or roughly 15–20 GB in pruned mode), some bandwidth, and a few days of patience for the initial sync. What it buys: **every claim this curriculum made stops being our word and becomes your machine\'s measurement.** This quest walks through what the program actually does with those days, and ends with the supply audit Quest #1 promised you.',
   ],
   promise:
     "Every snippet below is copied verbatim from the Bitcoin Core source, pinned to commit [18c05d9](https://github.com/bitcoin/bitcoin/commit/18c05d93016b28a9afd4c716dfe00b6e0accb30b). Don't trust this page either: every stop links to the same lines on GitHub so you can check we didn't edit a word.",
@@ -47,7 +47,7 @@ export const quest09: Quest = {
         'Understand what those days of CPU are buying. Your node never asks "what\'s the balance?" Instead it **recomputes** the answer from raw history, then keeps enforcing the rules on every new block forever. When it finally says "synced," the state it holds isn\'t downloaded trust. It\'s arithmetic your own hardware performed.',
       ],
       annotations: [
-        { lines: 'L2621–22', text: 'The Quest #1 audit: during initial sync your machine runs it against every block ever mined, Satoshi\'s included.' },
+        { lines: 'L2621–22', text: 'The Quest #1 audit: during initial sync your machine runs it against every block after genesis, Satoshi\'s early ones included.' },
         { lines: 'L2623–24', text: 'Any historical block that overpaid its miner would be rejected right here, on your hardware, seventeen years after the fact.' },
       ],
       excerpt: EXCERPT_COINBASE_ENFORCEMENT,
@@ -210,7 +210,7 @@ export const quest09: Quest = {
         cite: 'chainparams.cpp:168',
       },
       {
-        text: '**The one default shortcut is disclosed and refusable**: assumevalid skips ancient signature checks only; `-assumevalid=0` re-checks even those. Amounts are always verified.',
+        text: '**The one default shortcut is disclosed and refusable**: assumevalid skips signature (script) checks only, for blocks buried under a reviewed recent block; `-assumevalid=0` re-checks even those. Amounts are always verified.',
         cite: 'chainparams.cpp:142',
       },
       {

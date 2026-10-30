@@ -4,7 +4,7 @@ import {
   formatHeight,
   getBlockSubsidy,
   satsToBtc,
-  supplyAtHeight,
+  supplyThroughBlock,
   SUBSIDY_HALVING_INTERVAL,
   totalSupply,
   type Era,
@@ -26,13 +26,13 @@ const y = (btc: number) => Y0 - (btc / VMAX) * (Y0 - Y1);
 const TOTAL = totalSupply();
 
 /**
- * Roughly the present day, estimated live at 10-minute blocks from the 2024
- * halving anchor (packages/bitcoin-logic halving.ts), the same estimate the
+ * Roughly the present day, estimated live at 10-minute blocks from the last
+ * pinned block-time anchor (packages/bitcoin-logic halving.ts), the same estimate the
  * halving clock uses. A fixed height here went stale as the chain grew.
  */
 const TODAY = estimateHeightAtTime(Date.now());
 /** Whole percent of the final supply minted by TODAY, rounded down. */
-const TODAY_PCT = Number((supplyAtHeight(TODAY) * 100n) / TOTAL);
+const TODAY_PCT = Number((supplyThroughBlock(TODAY) * 100n) / TOTAL);
 const HALVINGS = [1, 2, 3, 4].map((k) => k * SUBSIDY_HALVING_INTERVAL);
 
 interface Hover {
@@ -75,7 +75,7 @@ export function SupplyChart({ eras, revealed, done }: SupplyChartProps) {
         return;
       }
       const height = Math.round(((mx - X0) / (X1 - X0)) * HMAX);
-      const cumulative = supplyAtHeight(height, eras);
+      const cumulative = supplyThroughBlock(height, eras);
       setHover({
         height,
         px: mx,
@@ -87,7 +87,7 @@ export function SupplyChart({ eras, revealed, done }: SupplyChartProps) {
     [done, eras]
   );
 
-  const hoverSupply = hover ? supplyAtHeight(hover.height, eras) : 0n;
+  const hoverSupply = hover ? supplyThroughBlock(hover.height, eras) : 0n;
   const hoverEra = hover ? Math.min(Math.floor(hover.height / SUBSIDY_HALVING_INTERVAL) + 1, 34) : 0;
 
   return (
@@ -147,11 +147,11 @@ export function SupplyChart({ eras, revealed, done }: SupplyChartProps) {
             <line
               x1={x(TODAY)}
               x2={x(TODAY)}
-              y1={y(Number(supplyAtHeight(TODAY, eras)) / 1e8)}
+              y1={y(Number(supplyThroughBlock(TODAY, eras)) / 1e8)}
               y2={Y0}
             />
-            <circle cx={x(TODAY)} cy={y(Number(supplyAtHeight(TODAY, eras)) / 1e8)} r={4} />
-            <text x={x(TODAY)} y={y(Number(supplyAtHeight(TODAY, eras)) / 1e8) - 10} textAnchor="middle">
+            <circle cx={x(TODAY)} cy={y(Number(supplyThroughBlock(TODAY, eras)) / 1e8)} r={4} />
+            <text x={x(TODAY)} y={y(Number(supplyThroughBlock(TODAY, eras)) / 1e8) - 10} textAnchor="middle">
               you are here ({TODAY_PCT}% already minted)
             </text>
           </g>

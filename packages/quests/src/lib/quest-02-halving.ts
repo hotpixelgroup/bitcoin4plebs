@@ -120,8 +120,8 @@ export const quest02: Quest = {
       takeaway:
         'You saw these ten lines in Quest #1. Read them again and notice: **there is no "halving event" in the code**, just integer division. Block 839,999 divides to 3; block 840,000 divides to 4. That\'s the whole ceremony.',
       prose: [
-        'At the April 2024 halving, block 839,999 paid 6.25 BTC and block 840,000 (mined minutes later) paid 3.125. Nothing else changed. No update shipped, no flag flipped: the same ten lines returned a different answer because `nHeight` crossed a multiple of 210,000.',
-        'This is worth sitting with: the most anticipated event in Bitcoin\'s calendar is **not an event in the software at all**. It\'s a property of arithmetic that was fixed the day the code was written. Every future halving (2028, 2032, on to the 2130s) is already sitting in line 1848, waiting for its height.',
+        'At the April 2024 halving, block 839,999\'s subsidy was 6.25 BTC and block 840,000\'s (mined minutes later) was 3.125. Fees came on top; that block famously carried over 37 BTC of them. Nothing else changed. No update shipped, no flag flipped: the same ten lines returned a different answer because `nHeight` crossed a multiple of 210,000.',
+        'This is worth sitting with: the most anticipated event in Bitcoin\'s calendar is **not an event in the software at all**. It\'s a property of arithmetic that was fixed the day the code was written. Every future halving (2028, 2032, all the way to around 2140) is already sitting in line 1848, waiting for its height.',
       ],
       annotations: [
         { lines: 'L1848', text: 'The "halving" is this division changing its answer: 839,999 ÷ 210,000 = 3; 840,000 ÷ 210,000 = 4.' },
@@ -135,7 +135,7 @@ export const quest02: Quest = {
       takeaway:
         'The first block after a halving is the moment of maximum temptation: claim yesterday\'s reward, earn double. Here\'s the code that makes that block **worthless the instant it\'s made**.',
       prose: [
-        'This is the same enforcement you met in Quest #1; now look at it through halving eyes. `GetBlockSubsidy(pindex->nHeight, …)` is evaluated at the *new* height, so the allowed reward already reflects the halving. A miner claiming the old 6.25 BTC at block 840,000 produces `bad-cb-amount`, and every node discards their block, along with the real electricity they burned to mine it.',
+        'This is the same enforcement you met in Quest #1; now look at it through halving eyes. `GetBlockSubsidy(pindex->nHeight, …)` is evaluated at the *new* height, so the allowed reward already reflects the halving. A miner who claims the old 6.25 BTC subsidy on top of the fees at block 840,000 overshoots the limit by 3.125 BTC and gets `bad-cb-amount`, and every node discards their block, along with the real electricity they burned to mine it.',
         'That\'s why halvings are boring in practice: cheating at the boundary doesn\'t need to be policed by anyone, because it\'s **automatically unprofitable**. The math moved; everyone\'s validator moved with it, in lockstep, because they all run these same lines.',
       ],
       excerpt: EXCERPT_COINBASE_ENFORCEMENT,

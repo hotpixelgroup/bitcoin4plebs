@@ -93,7 +93,7 @@ export function LiquiditySeesaw() {
         </div>
       </div>
 
-      <p className="utxo-box-note">
+      <p className="utxo-box-note" role="status">
         {mine === CAPACITY ? (
           <>
             <strong>This is a channel you just funded yourself.</strong> Every
@@ -105,14 +105,20 @@ export function LiquiditySeesaw() {
         ) : mine === 0 ? (
           <>
             <strong>Fully spent.</strong> You can receive up to the peer’s
-            spendable balance and send nothing. Notice the reserve still holds a
-            little back on each side.
+            spendable balance and send nothing. A simplification: in a real
+            channel your own reserve normally stops you short of zero, and the
+            peer keeps theirs back too.
           </>
-        ) : (
+        ) : Math.abs(mine - theirs) <= CAPACITY / 5 ? (
           <>
             A balanced channel is the useful one: {fmt(canSend)} out,{' '}
             {fmt(canReceive)} in. Nothing was created or destroyed, the coins
             simply moved along the seesaw.
+          </>
+        ) : (
+          <>
+            Lopsided: {fmt(canSend)} out, {fmt(canReceive)} in. Both numbers
+            always sum to the same total; moving one moves the other.
           </>
         )}
       </p>

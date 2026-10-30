@@ -47,8 +47,12 @@ export function MerkleLightning() {
 
   useEffect(() => {
     if (!pristine) return;
+    // Corrupt exactly one byte: flip one bit of the first character
+    // ("tx 3" becomes "Tx 3"), so the change really is a single byte.
     const texts = LEAVES.map((t, i) =>
-      corrupted.has(i) ? `${t} (1 byte flipped)` : t,
+      corrupted.has(i)
+        ? String.fromCharCode(t.charCodeAt(0) ^ 0x20) + t.slice(1)
+        : t,
     );
     buildTree(texts).then(setTree);
   }, [corrupted, pristine]);
@@ -171,7 +175,7 @@ export function MerkleLightning() {
           )),
         )}
       </svg>
-      <p className="viz-readout">
+      <p className="viz-readout" role="status">
         {mode === 'tamper'
           ? corrupted.size === 0
             ? 'Click any transaction to flip one byte of it. All hashes here are computed live, so watch exactly which ones notice.'
